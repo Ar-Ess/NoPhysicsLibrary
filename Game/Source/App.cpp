@@ -41,8 +41,8 @@ App::App(int argc, char* args[]) : argc(argc), args(args)
 
 App::~App()
 {
-	suint size = modules.size();
-	for (suint i = 0; i < size; ++i)
+	size_t size = modules.size();
+	for (size_t i = 0; i < size; ++i)
 	{
 		Module* m = modules[i];
 		RELEASE(m);
@@ -62,12 +62,12 @@ bool App::Start()
 	bool ret = true;
 	PERF_START(ptimer);
 
-	suint size = modules.size();
-	for (suint i = 0; i < size; ++i) ret = modules[i]->Start();
+	size_t size = modules.size();
+	for (size_t i = 0; i < size; ++i) ret = modules[i]->Start();
 	
 	PERF_PEEK(ptimer);
 
-	srand(time(NULL));
+	srand((uint)time(NULL));
 
 	return ret;
 }
@@ -87,10 +87,10 @@ bool App::Update()
 
 	PrepareUpdate();
 
-	if (input->GetWindowEvent(WE_QUIT)) ret = false;
+	if (input->GetWindowEvent(EventWindow::WE_QUIT)) ret = false;
 
-	suint size = modules.size();
-	for (suint i = 0; i < size; ++i)
+	size_t size = modules.size();
+	for (size_t i = 0; i < size; ++i)
 	{
 		Module* m = modules[i];
 		if (!m->active) continue;
@@ -98,7 +98,7 @@ bool App::Update()
 		if (!m->PreUpdate(dt)) ret = false;
 	}
 
-	for (suint i = 0; i < size; ++i)
+	for (size_t i = 0; i < size; ++i)
 	{
 		Module* m = modules[i];
 		if (!m->active) continue;
@@ -144,8 +144,8 @@ bool App::CleanUp()
 {
 	bool ret = true;
 
-	suint size = modules.size();
-	for (suint i = 0; i < size; ++i)
+	size_t size = modules.size();
+	for (size_t i = 0; i < size; ++i)
 	{
 		Module* m = modules[i];
 

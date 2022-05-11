@@ -1,6 +1,6 @@
 #pragma once
 
-enum Align
+enum class Align
 {
 	TOP_LEFT,
 	TOP_RIGHT,

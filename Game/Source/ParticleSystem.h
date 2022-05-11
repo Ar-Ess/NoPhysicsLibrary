@@ -17,7 +17,7 @@ struct SDL_Texture;
 struct SDL_Rect;
 struct SDL_Color;
 
-enum EmitterType
+enum class EmitterType
 {
 	EMITTER_TYPE_NONE = -1,
 	EMITTER_TYPE_FIRE,
@@ -40,7 +40,7 @@ struct EmitterData
 	uint emitNumber = 0u;
 	uint emitVariance = 0u;
 	uint maxParticleLife = 0u;
-	SDL_Rect textureRect = { 0, 0 };
+	Rect textureRect = { 0, 0 };
 	double lifetime = -1.0f;
 	SDL_Color startColor = { 0, 0, 0, 0 };
 	SDL_Color endColor = { 0, 0, 0, 0 };

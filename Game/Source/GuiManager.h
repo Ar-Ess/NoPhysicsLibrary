@@ -40,7 +40,7 @@ public:
 		this->ret = ret;
 	}
 
-	ControlSettings* AlignTo(Align align = TOP_LEFT, Point offset = {0, 0})
+	ControlSettings* AlignTo(Align align = Align::TOP_LEFT, Point offset = {0, 0})
 	{
 		GuiString* text = control->text;
 		switch (control->type)
@@ -65,39 +65,39 @@ private:
 
 		switch (align)
 		{
-		case CENTER:
+		case Align::CENTER:
 			text->offset = { (size.x / 2) - (text->bounds.w / 2), (size.y / 2) - (text->bounds.h / 2) };
 			break;
 
-		case BOTTOM_LEFT:
+		case Align::BOTTOM_LEFT:
 			text->offset = { 0.0f, size.y - text->bounds.h };
 			break;
 
-		case TOP_LEFT:
+		case Align::TOP_LEFT:
 			text->offset = { 0.0f, 0.0f };
 			break;
 
-		case CENTER_LEFT:
+		case Align::CENTER_LEFT:
 			text->offset = { 0.0f, (size.y / 2) - (text->bounds.h / 2) };
 			break;
 
-		case BOTTOM_RIGHT:
+		case Align::BOTTOM_RIGHT:
 			text->offset = { size.x - text->bounds.w, size.y - text->bounds.h };
 			break;
 
-		case TOP_RIGHT:
+		case Align::TOP_RIGHT:
 			text->offset = { size.x - text->bounds.w, 0.0f };
 			break;
 
-		case CENTER_RIGHT:
+		case Align::CENTER_RIGHT:
 			text->offset = { size.x - text->bounds.w, (size.y / 2) - (text->bounds.h / 2) };
 			break;
 
-		case CENTER_TOP:
+		case Align::CENTER_TOP:
 			text->offset = { (size.x / 2) - (text->bounds.w / 2), 0.0f };
 			break;
 
-		case CENTER_BOTTOM:
+		case Align::CENTER_BOTTOM:
 			text->offset = { (size.x / 2) - (text->bounds.w / 2), size.y - text->bounds.h };
 			break;
 		}
@@ -107,39 +107,39 @@ private:
 	{
 		switch (align)
 		{
-		case CENTER:
+		case Align::CENTER:
 			text->offset = { (size.x / 2) - (text->bounds.w / 2), (size.y / 2) - (text->bounds.h / 2) };
 			break;
 
-		case BOTTOM_LEFT:
+		case Align::BOTTOM_LEFT:
 			text->offset = { 0.0f, size.y };
 			break;
 
-		case TOP_LEFT:
+		case Align::TOP_LEFT:
 			text->offset = { 0.0f, -text->bounds.h };
 			break;
 
-		case CENTER_LEFT:
+		case Align::CENTER_LEFT:
 			text->offset = { -text->bounds.w, (size.y / 2) - (text->bounds.h / 2) };
 			break;
 
-		case BOTTOM_RIGHT:
+		case Align::BOTTOM_RIGHT:
 			text->offset = { size.x - text->bounds.w, size.y };
 			break;
 
-		case TOP_RIGHT:
+		case Align::TOP_RIGHT:
 			text->offset = { size.x - text->bounds.w, -text->bounds.h };
 			break;
 
-		case CENTER_RIGHT:
+		case Align::CENTER_RIGHT:
 			text->offset = { size.x, (size.y / 2) - (text->bounds.h / 2) };
 			break;
 
-		case CENTER_TOP:
+		case Align::CENTER_TOP:
 			text->offset = { (size.x / 2) - (text->bounds.w / 2), -text->bounds.h };
 			break;
 
-		case CENTER_BOTTOM:
+		case Align::CENTER_BOTTOM:
 			text->offset = { (size.x / 2) - (text->bounds.w / 2), size.y };
 			break;
 		}
@@ -149,39 +149,39 @@ private:
 	{
 		switch (align)
 		{
-		case CENTER:
+		case Align::CENTER:
 			text->offset = { (size.x / 2) - (text->bounds.w / 2), (size.y / 2) - (text->bounds.h / 2) };
 			break;
 
-		case CENTER_LEFT:
+		case Align::CENTER_LEFT:
 			text->offset = { -size.x, (size.y / 2) - (text->bounds.h / 2) };
 			break;
 
-		case BOTTOM_LEFT:
+		case Align::BOTTOM_LEFT:
 			text->offset = { -size.x, size.y };
 			break;
 
-		case TOP_LEFT:
+		case Align::TOP_LEFT:
 			text->offset = { -size.x, -text->bounds.h };
 			break;
 
-		case BOTTOM_RIGHT:
+		case Align::BOTTOM_RIGHT:
 			text->offset = { size.x,  size.y };
 			break;
 
-		case TOP_RIGHT:
+		case Align::TOP_RIGHT:
 			text->offset = { size.x, -text->bounds.h };
 			break;
 
-		case CENTER_RIGHT:
+		case Align::CENTER_RIGHT:
 			text->offset = { size.x, (size.y / 2) - (text->bounds.h / 2) };
 			break;
 
-		case CENTER_TOP:
+		case Align::CENTER_TOP:
 			text->offset = { (size.x / 2) - (text->bounds.w / 2), -text->bounds.h };
 			break;
 
-		case CENTER_BOTTOM:
+		case Align::CENTER_BOTTOM:
 			text->offset = { (size.x / 2) - (text->bounds.w / 2),  size.y };
 			break;
 		}
@@ -213,9 +213,9 @@ public:
 
 	bool Next()
 	{
-		suint size = textures->size();
+		size_t size = textures->size();
 		int index = -1;
-		for (suint i = 0; i < size; ++i)
+		for (size_t i = 0; i < size; ++i)
 		{
 			if (textures->at(i)->texture == control->texture)
 			{
@@ -247,9 +247,9 @@ public:
 
 	bool Prev()
 	{
-		suint size = textures->size();
+		size_t size = textures->size();
 		int index = -1;
-		for (suint i = 0; i < size; ++i)
+		for (size_t i = 0; i < size; ++i)
 		{
 			if (textures->at(i)->texture == control->texture)
 			{

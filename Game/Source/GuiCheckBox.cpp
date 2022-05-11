@@ -131,7 +131,7 @@ void GuiCheckBox::DebugDraw() const
 
 void GuiCheckBox::Manipulate()
 {
-    if (input->GetKey(SDL_SCANCODE_RETURN) == KEY_DOWN)
+    if (input->GetKey(SDL_SCANCODE_RETURN) == KeyState::KEY_DOWN)
     {
         checked = !checked;
         NotifyObserver(0.0f, checked);
@@ -148,7 +148,7 @@ bool GuiCheckBox::NormalUpdate()
 {
     Point mouse = input->GetMousePosition();
     bool on = collisionUtils.CheckCollision(Rect{ mouse, 1.0f, 1.0f }, { bounds.GetPosition(), bounds.GetDimensions().Multiply(scale) });
-    bool click = (input->GetMouseButtonDown(SDL_BUTTON_LEFT) == KEY_REPEAT);
+    bool click = (input->GetMouseButtonDown(SDL_BUTTON_LEFT) == KeyState::KEY_REPEAT);
 
     switch (state)
     {
@@ -189,7 +189,7 @@ bool GuiCheckBox::DGSOUpdate(bool MGS)
 {
     Point mouse = input->GetMousePosition();
     bool on = collisionUtils.CheckCollision(Rect{ mouse, 1.0f, 1.0f }, { bounds.GetPosition(), bounds.GetDimensions().Multiply(scale) });
-    bool click = (input->GetMouseButtonDown(SDL_BUTTON_LEFT) == KEY_REPEAT);
+    bool click = (input->GetMouseButtonDown(SDL_BUTTON_LEFT) == KeyState::KEY_REPEAT);
     GuiControlState prevState = state;
 
     if (!on && !click)

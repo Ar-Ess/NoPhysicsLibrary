@@ -5,7 +5,7 @@
 #include "Defs.h"
 #include "SDL/include/SDL.h"
 //#include "ParticleSystem.h"
-//#include "Render.h"
+#include "Rect.h"
 
 #define MIN_LIFE_TO_INTERPOLATE 15
 
@@ -34,23 +34,23 @@ private:
 		   it's being update (it's still alive).*/
 		struct ParticleState
 		{
-			uint startLife;
-			Point pos;
-			Point startVel;
-			Point endVel;
-			Point currentVel;
-			float currentSize, startSize, endSize;
-			float ageRatio;
-			float angle;
-			double startRotSpeed;
-			double currentRotSpeed;
-			SDL_Rect pRect;
-			SDL_Rect rectSize;
-			SDL_Color startColor;
-			SDL_Color endColor;
-			SDL_BlendMode blendMode;
-			bool vortexSensitive;
-			float t;
+			uint startLife = 0;
+			Point pos = {};
+			Point startVel = {};
+			Point endVel = {};
+			Point currentVel = {};
+			float currentSize = 0.0f, startSize = 0.0f, endSize = 0.0f;
+			float ageRatio = 0.0f;
+			float angle = 0.0f;
+			double startRotSpeed = 0.0;
+			double currentRotSpeed = 0.0;
+			Rect pRect = {};
+			Rect rectSize = {};
+			SDL_Color startColor = {};
+			SDL_Color endColor = {};
+			SDL_BlendMode blendMode = {};
+			bool vortexSensitive = false;
+			float t = 0.0f;
 
 			ParticleState() {}
 
@@ -60,7 +60,7 @@ private:
 		   into play and the struct it's not used. This pointer
 		   called 'next' holds a pointer to the next available
 		   particle after this one. */
-		Particle* next;
+		Particle* next = nullptr;
 
 		ParticleInfo() {}
 	} pState;
@@ -74,7 +74,7 @@ public:
 	Particle(Render* render, ParticleSystem* particle);
 
 	// Initializes new generated particle
-	void Init(Point pos, float startSpeed, float endSpeed, float angle, double rotSpeed, float startSize, float endSize, uint life, SDL_Rect textureRect, SDL_Color startColor, SDL_Color endColor, SDL_BlendMode blendMode, bool vortexSensitive);
+	void Init(Point pos, float startSpeed, float endSpeed, float angle, double rotSpeed, float startSize, float endSize, uint life, Rect textureRect, SDL_Color startColor, SDL_Color endColor, SDL_BlendMode blendMode, bool vortexSensitive);
 
 	// Generic methods
 	void Update();

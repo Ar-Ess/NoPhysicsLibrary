@@ -7,7 +7,7 @@
 #include <vector>
 #include "Render.h"
 
-enum ParticleState
+enum class ParticleState
 {
 	PARTICLE_STATE_NOT_DEF,
 	PARTICLE_ALIVE_DRAWN,
@@ -29,7 +29,7 @@ public:
 	virtual ~ParticlePool();
 
 	// Generates a new particle each time it's called
-	void Generate(Point pos, float startSpeed, float endSpeed, float angle, float rotSpeed, float startSize, float endSize, uint life, SDL_Rect textureRect, SDL_Color startColor, SDL_Color endColor, SDL_BlendMode blendMode, bool vortexSensitive);
+	void Generate(Point pos, float startSpeed, float endSpeed, float angle, float rotSpeed, float startSize, float endSize, uint life, Rect textureRect, SDL_Color startColor, SDL_Color endColor, SDL_BlendMode blendMode, bool vortexSensitive);
 
 	// Update (move and draw) particles in the pool.
 	// IMPORTANT NOTE: This method returns:

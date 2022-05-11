@@ -126,7 +126,7 @@ bool ParticleSystem::CleanUp()
 
 Emitter* ParticleSystem::AddEmiter(Point pos, EmitterType type)
 {
-	Emitter* tmp_emitter = new Emitter(pos, vecEmitterData[type], this);
+	Emitter* tmp_emitter = new Emitter(pos, vecEmitterData[(int)type], this);
 
 	emittersList.push_back(tmp_emitter);
 

@@ -36,7 +36,7 @@ public:
 
 	int GetArgc() const;
 	const char* GetArgv(int index) const;
-	uint32 GetFrameCount() const
+	uint64 GetFrameCount() const
 	{
 		return frameCount;
 	}

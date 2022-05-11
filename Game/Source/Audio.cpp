@@ -24,7 +24,6 @@ bool Audio::Start()
 		ret = true;
 	}
 
-	// Load support for the OGG formats
 	int flags = MIX_INIT_OGG;
 	int init = Mix_Init(flags);
 
@@ -35,7 +34,6 @@ bool Audio::Start()
 		ret = true;
 	}
 
-	// Initialize SDL_mixer
 	if(Mix_OpenAudio(MIX_DEFAULT_FREQUENCY, MIX_DEFAULT_FORMAT, 2, 2048) < 0)
 	{
 		LOG("SDL_mixer could not initialize! SDL_mixer Error: %s\n", Mix_GetError());
@@ -82,7 +80,7 @@ bool Audio::LoadTrack(const char* path)
 	Mix_Music* track = Mix_LoadMUS_RW(rW, 0);
 
 	if (!track)
-		LOG("Cannot load wav %s. Mix_GetError(): %s", path, Mix_GetError());
+		LOG("Cannot load %s. Mix_GetError(): %s", path, Mix_GetError());
 	else
 		music.push_back(track);
 
@@ -108,7 +106,7 @@ bool Audio::PlayTrack(Track track, float fadeTime)
 {
 	bool ret = true;
 	if (!active || track == Track::NO_TRACK) return false;
-	Mix_Music* m = music[track];
+	Mix_Music* m = music[(int)track];
 
 	if (Mix_PlayingMusic())
 	{
@@ -228,10 +226,10 @@ bool Audio::PlaySfx(Sfx fx)
 {
 	bool ret = false;
 
-	if(!active || fx == NO_SFX) return false;
+	if(!active || fx == Sfx::NO_SFX) return false;
 	
 	
-	Mix_PlayChannel(-1, sfx[fx], 0);
+	Mix_PlayChannel(-1, sfx[(int)fx], 0);
 
 	return ret;
 }

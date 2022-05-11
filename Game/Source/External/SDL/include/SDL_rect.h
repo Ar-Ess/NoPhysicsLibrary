@@ -70,27 +70,27 @@ typedef struct SDL_Rect
 /**
  *  \brief Returns true if point resides inside a rectangle.
  */
-SDL_FORCE_INLINE SDL_bool SDL_PointInRect(const SDL_Point *p, const SDL_Rect *r)
+SDL_FORCE_INLINE bool SDL_PointInRect(const SDL_Point *p, const SDL_Rect *r)
 {
     return ( (p->x >= r->x) && (p->x < (r->x + r->w)) &&
-             (p->y >= r->y) && (p->y < (r->y + r->h)) ) ? SDL_TRUE : SDL_FALSE;
+             (p->y >= r->y) && (p->y < (r->y + r->h)) ) ? true : false;
 }
 
 /**
  *  \brief Returns true if the rectangle has no area.
  */
-SDL_FORCE_INLINE SDL_bool SDL_RectEmpty(const SDL_Rect *r)
+SDL_FORCE_INLINE bool SDL_RectEmpty(const SDL_Rect *r)
 {
-    return ((!r) || (r->w <= 0) || (r->h <= 0)) ? SDL_TRUE : SDL_FALSE;
+    return ((!r) || (r->w <= 0) || (r->h <= 0)) ? true : false;
 }
 
 /**
  *  \brief Returns true if the two rectangles are equal.
  */
-SDL_FORCE_INLINE SDL_bool SDL_RectEquals(const SDL_Rect *a, const SDL_Rect *b)
+SDL_FORCE_INLINE bool SDL_RectEquals(const SDL_Rect *a, const SDL_Rect *b)
 {
     return (a && b && (a->x == b->x) && (a->y == b->y) &&
-            (a->w == b->w) && (a->h == b->h)) ? SDL_TRUE : SDL_FALSE;
+            (a->w == b->w) && (a->h == b->h)) ? true : false;
 }
 
 /**

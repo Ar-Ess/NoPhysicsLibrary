@@ -132,7 +132,7 @@ static int physfsrwops_read(SDL_RWops *rw, void *ptr, int size, int maxnum)
 #endif
 {
     PHYSFS_File *handle = (PHYSFS_File *) rw->hidden.unknown.data1;
-    const PHYSFS_uint64 readlen = (PHYSFS_uint64) (maxnum * size);
+    const PHYSFS_uint64 readlen = (PHYSFS_uint64) (double(maxnum) * double(size));
     const PHYSFS_sint64 rc = PHYSFS_readBytes(handle, ptr, readlen);
     if (rc != ((PHYSFS_sint64) readlen))
     {
@@ -164,7 +164,7 @@ static int physfsrwops_write(SDL_RWops *rw, const void *ptr, int size, int num)
 #endif
 {
     PHYSFS_File *handle = (PHYSFS_File *) rw->hidden.unknown.data1;
-    const PHYSFS_uint64 writelen = (PHYSFS_uint64) (num * size);
+    const PHYSFS_uint64 writelen = (PHYSFS_uint64) (double(num) * double(size));
     const PHYSFS_sint64 rc = PHYSFS_writeBytes(handle, ptr, writelen);
     if (rc != ((PHYSFS_sint64) writelen))
         SDL_SetError("PhysicsFS error: %s", PHYSFS_getLastError());

@@ -5,7 +5,6 @@
 #include "AssetsManager.h"
 
 #include "Point.h"
-
 #include <vector>
 
 #define MAX_CHANNELS			360.0f
@@ -26,12 +25,12 @@
 struct _Mix_Music;
 struct Mix_Chunk;
 
-enum Track
+enum class Track
 {
 	NO_TRACK = -1,
 };
 
-enum Sfx
+enum class Sfx
 {
 	NO_SFX = -1,
 	BUTTON_FOCUSSED,

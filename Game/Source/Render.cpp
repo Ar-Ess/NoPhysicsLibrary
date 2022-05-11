@@ -13,6 +13,8 @@ Render::Render(Window* win) : Module()
 	background.g = 0;
 	background.b = 0;
 	background.a = 0;
+	camera = {};
+	renderer = nullptr;
 }
 
 Render::~Render()
@@ -95,44 +97,6 @@ void Render::ResetViewPort()
 	SDL_RenderSetViewport(renderer, &viewport);
 }
 
-// Blit to screen
-bool Render::DrawTexture(SDL_Texture* texture, int x, int y, float sX, float sY, SDL_Rect* section, bool scaleModCoords, bool staticPos, double angle, SDL_RendererFlip flip) const
-{
-	if (!texture) return false;
-	bool ret = true;
-	SDL_Rect rect = {x, y, 0, 0};
-
-	if (staticPos)
-	{
-		rect.x += (int)camera.x;
-		rect.y += (int)camera.y;
-	}
-
-	if (scaleModCoords)
-	{
-		rect.x *= sX;
-		rect.y *= sY;
-	}
-
-	if (section != NULL)
-	{
-		rect.w = section->w;
-		rect.h = section->h;
-	}
-	else SDL_QueryTexture(texture, NULL, NULL, &rect.w, &rect.h);
-
-	rect.w *= sX;
-	rect.h *= sY;
-
-	if (SDL_RenderCopyEx(renderer, texture, section, &rect, angle, NULL, flip) != 0)
-	{
-		LOG("Cannot blit to screen. SDL_RenderCopy error: %s", SDL_GetError());
-		ret = false;
-	}
-
-	return ret;
-}
-
 bool Render::DrawTexture(SDL_Texture* texture, Point position, Point size, bool anchored, Rect* section, double angle, SDL_RendererFlip flip) const
 {
 	if (!texture) return false;
@@ -170,34 +134,7 @@ bool Render::DrawTexture(SDL_Texture* texture, Point position, Point size, bool 
 	return ret;
 }
 
-bool Render::DrawRectangle(const SDL_Rect& rect, SDL_Color color, bool filled, bool useCamera) const
-{
-	bool ret = true;
-
-	SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);
-	SDL_SetRenderDrawColor(renderer, color.r, color.g, color.b, color.a);
-
-	SDL_Rect rec(rect);
-	if (useCamera)
-	{
-		rec.x = (int)(camera.x + rect.x);
-		rec.y = (int)(camera.y + rect.y);
-		rec.w *= scale;
-		rec.h *= scale;
-	}
-
-	int result = (filled) ? SDL_RenderFillRect(renderer, &rec) : SDL_RenderDrawRect(renderer, &rec);
-
-	if (result != 0)
-	{
-		LOG("Cannot draw quad to screen. SDL_RenderFillRect error: %s", SDL_GetError());
-		ret = false;
-	}
-
-	return ret;
-}
-
-bool Render::DrawRectangle(Rect rect, SDL_Color color, Point size, bool filled, bool anchored) const
+bool Render::DrawRectangle(Rect rect, SDL_Color color, Point size, bool anchored, bool fill) const
 {
 	bool ret = true;
 
@@ -217,7 +154,7 @@ bool Render::DrawRectangle(Rect rect, SDL_Color color, Point size, bool filled, 
 
 	SDL_Rect rectangle = {(int)rec.x, (int)rec.y, (int)rec.w, (int)rec.h};
 
-	int result = (filled) ? SDL_RenderFillRect(renderer, &rectangle) : SDL_RenderDrawRect(renderer, &rectangle);
+	int result = (fill) ? SDL_RenderFillRect(renderer, &rectangle) : SDL_RenderDrawRect(renderer, &rectangle);
 
 	if (result != 0)
 	{
@@ -228,21 +165,20 @@ bool Render::DrawRectangle(Rect rect, SDL_Color color, Point size, bool filled, 
 	return ret;
 }
 
-
-bool Render::DrawLine(float x1, float y1, float x2, float y2, SDL_Color color, bool useCamera) const
+bool Render::DrawLine(Point start, Point end, SDL_Color color, bool anchored) const
 {
 	bool ret = true;
-	uint scale = win->GetScale();
+	suint scale = win->GetScale();
 
 	SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);
 	SDL_SetRenderDrawColor(renderer, color.r, color.g, color.b, color.a);
 
 	int result = -1;
 
-	if (useCamera)
-		result = SDL_RenderDrawLine(renderer, camera.x + x1 * scale, camera.y + y1 * scale, camera.x + x2 * scale, camera.y + y2 * scale);
+	if (anchored)
+		result = SDL_RenderDrawLine(renderer, camera.x + start.x * scale, camera.y + start.y * scale, camera.x + end.x * scale, camera.y + end.y * scale);
 	else
-		result = SDL_RenderDrawLine(renderer, x1 * scale, y1 * scale, x2 * scale, y2 * scale);
+		result = SDL_RenderDrawLine(renderer, start.x * scale, start.y * scale, end.x * scale, end.y * scale);
 
 	if (result != 0)
 	{
@@ -253,7 +189,7 @@ bool Render::DrawLine(float x1, float y1, float x2, float y2, SDL_Color color, b
 	return ret;
 }
 
-bool Render::DrawCircle(int x, int y, int radius, SDL_Color color, bool filled, bool useCamera) const
+bool Render::DrawCircle(CircleCollider circle, SDL_Color color, bool fill, bool anchored) const
 {
 	bool ret = true;
 
@@ -267,10 +203,10 @@ bool Render::DrawCircle(int x, int y, int radius, SDL_Color color, bool filled, 
 
 	for (uint i = 0; i < 360; ++i)
 	{
-		points[i].x = (int)(x + radius * cos(i * factor));
-		points[i].y = (int)(y + radius * sin(i * factor));
+		points[i].x = (int)(circle.x + circle.radius * cos(double(i) * double(factor)));
+		points[i].y = (int)(circle.y + circle.radius * sin(double(i) * double(factor)));
 
-		if (useCamera)
+		if (anchored)
 		{
 			points[i].x += camera.x;
 			points[i].y += camera.y;
@@ -279,65 +215,12 @@ bool Render::DrawCircle(int x, int y, int radius, SDL_Color color, bool filled, 
 
 	result = SDL_RenderDrawPoints(renderer, points, 360);
 
-	if (filled)
-	{
-		for (double dy = 1; dy <= radius; dy += 1)
-		{
-			double dx = floor(sqrt((2.0 * radius * dy) - (dy * dy)));
-			if (useCamera)
-			{
-				SDL_RenderDrawLine(renderer, camera.x + x - dx, camera.y + y + dy - radius, camera.x + x + dx, camera.y + y + dy - radius);
-				SDL_RenderDrawLine(renderer, camera.x + x - dx, camera.y + y - dy + radius, camera.x + x + dx, camera.y + y - dy + radius);
-			}
-			else
-			{
-				SDL_RenderDrawLine(renderer, x - dx, y + dy - radius, x + dx, y + dy - radius);
-				SDL_RenderDrawLine(renderer, x - dx, y - dy + radius, x + dx, y - dy + radius);
-			}
-		}
-	}
-
-	if (result != 0)
-	{
-		LOG("Cannot draw quad to screen. SDL_RenderFillRect error: %s", SDL_GetError());
-		ret = false;
-	}
-
-	return ret;
-}
-
-bool Render::DrawCircle(CircleCollider circle, SDL_Color color, bool filled, bool useCamera) const
-{
-	bool ret = true;
-
-	SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);
-	SDL_SetRenderDrawColor(renderer, color.r, color.g, color.b, color.a);
-
-	int result = -1;
-	SDL_Point points[360];
-
-	float factor = (float)M_PI / 180.0f;
-
-	for (uint i = 0; i < 360; ++i)
-	{
-		points[i].x = (int)(circle.x + circle.radius * cos(i * factor));
-		points[i].y = (int)(circle.y + circle.radius * sin(i * factor));
-
-		if (useCamera)
-		{
-			points[i].x += camera.x;
-			points[i].y += camera.y;
-		}
-	}
-
-	result = SDL_RenderDrawPoints(renderer, points, 360);
-
-	if (filled)
+	if (fill)
 	{
 		for (double dy = 1; dy <= circle.radius; dy += 1)
 		{
 			double dx = floor(sqrt((2.0 * circle.radius * dy) - (dy * dy)));
-			if (useCamera)
+			if (anchored)
 			{
 				SDL_RenderDrawLine(renderer, camera.x + circle.x - dx, camera.y + circle.y + dy - circle.radius, camera.x + circle.x + dx, camera.y + circle.y + dy - circle.radius);
 				SDL_RenderDrawLine(renderer, camera.x + circle.x - dx, camera.y + circle.y - dy + circle.radius, camera.x + circle.x + dx, camera.y + circle.y - dy + circle.radius);
@@ -359,14 +242,17 @@ bool Render::DrawCircle(CircleCollider circle, SDL_Color color, bool filled, boo
 	return ret;
 }
 
-bool Render::BlitParticle(SDL_Texture* texture, int x, int y, const SDL_Rect* section, const SDL_Rect* rectSize, SDL_Color color, SDL_BlendMode blendMode, float speed, double angle, int pivot_x, int pivot_y) const
+bool Render::DrawParticle(SDL_Texture* texture, Point position, Rect* section, Rect* rectSize, SDL_Color color, SDL_BlendMode blendMode, double angle) const
 {
 	bool ret = true;
 	uint scale = win->GetScale();
 
 	SDL_Rect rect;
-	rect.x = (int)(camera.x * speed) + x * scale;
-	rect.y = (int)(camera.y * speed) + y * scale;
+	SDL_Rect* sectPtr = nullptr;
+	SDL_Rect sect = {};
+
+	rect.x = (int)(camera.x) + position.x * scale;
+	rect.y = (int)(camera.y) + position.y * scale;
 
 	if (rectSize != NULL)
 	{
@@ -377,6 +263,9 @@ bool Render::BlitParticle(SDL_Texture* texture, int x, int y, const SDL_Rect* se
 	{
 		rect.w = section->w;
 		rect.h = section->h;
+
+		sect = { (int)section->x, (int)section->y, (int)section->w, (int)section->h };
+		sectPtr = &sect;
 	}
 	else
 		SDL_QueryTexture(texture, NULL, NULL, &rect.w, &rect.h);
@@ -403,7 +292,7 @@ bool Render::BlitParticle(SDL_Texture* texture, int x, int y, const SDL_Rect* se
 		LOG("Cannot set texture blend mode. SDL_SetTextureBlendMode error: %s", SDL_GetError());
 
 
-	if (SDL_RenderCopyEx(renderer, texture, section, &rect, angle, NULL, SDL_FLIP_NONE) != 0)
+	if (SDL_RenderCopyEx(renderer, texture, sectPtr, &rect, angle, NULL, SDL_FLIP_NONE) != 0)
 	{
 		LOG("Cannot blit to screen. SDL_RenderCopy error: %s", SDL_GetError());
 		ret = false;

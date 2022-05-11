@@ -9,9 +9,11 @@ class Collision
 public:
 	Collision() {}
 
-	double Distance(int x1, int y1, int x2, int y2)
+	float Distance(float x1, float y1, float x2, float y2)
 	{
-		return sqrt(pow(double(x2 - x1), 2) + pow(double(y2 - y1), 2));
+		double dx = double(x2) - double(x1);
+		double dy = double(y2) - double(y1);
+		return float(sqrt(pow(dx, 2) + pow(dy, 2)));
 	}
 
 	bool CheckCollision(Rect r1, Rect r2) const
@@ -23,7 +25,7 @@ public:
 	bool CheckCollision(CircleCollider& a, Rect& b)
 	{
 		//Closest point on collision box
-		int cX, cY;
+		float cX = 0, cY = 0;
 
 		//Find closest x offset
 		if (a.x < b.x)
@@ -67,7 +69,7 @@ public:
 	bool CheckCollision(Rect& b, CircleCollider& a)
 	{
 		//Closest point on collision box
-		int cX, cY;
+		float cX = 0, cY = 0;
 
 		//Find closest x offset
 		if (a.x < b.x)
@@ -110,14 +112,8 @@ public:
 
 	bool CheckCollision(CircleCollider& A, CircleCollider& B)
 	{
-		//If the distance between the centers of the circles is less than the sum of their radii
-		if (Distance(A.x, A.y, B.x, B.y) < (A.radius + B.radius))
-		{
-			//The circles have collided
-			return true;
-		}
+		if (Distance(A.x, A.y, B.x, B.y) < A.radius + B.radius) return true;
 
-		//If not
 		return false;
 	}
 };

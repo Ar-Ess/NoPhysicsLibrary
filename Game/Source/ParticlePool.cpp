@@ -34,7 +34,7 @@ ParticlePool::~ParticlePool()
 	firstAvailable = nullptr;
 }
 
-void ParticlePool::Generate(Point pos, float startSpeed, float endSpeed, float angle, float rotSpeed, float startSize, float endSize, uint life, SDL_Rect textureRect, SDL_Color startColor, SDL_Color endColor, SDL_BlendMode blendMode, bool vortexSensitive)
+void ParticlePool::Generate(Point pos, float startSpeed, float endSpeed, float angle, float rotSpeed, float startSize, float endSize, uint life, Rect textureRect, SDL_Color startColor, SDL_Color endColor, SDL_BlendMode blendMode, bool vortexSensitive)
 {
 	// Check if the pool is not full
 	assert(firstAvailable != nullptr);

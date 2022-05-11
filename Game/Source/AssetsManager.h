@@ -18,11 +18,8 @@ public:
 	bool Cleanup();
 
 	SDL_RWops* LoadAsset(const char* path);
+
 	size_t LoadXML(const char* path, char** buffer);
-
-private:
-
-public:
 
 private:
 

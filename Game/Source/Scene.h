@@ -10,7 +10,7 @@
 class GuiControl;
 class GuiManager;
 
-enum Scenes
+enum class Scenes
 {
 	NO_SCENE = -1,
 	LOGO_SCENE,
@@ -43,8 +43,8 @@ public:
 	bool SetScene(Scenes scene);
 
 private:
-	Scenes currScene = NO_SCENE;
-	Scenes prevScene = NO_SCENE;
+	Scenes currScene = Scenes::NO_SCENE;
+	Scenes prevScene = Scenes::NO_SCENE;
 
 	//Setters
 	bool SetLogoScene();

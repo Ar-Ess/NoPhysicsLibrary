@@ -15,7 +15,7 @@ struct SDL_Rect;
 struct _SDL_GameController;
 struct _SDL_Haptic;
 
-enum EventWindow
+enum class EventWindow
 {
 	WE_QUIT = 0,
 	WE_HIDE = 1,
@@ -23,7 +23,7 @@ enum EventWindow
 	WE_COUNT
 };
 
-enum KeyState
+enum class KeyState
 {
 	KEY_IDLE = 0,
 	KEY_DOWN,
@@ -31,7 +31,7 @@ enum KeyState
 	KEY_UP
 };
 
-enum GamePadInput
+enum class GamePadInput
 {
 	A = 0,
 	B,
@@ -61,7 +61,7 @@ struct GamePad
 
 	//Controller data
 	bool enabled = false;
-	int index;
+	int index = 0;
 	_SDL_GameController* sdlController = nullptr;
 	_SDL_Haptic* haptic = nullptr;
 
@@ -136,7 +136,7 @@ private:
 
 	Window* window = nullptr;
 
-	bool windowEvents[WE_COUNT];
+	bool windowEvents[(int)EventWindow::WE_COUNT];
 
 	KeyState* keyboard = nullptr;	
 	KeyState mouseButtons[NUM_MOUSE_BUTTONS];

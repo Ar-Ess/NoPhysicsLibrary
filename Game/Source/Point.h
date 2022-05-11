@@ -18,31 +18,31 @@ struct Point
 
 	float Distance(Point to)
 	{
-		float x = pow(to.x - double(this->x), 2);
-		float y = pow(to.y - double(this->y), 2);
+		float x = (float)pow(to.x - double(this->x), 2);
+		float y = (float)pow(to.y - double(this->y), 2);
 
-		return sqrt(double(x) + y);
+		return (float)sqrt(double(x) + y);
 	}
 	float Distance(float x, float y)
 	{
-		float xx = pow(x - double(this->x), 2);
-		float yy = pow(y - double(this->y), 2);
+		float xx = (float)pow(x - double(this->x), 2);
+		float yy = (float)pow(y - double(this->y), 2);
 
-		return sqrt(double(xx) + yy);
+		return (float)sqrt(double(xx) + yy);
 	}
 	float Distance(double x, double y)
 	{
-		float xx = pow(x - double(this->x), 2);
-		float yy = pow(y - double(this->y), 2);
+		float xx = (float)pow(x - double(this->x), 2);
+		float yy = (float)pow(y - double(this->y), 2);
 
-		return sqrt(double(xx) + yy);
+		return (float)sqrt(double(xx) + yy);
 	}
 	float Distance(int x, int y)
 	{
-		float xx = pow(double(x) - double(this->x), 2);
-		float yy = pow(double(y) - double(this->y), 2);
+		float xx = (float)pow(double(x) - double(this->x), 2);
+		float yy = (float)pow(double(y) - double(this->y), 2);
 
-		return sqrt(double(xx) + yy);
+		return (float)sqrt(double(xx) + yy);
 	}
 
 	//// Give Rect
@@ -105,12 +105,12 @@ struct Point
 
 	float GetMax()
 	{
-		return fmax(x, y);
+		return (float)fmax(x, y);
 	}
 
 	float GetMaxAbs()
 	{
-		return fmax(fabsf(x), fabsf(y));
+		return (float)fmax(fabsf(x), fabsf(y));
 	}
 
 	float operator[](int i) 

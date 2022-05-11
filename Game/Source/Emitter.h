@@ -50,7 +50,7 @@ private:
 	// Color and render properties
 	SDL_Color startColor = { 0, 0, 0, 0 };
 	SDL_Color endColor = { 0, 0, 0, 0 };
-	SDL_Rect textureRect;
+	Rect textureRect;
 	SDL_BlendMode blendMode = SDL_BlendMode::SDL_BLENDMODE_NONE;
 	float timeStep = 0.0f;
 

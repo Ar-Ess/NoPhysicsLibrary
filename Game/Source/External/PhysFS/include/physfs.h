@@ -3364,7 +3364,7 @@ PHYSFS_DECL int PHYSFS_mountHandle(PHYSFS_File *file, const char *newDir,
  * \sa PHYSFS_getLastErrorCode
  * \sa PHYSFS_getErrorByCode
  */
-typedef enum PHYSFS_ErrorCode
+typedef enum class PHYSFS_ErrorCode
 {
     PHYSFS_ERR_OK,               /**< Success; no error.                    */
     PHYSFS_ERR_OTHER_ERROR,      /**< Error not otherwise covered here.     */

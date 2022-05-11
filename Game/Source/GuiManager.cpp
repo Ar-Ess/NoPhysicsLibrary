@@ -42,13 +42,13 @@ bool GuiManager::Start(Scene* scene)
 
 bool GuiManager::Update(float dt)
 {
-	suint size = controls.size();
+	size_t size = controls.size();
 	bool MGS = false;
 	suint index = 0;
 
 	if (!allowMGS)
 	{
-		for (suint i = 0; i < size; ++i)
+		for (size_t i = 0; i < size; ++i)
 		{
 			if (controls[i]->state == GuiControlState::PRESSED)
 			{
@@ -59,7 +59,7 @@ bool GuiManager::Update(float dt)
 		}
 	}
 
-	for (suint i = 0; i < size; ++i)
+	for (size_t i = 0; i < size; ++i)
 	{
 		bool active = MGS;
 		if (i == index) active = false;
@@ -73,8 +73,8 @@ bool GuiManager::Update(float dt)
 
 bool GuiManager::Draw(float dt)
 {
-	suint size = controls.size();
-	for (suint i = 0; i < size; ++i)
+	size_t size = controls.size();
+	for (size_t i = 0; i < size; ++i)
 	{
 		controls[i]->Draw(dt);
 	}
@@ -208,7 +208,7 @@ bool GuiManager::InitializeFonts()
 
 void GuiManager::SelectButtonsLogic()
 {
-	if (input->GetKey(navKey) == KEY_DOWN)
+	if (input->GetKey(navKey) == KeyState::KEY_DOWN)
 	{
 		++idSelection;
 		if (idSelection == controls.size())

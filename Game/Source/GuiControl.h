@@ -22,6 +22,7 @@ class GuiManager;
 
 enum class GuiControlType
 {
+    EMPTY_CONTROL = -1,
     BUTTON,
     TOGGLE,
     CHECKBOX,
@@ -72,12 +73,7 @@ public:
         anchored(anchored),
         render(render), 
         gui(gui),
-        tex(tex){}
-
-    GuiControl(GuiControlType type) // Temp
-    {
-
-    }
+        tex(tex) {}
 
     virtual ~GuiControl() {}
 
@@ -122,9 +118,9 @@ public:
     Textures* tex = nullptr;
     GuiString* text = nullptr;
 
-    Collision collisionUtils;
-    GuiControlType type;
-    GuiControlState state;
+    Collision collisionUtils = {};
+    GuiControlType type = GuiControlType::EMPTY_CONTROL;
+    GuiControlState state = GuiControlState::DISABLED;
     Rect bounds = {};
     suint id = 0;
     SDL_Texture* texture = nullptr;

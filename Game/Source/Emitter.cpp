@@ -5,7 +5,7 @@
 
 Emitter::Emitter(Point pos, EmitterData data, ParticleSystem* particles)
 {
-	srand(time(NULL));
+	srand((uint)time(NULL));
 
 	this->particles = particles;
 
@@ -79,7 +79,7 @@ void Emitter::Update(float dt)
 			float randRadius = RangeRandomNum(randStart, randEnd);
 			double randRotSpeed = rotSpeed * RangeRandomNum(rotSpeedRand.x, rotSpeedRand.y);
 
-			emitterPool->Generate(pos, tmpStartSpeed, tmpEndSpeed, randAngle, randRotSpeed, randRadius, endSize, maxParticleLife, textureRect, startColor, endColor, blendMode, vortexSensitive);
+			emitterPool->Generate(pos, tmpStartSpeed, tmpEndSpeed, randAngle, (float)randRotSpeed, randRadius, endSize, maxParticleLife, textureRect, startColor, endColor, blendMode, vortexSensitive);
 			timeStep += timeStep;
 		}
 	}

@@ -12,22 +12,22 @@ public:
 	float x = 0.0f, y = 0.0f;
 	float radius = 0.0f;
 
-	void SetPos(int x_, int y_)
+	void SetPos(int x, int y)
 	{
-		x = x_;
-		y = y_;
+		this->x = (float)x;
+		this->y = (float)y;
 	}
 
-	void SetRadius(int radius_)
+	void SetRadius(float radius)
 	{
-		radius = radius_;
+		this->radius = radius;
 	}
 
-	void SetCircle(int x_, int y_, int radius_)
+	void SetCircle(Point position, float radius)
 	{
-		x = x_;
-		y = y_;
-		radius = radius_;
+		this->x = position.x;
+		this->y = position.y;
+		this->radius = radius;
 	}
 
 	float GetDiameter() const

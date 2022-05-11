@@ -151,10 +151,10 @@ void GuiSlider::SetDimensions(Point magnitudes)
 
 void GuiSlider::Manipulate()
 {
-    if (input->GetKey(lessKey) == KEY_DOWN)
+    if (input->GetKey(lessKey) == KeyState::KEY_DOWN)
     {
         suint substract = 5;
-        if (input->GetKey(slowKey) == KEY_REPEAT) substract = 1;
+        if (input->GetKey(slowKey) == KeyState::KEY_REPEAT) substract = 1;
 
         if (value - substract < 0) value = 0;
         else
@@ -165,10 +165,10 @@ void GuiSlider::Manipulate()
         return;
     }
 
-    if (input->GetKey(moreKey) == KEY_DOWN)
+    if (input->GetKey(moreKey) == KeyState::KEY_DOWN)
     {
         suint add = 5;
-        if (input->GetKey(slowKey) == KEY_REPEAT) add = 1;
+        if (input->GetKey(slowKey) == KeyState::KEY_REPEAT) add = 1;
 
         if (value + add > 100) value = 100;
         else
@@ -185,8 +185,8 @@ bool GuiSlider::NormalUpdate()
     Point mouse = input->GetMousePosition();
     bool on = collisionUtils.CheckCollision(Rect{ mouse, 1.0f, 1.0f }, slider);
     bool onTrail = collisionUtils.CheckCollision(Rect{ mouse, 1.0f, 1.0f }, bounds);
-    bool click = (input->GetMouseButtonDown(SDL_BUTTON_LEFT) == KEY_REPEAT);
-    bool release = (input->GetMouseButtonDown(SDL_BUTTON_LEFT) == KEY_UP);
+    bool click = (input->GetMouseButtonDown(SDL_BUTTON_LEFT) == KeyState::KEY_REPEAT);
+    bool release = (input->GetMouseButtonDown(SDL_BUTTON_LEFT) == KeyState::KEY_UP);
     float res = 0;
 
     switch (state)
@@ -236,7 +236,7 @@ bool GuiSlider::DGSOUpdate(bool MGS)
 {
     Point mouse = input->GetMousePosition();
     bool on = collisionUtils.CheckCollision(Rect{ mouse, 1.0f, 1.0f }, slider);
-    bool click = (input->GetMouseButtonDown(SDL_BUTTON_LEFT) == KEY_REPEAT);
+    bool click = (input->GetMouseButtonDown(SDL_BUTTON_LEFT) == KeyState::KEY_REPEAT);
     float res = 0;
     GuiControlState prevState = state;
 

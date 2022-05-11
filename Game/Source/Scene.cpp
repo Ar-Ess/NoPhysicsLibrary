@@ -23,7 +23,7 @@ bool Scene::Start()
 	gui->Start(this);
 
 	//FIRST SCENE
-	if (!SetScene(LOGO_SCENE)) return false;
+	if (!SetScene(Scenes::LOGO_SCENE)) return false;
 
 	//CONTINUE ACTIVITY
 	/*activeContinue = false;
@@ -44,11 +44,11 @@ bool Scene::Update(float dt)
 
 	switch (currScene)
 	{
-	case LOGO_SCENE:
+	case Scenes::LOGO_SCENE:
 		ret = UpdateLogoScene(dt);
 		break;
 
-	case MAIN_MENU_SCENE:
+	case Scenes::MAIN_MENU_SCENE:
 		ret = UpdateMainMenuScene(dt);
 		break;
 	}
@@ -64,10 +64,10 @@ bool Scene::CleanUp()
 
 	switch (currScene)
 	{
-	case LOGO_SCENE:
+	case Scenes::LOGO_SCENE:
 		break;
 
-	case MAIN_MENU_SCENE:
+	case Scenes::MAIN_MENU_SCENE:
 		break;
 	}
 
@@ -86,11 +86,11 @@ bool Scene::SetScene(Scenes scene)
 
 	switch (currScene)
 	{
-	case LOGO_SCENE:
+	case Scenes::LOGO_SCENE:
 		ret = SetLogoScene();
 		break;
 
-	case MAIN_MENU_SCENE:
+	case Scenes::MAIN_MENU_SCENE:
 		ret = SetMainMenuScene();
 		break;
 	}
@@ -114,7 +114,7 @@ bool Scene::UpdateLogoScene(float dt)
 {
 	bool ret = true;
 
-	if (input->GetKey(SDL_SCANCODE_SPACE) == KEY_DOWN) ret = SetScene(Scenes::MAIN_MENU_SCENE);
+	if (input->GetKey(SDL_SCANCODE_SPACE) == KeyState::KEY_DOWN) ret = SetScene(Scenes::MAIN_MENU_SCENE);
 
 	return ret;
 }
@@ -132,7 +132,7 @@ bool Scene::OnGuiMouseClickEvent(GuiControl* control, float value, bool check)
 {
 	switch (currScene)
 	{
-	case MAIN_MENU_SCENE:
+	case Scenes::MAIN_MENU_SCENE:
 		switch (control->id)
 		{
 			break;
@@ -145,13 +145,13 @@ bool Scene::OnGuiMouseClickEvent(GuiControl* control, float value, bool check)
 
 void Scene::DebugCommands()
 {
-	if (input->GetKey(SDL_SCANCODE_F1) == KEY_DOWN) gui->debug = !gui->debug;
+	if (input->GetKey(SDL_SCANCODE_F1) == KeyState::KEY_DOWN) gui->debug = !gui->debug;
 
-	if (input->GetKey(SDL_SCANCODE_F11) == KEY_DOWN) window->SetWinFullScreen(!window->fullScreen);
+	if (input->GetKey(SDL_SCANCODE_F11) == KeyState::KEY_DOWN) window->SetWinFullScreen(!window->fullScreen);
 
 	switch (currScene)
 	{
-	case LOGO_SCENE:
+	case Scenes::LOGO_SCENE:
 		break;
 	}
 }

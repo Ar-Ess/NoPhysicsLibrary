@@ -11,14 +11,14 @@ Particle::Particle(Render* render, ParticleSystem* particles) : life(0)
 	this->particles = particles;
 }
 
-void Particle::Init(Point pos, float startSpeed, float endSpeed, float angle, double rotSpeed, float startSize, float endSize, uint life, SDL_Rect textureRect, SDL_Color startColor, SDL_Color endColor, SDL_BlendMode blendMode, bool vortexSensitive)
+void Particle::Init(Point pos, float startSpeed, float endSpeed, float angle, double rotSpeed, float startSize, float endSize, uint life, Rect textureRect, SDL_Color startColor, SDL_Color endColor, SDL_BlendMode blendMode, bool vortexSensitive)
 {
 	// Movement properties
 	pState.pLive.pos = pos;
-	pState.pLive.startVel.x = startSpeed * cos(DEG_2_RAD(angle));
-	pState.pLive.startVel.y = -startSpeed * sin(DEG_2_RAD(angle));
-	pState.pLive.endVel.x = endSpeed * cos(DEG_2_RAD(angle));
-	pState.pLive.endVel.y = -endSpeed * sin(DEG_2_RAD(angle));
+	pState.pLive.startVel.x = startSpeed * (float)cos(DEG_2_RAD(angle));
+	pState.pLive.startVel.y = -startSpeed * (float)sin(DEG_2_RAD(angle));
+	pState.pLive.endVel.x = endSpeed * (float)cos(DEG_2_RAD(angle));
+	pState.pLive.endVel.y = -endSpeed * (float)sin(DEG_2_RAD(angle));
 	pState.pLive.startRotSpeed = rotSpeed;
 	pState.pLive.currentRotSpeed = rotSpeed;
 
@@ -78,14 +78,14 @@ bool Particle::Draw()
 	float centerY = pState.pLive.pos.y + ((tmpRect.h - pState.pLive.rectSize.h) / 2.0f);
 
 	// Color interpolation, only if the particle has enough life
-	SDL_Color resColor;
+	SDL_Color resColor = {};
 
 	if (pState.pLive.startLife > MIN_LIFE_TO_INTERPOLATE)
 		resColor = RgbInterpolation(pState.pLive.startColor, pState.pLive.t, pState.pLive.endColor);
 
 	// Blitting particle on screen
-	ret = render->BlitParticle(particles->GetParticleAtlas(), (int)centerX, (int)centerY, &pState.pLive.pRect,
-		&pState.pLive.rectSize, resColor, pState.pLive.blendMode, 1.0f, pState.pLive.currentRotSpeed);
+	ret = render->DrawParticle(particles->GetParticleAtlas(), { centerX, centerY }, (Rect*)&pState.pLive.pRect,
+		(Rect*)&pState.pLive.rectSize, resColor, pState.pLive.blendMode, 1.0f);
 
 	// Calculating new rotation according to rotation speed
 	pState.pLive.currentRotSpeed += pState.pLive.startRotSpeed;
@@ -118,10 +118,10 @@ SDL_Color Particle::RgbInterpolation(SDL_Color startColor, float timeStep, SDL_C
 {
 	SDL_Color finalColor;
 
-	finalColor.r = startColor.r + (endColor.r - startColor.r) * timeStep;
-	finalColor.g = startColor.g + (endColor.g - startColor.g) * timeStep;
-	finalColor.b = startColor.b + (endColor.b - startColor.b) * timeStep;
-	finalColor.a = startColor.a + (endColor.a - startColor.a) * timeStep;
+	finalColor.r = startColor.r + (endColor.r - startColor.r) * (Uint8)timeStep;
+	finalColor.g = startColor.g + (endColor.g - startColor.g) * (Uint8)timeStep;
+	finalColor.b = startColor.b + (endColor.b - startColor.b) * (Uint8)timeStep;
+	finalColor.a = startColor.a + (endColor.a - startColor.a) * (Uint8)timeStep;
 
 	return finalColor;
 }

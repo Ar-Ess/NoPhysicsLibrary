@@ -109,15 +109,15 @@ void GuiButton::DebugDraw() const
 
 void GuiButton::Manipulate()
 {
-    if (input->GetKey(SDL_SCANCODE_RETURN) == KEY_DOWN) NotifyObserver();
+    if (input->GetKey(SDL_SCANCODE_RETURN) == KeyState::KEY_DOWN) NotifyObserver();
 }
 
 bool GuiButton::NormalUpdate()
 {
     Point mouse = input->GetMousePosition();
     bool on = collisionUtils.CheckCollision(Rect{ mouse, 1.0f, 1.0f }, { bounds.GetPosition(), bounds.GetDimensions().Multiply(scale) });
-    bool click = (input->GetMouseButtonDown(SDL_BUTTON_LEFT) == KEY_REPEAT);
-    bool release = (input->GetMouseButtonDown(SDL_BUTTON_LEFT) == KEY_UP);
+    bool click = (input->GetMouseButtonDown(SDL_BUTTON_LEFT) == KeyState::KEY_REPEAT);
+    bool release = (input->GetMouseButtonDown(SDL_BUTTON_LEFT) == KeyState::KEY_UP);
 
     switch (state)
     {
@@ -157,7 +157,7 @@ bool GuiButton::DGSOUpdate(bool MGS)
 {
     Point mouse = input->GetMousePosition();
     bool on = collisionUtils.CheckCollision(Rect{ mouse, 1.0f, 1.0f }, { bounds.GetPosition(), bounds.GetDimensions().Multiply(scale) });
-    bool click = (input->GetMouseButtonDown(SDL_BUTTON_LEFT) == KEY_REPEAT);
+    bool click = (input->GetMouseButtonDown(SDL_BUTTON_LEFT) == KeyState::KEY_REPEAT);
     GuiControlState prevState = state;
 
 
