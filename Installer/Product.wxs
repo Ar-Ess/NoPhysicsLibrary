@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
+  <!-- STEP 0 -->
+	<Product Id="*" Name="Game_Name" Language="1033" Version="1.0.0.0" Manufacturer="STUDIO_NAME" UpgradeCode="8d82de04-1824-4225-bed2-8f04526e95b4">
+		<Package InstallerVersion="200" Compressed="yes" InstallScope="perMachine" />
+
+		<MajorUpgrade DowngradeErrorMessage="A newer version of Game_Name is already installed." />
+		<MediaTemplate />
+    
+    <!-- STEP 5 -->
+    <Property Id="WIXUI_INSTALLDIR" Value="INSTALLFOLDER" />
+    <UIRef Id="WixUI_InstallDir" />
+    <!-- STEP 5 -->
+    <WixVariable Id="WixUIBannerBmp" Value="assets\TopBanner.bmp" />
+    <WixVariable Id="WixUIDialogBmp" Value="assets\BackgroundBanner.bmp" />
+    <!-- STEP 5 -->
+    <WixVariable Id="WixUILicenseRtf" Value="assets\license.rtf" />
+    
+    <!-- STEP 4 -->
+    <Icon Id="icon.ico" SourceFile="assets\icon.ico" />
+    <Property Id="ARPPRODUCTICON" Value="icon.ico" />
+
+    <!-- FEATURE FRAGMENT -->
+		<Feature Id="ProductFeature" Title="Installer" Level="1">
+      <!-- STEP 1 -->
+			<ComponentGroupRef Id="ProductComponents" />
+      <!-- STEP 2 -->
+      <ComponentRef Id="StartMenuShortcut" />
+      <!-- STEP 3 -->
+      <ComponentRef Id="DesktopShortcut" />
+      <!-- STEP 6 -->
+      <ComponentGroupRef Id="HeatGenerated" />
+		</Feature>
+	</Product>
+
+  <!-- SHORTCUTS FRAGMENT -->
+  <!-- STEP 2 -->
+  <Fragment>
+    <DirectoryRef Id="ApplicationProgramsFolder">
+      <Component Id="StartMenuShortcut" Guid="ea2fc581-b635-4278-a8f1-1a81320d803a">
+        <Shortcut Id="ApplicationStartMenuShortcut"
+               Name="Game_Name"
+               Description="Game Description..."
+               Target="[#Game_Name.exe]"
+               WorkingDirectory="INSTALLFOLDER"
+               Icon = "icon.ico"/><!-- STEP 4 -->
+        <RemoveFolder Id="RemoveProgramsFolder" On="uninstall"/>
+        <RegistryValue Root="HKCU" Key="Software\MyCompany\MyApplicationName" Name="installed" Type="integer" Value="1" KeyPath="yes"/>
+      </Component>
+    </DirectoryRef>
+
+    <!-- STEP 3 -->
+    <DirectoryRef Id="DesktopFolder">
+      <Component Id="DesktopShortcut" Guid="c0f4eeec-8988-4c58-8a0a-2ebac04e2a2a">
+        <Shortcut Id="ApplicationDesktopShortcut"
+               Name="Game_Name"
+               Description="Game Description..."
+               Target="[#Game_Name.exe]"
+               WorkingDirectory="INSTALLFOLDER"
+               Icon = "icon.ico"/><!-- STEP 4 -->
+        <RemoveFolder Id="RemoveDesktopFolder" On="uninstall"/>
+        <RegistryValue Root="HKCU" Key="Software\MyCompany\MyApplicationName" Name="installed" Type="integer" Value="1" KeyPath="yes"/>
+      </Component>
+    </DirectoryRef>
+    
+  </Fragment>
+  
+  
+  <!-- DIRECTORIES FRAGMENT -->
+	<Fragment>
+		<Directory Id="TARGETDIR" Name="SourceDir">
+      
+			<Directory Id="ProgramFilesFolder">
+				<Directory Id="INSTALLFOLDER" Name="Game_Name" />
+			</Directory>
+
+      <!-- STEP 2 -->
+      <Directory Id="ProgramMenuFolder">
+        <Directory Id="ApplicationProgramsFolder" Name="Game_Name"/>
+      </Directory>
+      
+      <!-- STEP 3 -->
+      <Directory Id="DesktopFolder" Name="Game_Name" />
+
+    </Directory>
+  </Fragment>
+
+  <!-- COMPONENTS FRAGMENT -->
+	<Fragment>
+		<ComponentGroup Id="ProductComponents" Directory="INSTALLFOLDER">
+			<!-- STEP 1 -->
+      <Component Id="Game_Name.exe" Guid="69C449AB-233D-4E39-874D-E50466690828">
+                <File Id="Game_Name.exe" Source="..\Build\Release\Game_Name.exe" KeyPath="yes" Checksum="yes" />
+            </Component> 
+    </ComponentGroup>
+	</Fragment>
+</Wix>

@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?> 
+
+<!-- Settup Dialog for the game -->
+<DialogSettup>
+  <DialogueTextures file="Assets/Textures/UI/dialog_square.png"/>
+  <DialogueButtons file="Assets/Textures/UI/button_set_1.png"/>
+  <Dialogs>
+    <Dialog ID="1">
+      <Node ID="0">
+        <NPCTalk>HEY ADVENTURER, WHAT IS BRINGING YOU HERE?</NPCTalk>
+        <Option NextNode="1" ReturnCode="1">Some beer</Option>
+        <Option NextNode="2" ReturnCode="1">Adventure</Option>
+      </Node>
+      <Node ID="1">
+        <NPCTalk>OHHH, THAT'S A SHAME, THIS IS AN ABSTEMIC TAVERN, WE DO NOT OFFER BEER...</NPCTalk>
+        <Option NextNode="-1" ReturnCode="-1">Ooooo...</Option>
+      </Node>
+      <Node ID="2">
+        <NPCTalk>THEN YOU SHOULD BE INTERESTED IN GETTING PREPARED FOR IT RIGHT?</NPCTalk>
+        <Option NextNode="4" ReturnCode="1">OF COURSE!</Option>
+        <Option NextNode="3" ReturnCode="1">NOT REALLY...</Option>
+      </Node>
+      <Node ID="3">
+        <NPCTalk>WELL THEN, SEE YOU NEXT TIME!</NPCTalk>
+        <Option NextNode="-1" ReturnCode="-1">BIE!</Option>
+      </Node>
+      <Node ID="4">
+        <NPCTalk>I HEARD ABOUT A MAGIC ITEM WHICH ACCELERATES YOU, MAKING YOU CAN ATTACK ENEMIES FIRST IF YOU HAVE THE LEVEL ENOUGH!</NPCTalk>
+        <Option NextNode="5" ReturnCode="1">TELL ME!</Option>
+      </Node>
+      <Node ID="5">
+        <NPCTalk>IF MY MIND DOES NOT BETRAY ME, THE ROUTE WAS AROUND THE WEST CAMP. AN UPWARD PATH SHOULD BE THERE, TO SUM UP, NORTH-WEST FROM HERE.</NPCTalk>
+        <Option NextNode="6" ReturnCode="1">OKEY!</Option>
+      </Node>
+      <Node ID="6">
+        <NPCTalk>WAIT! I REMEMBER THERE WAS A RIVER THERE, YOU'LL HAVE TO FIND THE WAY TO CROSS IT...</NPCTalk>
+        <Option NextNode="3" ReturnCode="1">NOTE IT</Option>
+      </Node>
+    </Dialog>
+  </Dialogs>
+</DialogSettup>

@@ -1,0 +1,40 @@
+<!-- Config file for the game -->
+<!-- L01: DONE 1: Create configuration file-->
+<config>
+  <app>
+    <title>Game Development Testbed</title>
+    <organization>UPC</organization>
+  </app>
+
+  <fonts>
+    <default_font file="Fonts/manaspace.regular.ttf" size="14"/>
+  </fonts>
+
+  <renderer>
+    <vsync value="true"/>
+  </renderer>
+
+  <window>
+    <resolution width="1280" height="720" scale="1"/>
+    <fullscreen value="false"/>
+    <borderless value="false"/>
+    <resizable value="false"/>
+    <fullscreen_window value="false"/>
+  </window>
+
+  <!-- L03: Added maps folder as config option -->
+  <map>
+    <folder>Assets/maps/</folder>
+  </map>
+
+  <audio>
+    <music>
+     <!-- <track>Assets/Audio/Music/ockaie_temple.ogg</track>-->
+    </music>
+    <fx>
+      <sound>Assets/Audio/Fx/SplitDuty_ButtonFocussed_Fx.wav</sound>
+      <sound>Assets/Audio/Fx/SplitDuty_ButtonReleased_Fx.wav</sound>
+      <sound>Assets/Audio/Fx/SplitDuty_SkipDialogue_Fx.wav</sound>
+    </fx>
+  </audio>
+</config>

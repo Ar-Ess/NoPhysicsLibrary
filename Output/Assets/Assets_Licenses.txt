@@ -1,0 +1,210 @@
+Assets/GUI:
+
+1.Pixel art Wooden(Mobile) Game UI by Narik The Artist
+
+You can use this asset for personal and commercial purpose.  You can also edit them to fit your game. Credit is not required but would be appreciated. :D
+
+2.Grab Hand by Kicked-In-Teeth
+
+Creative commons licence under CC-by-sa: you are free to edit and use in commercial projects
+
+3. PS4 Pixel Controller Buttons FREE by Narehop
+
+?PS4 Pixel Controller Buttons is a pack designed to be used in GUI of any game pixel art. In this free version you can find the following sprites:
+
+35 Sprites 16x16
+Arrows with the colors Gray / White / R / G / B
+Square / Triangle / Circle / Cross Buttons
+L1 / R1 L2 / R2 buttons
+Options Button / Share
+Button with PS logo with colors R / G / B
+
+20 Sprites 16x32
+Swipes left / right / up / down and Tap
+with the colors R / G / B
+
+You can freely use this material for both professional and personal use without any impediment or license. It's totally free. The only condition is that you leave a comment thanking the assets pack.
+
+You can see more free and paid assets in my own profile
+
+twitter: @narehop
+Youtube: www.youtube.com/Narehop
+Mail: narehop.yt@gmail.com
+--------------------------
+ITCH.IO: narehop.itch.io
+PIXELJOINT: http://pixeljoint.com/p/171591.htm
+------------------------
+
+4. Pixel Art GUI Elements by Mounir Tohami
+
+[ Panels - Buttons - Nine Patch Rectangles - Text Buttons - Progress Bars - Text Boxes - Icons ] 
+
+Everything you may need for Creating Pixel Art Menus and Interfaces .
+
+free to use for any purpose .
+
+please rate this asset on the top right corner , this will make me happy ;)
+
+Credit me if you like [ it's optional ] , Thanks .
+
+5. Wooden Controls for Gamepad/Keyboard by NedoKontent
+
+You can use this asset for personal and commercial purpose.
+Credit is not required but would be appreciated.)
+
+Assets/Items:
+
+1. Pixel Art Free Game Assets by Kronbits
+
+You can use the assets for your personal/commercial games without need of credit back, but if you do that, and this means, add a link in your project to this site, i will share your creations on my social networks like twitter, tumblr, twitch or hitbox and also at the end of this page as example of games created with my assets. Quid pro quo! Cool right?.
+
+Assets/Maps:
+
+1. Ashlands Tileset by finalbossblues
+
+-=-=-=- -==-=- -==-=- -==-=- -==-=-
+ TIME FANTASY - ASHLANDS TILESET
+-==-=- -==-=- -==-=- -==-=- -==-=-
+
+Thank you for downloading this tileset! 
+
+This tileset is a FREE release for anybody to download. I created this set as a reward for reaching a goal 
+on my Patreon page. Thanks to my wonderful patrons for making this free release possible! patreon.com/finalbossblues
+
+This tileset is a mini-expansion for the Time Fantasy RPG assets. It's compatible with all other graphics that I release 
+in my Time Fantasy style. Can also be used as a standalone tileset.
+
+This set includes versions formatted for use in RPGMaker VX/Ace and RPGMaker MV, as well as a regular 
+tile-sheet based on a 16x16 grid. 
+
+-------------------------
+Time Fantasy Website
+ timefantasy.net
+-------------------------
+Artist's Website
+ finalbossblues.com
+Twitter
+ @finalbossblues
+Facebook
+ finalbossblues
+Patreon
+ patreon.com/finalbossblues
+-------------------------
+
+2. Mythril Age by Mythril Age
+
+You are free to use these assets in your commercial or non-commercial game as well as edit anything you would like. All I ask is is to maybe add Mythril Age into your games credits. If not, well, that is perfectly fine but it would be nice.
+
+3. Interior tileset by Bonsaiheldin
+
+This work is released under a Creative Commons (CC) BY SA 3.0 license.
+
+For further information, please check: http://creativecommons.org/licenses/by-sa/3.0/
+
+How to credit me (for example): Bonsaiheldin | http://bonsaiheld.org
+
+----------
+
+Although it's not really needed, it makes me happy to know what you do with my work.
+It took me time to create it, so, why not drop me a line somewhere if you happen to use it? :)
+
+3. A pixel art tileset (16x16) based on SunnyLand, by Ansimuz
+
+This is my first pixel art pack, and my first plataform tileset too. I've made this pack because recently I've started to work with GMS2, and downloaded the SunnyLand Forest​, by Ansimuz. I love that style and started to redraw the tiles, using the same palette. I've took a lot of references from this pack on my first tiles (trees and bushes), and actually I'm able to make the tiles on my own.
+
+This pack contains tiles like: Trees, rocks, wines, bushes (a lot), walls, roofs, floors, water, mine carts, rails, tables, bookshelfs, tall grass, bridges, stairs, signs, farm stuff, mushrooms and more. You be able to make at least 3 different maps with those tiles, like: Forest, Caves, Lakes/Underwater, and Interior maps
+
+Pack includes:
+
+• At least 100 tiles
+• 2 Trees 
+• 2 Backgrounds
+• An frog, an snake and a fish
+• Smoke and fire particles
+• Animated Seaweed, Tree and Bush
+• Bubbles, Coins and some other animated stuff​
+
+4. Stringstar fields by Trixie
+
+STRINGSTAR FIELDS
+A dark & soothing tileset <3
+
+contents:
+- A detailed nature environment
+- One-way platforms and spikes
+- Two big, fancy trees and other vegetation
+- A background with 3 parallax layers
+- An optional .aseprite file with everything in it
+
+5. Free Pixel Art Forest by edermunizz
+
+You can use this asset even commercially, just give proper credit.
+
+
+Assets/Textures:
+
+1. Pixel Art Free Game Assets by Kronbits
+
+You can use the assets for your personal/commercial games without need of credit back, but if you do that, and this means, add a link in your project to this site, i will share your creations on my social networks like twitter, tumblr, twitch or hitbox and also at the end of this page as example of games created with my assets. Quid pro quo! Cool right?.
+
+2. Warrior-Free Animation set v1.3 by Clembod
+
+You can use this asset for personal and commercial purpose,
+you can modify this object to your needs.
+Credit is not required but would be appreciated
+
+You can NOT redistribute or resell it.
+
+3. Animated insect enemy assets by Cheshire
+
+The assets are from a game project that never panned out :(
+
+Donations are welcome :)
+
+4. PIPOYA FREE RPG Character Sprites 32x32 by pipoya
+
+- For commercial or personal use.
+- Use and edit freely.
+- Not redistribute or resell this assets.
+- It can be used for game development and other productions.
+
+5. Mecha-Stone Golem [Free] by Kronovi-
+
+You can use this asset pack with your commercial or non-commercial projects and credits are always appreciated (if you like giving credits). 
+
+You can edit the sprites
+
+Reselling and redistributing this asset pack is prohibited. 
+
+Assets/Fonts:
+
+1. Manaspace Font by codeman38
+
+Thanks for downloading one of codeman38's retro video game fonts, as seen on Memepool, BoingBoing, and all around the blogosphere.
+
+So, you're wondering what the license is for these fonts? Pretty simple; it's based upon that used for Bitstream's Vera font set <http://www.gnome.org/fonts/>.
+
+Basically, here are the key points summarized, in as little legalese as possible; I hate reading license agreements as much as you probably do:
+
+With one specific exception, you have full permission to bundle these fonts in your own free or commercial projects-- and by projects, I'm referring to not just software but also electronic documents and print publications.
+
+So what's the exception? Simple: you can't re-sell these fonts in a commercial font collection. I've seen too many font CDs for sale in stores that are just a repackaging of thousands of freeware fonts found on the internet, and in my mind, that's quite a bit like highway robbery. Note that this *only* applies to products that are font collections in and of themselves; you may freely bundle these fonts with an operating system, application program, or the like.
+
+Feel free to modify these fonts and even to release the modified versions, as long as you change the original font names (to ensure consistency among people with the font installed) and as long as you give credit somewhere in the font file to codeman38 or zone38.net. I may even incorporate these changes into a later version of my fonts if you wish to send me the modifed fonts via e-mail.
+
+Also, feel free to mirror these fonts on your own site, as long as you make it reasonably clear that these fonts are not your own work. I'm not asking for much; linking to zone38.net or even just mentioning the nickname codeman38 should be enough.
+
+Well, that pretty much sums it up... so without further ado, install and enjoy these fonts from the golden age of video games.
+
+[ codeman38 | cody@zone38.net | http://www.zone38.net/ ]
+
+Assets/Audio:
+
+1. Music & FX provided by [Raxer Sound](https://lnkfi.re/EhBCPZ4v)
+
+https://www.safecreative.org/work/2103087115112-st_mainmenu_rpgame
+https://www.safecreative.org/work/2103087115105-st_mainvillage_rpgame
+https://www.safecreative.org/work/2104187538412-split-duty-main-combat-soundtrack
+https://www.safecreative.org/work/2105167844325-splitduty_endscene_soundtrack
+https://www.safecreative.org/work/2105167844332-splitduty_optionsmenu_soundtrack
+https://www.safecreative.org/work/2105167844349-splitduty_levelupscene_soundtrack
