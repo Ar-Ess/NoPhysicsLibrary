@@ -12,7 +12,6 @@ Scene::Scene(Render* render, Input* input, Textures* texture, Window* window, Au
 	this->texture = texture;
 	this->window = window;
 	this->audio = audio;
-	this->physics = new Physics(render, gui);
 }
 
 Scene::~Scene()
@@ -22,7 +21,6 @@ bool Scene::Start()
 {
 	//DEBUG BOOLS
 	gui->Start(this);
-	physics->Start();
 
 	//FIRST SCENE
 	if (!SetScene(Scenes::LOGO_SCENE)) return false;
@@ -147,16 +145,7 @@ bool Scene::OnGuiMouseClickEvent(GuiControl* control, float value, bool check)
 
 void Scene::DebugCommands()
 {
-	if (input->GetKey(SDL_SCANCODE_F1) == KeyState::KEY_DOWN)
-	{
-		gui->debug = !gui->debug;
-		physics->debug = !physics->debug;
-	}
-
-	if (input->GetKey(SDL_SCANCODE_F2) == KeyState::KEY_DOWN)
-	{
-		physics->debugBools = !physics->debugBools;
-	}
+	if (input->GetKey(SDL_SCANCODE_F1) == KeyState::KEY_DOWN) gui->debug = !gui->debug;
 
 	if (input->GetKey(SDL_SCANCODE_F11) == KeyState::KEY_DOWN) window->SetWinFullScreen(!window->fullScreen);
 

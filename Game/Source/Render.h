@@ -5,7 +5,7 @@
 
 #include "Point.h"
 #include "SDL/include/SDL.h"
-#include "Collision.h"
+#include "Collider.h"
 #include "Rect.h"
 #include "Window.h"
 

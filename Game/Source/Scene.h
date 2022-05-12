@@ -6,7 +6,6 @@
 #include "Window.h"
 #include "Audio.h"
 #include "Textures.h"
-#include "Physics.h"
 
 class GuiControl;
 class GuiManager;
@@ -67,7 +66,6 @@ private: // Variables
 	Textures* texture = nullptr;
 	Window* window = nullptr;
 	Audio* audio = nullptr;
-	Physics* physics = nullptr;
 
 	bool exit = false;
 	bool activeContinue = false;

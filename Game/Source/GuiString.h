@@ -1,12 +1,11 @@
 #ifndef _GUISTRING_H_
 #define _GUISTRING_H_
 
-#include "AlignEnum.h"
 #include "GuiControl.h"
+#include "AlignEnum.h"
 
 struct _TTF_Font;
 struct SDL_Texture;
-
 
 class GuiString : public GuiControl
 {

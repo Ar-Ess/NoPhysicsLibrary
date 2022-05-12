@@ -7,7 +7,9 @@
 #include "Textures.h"
 #include "Scene.h"
 
-#include "Collision.h"
+#include "Point.h"
+#include "Rect.h"
+#include "Collider.h"
 
 class Input;
 class Audio;
