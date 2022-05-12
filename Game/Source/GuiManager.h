@@ -336,7 +336,7 @@ public:
 		else str = (GuiString*)control;
 		short int newIndex = str->fontId;
 
-		if (str->fontId == 0) newIndex = fonts->size();
+		if (str->fontId == 0) newIndex = (short int)fonts->size();
 
 		newIndex--;
 

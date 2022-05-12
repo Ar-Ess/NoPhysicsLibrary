@@ -10,6 +10,7 @@ Input::Input(Window* window) : Module()
 {
 	keyboard = new KeyState[MAX_KEYS];
 	memset(keyboard, (int)KeyState::KEY_IDLE, sizeof(KeyState) * MAX_KEYS);
+	mouseButtons = new KeyState[NUM_MOUSE_BUTTONS];
 	memset(mouseButtons, (int)KeyState::KEY_IDLE, sizeof(KeyState) * NUM_MOUSE_BUTTONS);
 
 	controllerButtons = new KeyState[NUM_CONTROLLER_BUTTONS];
@@ -128,10 +129,10 @@ bool Input::PreUpdate(float dt)
 
 			case SDL_MOUSEMOTION:
 				int scale = window->GetScale();
-				mouseMotion.x = event.motion.xrel / scale;
-				mouseMotion.y = event.motion.yrel / scale;
-				mouse.x = event.motion.x / scale;
-				mouse.y = event.motion.y / scale;
+				mouseMotion.x = float(event.motion.xrel) / float(scale);
+				mouseMotion.y = float(event.motion.yrel) / float(scale);
+				mouse.x = float(event.motion.x) / float(scale);
+				mouse.y = float(event.motion.y) / float(scale);
 				//LOG("Mouse motion x %d y %d", mouse_motion_x, mouse_motion_y);
 				break;
 		}

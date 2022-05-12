@@ -53,7 +53,7 @@ bool GuiManager::Update(float dt)
 			if (controls[i]->state == GuiControlState::PRESSED)
 			{
 				MGS = true;
-				index = i;
+				index = (suint)i;
 				break;
 			}
 		}
@@ -93,18 +93,18 @@ ControlSettings GuiManager::CreateGuiControl(GuiControlType type, Point position
 	switch (type)
 	{
 	case GuiControlType::BUTTON:
-		control = new GuiButton(bounds, tex->texture, scale, controls.size(), anchored, input, render, this, audio, scene, texture); 
+		control = new GuiButton(bounds, tex->texture, scale, (suint)controls.size(), anchored, input, render, this, audio, scene, texture); 
 		break;
 	case GuiControlType::IMAGE:
-		control = new GuiImage(bounds, tex->texture, scale, controls.size(), anchored, input, render, this, audio, scene, texture);
+		control = new GuiImage(bounds, tex->texture, scale, (suint)controls.size(), anchored, input, render, this, audio, scene, texture);
 		break;
-	case GuiControlType::CHECKBOX: control = new GuiCheckBox(bounds, tex->texture, scale, controls.size(), anchored, input, render, this, audio, scene, texture); break;
+	case GuiControlType::CHECKBOX: control = new GuiCheckBox(bounds, tex->texture, scale, (suint)controls.size(), anchored, input, render, this, audio, scene, texture); break;
 	case GuiControlType::SLIDER:
-		control = new GuiSlider(bounds, tex->texture, scale, controls.size(), anchored, input, render, this, audio, scene, texture);
+		control = new GuiSlider(bounds, tex->texture, scale, (suint)controls.size(), anchored, input, render, this, audio, scene, texture);
 		break;
 	case GuiControlType::TEXT: 
 		bounds.SetDimensions({0, 0});
-		control = new GuiString(bounds, "", texIndex, controls.size(), scale, render, this, texture, anchored);
+		control = new GuiString(bounds, "", texIndex, (suint)controls.size(), scale, render, this, texture, anchored);
 		break;
 	}
 
@@ -156,7 +156,7 @@ SDL_Texture* GuiManager::PrintFont(const char* text, SDL_Color color, suint font
 	if (endLine == -1)
 	{
 		CalculateSize(text, fontIndex, &result);
-		endLine = result.x;
+		endLine = (int)result.x;
 	}
 	SDL_Surface* surface = TTF_RenderText_Blended_Wrapped(font, text, color, endLine);
 
@@ -186,8 +186,8 @@ bool GuiManager::CalculateSize(const char* text, suint fontIndex, Point* result)
 
 	if (TTF_SizeText(fonts.at(fontIndex), text, &w, &h) != 0) return false;
 
-	result->x = w;
-	result->y = h;
+	result->x = (float)w;
+	result->y = (float)h;
 
 	return true;
 }
@@ -229,7 +229,7 @@ void GuiManager::SelectButtonsLogic()
 
 void GuiManager::ActivateControls(bool active)
 {
-	suint size = controls.size();
+	size_t size = controls.size();
 	for (suint i = 0; i < size; ++i) !active ? controls[i]->state = GuiControlState::DISABLED : controls[i]->state = GuiControlState::NORMAL;
 }
 
@@ -237,7 +237,7 @@ bool GuiManager::CleanUp()
 {
 	LOG("Freeing True Type fonts and library");
 
-	suint size = fonts.size();
+	size_t size = fonts.size();
 	for (suint i = 0; i < size; ++i) TTF_CloseFont(fonts.at(i));
 	fonts.shrink_to_fit();
 	fonts.clear();

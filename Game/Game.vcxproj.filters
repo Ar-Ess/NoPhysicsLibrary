@@ -179,5 +179,8 @@
     <Filter Include="Particles">
       <UniqueIdentifier>{257dd264-c3ff-4f1c-beda-43942a23e913}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Physics">
+      <UniqueIdentifier>{ef73ebca-49be-4765-8c68-56598f9bf740}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
 </Project>

@@ -56,8 +56,8 @@ struct GamePad
 	//bool start, back, guide;
 	//bool x, y, a, b, l1, r1, l3, r3;
 	//bool up, down, left, right;
-	float l2, r2;
-	float leftX, leftY, rightX, rightY, leftDeadZone, rightDeadZone;
+	float l2 = 0.0f, r2 = 0.0f;
+	float leftX = 0.0f, leftY = 0.0f, rightX = 0.0f, rightY = 0.0f, leftDeadZone = 0.0f, rightDeadZone = 0.0f;
 
 	//Controller data
 	bool enabled = false;
@@ -66,8 +66,8 @@ struct GamePad
 	_SDL_Haptic* haptic = nullptr;
 
 	//Rumble controller
-	int rumbleCountdown;
-	float rumbleStrength;
+	int rumbleCountdown = 0;
+	float rumbleStrength = 0.0f;
 };
 
 class Input : public Module
@@ -139,7 +139,7 @@ private:
 	bool windowEvents[(int)EventWindow::WE_COUNT];
 
 	KeyState* keyboard = nullptr;	
-	KeyState mouseButtons[NUM_MOUSE_BUTTONS];
+	KeyState* mouseButtons = nullptr;
 
 	GamePad pad;
 	KeyState* controllerButtons = nullptr;

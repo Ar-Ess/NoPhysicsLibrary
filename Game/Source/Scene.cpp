@@ -48,8 +48,8 @@ bool Scene::Update(float dt)
 		ret = UpdateLogoScene(dt);
 		break;
 
-	case Scenes::MAIN_MENU_SCENE:
-		ret = UpdateMainMenuScene(dt);
+	case Scenes::DEBUG_SCENE:
+		ret = UpdateDebugScene(dt);
 		break;
 	}
 
@@ -67,7 +67,7 @@ bool Scene::CleanUp()
 	case Scenes::LOGO_SCENE:
 		break;
 
-	case Scenes::MAIN_MENU_SCENE:
+	case Scenes::DEBUG_SCENE:
 		break;
 	}
 
@@ -90,8 +90,8 @@ bool Scene::SetScene(Scenes scene)
 		ret = SetLogoScene();
 		break;
 
-	case Scenes::MAIN_MENU_SCENE:
-		ret = SetMainMenuScene();
+	case Scenes::DEBUG_SCENE:
+		ret = SetDebugScene();
 		break;
 	}
 
@@ -105,7 +105,7 @@ bool Scene::SetLogoScene()
 	return true;
 }
 
-bool Scene::SetMainMenuScene()
+bool Scene::SetDebugScene()
 {
 	return true;
 }
@@ -114,12 +114,12 @@ bool Scene::UpdateLogoScene(float dt)
 {
 	bool ret = true;
 
-	if (input->GetKey(SDL_SCANCODE_SPACE) == KeyState::KEY_DOWN) ret = SetScene(Scenes::MAIN_MENU_SCENE);
+	if (input->GetKey(SDL_SCANCODE_SPACE) == KeyState::KEY_DOWN) ret = SetScene(Scenes::DEBUG_SCENE);
 
 	return ret;
 }
 
-bool Scene::UpdateMainMenuScene(float dt)
+bool Scene::UpdateDebugScene(float dt)
 {
 	bool ret = true;
 
@@ -132,7 +132,7 @@ bool Scene::OnGuiMouseClickEvent(GuiControl* control, float value, bool check)
 {
 	switch (currScene)
 	{
-	case Scenes::MAIN_MENU_SCENE:
+	case Scenes::DEBUG_SCENE:
 		switch (control->id)
 		{
 			break;

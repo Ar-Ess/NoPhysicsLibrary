@@ -14,7 +14,7 @@ enum class Scenes
 {
 	NO_SCENE = -1,
 	LOGO_SCENE,
-	MAIN_MENU_SCENE,
+	DEBUG_SCENE,
 };
 
 class Scene : public Module
@@ -48,11 +48,11 @@ private:
 
 	//Setters
 	bool SetLogoScene();
-	bool SetMainMenuScene();
+	bool SetDebugScene();
 
 	//Updaters
 	bool UpdateLogoScene(float dt);
-	bool UpdateMainMenuScene(float dt);
+	bool UpdateDebugScene(float dt);
 
 private: // Methods
 
