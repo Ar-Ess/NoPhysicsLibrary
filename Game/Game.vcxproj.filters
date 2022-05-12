@@ -66,6 +66,9 @@
     <ClCompile Include="Source\Emitter.cpp">
       <Filter>Particles</Filter>
     </ClCompile>
+    <ClCompile Include="Source\Physics.cpp">
+      <Filter>Physics</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\App.h" />
@@ -117,7 +120,7 @@
     <ClInclude Include="Source\GuiString.h">
       <Filter>GuiControls</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Collider.h">
+    <ClInclude Include="Source\Collision.h">
       <Filter>Utils</Filter>
     </ClInclude>
     <ClInclude Include="Source\Animation.h">
@@ -161,6 +164,12 @@
     </ClInclude>
     <ClInclude Include="Source\Emitter.h">
       <Filter>Particles</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Physics.h">
+      <Filter>Physics</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\DynArray.h">
+      <Filter>Utils</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
