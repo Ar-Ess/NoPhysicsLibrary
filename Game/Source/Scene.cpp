@@ -12,6 +12,8 @@ Scene::Scene(Render* render, Input* input, Textures* texture, Window* window, Au
 	this->texture = texture;
 	this->window = window;
 	this->audio = audio;
+
+	this->physics = new Physics(render, gui);
 }
 
 Scene::~Scene()
@@ -21,6 +23,7 @@ bool Scene::Start()
 {
 	//DEBUG BOOLS
 	gui->Start(this);
+	physics->Start();
 
 	//FIRST SCENE
 	if (!SetScene(Scenes::LOGO_SCENE)) return false;
@@ -107,6 +110,7 @@ bool Scene::SetLogoScene()
 
 bool Scene::SetDebugScene()
 {
+	physics->SetScenarioPreset(ScenarioPreset::PLATFORMER_1280x720_SCENARIO_PRESET);
 	return true;
 }
 
@@ -122,6 +126,10 @@ bool Scene::UpdateLogoScene(float dt)
 bool Scene::UpdateDebugScene(float dt)
 {
 	bool ret = true;
+
+	physics->Update(dt);
+
+	physics->Draw();
 
 	return ret;
 }
@@ -145,7 +153,11 @@ bool Scene::OnGuiMouseClickEvent(GuiControl* control, float value, bool check)
 
 void Scene::DebugCommands()
 {
-	if (input->GetKey(SDL_SCANCODE_F1) == KeyState::KEY_DOWN) gui->debug = !gui->debug;
+	if (input->GetKey(SDL_SCANCODE_F1) == KeyState::KEY_DOWN)
+	{
+		gui->debug = !gui->debug;
+		physics->debug = !physics->debug;
+	}
 
 	if (input->GetKey(SDL_SCANCODE_F11) == KeyState::KEY_DOWN) window->SetWinFullScreen(!window->fullScreen);
 

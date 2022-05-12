@@ -1,6 +1,7 @@
-#ifndef __COLLIDER_H__
-#define __COLLIDER_H__
+#ifndef __COLLISION_H__
+#define __COLLISION_H__
 
+#include "Point.h"
 #include "Rect.h"
 #include "Circle.h"
 
@@ -116,6 +117,41 @@ public:
 
 		return false;
 	}
+
+	Rect IntersectRectangle(Rect r1, Rect r2)
+	{
+		float x = Max(r1.x, r2.x);
+		float y = Max(r1.y, r2.y);
+		float w = Min(r1.x + r1.w, r2.x + r2.w) - x;
+		float h = Min(r1.y + r1.h, r2.y + r2.h) - y;
+
+		return { x, y, w, h };
+	}
+
+	int Min(int a, int b)
+	{
+		if (a <= b) return a;
+		return b;
+	}
+
+	float Min(float a, float b)
+	{
+		if (a <= b) return a;
+		return b;
+	}
+
+	int Max(int a, int b)
+	{
+		if (a >= b) return a;
+		return b;
+	}
+
+	float Max(float a, float b)
+	{
+		if (a >= b) return a;
+		return b;
+	}
+
 };
 
 #endif

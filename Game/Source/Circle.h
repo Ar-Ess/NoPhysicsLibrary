@@ -1,8 +1,6 @@
 #ifndef __CIRCLE_H__
 #define __CIRCLE_H__
 
-#include "Point.h"
-
 struct CircleCollider
 {
 public:

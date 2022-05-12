@@ -3,7 +3,7 @@
 
 #include "GuiControl.h"
 #include "Point.h"
-#include "Collider.h"
+#include "Collision.h"
 
 class GuiSlider : public GuiControl
 {

@@ -1,8 +1,6 @@
 #ifndef __RECT_H__
 #define __RECT_H__
 
-#include "Point.h"
-
 class Rect
 {
 public:

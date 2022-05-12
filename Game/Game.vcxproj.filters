@@ -30,9 +30,6 @@
     <ClCompile Include="Source\GuiButton.cpp">
       <Filter>GuiControls</Filter>
     </ClCompile>
-    <ClCompile Include="Source\GuiManager.cpp">
-      <Filter>Modules</Filter>
-    </ClCompile>
     <ClCompile Include="Source\GuiCheckBox.cpp">
       <Filter>GuiControls</Filter>
     </ClCompile>
@@ -65,6 +62,12 @@
     </ClCompile>
     <ClCompile Include="Source\Emitter.cpp">
       <Filter>Particles</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Physics.cpp">
+      <Filter>Physics</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\GuiManager.cpp">
+      <Filter>Modules</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -105,9 +108,6 @@
     <ClInclude Include="Source\GuiControl.h">
       <Filter>GuiControls</Filter>
     </ClInclude>
-    <ClInclude Include="Source\GuiManager.h">
-      <Filter>Modules</Filter>
-    </ClInclude>
     <ClInclude Include="Source\GuiCheckBox.h">
       <Filter>GuiControls</Filter>
     </ClInclude>
@@ -116,9 +116,6 @@
     </ClInclude>
     <ClInclude Include="Source\GuiString.h">
       <Filter>GuiControls</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Collider.h">
-      <Filter>Utils</Filter>
     </ClInclude>
     <ClInclude Include="Source\Animation.h">
       <Filter>Utils</Filter>
@@ -161,6 +158,18 @@
     </ClInclude>
     <ClInclude Include="Source\Emitter.h">
       <Filter>Particles</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Collision.h">
+      <Filter>Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Physics.h">
+      <Filter>Physics</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\DynArray.h">
+      <Filter>Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\GuiManager.h">
+      <Filter>Modules</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

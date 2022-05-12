@@ -45,6 +45,24 @@ struct Point
 		return (float)sqrt(double(xx) + yy);
 	}
 
+	void Zero()
+	{
+		this->x = 0;
+		this->y = 0;
+	}
+
+	void Negate()
+	{
+		this->x *= -1;
+		this->y *= -1;
+	}
+
+	void Abs()
+	{
+		if (this->x < 0) this->x *= -1;
+		if (this->y < 0) this->y *= -1;
+	}
+
 	//// Give Rect
 	//// This function outputs a Rect given a with & heigh
 	//// with the Point's x & y

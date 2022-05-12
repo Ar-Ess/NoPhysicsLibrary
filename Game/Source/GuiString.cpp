@@ -53,3 +53,7 @@ void GuiString::Delete()
 	tex->UnLoad(texture);
 	texture = nullptr;
 }
+
+void GuiString::SetString(const char* text, SDL_Color color)
+{
+}
