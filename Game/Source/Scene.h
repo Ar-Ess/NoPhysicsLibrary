@@ -69,6 +69,7 @@ private: // Variables
 	Audio* audio = nullptr;
 
 	Physics* physics = nullptr;
+	DynamicBody* player = nullptr;
 
 	bool exit = false;
 	bool activeContinue = false;

@@ -23,14 +23,14 @@ struct SDL_Texture;
 class Collision;
 class GuiManager;
 
-enum BodyType
+enum class BodyType
 {
 	NONE = -1,
 	STATIC_BODY,
 	DYNAMIC_BODY
 };
 
-enum CollisionType
+enum class CollisionType
 {
 	UNDEFINED = -1,
 	RECTANGLE,
@@ -56,6 +56,7 @@ enum class ScenarioPreset
 
 enum class Direction
 {
+	NO_DIR = -1,
 	UP = 0,
 	DOWN,
 	LEFT,
@@ -90,9 +91,9 @@ struct GhostSlot
 {
 	GhostSlot() 
 	{
-		int surface = 0;
-		Direction dir;
-		int slot = -1;
+		this->surface = 0;
+		this->dir = Direction::NO_DIR;
+		this->slot = -1;
 	}
 	GhostSlot(Direction direct, int surf, int slt)
 	{
@@ -106,7 +107,7 @@ struct GhostSlot
 	}
 
 	int surface = 0;
-	Direction dir;
+	Direction dir = Direction::NO_DIR;
 	int slot = -1;
 
 	bool operator >(const GhostSlot& a)
@@ -124,7 +125,7 @@ struct GhostSlot
 class Body
 {
 public:
-	Body(BodyType bodyType, int a) : bodyType(bodyType), texture(NULL), rect({0.0f, 0.0f, 1.0f, 1.0f }), circle({}) {} // Default constructor
+	Body(BodyType bodyType, int a) : bodyType(bodyType), texture(NULL), rect({0.0f, 0.0f, 1.0f, 1.0f }), circle({}), colliderType(CollisionType::UNDEFINED), mass(1.0f), rotation(0.0f) {} // Default constructor
 	Body(BodyType bodyType, CollisionType colliderType = CollisionType::UNDEFINED, Point position = { 0.0f, 0.0f }, Rect rect = { 0.0f, 0.0f, 1.0f, 1.0f }, float mass = 1.0f) // Constructor with body type and collider type
 	{
 		this->bodyType = bodyType;
@@ -153,7 +154,7 @@ public: //Getters
 	// This function returns the width & height of the body (Rectangle) or the radius (Circle)
 	Point GetMagnitudes() const
 	{
-		if (colliderType == RECTANGLE) return {rect.w, rect.h};
+		if (colliderType == CollisionType::RECTANGLE) return {rect.w, rect.h};
 		return {(int)circle.radius, 0};
 	}
 	// This function returns the rect or circle of the body
@@ -184,7 +185,7 @@ public: //Getters
 	//This function returns the body as an SDL_Rect (from SDL library) in case of being a Rectangle. If it is not, it returns {0, 0, 0, 0}.
 	Rect ReturnBodyRect() const
 	{
-		if (colliderType == RECTANGLE) return rect;
+		if (colliderType == CollisionType::RECTANGLE) return rect;
 
 		return {0, 0, 0, 0};
 	}
@@ -202,16 +203,16 @@ protected:
 	void DeClipper(Body& body, Direction dir);
 	double ToPositiveAngle(double angle);
 
-	Rect rect;
-	CircleCollider circle;
+	Rect rect = {};
+	CircleCollider circle = {};
 	SDL_Texture* texture = nullptr;
 
-	BodyType bodyType;
-	CollisionType colliderType;
+	BodyType bodyType = BodyType::NONE;
+	CollisionType colliderType = CollisionType::UNDEFINED;
 
-	Point position;
-	float rotation;
-	float mass;
+	Point position = {};
+	float rotation = 0.0f;
+	float mass = 0.0f;
 	bool isCollidable = true;
 	bool player = false;
 };

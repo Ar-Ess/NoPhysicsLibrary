@@ -68,7 +68,7 @@ bool Physics::CleanUp()
 	LOG("Freeing scene");
 
 	std::vector<Body*>::const_iterator it;
-	for (it = bodies.begin(); it != bodies.end(); ++it) DestroyBody(it);
+	for (it = bodies.begin(); bodies.empty(); it) DestroyBody(it);
 	
 	bodies.shrink_to_fit();
 	bodies.clear();
@@ -163,7 +163,7 @@ void Physics::DebugBools(DynamicBody* dB, float dt)
 	for (it = bodies.begin(); it != bodies.end(); ++it)
 	{
 		Body* body = (*it);
-		if (body->bodyType == DYNAMIC_BODY)
+		if (body->bodyType == BodyType::DYNAMIC_BODY)
 		{
 			DynamicBody* dB = (DynamicBody*)body;
 			if (dB->onGround && !ground)
@@ -235,7 +235,7 @@ void Physics::ResetBodyBools()
 	for (it = bodies.begin(); it != bodies.end(); ++it)
 	{
 		Body* body = (*it);
-		if (body->bodyType == DYNAMIC_BODY)
+		if (body->bodyType == BodyType::DYNAMIC_BODY)
 		{
 			DynamicBody* dB = (DynamicBody*)body;
 			dB->ResetBools();
@@ -536,6 +536,7 @@ void Physics::DestroyBody(std::vector<Body*>::const_iterator it)
 	delete body;
 	bodies.erase(it);
 	body = nullptr;
+	bodies.shrink_to_fit();
 }
 
 bool Physics::SetBodyAsPlayer(Body* b)
@@ -559,7 +560,7 @@ Body* Physics::CheckCollisions(Body* b, Point prevPos)
 		Body* body = (*it);
 		if (body != b)
 		{
-			if (body->colliderType == RECTANGLE && b->colliderType == RECTANGLE)
+			if (body->colliderType == CollisionType::RECTANGLE && b->colliderType == CollisionType::RECTANGLE)
 			{
 				if (utils.CheckCollision(body->rect, b->rect)) ghostColliders.push_back(body);
 			}
@@ -665,7 +666,7 @@ Body* Physics::CreateBody(BodyType bodyType, Point position, Rect rect, Point ve
 	{
 	case BodyType::DYNAMIC_BODY:
 	{
-		DynamicBody* newBodyD = new DynamicBody(position, velocity, gravity, RECTANGLE, rect, mass_);
+		DynamicBody* newBodyD = new DynamicBody(position, velocity, gravity, CollisionType::RECTANGLE, rect, mass_);
 		bodies.push_back(newBodyD);
 		ret = newBodyD;
 		newBodyD = nullptr;
@@ -674,7 +675,7 @@ Body* Physics::CreateBody(BodyType bodyType, Point position, Rect rect, Point ve
 
 	case BodyType::STATIC_BODY:
 	{
-		StaticBody* newBodyS = new StaticBody(position, RECTANGLE, rect, mass_);
+		StaticBody* newBodyS = new StaticBody(position, CollisionType::RECTANGLE, rect, mass_);
 		bodies.push_back(newBodyS);
 		ret = newBodyS;
 		newBodyS = nullptr;
@@ -693,7 +694,7 @@ Body* Physics::CreateBody(BodyType bodyType_, Point position, CircleCollider cir
 	{
 	case BodyType::DYNAMIC_BODY:
 	{
-		DynamicBody* newBodyD = new DynamicBody(position, velocity, gravity, CIRCLE, circle, mass_);
+		DynamicBody* newBodyD = new DynamicBody(position, velocity, gravity, CollisionType::CIRCLE, circle, mass_);
 		bodies.push_back(newBodyD);
 		ret = newBodyD;
 		newBodyD = nullptr;
@@ -702,7 +703,7 @@ Body* Physics::CreateBody(BodyType bodyType_, Point position, CircleCollider cir
 
 	case BodyType::STATIC_BODY:
 	{
-		StaticBody* newBodyS = new StaticBody(position, CIRCLE, circle, mass_);
+		StaticBody* newBodyS = new StaticBody(position, CollisionType::CIRCLE, circle, mass_);
 		bodies.push_back(newBodyS);
 		ret = newBodyS;
 		newBodyS = nullptr;
@@ -1000,7 +1001,7 @@ void Body::DeClipper(Body &body, Direction dir)
 		case BodyType::DYNAMIC_BODY:
 			DynamicBody* currentBody = (DynamicBody*)this;
 			
-			if (currentBody->colliderType == RECTANGLE && body.colliderType == RECTANGLE)
+			if (currentBody->colliderType == CollisionType::RECTANGLE && body.colliderType == CollisionType::RECTANGLE)
 			{
 				//TOP & DOWN & LEFT & RIGHT
 				if ((currentBody->position.y + currentBody->rect.h > body.position.y) && (currentBody->position.y < body.position.y) && (currentBody->position.y + currentBody->rect.h < body.position.y + body.rect.h))

@@ -71,6 +71,7 @@ bool Scene::CleanUp()
 		break;
 
 	case Scenes::DEBUG_SCENE:
+		physics->CleanUp();
 		break;
 	}
 
@@ -110,7 +111,10 @@ bool Scene::SetLogoScene()
 
 bool Scene::SetDebugScene()
 {
-	physics->SetScenarioPreset(ScenarioPreset::PLATFORMER_1280x720_SCENARIO_PRESET);
+	physics->SetScenarioPreset(ScenarioPreset::WALLJUMP_1280x720_SCENARIO_PRESET);
+	physics->SetPhysicsPreset(PhysicsPreset::PLATFORMER_PHYSICS_PRESET);
+	physics->SetGlobalFriction({0.5f, 0.0f});
+	player = (DynamicBody*)physics->CreateBody(BodyType::DYNAMIC_BODY, { 120, 120 }, {120, 120, 50, 20});
 	return true;
 }
 
@@ -128,6 +132,11 @@ bool Scene::UpdateDebugScene(float dt)
 	bool ret = true;
 
 	physics->Update(dt);
+
+	if (input->GetKey(SDL_SCANCODE_A) == KeyState::KEY_REPEAT) player->Move(5, Direction::LEFT);
+	if (input->GetKey(SDL_SCANCODE_D) == KeyState::KEY_REPEAT) player->Move(5, Direction::RIGHT);
+	if (input->GetKey(SDL_SCANCODE_SPACE) == KeyState::KEY_DOWN) player->Jump(300.0f, true);
+	if (input->GetKey(SDL_SCANCODE_SPACE) == KeyState::KEY_DOWN) player->WallJump({250.0f, 200.0f});
 
 	physics->Draw();
 
