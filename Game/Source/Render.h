@@ -17,6 +17,8 @@ public:
 
 	virtual ~Render();
 
+	bool Awake();
+
 	bool Start();
 
 	bool PreUpdate(float dt);

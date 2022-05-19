@@ -63,7 +63,15 @@ bool App::Start()
 	PERF_START(ptimer);
 
 	size_t size = modules.size();
-	for (size_t i = 0; i < size; ++i) ret = modules[i]->Start();
+	for (size_t i = 0; i < size; ++i)
+	{
+		ret = modules[i]->Awake();
+	}
+
+	for (size_t i = 0; i < size; ++i)
+	{
+		ret = modules[i]->Start();
+	}
 	
 	PERF_PEEK(ptimer);
 

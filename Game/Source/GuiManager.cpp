@@ -13,10 +13,10 @@
 
 GuiManager::GuiManager(Input* input, Render* render, Audio* audio, Textures* texture)
 {
-	this->texture = texture;
 	this->input = input;
 	this->render = render;
 	this->audio = audio;
+	this->texture = texture;
 }
 
 GuiManager::~GuiManager()
@@ -31,7 +31,7 @@ bool GuiManager::Start(Scene* scene)
 	CreateTexture("Assets/Textures/UI/slider_default_set.png", GuiControlType::SLIDER);
 	CreateTexture("Assets/Textures/UI/checkbox_default_set.png", GuiControlType::CHECKBOX);
 	CreateTexture("Assets/Textures/UI/image_default_set.png", GuiControlType::IMAGE);
-	CreateFont("Fonts/manaspace.regular.ttf", 18);
+	CreateFont("Fonts/manaspace.regular.ttf", 16);
 	CreateFont("Fonts/manaspace.regular.ttf", 32);
 
 	debug = false;
@@ -110,7 +110,7 @@ ControlSettings GuiManager::CreateGuiControl(GuiControlType type, Point position
 
 	if (control != nullptr) controls.push_back(control);
 
-	return ControlSettings(control);
+	return ControlSettings(control, fonts.size());
 }
 
 void GuiManager::DestroyGuiControl(suint index)
@@ -173,6 +173,18 @@ FontSwitcher GuiManager::ChangeFont(suint controlIndex)
 	assert(controlIndex >= 0 && controlIndex < controls.size());
 
 	return FontSwitcher(controls.at(controlIndex), &fonts);
+}
+
+void GuiManager::ChangeString(suint controlTextIndex, const char* text)
+{
+	// The inputted control index does not reference to any control
+	assert(controlTextIndex >= 0 && controlTextIndex < controls.size());
+
+	// Only Texts does have strings. You might have to change the texture
+	assert(controls[controlTextIndex]->type == GuiControlType::TEXT);
+
+	GuiString* str = (GuiString*)controls[controlTextIndex];
+	str->SetString(text, str->GetColor(), str->GetFontIndex());
 }
 
 TextureSwitcher GuiManager::ChangeTexture(suint controlIndex)

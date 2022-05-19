@@ -67,7 +67,7 @@
       <Filter>Physics</Filter>
     </ClCompile>
     <ClCompile Include="Source\GuiManager.cpp">
-      <Filter>Modules</Filter>
+      <Filter>GuiControls</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -169,7 +169,7 @@
       <Filter>Utils</Filter>
     </ClInclude>
     <ClInclude Include="Source\GuiManager.h">
-      <Filter>Modules</Filter>
+      <Filter>GuiControls</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

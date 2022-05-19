@@ -22,20 +22,19 @@ Physics::~Physics()
 
 bool Physics::Start()
 {
-	gui->CreateGuiControl(GuiControlType::TEXT, {   5,  10 }, 0).TextSettings("GND:", { 0, 0, 0, 255 });
-	gui->CreateGuiControl(GuiControlType::TEXT, {   5,  35 }, 0).TextSettings("LWL:", { 0, 0, 0, 255 });
-	gui->CreateGuiControl(GuiControlType::TEXT, {   5,  60 }, 0).TextSettings("RWL:", { 0, 0, 0, 255 });
-	gui->CreateGuiControl(GuiControlType::TEXT, {   5,  85 }, 0).TextSettings(" RF:", { 0, 0, 0, 255 });
-	gui->CreateGuiControl(GuiControlType::TEXT, {   5, 110 }, 0).TextSettings("AIR:", { 0, 0, 0, 255 });
-	gui->CreateGuiControl(GuiControlType::TEXT, {  10,  10 }, 0).TextSettings("JMP:", { 0, 0, 0, 255 });
-	gui->CreateGuiControl(GuiControlType::TEXT, {  10,  35 }, 0).TextSettings("DJP:", { 0, 0, 0, 255 });
-	gui->CreateGuiControl(GuiControlType::TEXT, {  10,  60 }, 0).TextSettings("WJP:", { 0, 0, 0, 255 });
-	gui->CreateGuiControl(GuiControlType::TEXT, {  10,  85 }, 0).TextSettings("DSH:", { 0, 0, 0, 255 });
-	gui->CreateGuiControl(GuiControlType::TEXT, {  10, 110 }, 0).TextSettings("WTR:", { 0, 0, 0, 255 });
-
-	gui->CreateGuiControl(GuiControlType::TEXT, { 165,  10 }, 0).TextSettings("POS:", { 0, 0, 0, 255 });
-	gui->CreateGuiControl(GuiControlType::TEXT, { 165,  35 }, 0).TextSettings("VEL:", { 0, 0, 0, 255 });
-	gui->CreateGuiControl(GuiControlType::TEXT, { 165,  60 }, 0).TextSettings("ACC:", { 0, 0, 0, 255 });
+	gui->CreateGuiControl(GuiControlType::TEXT, {   5,  10 }, 0).TextSettings("GND:", { 255, 255, 255, 255 });
+	gui->CreateGuiControl(GuiControlType::TEXT, {   5,  35 }, 0).TextSettings("LWL:", { 255, 255, 255, 255 });
+	gui->CreateGuiControl(GuiControlType::TEXT, {   5,  60 }, 0).TextSettings("RWL:", { 255, 255, 255, 255 });
+	gui->CreateGuiControl(GuiControlType::TEXT, {   5,  85 }, 0).TextSettings(" RF:", { 255, 255, 255, 255 });
+	gui->CreateGuiControl(GuiControlType::TEXT, {   5, 110 }, 0).TextSettings("AIR:", { 255, 255, 255, 255 });
+	gui->CreateGuiControl(GuiControlType::TEXT, {  85,  10 }, 0).TextSettings("JMP:", { 255, 255, 255, 255 });
+	gui->CreateGuiControl(GuiControlType::TEXT, {  85,  35 }, 0).TextSettings("DJP:", { 255, 255, 255, 255 });
+	gui->CreateGuiControl(GuiControlType::TEXT, {  85,  60 }, 0).TextSettings("WJP:", { 255, 255, 255, 255 });
+	gui->CreateGuiControl(GuiControlType::TEXT, {  85,  85 }, 0).TextSettings("DSH:", { 255, 255, 255, 255 });
+	gui->CreateGuiControl(GuiControlType::TEXT, {  85, 110 }, 0).TextSettings("WTR:", { 255, 255, 255, 255 });
+	gui->CreateGuiControl(GuiControlType::TEXT, { 165,  10 }, 0).TextSettings("POS:", { 255, 255, 255, 255 });
+	gui->CreateGuiControl(GuiControlType::TEXT, { 165,  35 }, 0).TextSettings("VEL:", { 255, 255, 255, 255 });
+	gui->CreateGuiControl(GuiControlType::TEXT, { 165,  60 }, 0).TextSettings("ACC:", { 255, 255, 255, 255 });
 	return true;
 }
 
@@ -56,10 +55,10 @@ bool Physics::Update(float dt)
 	return true;
 }
 
-void Physics::Draw(DynamicBody* dB)
+void Physics::Draw(float dt, DynamicBody* dB)
 {
 	if (debug) DebugDraw();
-	if (debugBools) DebugBools(dB);
+	if (debugBools) DebugBools(dB, dt);
 	ResetBodyBools();
 }
 
@@ -146,18 +145,20 @@ void Physics::DebugBools(DynamicBody* dB, float dt)
 	{
 		char posStr[40] = {};
 		sprintf(posStr, "POS: %.2f %.2f", dB->position.x, dB->position.y);
+		gui->ChangeString(10, posStr);
 
 		char velStr[40] = {};
 		sprintf(velStr, "VEL: %.2f %.2f", dB->velocity.x, dB->velocity.y);
+		gui->ChangeString(11, velStr);
 
 		char accStr[40] = {};
 		float kgs = dB->mass / dt;
 		sprintf(accStr, "ACC: %.2f %.2f", (dB->velocity.x * kgs), (dB->velocity.y * kgs));
+		gui->ChangeString(12, accStr);
 	}
 
-
-	int xOff = 45;
-	int xOff1 = 125; // xOff + 60
+	int xOff = 52;
+	int xOff1 = xOff + 80;
 	int yOff = 2;
 	std::vector<Body*>::const_iterator it;
 	for (it = bodies.begin(); it != bodies.end(); ++it)

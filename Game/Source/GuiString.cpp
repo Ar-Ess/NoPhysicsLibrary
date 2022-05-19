@@ -54,6 +54,15 @@ void GuiString::Delete()
 	texture = nullptr;
 }
 
-void GuiString::SetString(const char* text, SDL_Color color)
+void GuiString::SetString(const char* text, SDL_Color color, suint fontIndex)
 {
+	Delete();
+	texture = gui->PrintFont(text, color, fontIndex);
+	Point result = {};
+	gui->CalculateSize(text, fontIndex, &result);
+	this->bounds.w = result.x;
+	this->bounds.h = result.y;
+	this->color = color;
+	this->string = text;
+	this->fontId = fontIndex;
 }

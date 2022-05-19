@@ -338,7 +338,7 @@ public:
 	bool Update(float dt);
 
 	//Draw your physic bodies. First argument shows specific propierties from the given DynamicBody*
-	void Draw(DynamicBody* dB = nullptr);
+	void Draw(float dt, DynamicBody* dB = nullptr);
 
 	bool CleanUp();
 

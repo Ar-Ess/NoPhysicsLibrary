@@ -15,6 +15,11 @@ public:
 	{
 	}
 
+	virtual bool Awake()
+	{
+		return true;
+	}
+
 	virtual bool Start()
 	{
 		return true;

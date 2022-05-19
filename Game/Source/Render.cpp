@@ -21,9 +21,9 @@ Render::~Render()
 {
 }
 
-bool Render::Start()
+bool Render::Awake()
 {
-	LOG("render start");
+	LOG("render awake");
 	// back background
 
 	uint32 flags = SDL_RENDERER_ACCELERATED;
@@ -33,15 +33,20 @@ bool Render::Start()
 
 	if (!renderer)
 		return false;
-	else
-	{
-		camera.w = win->screenSurface->w;
-		camera.h = win->screenSurface->h;
-		camera.x = 0;
-		camera.y = 0;
-	}
+
+	camera.w = win->screenSurface->w;
+	camera.h = win->screenSurface->h;
+	camera.x = 0;
+	camera.y = 0;
 
 	SDL_RenderGetViewport(renderer, &viewport);
+
+	return true;
+}
+
+bool Render::Start()
+{
+	LOG("render start");
 
 	SetVSync(true);
 

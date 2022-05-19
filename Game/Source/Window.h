@@ -16,6 +16,8 @@ public:
 
 	virtual ~Window();
 
+	bool Awake();
+
 	bool Start();
 
 	bool CleanUp();

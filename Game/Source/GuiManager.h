@@ -205,7 +205,12 @@ public:
 
 	void To(suint newTextureId)
 	{
+		// Texts does not have textures. You might have to change the font or the string
+		assert(control->type != GuiControlType::TEXT);
+
+		// The inputted texture index does not reference to any texture
 		assert(newTextureId > 0 && newTextureId < textures->size());
+
 		Texture* newTexture = textures->at(newTextureId);
 		control->texture = newTexture->texture;
 		control->SetDimensions(newTexture->size);
@@ -213,6 +218,9 @@ public:
 
 	bool Next()
 	{
+		// Texts does not have textures. You might have to change the font or the string
+		assert(control->type != GuiControlType::TEXT);
+
 		size_t size = textures->size();
 		int index = -1;
 		for (size_t i = 0; i < size; ++i)
@@ -247,6 +255,9 @@ public:
 
 	bool Prev()
 	{
+		// Texts does not have textures. You might have to change the font or the string
+		assert(control->type != GuiControlType::TEXT);
+
 		size_t size = textures->size();
 		int index = -1;
 		for (size_t i = 0; i < size; ++i)
@@ -296,6 +307,7 @@ public:
 
 	void To(suint newFontId)
 	{
+		// The inputted font index does not reference to any font
 		assert(newFontId >= 0 && newFontId < fonts->size());
 
 		GuiString* string = control->text;
@@ -315,6 +327,9 @@ public:
 
 	bool Next()
 	{
+		// Only texts does have fonts. You might have to change texture instead
+		assert(control->type == GuiControlType::TEXT);
+
 		GuiString* str = nullptr;
 		if (control->type != GuiControlType::TEXT) str = control->text;
 		else str = (GuiString*)control;
@@ -331,6 +346,9 @@ public:
 
 	bool Prev()
 	{
+		// Only texts does have fonts. You might have to change texture instead
+		assert(control->type == GuiControlType::TEXT);
+
 		GuiString* str = nullptr;
 		if (control->type != GuiControlType::TEXT) str = control->text;
 		else str = (GuiString*)control;
@@ -354,9 +372,10 @@ private:
 class ControlSettings
 {
 public:
-	ControlSettings(GuiControl* control)
+	ControlSettings(GuiControl* control, size_t fontAmount)
 	{
 		this->control = control;
+		this->fontAmount = fontAmount;
 	}
 
 	Alignment AddGuiString(const char* text, suint fontIndex = 0, SDL_Color color = { 0, 0, 0, 255 })
@@ -391,13 +410,14 @@ public:
 		return this;
 	}
 
-	ControlSettings* TextSettings(const char* text = "", SDL_Color color = {255, 255, 255, 255})
+	ControlSettings* TextSettings(const char* text = "", SDL_Color color = {255, 255, 255, 255}, suint fontIndex = 0)
 	{
 		// You tried to modify slider setting in another gui control. SliderSettings is only for Sliders
 		assert(control->type == GuiControlType::TEXT);
+		assert(fontIndex < fontAmount);
 
 		GuiString* string = (GuiString*)control;
-		string->SetString(text, color);
+		string->SetString(text, color, fontIndex);
 
 		return this;
 	}
@@ -406,6 +426,7 @@ public:
 private:
 
 	GuiControl* control = nullptr;
+	size_t fontAmount = 0;
 };
 
 class GuiManager
@@ -439,6 +460,8 @@ public:
 	SDL_Texture* PrintFont(const char* text, SDL_Color color, suint fontIndex, int endLine = -1);
 
 	FontSwitcher ChangeFont(suint controlIndex);
+
+	void ChangeString(suint controlTextIndex, const char* text);
 
 	/*
 	GuiSettings function allows to modify some parts of the functionality of the gui :

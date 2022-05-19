@@ -18,7 +18,7 @@ Window::~Window()
 {
 }
 
-bool Window::Start()
+bool Window::Awake()
 {
 	LOG("Init SDL window & surface");
 	bool ret = true;
@@ -29,8 +29,6 @@ bool Window::Start()
 
 
 	uint32 flags = SDL_WINDOW_SHOWN;
-	SetWinFullScreen(false);
-	SetWinDFullScreen(false);
 
 	window = SDL_CreateWindow("", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, size.x, size.y, flags);
 
@@ -43,6 +41,14 @@ bool Window::Start()
 		screenSurface = SDL_GetWindowSurface(window);
 
 	return ret;
+}
+
+bool Window::Start()
+{
+	SetWinFullScreen(false);
+	SetWinDFullScreen(false);
+
+	return true;
 }
 
 bool Window::CleanUp()

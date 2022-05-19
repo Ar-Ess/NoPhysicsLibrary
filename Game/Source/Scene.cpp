@@ -138,7 +138,9 @@ bool Scene::UpdateDebugScene(float dt)
 	if (input->GetKey(SDL_SCANCODE_SPACE) == KeyState::KEY_DOWN) player->Jump(300.0f, true);
 	if (input->GetKey(SDL_SCANCODE_SPACE) == KeyState::KEY_DOWN) player->WallJump({250.0f, 200.0f});
 
-	physics->Draw();
+	physics->Draw(dt, player);
+
+	if (physics->debugBools) gui->Draw();
 
 	return ret;
 }
@@ -166,6 +168,11 @@ void Scene::DebugCommands()
 	{
 		gui->debug = !gui->debug;
 		physics->debug = !physics->debug;
+	}
+
+	if (input->GetKey(SDL_SCANCODE_F2) == KeyState::KEY_DOWN)
+	{
+		physics->debugBools = !physics->debugBools;
 	}
 
 	if (input->GetKey(SDL_SCANCODE_F11) == KeyState::KEY_DOWN) window->SetWinFullScreen(!window->fullScreen);
