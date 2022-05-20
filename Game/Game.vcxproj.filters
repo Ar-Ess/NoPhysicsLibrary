@@ -171,6 +171,9 @@
     <ClInclude Include="Source\GuiManager.h">
       <Filter>GuiControls</Filter>
     </ClInclude>
+    <ClInclude Include="Source\Flag.h">
+      <Filter>Utils</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="External">
