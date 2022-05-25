@@ -117,7 +117,7 @@
     <ClInclude Include="Source\GuiString.h">
       <Filter>GuiControls</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Animation.h">
+    <ClInclude Include="Source\Reel.h">
       <Filter>Utils</Filter>
     </ClInclude>
     <ClInclude Include="Source\EasingFunctions.h">
