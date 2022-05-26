@@ -41,7 +41,7 @@ enum class EasingType
 class EasingFunctions 
 {
 public:
-	Point Ease(EasingType easeType, Point finalPosition, Point initialPosition, bool repeat, int totalIterX, int totalIterY);
+	void Ease(EasingType easeType, Point* easedPosition, Point positionOffset, bool repeat, int totalIterX, int totalIterY);
 	void ResetIterations();
 
 private:
@@ -91,12 +91,3 @@ private:
 	float t, b, c, d;
 	int iterations = 0;
 };
-
-//IMPLEMENTATION
-//fPoint ease = easing.Ease(EasingType::QUINTIC_IN_OUT, { 300, 300 }, { 0, 0 }, false, 100, 100);
-//testButton->Update(0.0f);
-//testButton->bounds.x -= ease.x;
-//testButton->bounds.y -= ease.y;
-//testButton->Draw();
-//testButton->bounds.x += ease.x;
-//testButton->bounds.y += ease.y;

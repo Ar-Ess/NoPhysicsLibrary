@@ -1,14 +1,14 @@
-#ifndef __COLLISION_H__
-#define __COLLISION_H__
+#ifndef __UTILS_H__
+#define __UTILS_H__
 
 #include "Point.h"
 #include "Rect.h"
 #include "Circle.h"
 
-class Collision
+class Utils
 {
 public:
-	Collision() {}
+	Utils() {}
 
 	float Distance(float x1, float y1, float x2, float y2)
 	{

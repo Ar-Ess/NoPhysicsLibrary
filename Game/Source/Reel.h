@@ -25,7 +25,7 @@ public:
 		}
 	}
 
-	void PushBack(Rect rect)
+	inline void PushBack(Rect rect)
 	{
 		frames.push_back(rect);
 	}
@@ -37,9 +37,9 @@ public:
 		pingpongDirection = true;
 	}
 
-	bool HasFinished()
+	inline bool HasFinished()
 	{
-		return !loop && !pingpong && loopCount > 0;
+		return currentFrame < 1.0f;
 	}
 
 	void Update(float dt)
@@ -59,12 +59,12 @@ public:
 
 public: // Getters
 
-	const suint GetTotalFrames() const
+	inline const suint GetTotalFrames() const
 	{
 		return (const suint)frames.size();
 	}
 
-	Rect GetLastFrame() const
+	inline Rect GetLastFrame() const
 	{
 		return *frames.end();
 	}

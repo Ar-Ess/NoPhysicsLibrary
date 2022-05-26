@@ -39,10 +39,6 @@ bool Textures::CleanUp()
 {
 	LOG("Freeing textures and Image library");
 
-	suint size = textures.size();
-	for (suint i = 0; i < size; ++i) SDL_DestroyTexture(textures[i]);
-
-	textures.clear();
 	IMG_Quit();
 	return true;
 }
@@ -76,16 +72,6 @@ SDL_Texture* const Textures::Load(const char* path, Point* size)
 
 bool Textures::UnLoad(SDL_Texture* texture)
 {
-	suint size = textures.size();
-
-	for (suint i = 0; i < size; ++i)
-	{
-		if (texture == textures[i])
-		{
-			textures.erase(textures.begin() + i);
-			break;
-		}
-	}
 
 	SDL_DestroyTexture(texture);
 	texture = nullptr;
@@ -99,8 +85,6 @@ SDL_Texture* const Textures::LoadSurface(SDL_Surface* surface, SDL_Texture* last
 
 	if (!texture) 
 		LOG("Unable to create texture from surface! SDL Error: %s\n", SDL_GetError());
-	else
-		textures.push_back(texture);
 
 	if (last)
 	{

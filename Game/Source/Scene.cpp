@@ -4,14 +4,15 @@
 #include "Defs.h"
 #include "Log.h"
 
-Scene::Scene(Render* render, Input* input, Textures* texture, Window* window, Audio* audio)
+Scene::Scene(Render* render, Input* input, Window* window)
 {
 	this->gui = new GuiManager(input, render, audio, texture);
+	this->assets = new AssetsManager();
+	this->texture = new Textures(render, assets);
+	this->audio = new Audio(assets);
 	this->render = render;
 	this->input = input;
-	this->texture = texture;
 	this->window = window;
-	this->audio = audio;
 
 	this->physics = new Physics(render, gui);
 }
@@ -21,7 +22,9 @@ Scene::~Scene()
 
 bool Scene::Start()
 {
-	//DEBUG BOOLS
+	assets->Start();
+	texture->Start();
+	audio->Start();
 	gui->Start(this);
 	physics->Start();
 

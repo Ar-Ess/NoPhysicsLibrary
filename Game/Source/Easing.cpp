@@ -1,13 +1,14 @@
-#include "EasingFunctions.h"
-#include <cmath>
+#include "Easing.h"
+#include <math.h>
 
 //
 
-Point EasingFunctions::Ease(EasingType eType, Point posA, Point posB, bool repeat, int totalIterX, int totalIterY)
+void EasingFunctions::Ease(EasingType eType, Point* easedPos, Point posB, bool repeat, int totalIterX, int totalIterY)
 {
-
 	float valueX = 0.0f;
 	float valueY = 0.0f;
+
+	Point posA = {0.0f, 0.0f};
 
 	switch (eType)
 	{
@@ -172,20 +173,16 @@ Point EasingFunctions::Ease(EasingType eType, Point posA, Point posB, bool repea
 	else totalIter = totalIterY;
 
 	if (iterations < totalIter) 
-	{
 		iterations++;
-	}
 	else 
-	{
 		if (repeat)	iterations = 0;
-	}
 
 	if (iterations >= totalIterX) valueX = (float)posB.x;
 	if (iterations >= totalIterY) valueY = (float)posB.y;
 	if (totalIterX == 0) valueX = 0.0f;
 	if (totalIterY == 0) valueY = 0.0f;
 
-	return { valueX, valueY };
+	easedPos->Set(easedPos->x + valueX, easedPos->y + valueY );
 }
 
 void EasingFunctions::ResetIterations()

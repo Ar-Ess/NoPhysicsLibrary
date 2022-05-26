@@ -57,6 +57,12 @@ struct Point
 		this->y *= -1;
 	}
 
+	void Set(float x, float y)
+	{
+		this->x = x;
+		this->y = y;
+	}
+
 	void Abs()
 	{
 		if (this->x < 0) this->x *= -1;
@@ -87,46 +93,46 @@ struct Point
 
 	// Function: It applies the number inputed to the actual Point value and the result is the output.
 	// It does not modify the value stored in the class
-	Point Apply(Point sum) const
+	inline Point Apply(Point sum) const
 	{
 		return Point{this->x + sum.x, this->y + sum.y};
 	}
-	Point Apply(float x, float y) const
+	inline Point Apply(float x, float y) const
 	{
 		return Point{ this->x + x, this->y + y };
 	}
-	Point Apply(double x, double y) const
+	inline Point Apply(double x, double y) const
 	{
 		return Point{ this->x + x, this->y + y };
 	}
-	Point Apply(int x, int y) const
+	inline Point Apply(int x, int y) const
 	{
 		return Point{ this->x + float(x), this->y + float(y) };
 	}
 
-	Point Multiply(Point multi) const
+	inline Point Multiply(Point multi) const
 	{
 		return Point{ this->x * multi.x, this->y * multi.y };
 	}
-	Point Multiply(float x, float y) const
+	inline Point Multiply(float x, float y) const
 	{
 		return Point{ this->x * x, this->y * y };
 	}
-	Point Multiply(double x, double y) const
+	inline Point Multiply(double x, double y) const
 	{
 		return Point{ this->x * x, this->y * y };
 	}
-	Point Multiply(int x, int y) const
+	inline Point Multiply(int x, int y) const
 	{
 		return Point{ this->x * float(x), this->y * float(y) };
 	}
 
-	float GetMax()
+	inline float GetMax()
 	{
 		return (float)fmax(x, y);
 	}
 
-	float GetMaxAbs()
+	inline float GetMaxAbs()
 	{
 		return (float)fmax(fabsf(x), fabsf(y));
 	}
@@ -143,47 +149,47 @@ struct Point
 		return ret;
 	}
 
-	bool operator==(Point b) { return (x == b.x && y == b.y); }
-	bool operator==(int i) { return (x == i || y == i); }
-	bool operator!=(Point b) { return !(x == b.x && y == b.y); }
-	bool operator!=(int i) { return !(x == i && y == i); }
+	inline bool operator==(Point b) { return (x == b.x && y == b.y); }
+	inline bool operator==(int i) { return (x == i || y == i); }
+	inline bool operator!=(Point b) { return !(x == b.x && y == b.y); }
+	inline bool operator!=(int i) { return !(x == i && y == i); }
 
-	void operator+=(int i) { x += i; y += i; }
-	void operator-=(int i) { x -= i; y -= i; }
-	void operator*=(int i) { x *= i; y *= i; }
-	void operator/=(int i) { if (i == 0) return; x /= i; y /= i; }
+	inline void operator+=(int i) { x += i; y += i; }
+	inline void operator-=(int i) { x -= i; y -= i; }
+	inline void operator*=(int i) { x *= i; y *= i; }
+	inline void operator/=(int i) { if (i == 0) return; x /= i; y /= i; }
 
-	void operator+=(Point i) { x += i.x; y += i.y; }
-	void operator-=(Point i) { x -= i.x; y -= i.y; }
-	void operator*=(Point i) { x *= i.x; y *= i.y; }
-	void operator/=(Point i) { if (i == 0) return; x /= i.x; y /= i.y; }
+	inline void operator+=(Point i) { x += i.x; y += i.y; }
+	inline void operator-=(Point i) { x -= i.x; y -= i.y; }
+	inline void operator*=(Point i) { x *= i.x; y *= i.y; }
+	inline void operator/=(Point i) { if (i == 0) return; x /= i.x; y /= i.y; }
 
-	void operator+=(float i) { x += i; y += i; }
-	void operator-=(float i) { x -= i; y -= i; }
-	void operator*=(float i) { x *= i; y *= i; }
-	void operator/=(float i) { if (i == 0) return; x /= i; y /= i; }
+	inline void operator+=(float i) { x += i; y += i; }
+	inline void operator-=(float i) { x -= i; y -= i; }
+	inline void operator*=(float i) { x *= i; y *= i; }
+	inline void operator/=(float i) { if (i == 0) return; x /= i; y /= i; }
 
-	Point operator+(int i) { return Point{ x + i, y + i }; }
-	Point operator-(int i) { return Point{ x - i, y - i }; }
-	Point operator*(int i) { return Point{ x * i, y * i }; }
+	inline Point operator+(int i) { return Point{ x + i, y + i }; }
+	inline Point operator-(int i) { return Point{ x - i, y - i }; }
+	inline Point operator*(int i) { return Point{ x * i, y * i }; }
 
-	Point operator+(float i) { return Point{ x + i, y + i }; }
-	Point operator-(float i) { return Point{ x - i, y - i }; }
-	Point operator*(float i) { return Point{ x * i, y * i }; }
+	inline Point operator+(float i) { return Point{ x + i, y + i }; }
+	inline Point operator-(float i) { return Point{ x - i, y - i }; }
+	inline Point operator*(float i) { return Point{ x * i, y * i }; }
 
-	Point operator/(int div) { return Point{ x / div, y / div }; }
+	inline Point operator/(int div) { return Point{ x / div, y / div }; }
 
-	bool operator<(int i) { return (x < i&& y < i); }
-	bool operator<=(int i) { return (x <= i && y <= i); }
-	bool operator>(int i) { return (x > i && y > i); }
-	bool operator>=(int i) { return (x >= i && y >= i); }
+	inline bool operator<(int i) { return (x < i&& y < i); }
+	inline bool operator<=(int i) { return (x <= i && y <= i); }
+	inline bool operator>(int i) { return (x > i && y > i); }
+	inline bool operator>=(int i) { return (x >= i && y >= i); }
 
-	bool operator<(Point b) { return (x < b.x&& y < b.y); }
-	bool operator<=(Point b) { return (x <= b.x && y <= b.y); }
-	bool operator>(Point b) { return (x > b.x && y > b.y); }
-	bool operator>=(Point b) { return (x >= b.x && y >= b.y); }
+	inline bool operator<(Point b) { return (x < b.x&& y < b.y); }
+	inline bool operator<=(Point b) { return (x <= b.x && y <= b.y); }
+	inline bool operator>(Point b) { return (x > b.x && y > b.y); }
+	inline bool operator>=(Point b) { return (x >= b.x && y >= b.y); }
 
-	Point& operator = (const Point& u)
+	inline Point& operator = (const Point& u)
 	{
 		x = u.x; y = u.y; return *this;
 	}

@@ -9,7 +9,7 @@
 
 #include "Point.h"
 #include "Rect.h"
-#include "Collision.h"
+#include "Utils.h"
 
 class Input;
 class Audio;
@@ -118,7 +118,7 @@ public:
     Textures* tex = nullptr;
     GuiString* text = nullptr;
 
-    Collision collisionUtils = {};
+    Utils utils = {};
     GuiControlType type = GuiControlType::EMPTY_CONTROL;
     GuiControlState state = GuiControlState::DISABLED;
     Rect bounds = {};

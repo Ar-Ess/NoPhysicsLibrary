@@ -6,6 +6,7 @@
 #include "Window.h"
 #include "Audio.h"
 #include "Textures.h"
+#include "AssetsManager.h"
 #include "Physics.h"
 
 class GuiControl;
@@ -22,7 +23,7 @@ class Scene : public Module
 {
 public:
 
-	Scene(Render* render, Input* input, Textures* texture, Window* window, Audio* audio);
+	Scene(Render* render, Input* input, Window* window);
 
 	virtual ~Scene();
 
@@ -65,6 +66,7 @@ private: // Variables
 	Render* render = nullptr;
 	Input* input = nullptr;
 	Textures* texture = nullptr;
+	AssetsManager* assets = nullptr;
 	Window* window = nullptr;
 	Audio* audio = nullptr;
 

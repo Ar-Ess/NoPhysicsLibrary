@@ -22,17 +22,11 @@ App::App(int argc, char* args[]) : argc(argc), args(args)
 
 	win = new Window();
 	input = new Input(win);
-	assetsManager = new AssetsManager();
 	render = new Render(win);
-	tex = new Textures(render, assetsManager);
-	audio = new Audio(assetsManager);
-	scene = new Scene(render, input, tex, win, audio);
+	scene = new Scene(render, input, win);
 
 	AddModule(win);
 	AddModule(input);
-	AddModule(assetsManager);
-	AddModule(tex);
-	AddModule(audio);
 	AddModule(scene);
 	AddModule(render);
 	

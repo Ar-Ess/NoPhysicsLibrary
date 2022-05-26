@@ -7,17 +7,11 @@
 
 #include <vector>
 
-#define CONFIG_FILENAME		"config.xml"
-#define SAVE_STATE_FILENAME "save_game.xml"
-
 // Modules
 class Window;
 class Input;
 class Render;
-class Textures;
-class Audio;
 class Scene;
-class AssetsManager;
 
 class App
 {
@@ -35,17 +29,21 @@ public:
 	void AddModule(Module* module);
 
 	int GetArgc() const;
+
 	const char* GetArgv(int index) const;
-	uint64 GetFrameCount() const
+
+	inline uint64 GetFrameCount() const
 	{
 		return frameCount;
 	}
-	float GetDeltaTime() const
+	
+	inline float GetDeltaTime() const
 	{
 		return dt;
 	}
 
 	void LoadGameRequest();
+
 	void SaveGameRequest() const;
 
 private:
@@ -63,10 +61,7 @@ public:
 	Window* win = nullptr;
 	Input* input = nullptr;
 	Render* render = nullptr;
-	Textures* tex = nullptr;
-	Audio* audio = nullptr;
 	Scene* scene = nullptr;
-	AssetsManager* assetsManager = nullptr;
 
 private:
 

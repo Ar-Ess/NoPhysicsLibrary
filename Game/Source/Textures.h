@@ -33,8 +33,6 @@ private:
 
 	AssetsManager* assets = nullptr;
 	Render* render = nullptr;
-
-	std::vector<SDL_Texture*> textures;
 };
 
 
