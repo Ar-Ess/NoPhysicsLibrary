@@ -183,8 +183,8 @@ void GuiSlider::Manipulate()
 bool GuiSlider::NormalUpdate()
 {
     Point mouse = input->GetMousePosition();
-    bool on = collisionUtils.CheckCollision(Rect{ mouse, 1.0f, 1.0f }, slider);
-    bool onTrail = collisionUtils.CheckCollision(Rect{ mouse, 1.0f, 1.0f }, bounds);
+    bool on = utils.CheckCollision(Rect{ mouse, 1.0f, 1.0f }, slider);
+    bool onTrail = utils.CheckCollision(Rect{ mouse, 1.0f, 1.0f }, bounds);
     bool click = (input->GetMouseButtonDown(SDL_BUTTON_LEFT) == KeyState::KEY_REPEAT);
     bool release = (input->GetMouseButtonDown(SDL_BUTTON_LEFT) == KeyState::KEY_UP);
     float res = 0;
@@ -235,7 +235,7 @@ bool GuiSlider::NormalUpdate()
 bool GuiSlider::DGSOUpdate(bool MGS)
 {
     Point mouse = input->GetMousePosition();
-    bool on = collisionUtils.CheckCollision(Rect{ mouse, 1.0f, 1.0f }, slider);
+    bool on = utils.CheckCollision(Rect{ mouse, 1.0f, 1.0f }, slider);
     bool click = (input->GetMouseButtonDown(SDL_BUTTON_LEFT) == KeyState::KEY_REPEAT);
     float res = 0;
     GuiControlState prevState = state;

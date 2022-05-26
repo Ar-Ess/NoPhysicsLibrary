@@ -6,9 +6,6 @@
     <ClCompile Include="Source\Log.cpp">
       <Filter>Utils</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Audio.cpp">
-      <Filter>Modules</Filter>
-    </ClCompile>
     <ClCompile Include="Source\Input.cpp">
       <Filter>Modules</Filter>
     </ClCompile>
@@ -19,9 +16,6 @@
       <Filter>Utils</Filter>
     </ClCompile>
     <ClCompile Include="Source\Render.cpp">
-      <Filter>Modules</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Textures.cpp">
       <Filter>Modules</Filter>
     </ClCompile>
     <ClCompile Include="Source\Window.cpp">
@@ -39,16 +33,10 @@
     <ClCompile Include="Source\GuiString.cpp">
       <Filter>GuiControls</Filter>
     </ClCompile>
-    <ClCompile Include="Source\EasingFunctions.cpp">
+    <ClCompile Include="Source\Easing.cpp">
       <Filter>Utils</Filter>
     </ClCompile>
-    <ClCompile Include="Source\AssetsManager.cpp">
-      <Filter>Modules</Filter>
-    </ClCompile>
     <ClCompile Include="Source\Scene.cpp">
-      <Filter>Modules</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\ParticleSystem.cpp">
       <Filter>Modules</Filter>
     </ClCompile>
     <ClCompile Include="Source\GuiImage.cpp">
@@ -69,6 +57,18 @@
     <ClCompile Include="Source\GuiManager.cpp">
       <Filter>GuiControls</Filter>
     </ClCompile>
+    <ClCompile Include="Source\AssetsManager.cpp">
+      <Filter>Assets Manager</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Audio.cpp">
+      <Filter>Audio System</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\ParticleSystem.cpp">
+      <Filter>Particle System</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Textures.cpp">
+      <Filter>Assets Manager</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\App.h" />
@@ -77,9 +77,6 @@
     </ClInclude>
     <ClInclude Include="Source\Log.h">
       <Filter>Utils</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Audio.h">
-      <Filter>Modules</Filter>
     </ClInclude>
     <ClInclude Include="Source\Input.h">
       <Filter>Modules</Filter>
@@ -94,9 +91,6 @@
       <Filter>Utils</Filter>
     </ClInclude>
     <ClInclude Include="Source\Render.h">
-      <Filter>Modules</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Textures.h">
       <Filter>Modules</Filter>
     </ClInclude>
     <ClInclude Include="Source\Window.h">
@@ -120,16 +114,10 @@
     <ClInclude Include="Source\Reel.h">
       <Filter>Utils</Filter>
     </ClInclude>
-    <ClInclude Include="Source\EasingFunctions.h">
+    <ClInclude Include="Source\Easing.h">
       <Filter>Utils</Filter>
     </ClInclude>
-    <ClInclude Include="Source\AssetsManager.h">
-      <Filter>Modules</Filter>
-    </ClInclude>
     <ClInclude Include="Source\Scene.h">
-      <Filter>Modules</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\ParticleSystem.h">
       <Filter>Modules</Filter>
     </ClInclude>
     <ClInclude Include="Source\Rect.h">
@@ -159,7 +147,7 @@
     <ClInclude Include="Source\Emitter.h">
       <Filter>Particles</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Collision.h">
+    <ClInclude Include="Source\Utils.h">
       <Filter>Utils</Filter>
     </ClInclude>
     <ClInclude Include="Source\Physics.h">
@@ -173,6 +161,18 @@
     </ClInclude>
     <ClInclude Include="Source\Flag.h">
       <Filter>Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\AssetsManager.h">
+      <Filter>Assets Manager</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Audio.h">
+      <Filter>Audio System</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\ParticleSystem.h">
+      <Filter>Particle System</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Textures.h">
+      <Filter>Assets Manager</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -193,6 +193,15 @@
     </Filter>
     <Filter Include="Physics">
       <UniqueIdentifier>{ef73ebca-49be-4765-8c68-56598f9bf740}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Assets Manager">
+      <UniqueIdentifier>{1a899daa-a751-4a1e-a203-925337f47feb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Audio System">
+      <UniqueIdentifier>{d5b452e9-7f2c-45f6-929f-db32fce171e5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Particle System">
+      <UniqueIdentifier>{26a90462-15ae-4cc0-95e9-892e71ae3711}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

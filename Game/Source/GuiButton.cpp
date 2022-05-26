@@ -115,7 +115,7 @@ void GuiButton::Manipulate()
 bool GuiButton::NormalUpdate()
 {
     Point mouse = input->GetMousePosition();
-    bool on = collisionUtils.CheckCollision(Rect{ mouse, 1.0f, 1.0f }, { bounds.GetPosition(), bounds.GetDimensions().Multiply(scale) });
+    bool on = utils.CheckCollision(Rect{ mouse, 1.0f, 1.0f }, { bounds.GetPosition(), bounds.GetDimensions().Multiply(scale) });
     bool click = (input->GetMouseButtonDown(SDL_BUTTON_LEFT) == KeyState::KEY_REPEAT);
     bool release = (input->GetMouseButtonDown(SDL_BUTTON_LEFT) == KeyState::KEY_UP);
 
@@ -156,7 +156,7 @@ bool GuiButton::NormalUpdate()
 bool GuiButton::DGSOUpdate(bool MGS)
 {
     Point mouse = input->GetMousePosition();
-    bool on = collisionUtils.CheckCollision(Rect{ mouse, 1.0f, 1.0f }, { bounds.GetPosition(), bounds.GetDimensions().Multiply(scale) });
+    bool on = utils.CheckCollision(Rect{ mouse, 1.0f, 1.0f }, { bounds.GetPosition(), bounds.GetDimensions().Multiply(scale) });
     bool click = (input->GetMouseButtonDown(SDL_BUTTON_LEFT) == KeyState::KEY_REPEAT);
     GuiControlState prevState = state;
 
