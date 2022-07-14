@@ -2,6 +2,10 @@
 #define __DYNARRAY_H__
 
 #define DYN_ARRAY_BLOCK_SIZE 16
+
+#define MIN( a, b ) ( ((a) < (b)) ? (a) : (b) )
+#define MAX( a, b ) ( ((a) > (b)) ? (a) : (b) )
+
 #include <assert.h>
 
 template<class VALUE>

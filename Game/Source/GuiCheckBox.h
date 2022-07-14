@@ -3,7 +3,7 @@
 
 #include "GuiControl.h"
 #include "Point.h"
-#include "Collision.h"
+#include "Utils.h"
 
 class GuiCheckBox : public GuiControl
 {

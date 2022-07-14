@@ -9,9 +9,6 @@
 #include "AssetsManager.h"
 #include "Physics.h"
 
-class GuiControl;
-class GuiManager;
-
 enum class Scenes
 {
 	NO_SCENE = -1,
@@ -32,8 +29,6 @@ public:
 	bool Update(float dt);
 
 	bool CleanUp();
-
-	bool OnGuiMouseClickEvent(GuiControl* control, float value, bool check);
 
 // SCENE MANAGER
 
@@ -62,7 +57,6 @@ private: // Methods
 
 private: // Variables
 
-	GuiManager* gui = nullptr;
 	Render* render = nullptr;
 	Input* input = nullptr;
 	Textures* texture = nullptr;

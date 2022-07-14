@@ -1,12 +1,10 @@
 #include "Scene.h"
-#include "GuiManager.h"
 
 #include "Defs.h"
 #include "Log.h"
 
 Scene::Scene(Render* render, Input* input, Window* window)
 {
-	this->gui = new GuiManager(input, render, audio, texture);
 	this->assets = new AssetsManager();
 	this->texture = new Textures(render, assets);
 	this->audio = new Audio(assets);
@@ -14,7 +12,7 @@ Scene::Scene(Render* render, Input* input, Window* window)
 	this->input = input;
 	this->window = window;
 
-	this->physics = new Physics(render, gui);
+	this->physics = new Physics(render);
 }
 
 Scene::~Scene()
@@ -25,7 +23,6 @@ bool Scene::Start()
 	assets->Start();
 	texture->Start();
 	audio->Start();
-	gui->Start(this);
 	physics->Start();
 
 	//FIRST SCENE
@@ -143,33 +140,16 @@ bool Scene::UpdateDebugScene(float dt)
 
 	physics->Draw(dt, player);
 
-	if (physics->debugBools) gui->Draw();
+	//if (physics->debugBools) gui->Draw();
 
 	return ret;
-}
-
-// GUI CONTROLS
-
-bool Scene::OnGuiMouseClickEvent(GuiControl* control, float value, bool check)
-{
-	switch (currScene)
-	{
-	case Scenes::DEBUG_SCENE:
-		switch (control->id)
-		{
-			break;
-		}
-		break;
-	}
-
-	return true;
 }
 
 void Scene::DebugCommands()
 {
 	if (input->GetKey(SDL_SCANCODE_F1) == KeyState::KEY_DOWN)
 	{
-		gui->debug = !gui->debug;
+		//gui->debug = !gui->debug;
 		physics->debug = !physics->debug;
 	}
 

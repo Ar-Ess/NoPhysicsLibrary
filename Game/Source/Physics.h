@@ -20,8 +20,6 @@
 #define NEWTONS_MULTIPLIER 100
 
 struct SDL_Texture;
-class Collision;
-class GuiManager;
 
 enum class BodyType
 {
@@ -328,7 +326,7 @@ class Physics
 {
 public:
 
-	Physics(Render* render, GuiManager* gui);
+	Physics(Render* render);
 
 	virtual ~Physics();
 
@@ -395,7 +393,7 @@ private:
 
 private:
 	std::vector<Body*> bodies;
-	Collision utils;
+	Utils utils;
 	Point globalGravity = {};
 	Point globalRestitution = {};
 	Point globalFriction = {};
@@ -406,7 +404,6 @@ private:
 	Body* collidingPlayer = nullptr;
 
 	Render* render = nullptr;
-	GuiManager* gui = nullptr;
 };
 
 #endif

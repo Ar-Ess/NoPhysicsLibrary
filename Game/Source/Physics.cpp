@@ -5,16 +5,13 @@
 #include "Window.h"
 #include "Scene.h"
 #include "Physics.h"
-#include "GuiManager.h"
-#include "GuiString.h"
 
 #include "Defs.h"
 #include "Log.h"
 
-Physics::Physics(Render* render, GuiManager* gui)
+Physics::Physics(Render* render)
 {
 	this->render = render;
-	this->gui = gui;
 }
 
 Physics::~Physics()
@@ -22,19 +19,19 @@ Physics::~Physics()
 
 bool Physics::Start()
 {
-	gui->CreateGuiControl(GuiControlType::TEXT, {   5,  10 }, 0).TextSettings("GND:", { 255, 255, 255, 255 });
-	gui->CreateGuiControl(GuiControlType::TEXT, {   5,  35 }, 0).TextSettings("LWL:", { 255, 255, 255, 255 });
-	gui->CreateGuiControl(GuiControlType::TEXT, {   5,  60 }, 0).TextSettings("RWL:", { 255, 255, 255, 255 });
-	gui->CreateGuiControl(GuiControlType::TEXT, {   5,  85 }, 0).TextSettings(" RF:", { 255, 255, 255, 255 });
-	gui->CreateGuiControl(GuiControlType::TEXT, {   5, 110 }, 0).TextSettings("AIR:", { 255, 255, 255, 255 });
-	gui->CreateGuiControl(GuiControlType::TEXT, {  85,  10 }, 0).TextSettings("JMP:", { 255, 255, 255, 255 });
-	gui->CreateGuiControl(GuiControlType::TEXT, {  85,  35 }, 0).TextSettings("DJP:", { 255, 255, 255, 255 });
-	gui->CreateGuiControl(GuiControlType::TEXT, {  85,  60 }, 0).TextSettings("WJP:", { 255, 255, 255, 255 });
-	gui->CreateGuiControl(GuiControlType::TEXT, {  85,  85 }, 0).TextSettings("DSH:", { 255, 255, 255, 255 });
-	gui->CreateGuiControl(GuiControlType::TEXT, {  85, 110 }, 0).TextSettings("WTR:", { 255, 255, 255, 255 });
-	gui->CreateGuiControl(GuiControlType::TEXT, { 165,  10 }, 0).TextSettings("POS:", { 255, 255, 255, 255 });
-	gui->CreateGuiControl(GuiControlType::TEXT, { 165,  35 }, 0).TextSettings("VEL:", { 255, 255, 255, 255 });
-	gui->CreateGuiControl(GuiControlType::TEXT, { 165,  60 }, 0).TextSettings("ACC:", { 255, 255, 255, 255 });
+	//gui->CreateGuiControl(GuiControlType::TEXT, {   5,  10 }, 0).TextSettings("GND:", { 255, 255, 255, 255 });
+	//gui->CreateGuiControl(GuiControlType::TEXT, {   5,  35 }, 0).TextSettings("LWL:", { 255, 255, 255, 255 });
+	//gui->CreateGuiControl(GuiControlType::TEXT, {   5,  60 }, 0).TextSettings("RWL:", { 255, 255, 255, 255 });
+	//gui->CreateGuiControl(GuiControlType::TEXT, {   5,  85 }, 0).TextSettings(" RF:", { 255, 255, 255, 255 });
+	//gui->CreateGuiControl(GuiControlType::TEXT, {   5, 110 }, 0).TextSettings("AIR:", { 255, 255, 255, 255 });
+	//gui->CreateGuiControl(GuiControlType::TEXT, {  85,  10 }, 0).TextSettings("JMP:", { 255, 255, 255, 255 });
+	//gui->CreateGuiControl(GuiControlType::TEXT, {  85,  35 }, 0).TextSettings("DJP:", { 255, 255, 255, 255 });
+	//gui->CreateGuiControl(GuiControlType::TEXT, {  85,  60 }, 0).TextSettings("WJP:", { 255, 255, 255, 255 });
+	//gui->CreateGuiControl(GuiControlType::TEXT, {  85,  85 }, 0).TextSettings("DSH:", { 255, 255, 255, 255 });
+	//gui->CreateGuiControl(GuiControlType::TEXT, {  85, 110 }, 0).TextSettings("WTR:", { 255, 255, 255, 255 });
+	//gui->CreateGuiControl(GuiControlType::TEXT, { 165,  10 }, 0).TextSettings("POS:", { 255, 255, 255, 255 });
+	//gui->CreateGuiControl(GuiControlType::TEXT, { 165,  35 }, 0).TextSettings("VEL:", { 255, 255, 255, 255 });
+	//gui->CreateGuiControl(GuiControlType::TEXT, { 165,  60 }, 0).TextSettings("ACC:", { 255, 255, 255, 255 });
 	return true;
 }
 
@@ -145,16 +142,16 @@ void Physics::DebugBools(DynamicBody* dB, float dt)
 	{
 		char posStr[40] = {};
 		sprintf(posStr, "POS: %.2f %.2f", dB->position.x, dB->position.y);
-		gui->ChangeString(10, posStr);
+		//gui->ChangeString(10, posStr);
 
 		char velStr[40] = {};
 		sprintf(velStr, "VEL: %.2f %.2f", dB->velocity.x, dB->velocity.y);
-		gui->ChangeString(11, velStr);
+		//gui->ChangeString(11, velStr);
 
 		char accStr[40] = {};
 		float kgs = dB->mass / dt;
 		sprintf(accStr, "ACC: %.2f %.2f", (dB->velocity.x * kgs), (dB->velocity.y * kgs));
-		gui->ChangeString(12, accStr);
+		//gui->ChangeString(12, accStr);
 	}
 
 	int xOff = 52;

@@ -1,6 +1,6 @@
 #include "GuiSlider.h"
 #include "GuiManager.h"
-#include "Collision.h"
+#include "Utils.h"
 
 GuiSlider::GuiSlider(Rect bounds, SDL_Texture* texture, Point scale, suint id, bool anchored, Input* input, Render* render, GuiManager* gui, Audio* audio, Scene* scene, Textures* tex) :
     GuiControl(
