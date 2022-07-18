@@ -1,11 +1,11 @@
-#ifndef __PHYSICS_H__
-#define __PHYSICS_H__
+#pragma once
 
 #include "Log.h"
 #include "DynArray.h"
 #include "Render.h"
 #include "Rect.h"
 #include <vector>
+#include "MathUtils.h"
 
 #define PIXELS_PER_METER 1.0f // if touched change METER_PER_PIXEL too
 #define METER_PER_PIXEL 1.0f // this is 1 / PIXELS_PER_METER !
@@ -132,7 +132,7 @@ public:
 		this->rect = rect;
 		this->mass = mass;
 	}
-	Body(BodyType bodyType, CollisionType colliderType = CollisionType::UNDEFINED, Point position = { 0.0f, 0.0f }, CircleCollider circle = {}, float mass = 1.0f) // Constructor with body type and collider type
+	Body(BodyType bodyType, CollisionType colliderType = CollisionType::UNDEFINED, Point position = { 0.0f, 0.0f }, Circle circle = {}, float mass = 1.0f) // Constructor with body type and collider type
 	{
 		this->bodyType = bodyType;
 		this->position = position;
@@ -161,7 +161,7 @@ public: //Getters
 		rectangle = rect;
 	}
 	// This function returns the rect or circle of the body
-	void GetCollision(CircleCollider& circ)
+	void GetCollision(Circle& circ)
 	{
 		circ = circle;
 	}
@@ -202,7 +202,7 @@ protected:
 	double ToPositiveAngle(double angle);
 
 	Rect rect = {};
-	CircleCollider circle = {};
+	Circle circle = {};
 	SDL_Texture* texture = nullptr;
 
 	BodyType bodyType = BodyType::NONE;
@@ -220,7 +220,7 @@ class StaticBody : public Body
 public:
 	StaticBody() :Body(BodyType::STATIC_BODY, 0) {}
 	StaticBody(Point position_, CollisionType colliderType_, Rect rect_, uint mass_) :Body(BodyType::STATIC_BODY, colliderType_, position_, rect_, mass_) {}
-	StaticBody(Point position_, CollisionType colliderType_, CircleCollider circle_, uint mass_) :Body(BodyType::STATIC_BODY, colliderType_, position_, circle_, mass_) {}
+	StaticBody(Point position_, CollisionType colliderType_, Circle circle_, uint mass_) :Body(BodyType::STATIC_BODY, colliderType_, position_, circle_, mass_) {}
 };
 
 class DynamicBody : public Body
@@ -232,7 +232,7 @@ public:
 		this->velocity = velocity;
 		this->gravityAcceleration = gravity;
 	}
-	DynamicBody(Point position, Point velocity, Point gravity, CollisionType colliderType, CircleCollider circle, float mass) :Body(BodyType::DYNAMIC_BODY, colliderType, position, circle, mass)
+	DynamicBody(Point position, Point velocity, Point gravity, CollisionType colliderType, Circle circle, float mass) :Body(BodyType::DYNAMIC_BODY, colliderType, position, circle, mass)
 	{
 		this->velocity = velocity;
 		this->gravityAcceleration = gravity;
@@ -344,7 +344,7 @@ public:
 	//Creates a new body with a rectangular form
 	Body* CreateBody(BodyType bodyType, Point position = { 0.0f,0.0f }, Rect rect = {}, Point velocity = { 0.0f,0.0f }, Point gravity = { 0.0f,0.0f }, float mass = 1);
 	//Creates a new body with a circular form
-	Body* CreateBody(BodyType bodyType, Point position = { 0.0f,0.0f }, CircleCollider collider = {}, Point velocity = { 0.0f,0.0f }, Point gravity = { 0.0f,0.0f }, float mass = 1);
+	Body* CreateBody(BodyType bodyType, Point position = { 0.0f,0.0f }, Circle collider = {}, Point velocity = { 0.0f,0.0f }, Point gravity = { 0.0f,0.0f }, float mass = 1);
 	//Sets global gravity for all bodies. {0.0f, 0.0f} for no gravity
 	void SetGlobalGravity(Point gravity);
 	//Sets global restitution coeficient for all bodies. {0.0f, 0.0f} for perfect elastic restitution
@@ -393,7 +393,6 @@ private:
 
 private:
 	std::vector<Body*> bodies;
-	Utils utils;
 	Point globalGravity = {};
 	Point globalRestitution = {};
 	Point globalFriction = {};
@@ -405,5 +404,3 @@ private:
 
 	Render* render = nullptr;
 };
-
-#endif

@@ -81,16 +81,7 @@
     <ClInclude Include="Source\Point.h">
       <Filter>Utils</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Multibool.h">
-      <Filter>Utils</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\AlignEnum.h">
-      <Filter>Utils</Filter>
-    </ClInclude>
     <ClInclude Include="Source\Circle.h">
-      <Filter>Utils</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Utils.h">
       <Filter>Utils</Filter>
     </ClInclude>
     <ClInclude Include="Source\Physics.h">
@@ -110,6 +101,9 @@
     </ClInclude>
     <ClInclude Include="Source\Textures.h">
       <Filter>Assets Manager</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\MathUtils.h">
+      <Filter>Utils</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

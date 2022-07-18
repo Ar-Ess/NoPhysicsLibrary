@@ -1,5 +1,4 @@
-#ifndef __REEL_H__
-#define __REEL_H__
+#pragma once
 
 #include <vector>
 #include "Rect.h"
@@ -91,5 +90,3 @@ private:
 	int loopCount = 0;
 	bool pingpongDirection = true; // True = R, False = L
 };
-
-#endif

@@ -1,15 +1,10 @@
-#ifndef __UTILS_H__
-#define __UTILS_H__
+#pragma once
 
-#include "Point.h"
 #include "Rect.h"
 #include "Circle.h"
 
-class Utils
+namespace MathUtils
 {
-public:
-	Utils() {}
-
 	float Distance(float x1, float y1, float x2, float y2)
 	{
 		double dx = double(x2) - double(x1);
@@ -17,13 +12,13 @@ public:
 		return float(sqrt(pow(dx, 2) + pow(dy, 2)));
 	}
 
-	bool CheckCollision(Rect r1, Rect r2) const
+	bool CheckCollision(Rect r1, Rect r2)
 	{
 		if ((r1.x > r2.x + r2.w) || (r1.x + r1.w < r2.x) || (r1.y > r2.y + r2.h) || (r1.y + r1.h < r2.y)) return false;
 		return true;
 	}
 
-	bool CheckCollision(CircleCollider& a, Rect& b)
+	bool CheckCollision(Circle& a, Rect& b)
 	{
 		//Closest point on collision box
 		float cX = 0, cY = 0;
@@ -67,7 +62,7 @@ public:
 		return false;
 	}
 
-	bool CheckCollision(Rect& b, CircleCollider& a)
+	bool CheckCollision(Rect& b, Circle& a)
 	{
 		//Closest point on collision box
 		float cX = 0, cY = 0;
@@ -111,21 +106,11 @@ public:
 		return false;
 	}
 
-	bool CheckCollision(CircleCollider& A, CircleCollider& B)
+	bool CheckCollision(Circle& A, Circle& B)
 	{
 		if (Distance(A.x, A.y, B.x, B.y) < A.radius + B.radius) return true;
 
 		return false;
-	}
-
-	Rect IntersectRectangle(Rect r1, Rect r2)
-	{
-		float x = Max(r1.x, r2.x);
-		float y = Max(r1.y, r2.y);
-		float w = Min(r1.x + r1.w, r2.x + r2.w) - x;
-		float h = Min(r1.y + r1.h, r2.y + r2.h) - y;
-
-		return { x, y, w, h };
 	}
 
 	int Min(int a, int b)
@@ -152,6 +137,14 @@ public:
 		return b;
 	}
 
-};
+	Rect IntersectRectangle(Rect r1, Rect r2)
+	{
+		float x = Max(r1.x, r2.x);
+		float y = Max(r1.y, r2.y);
+		float w = Min(r1.x + r1.w, r2.x + r2.w) - x;
+		float h = Min(r1.y + r1.h, r2.y + r2.h) - y;
 
-#endif
+		return { x, y, w, h };
+	}
+
+};

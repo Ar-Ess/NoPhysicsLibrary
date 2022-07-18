@@ -1,11 +1,4 @@
-#include "Input.h"
 #include "Window.h"
-#include "App.h"
-
-#include "Defs.h"
-#include "Log.h"
-
-#include "SDL/include/SDL.h"
 
 
 Window::Window() : Module()
@@ -26,7 +19,6 @@ bool Window::Awake()
 	size = { 1280, 720 };
 
 	if (SDL_Init(SDL_INIT_VIDEO) < 0) return false;
-
 
 	uint32 flags = SDL_WINDOW_SHOWN;
 

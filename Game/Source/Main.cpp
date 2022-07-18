@@ -45,7 +45,7 @@ int main(int argc, char* args[])
 			// Call all modules before first frame  ----------------------------
 			case MainState::START:
 			LOG("START PHASE ===============================");
-			if(app->Start() == true)
+			if(app->Start())
 			{
 				state = MainState::LOOP;
 				LOG("UPDATE PHASE ===============================");
@@ -59,14 +59,14 @@ int main(int argc, char* args[])
 
 			// Loop all modules until we are asked to leave ---------------------
 			case MainState::LOOP:
-			if(app->Update() == false)
+			if(!app->Update())
 				state = MainState::CLEAN;
 			break;
 
 			// Cleanup allocated memory -----------------------------------------
 			case MainState::CLEAN:
 			LOG("CLEANUP PHASE ===============================");
-			if(app->CleanUp() == true)
+			if(app->CleanUp())
 			{
 				RELEASE(app);
 				result = EXIT_SUCCESS;
@@ -79,13 +79,12 @@ int main(int argc, char* args[])
 
 			// Exit with errors and shame ---------------------------------------
 			case MainState::FAIL:
-			LOG("Exiting with errors :(");
+			LOG("Exiting with errors");
 			result = EXIT_FAILURE;
 			state = MainState::EXIT;
 			break;
 		}
 	}
 
-	// Dump memory leaks
 	return result;
 }

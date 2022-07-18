@@ -1,5 +1,4 @@
-#ifndef __TIMER_H__
-#define __TIMER_H__
+#pragma once
 
 #include "Defs.h"
 
@@ -17,5 +16,3 @@ public:
 private:
 	uint32 startTime;
 };
-
-#endif //__TIMER_H__

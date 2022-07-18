@@ -1,5 +1,6 @@
-#ifndef __RECT_H__
-#define __RECT_H__
+#pragma once
+
+#include "Point.h"
 
 class Rect
 {
@@ -67,5 +68,3 @@ public:
 
 	float x = 0, y = 0, w = 0, h = 0;
 };
-
-#endif //__RECT_H__

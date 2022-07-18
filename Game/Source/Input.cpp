@@ -1,5 +1,4 @@
 #include "Input.h"
-
 #include "SDL/include/SDL.h"
 
 #define MAX_KEYS 300

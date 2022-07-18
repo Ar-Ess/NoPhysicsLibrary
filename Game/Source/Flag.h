@@ -1,5 +1,4 @@
-#ifndef __FLAGS_H__
-#define __FLAGS_H__
+#pragma once
 
 #include <assert.h>
 #include <stdint.h>
@@ -33,10 +32,7 @@ public:
 	}
 
 	// Set the whole flag
-	void Set(uint8_t flag)
-	{
-		this->flag = flag;
-	}
+	inline void Set(uint8_t flag) { this->flag = flag; }
 
 	// Get an specific flag
 	bool Get(short int index)
@@ -53,16 +49,11 @@ public:
 	}
 
 	// Inverts the state of all the flags
-	void Invert()
-	{
-		flag = ~flag;
-	}
+	inline void Invert() { flag = ~flag; }
 
 private:
 
 	uint8_t flag = 0;
 
 };
-
-#endif // !__FLAGS_H__
 

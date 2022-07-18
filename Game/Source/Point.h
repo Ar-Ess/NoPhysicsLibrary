@@ -1,5 +1,4 @@
-#ifndef __POINT_H__
-#define __POINT_H__
+#pragma once
 
 #include <math.h>
 
@@ -195,5 +194,3 @@ struct Point
 	}
 
 };
-
-#endif //__POINT_H__

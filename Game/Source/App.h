@@ -1,5 +1,4 @@
-#ifndef __APP_H__
-#define __APP_H__
+#pragma once
 
 #include "Module.h"
 #include "PerfTimer.h"
@@ -89,5 +88,3 @@ private:
 
 	int	cappedMs = -1;
 };
-
-#endif	// __APP_H__

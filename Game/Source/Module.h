@@ -1,5 +1,4 @@
-#ifndef __MODULE_H__
-#define __MODULE_H__
+#pragma once
 
 #include "Log.h"
 #include "Defs.h"
@@ -63,5 +62,3 @@ public:
 	bool active = true;
 
 };
-
-#endif // __MODULE_H__

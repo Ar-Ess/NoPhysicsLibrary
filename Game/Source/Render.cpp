@@ -1,10 +1,4 @@
-#include "App.h"
-#include "Window.h"
 #include "Render.h"
-#include "Input.h"
-#include "Defs.h"
-#include "Log.h"
-
 
 Render::Render(Window* win) : Module()
 {
@@ -194,7 +188,7 @@ bool Render::DrawLine(Point start, Point end, SDL_Color color, bool anchored) co
 	return ret;
 }
 
-bool Render::DrawCircle(CircleCollider circle, SDL_Color color, bool fill, bool anchored) const
+bool Render::DrawCircle(Circle circle, SDL_Color color, bool fill, bool anchored) const
 {
 	bool ret = true;
 

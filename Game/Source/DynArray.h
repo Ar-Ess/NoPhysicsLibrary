@@ -1,5 +1,4 @@
-#ifndef __DYNARRAY_H__
-#define __DYNARRAY_H__
+#pragma once
 
 #define DYN_ARRAY_BLOCK_SIZE 16
 
@@ -260,5 +259,3 @@ private:
 		}
 	}
 };
-
-#endif // __DYNARRAY_H__

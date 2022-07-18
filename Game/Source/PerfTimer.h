@@ -1,5 +1,4 @@
-#ifndef __PERFTIMER_H__
-#define __PERFTIMER_H__
+#pragma once
 
 #include "Defs.h"
 
@@ -21,5 +20,3 @@ private:
 	uint64 startTime;
 	static uint64 frequency;
 };
-
-#endif //__PERFTIMER_H__

@@ -3,18 +3,12 @@
 #include "Window.h"
 #include "Input.h"
 #include "Render.h"
-#include "Textures.h"
-#include "Audio.h"
-#include "AssetsManager.h"
 #include "Scene.h"
 
 #include <time.h>
 
 #include "Defs.h"
 #include "Log.h"
-
-#include <iostream>
-#include <sstream>
 
 App::App(int argc, char* args[]) : argc(argc), args(args)
 {

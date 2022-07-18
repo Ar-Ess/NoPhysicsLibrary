@@ -1,13 +1,12 @@
-#ifndef __SCENE_H__
-#define __SCENE_H__
+#pragma once
 
 #include "Module.h"
+
 #include "Input.h"
 #include "Window.h"
 #include "Audio.h"
 #include "Textures.h"
 #include "AssetsManager.h"
-#include "Physics.h"
 
 enum class Scenes
 {
@@ -32,10 +31,7 @@ public:
 
 // SCENE MANAGER
 
-	Scenes GetCurrScene() const
-	{
-		return currScene;
-	}
+	inline Scenes GetCurrScene() const { return currScene; }
 
 	bool SetScene(Scenes scene);
 
@@ -64,13 +60,8 @@ private: // Variables
 	Window* window = nullptr;
 	Audio* audio = nullptr;
 
-	Physics* physics = nullptr;
-	DynamicBody* player = nullptr;
-
 	bool exit = false;
 	bool activeContinue = false;
 
 	suint lvl = 0;
 };
-
-#endif // __SCENE_H__

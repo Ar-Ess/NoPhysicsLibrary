@@ -1,8 +1,10 @@
-#ifndef __AUDIO_H__
-#define __AUDIO_H__
+#pragma once
 
 #include "Module.h"
+
 #include "AssetsManager.h"
+#include "SDL/include/SDL.h"
+#include "SDL_mixer/include/SDL_mixer.h"
 
 #include "Point.h"
 #include <vector>
@@ -81,5 +83,3 @@ private:
 
 	AssetsManager* assets = nullptr;
 };
-
-#endif // __AUDIO_H__

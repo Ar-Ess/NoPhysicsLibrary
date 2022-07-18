@@ -1,8 +1,5 @@
 #include "Audio.h"
 
-#include "SDL/include/SDL.h"
-#include "SDL_mixer/include/SDL_mixer.h"
-
 Audio::Audio(AssetsManager* assets) : Module()
 {
 	this->assets = assets;

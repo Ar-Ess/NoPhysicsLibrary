@@ -104,15 +104,13 @@
     <ClCompile Include="Source\Textures.cpp" />
     <ClCompile Include="Source\Timer.cpp" />
     <ClCompile Include="Source\Window.cpp" />
-    <ClInclude Include="Source\AlignEnum.h" />
     <ClInclude Include="Source\Reel.h" />
     <ClInclude Include="Source\AssetsManager.h" />
     <ClInclude Include="Source\Circle.h" />
-    <ClInclude Include="Source\Utils.h" />
+    <ClInclude Include="Source\MathUtils.h" />
     <ClInclude Include="Source\DynArray.h" />
     <ClInclude Include="Source\Easing.h" />
     <ClInclude Include="Source\Flag.h" />
-    <ClInclude Include="Source\Multibool.h" />
     <ClInclude Include="Source\PerfTimer.h" />
     <ClInclude Include="Source\Physics.h" />
     <ClInclude Include="Source\Point.h" />

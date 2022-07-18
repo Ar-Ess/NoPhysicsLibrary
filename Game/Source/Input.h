@@ -6,10 +6,8 @@
 
 #include "Point.h"
 
-//#define NUM_KEYS 352
 #define NUM_MOUSE_BUTTONS 5
 #define MAX_PADS 1
-//#define LAST_KEYS_PRESSED_BUFFER 50
 
 struct SDL_Rect;
 struct _SDL_GameController;
@@ -90,22 +88,22 @@ public:
 
 	bool CleanUp();
 
-	KeyState GetKey(int id) const
+	inline KeyState GetKey(int id) const
 	{
 		return keyboard[id];
 	}
 
-	KeyState GetControl(int id) const
+	inline KeyState GetControl(int id) const
 	{
 		return controllerButtons[id];
 	}
 
-	KeyState GetMouseButtonDown(int id) const
+	inline KeyState GetMouseButtonDown(int id) const
 	{
 		return mouseButtons[id - 1];
 	}
 
-	bool GetPadEnabled() const
+	inline bool GetPadEnabled() const
 	{
 		return pad.enabled;
 	}

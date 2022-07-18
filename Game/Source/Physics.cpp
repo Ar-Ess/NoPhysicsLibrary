@@ -80,8 +80,8 @@ void Physics::DebugDraw()
 		Body* body = (*it);
 		Rect rectx = {};
 		Rect rect = {};
-		CircleCollider circx;
-		CircleCollider circ;
+		Circle circx;
+		Circle circ;
 
 		if (body->isCollidable)
 		{
@@ -467,7 +467,7 @@ void Physics::SetScenarioPreset(ScenarioPreset sPreset)
 		CreateBody(BodyType::STATIC_BODY, Point{ 0, 670 }, { 0, 670, 1280, 50 }, { 0, 0 }, { 0, 0 }, 1);
 		CreateBody(BodyType::STATIC_BODY, Point{ 1230, 0 }, { 1230, 0, 50, 720 }, { 0, 0 }, { 0, 0 }, 1);
 		//Sphere
-		CreateBody(BodyType::STATIC_BODY, Point{ 640, 360 }, CircleCollider{ 640, 390, 120}, { 0, 0 }, { 0, 0 }, 1);
+		CreateBody(BodyType::STATIC_BODY, Point{ 640, 360 }, Circle{ 640, 390, 120}, { 0, 0 }, { 0, 0 }, 1);
 		debugBools = false;
 		break;
 	}
@@ -482,11 +482,11 @@ void Physics::DeathLimit(Rect limits)
 		switch (body->colliderType)
 		{
 		case CollisionType::RECTANGLE:
-			if (!utils.CheckCollision(body->rect, limits)) DestroyBody(it);
+			if (!MathUtils::CheckCollision(body->rect, limits)) DestroyBody(it);
 			break;
 
 		case CollisionType::CIRCLE:
-			if (!utils.CheckCollision(body->circle, limits)) DestroyBody(it);
+			if (!MathUtils::CheckCollision(body->circle, limits)) DestroyBody(it);
 			break;
 		}
 	}
@@ -560,7 +560,7 @@ Body* Physics::CheckCollisions(Body* b, Point prevPos)
 		{
 			if (body->colliderType == CollisionType::RECTANGLE && b->colliderType == CollisionType::RECTANGLE)
 			{
-				if (utils.CheckCollision(body->rect, b->rect)) ghostColliders.push_back(body);
+				if (MathUtils::CheckCollision(body->rect, b->rect)) ghostColliders.push_back(body);
 			}
 			/*else if (bodyList1->data->colliderType == CIRCLE && b->colliderType == RECTANGLE)
 			{
@@ -592,7 +592,7 @@ Body* Physics::CheckCollisions(Body* b, Point prevPos)
 		for (it = ghostColliders.begin(); it != ghostColliders.end(); ++it)
 		{
 			Body* body = (*it);
-			Rect inter = utils.IntersectRectangle(b->rect, body->rect);
+			Rect inter = MathUtils::IntersectRectangle(b->rect, body->rect);
 			Direction dir = DirectionDetection(b->GetPosition(), prevPos);
 			if (inter.h < 1) inter.h = 1;
 			if (inter.w < 1) inter.w = 1;
@@ -684,7 +684,7 @@ Body* Physics::CreateBody(BodyType bodyType, Point position, Rect rect, Point ve
 	return ret;
 }
 
-Body* Physics::CreateBody(BodyType bodyType_, Point position, CircleCollider circle, Point velocity, Point gravity, float mass_)
+Body* Physics::CreateBody(BodyType bodyType_, Point position, Circle circle, Point velocity, Point gravity, float mass_)
 {
 	Body* ret = nullptr;
 

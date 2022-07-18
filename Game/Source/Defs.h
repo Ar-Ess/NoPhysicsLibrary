@@ -1,12 +1,10 @@
-#ifndef __DEFS_H__
-#define __DEFS_H__
+#pragma once
 
 #include <stdio.h>
 #include <string>
 #include <map>
 
 //  NULL just in case ----------------------
-
 #ifdef NULL
 #undef NULL
 #endif
@@ -57,5 +55,3 @@ bool SameString(std::string a, std::string b);
 #define PI 3.14159265359f
 #define DEG_2_RAD(a) a * PI / 180.0f
 #define RAD_2_DEG(a) a * 180.0f / PI
-
-#endif	// __DEFS_H__
