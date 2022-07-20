@@ -6,6 +6,7 @@
 #define MAX( a, b ) ( ((a) > (b)) ? (a) : (b) )
 
 #include <assert.h>
+typedef unsigned int uint;
 
 template<class VALUE>
 class DynArray

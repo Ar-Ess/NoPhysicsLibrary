@@ -1,0 +1,72 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Core">
+      <UniqueIdentifier>{b04cbb27-f9fa-4cfd-a206-f5391ef8efaf}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Utils">
+      <UniqueIdentifier>{8e05faad-d55b-47c1-a8af-b8245aa900a4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Enums">
+      <UniqueIdentifier>{2db2c919-7b88-48d1-924b-11881312a60a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Aux">
+      <UniqueIdentifier>{10ec213a-c895-4ae3-805b-a1548ae2482a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Bodies">
+      <UniqueIdentifier>{52485742-4c24-4130-b2a5-d981ba201e50}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="Source\NoPhysicsLibrary.cpp">
+      <Filter>Core</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Physics.cpp">
+      <Filter>Core</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Body.cpp">
+      <Filter>Bodies</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\DynamicBody.cpp">
+      <Filter>Bodies</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\StaticBody.cpp">
+      <Filter>Bodies</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Source\NoPhysicsLibrary.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Physics.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Point.h">
+      <Filter>Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\BodyClassEnum.h">
+      <Filter>Enums</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Body.h">
+      <Filter>Bodies</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\DynamicBody.h">
+      <Filter>Bodies</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\StaticBody.h">
+      <Filter>Bodies</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\DynArray.h">
+      <Filter>Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Flag.h">
+      <Filter>Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Rect.h">
+      <Filter>Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\BodyCreationAux.h">
+      <Filter>Aux</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>

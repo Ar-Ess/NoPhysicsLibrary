@@ -17,7 +17,7 @@ public:
 		this->flag = flag;
 	}
 
-	// Set an specific flag
+	// Set an specific flag from slot 0 to 7
 	void Set(bool state, short int index)
 	{
 		// Flags only have 8 slots available

@@ -59,9 +59,9 @@
       <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
       <WarningLevel>Level3</WarningLevel>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>_ITERATOR_DEBUG_LEVEL=0;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_HAS_ITERATOR_DEBUGGING=0;_ITERATOR_DEBUG_LEVEL=0;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ShowIncludes>false</ShowIncludes>
-      <AdditionalIncludeDirectories>$(ProjectDir)Source\External\PhysFS\include;$(ProjectDir)Source\External</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)Source\External\PhysFS\include;C:\Users\marti\OneDrive\Documents\GitHub\NoPhysicsLibrary\NoPhysicsLibrary\Source;$(ProjectDir)Source\External</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -79,8 +79,8 @@
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <UseFullPaths>false</UseFullPaths>
       <ShowIncludes>false</ShowIncludes>
-      <PreprocessorDefinitions>_ITERATOR_DEBUG_LEVEL=0;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>$(ProjectDir)Source\External\PhysFS\include;$(ProjectDir)Source\External</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>_HAS_ITERATOR_DEBUGGING=0;_ITERATOR_DEBUG_LEVEL=0;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>$(ProjectDir)Source\External\PhysFS\include;C:\Users\marti\OneDrive\Documents\GitHub\NoPhysicsLibrary\NoPhysicsLibrary\Source;$(ProjectDir)Source\External</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
@@ -98,27 +98,20 @@
     <ClCompile Include="Source\Audio.cpp" />
     <ClCompile Include="Source\Input.cpp" />
     <ClCompile Include="Source\PerfTimer.cpp" />
-    <ClCompile Include="Source\Physics.cpp" />
     <ClCompile Include="Source\Render.cpp" />
     <ClCompile Include="Source\Scene.cpp" />
     <ClCompile Include="Source\Textures.cpp" />
     <ClCompile Include="Source\Timer.cpp" />
     <ClCompile Include="Source\Window.cpp" />
-    <ClInclude Include="Source\Reel.h" />
     <ClInclude Include="Source\AssetsManager.h" />
     <ClInclude Include="Source\Circle.h" />
     <ClInclude Include="Source\MathUtils.h" />
-    <ClInclude Include="Source\DynArray.h" />
     <ClInclude Include="Source\Easing.h" />
-    <ClInclude Include="Source\Flag.h" />
     <ClInclude Include="Source\PerfTimer.h" />
-    <ClInclude Include="Source\Physics.h" />
-    <ClInclude Include="Source\Point.h" />
     <ClInclude Include="Source\Audio.h" />
     <ClInclude Include="Source\Input.h" />
     <ClInclude Include="Source\App.h" />
     <ClInclude Include="Source\Module.h" />
-    <ClInclude Include="Source\Rect.h" />
     <ClInclude Include="Source\Render.h" />
     <ClInclude Include="Source\Scene.h" />
     <ClInclude Include="Source\Textures.h" />
@@ -127,6 +120,11 @@
     <ClInclude Include="Source\Defs.h" />
     <ClInclude Include="Source\Log.h" />
     <ClCompile Include="Source\Log.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\NoPhysicsLibrary\NoPhysicsLibrary.vcxproj">
+      <Project>{be3fee83-47ee-4057-8bb4-4050beb7c0d0}</Project>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

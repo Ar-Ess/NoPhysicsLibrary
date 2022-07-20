@@ -54,11 +54,6 @@ public:
 		return Point{x, y};
 	}
 
-	Point GetDimensions() const
-	{
-		return Point{ w, h };
-	}
-
 	Point GetSize() const
 	{
 		return Point{ w, h };

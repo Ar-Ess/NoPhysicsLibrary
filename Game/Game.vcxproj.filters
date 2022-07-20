@@ -27,16 +27,13 @@
     <ClCompile Include="Source\Scene.cpp">
       <Filter>Modules</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Physics.cpp">
-      <Filter>Physics</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\AssetsManager.cpp">
-      <Filter>Assets Manager</Filter>
-    </ClCompile>
     <ClCompile Include="Source\Audio.cpp">
       <Filter>Audio System</Filter>
     </ClCompile>
     <ClCompile Include="Source\Textures.cpp">
+      <Filter>Assets Manager</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\AssetsManager.cpp">
       <Filter>Assets Manager</Filter>
     </ClCompile>
   </ItemGroup>
@@ -66,35 +63,14 @@
     <ClInclude Include="Source\Window.h">
       <Filter>Modules</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Reel.h">
-      <Filter>Utils</Filter>
-    </ClInclude>
     <ClInclude Include="Source\Easing.h">
       <Filter>Utils</Filter>
     </ClInclude>
     <ClInclude Include="Source\Scene.h">
       <Filter>Modules</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Rect.h">
-      <Filter>Utils</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Point.h">
-      <Filter>Utils</Filter>
-    </ClInclude>
     <ClInclude Include="Source\Circle.h">
       <Filter>Utils</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Physics.h">
-      <Filter>Physics</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\DynArray.h">
-      <Filter>Utils</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Flag.h">
-      <Filter>Utils</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\AssetsManager.h">
-      <Filter>Assets Manager</Filter>
     </ClInclude>
     <ClInclude Include="Source\Audio.h">
       <Filter>Audio System</Filter>
@@ -104,6 +80,9 @@
     </ClInclude>
     <ClInclude Include="Source\MathUtils.h">
       <Filter>Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\AssetsManager.h">
+      <Filter>Assets Manager</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -115,9 +94,6 @@
     </Filter>
     <Filter Include="Modules">
       <UniqueIdentifier>{bfe4e094-9e73-4cb6-9027-deaaa69e9993}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Physics">
-      <UniqueIdentifier>{ef73ebca-49be-4765-8c68-56598f9bf740}</UniqueIdentifier>
     </Filter>
     <Filter Include="Assets Manager">
       <UniqueIdentifier>{1a899daa-a751-4a1e-a203-925337f47feb}</UniqueIdentifier>

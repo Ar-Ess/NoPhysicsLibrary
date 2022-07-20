@@ -1,4 +1,5 @@
 #include "Scene.h"
+#include "NoPhysicsLibrary.h"
 
 Scene::Scene(Render* render, Input* input, Window* window)
 {
@@ -18,6 +19,7 @@ bool Scene::Start()
 	assets->Start();
 	texture->Start();
 	audio->Start();
+	NPL::Init();
 
 	//FIRST SCENE
 	if (!SetScene(Scenes::LOGO_SCENE)) return false;
@@ -96,6 +98,7 @@ bool Scene::SetLogoScene()
 
 bool Scene::SetDebugScene()
 {
+	NPL::CreateBody({}, 1).Dynamic();
 	return true;
 }
 
