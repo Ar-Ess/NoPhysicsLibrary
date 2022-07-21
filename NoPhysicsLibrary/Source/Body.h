@@ -4,11 +4,16 @@
 #include "Rect.h"
 #include "Flag.h"
 
+
 class Body
 {
 public: // Methods
 
 	Body(BodyClass clas = BodyClass::EMPTY_BODY, Rect rect = { 0.0f, 0.0f, 1.0f, 1.0f }, float mass = 1.0f);
+
+	void SolveCollision(Body& body, int dir);
+
+	void DeClipper(Body& body, int dir);
 
 public: //Getters
 
@@ -33,7 +38,7 @@ public: // Setters
 	inline void SetCollidable(bool set) { properties.Set(set, 1); }
 
 protected:
-
+	friend class Physics;
 	Rect rect = {};
 	BodyClass clas = BodyClass::EMPTY_BODY;
 	float mass = 1.0f;

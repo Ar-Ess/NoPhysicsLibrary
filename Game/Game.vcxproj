@@ -105,7 +105,6 @@
     <ClCompile Include="Source\Window.cpp" />
     <ClInclude Include="Source\AssetsManager.h" />
     <ClInclude Include="Source\Circle.h" />
-    <ClInclude Include="Source\MathUtils.h" />
     <ClInclude Include="Source\Easing.h" />
     <ClInclude Include="Source\PerfTimer.h" />
     <ClInclude Include="Source\Audio.h" />

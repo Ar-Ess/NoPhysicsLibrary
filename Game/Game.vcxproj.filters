@@ -78,9 +78,6 @@
     <ClInclude Include="Source\Textures.h">
       <Filter>Assets Manager</Filter>
     </ClInclude>
-    <ClInclude Include="Source\MathUtils.h">
-      <Filter>Utils</Filter>
-    </ClInclude>
     <ClInclude Include="Source\AssetsManager.h">
       <Filter>Assets Manager</Filter>
     </ClInclude>

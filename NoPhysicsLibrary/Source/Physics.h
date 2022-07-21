@@ -3,7 +3,9 @@
 //#include "DynArray.h"
 #include "Rect.h"
 #include <vector>
-#include "Body.h"
+#include "DynamicBody.h"
+#include "StaticBody.h"
+#include "Flag.h"
 
 #define PIXELS_PER_METER 1.0f // if touched change METER_PER_PIXEL too
 #define METER_PER_PIXEL 1.0f // this is 1 / PIXELS_PER_METER !
@@ -17,32 +19,6 @@
 #define REALITY_MULTIPLIER 60
 #define NEWTONS_MULTIPLIER 100
 
-//enum class PhysicsPreset
-//{
-//	NO_PRESET = -1,
-//	PLATFORMER_PHYSICS_PRESET,
-//	MOON_PHYSICS_PRESET,
-//	SPACE_PHYSICS_PRESET
-//};
-//
-//enum class ScenarioPreset
-//{
-//	NO_PRESET = -1,
-//	LIMITS_1280x720_SCENARIO_PRESET,
-//	PLATFORMER_1280x720_SCENARIO_PRESET,
-//	WALLJUMP_1280x720_SCENARIO_PRESET,
-//	SPHERE_1280x720_SCENARIO_PRESET,
-//};
-//
-//enum class Direction
-//{
-//	NO_DIR = -1,
-//	UP = 0,
-//	DOWN,
-//	LEFT,
-//	RIGHT
-//};
-//
 //enum class DashDirection
 //{
 //	UP = 0,
@@ -66,61 +42,21 @@
 //	WALL_JUMP,
 //	DASH
 //};
-//
-//struct GhostSlot
-//{
-//	GhostSlot() 
-//	{
-//		this->surface = 0;
-//		this->dir = Direction::NO_DIR;
-//		this->slot = -1;
-//	}
-//	GhostSlot(Direction direct, int surf, int slt)
-//	{
-//		dir = direct;
-//		surface = surf;
-//		slot = slt;
-//	}
-//	~GhostSlot()
-//	{
-//
-//	}
-//
-//	int surface = 0;
-//	Direction dir = Direction::NO_DIR;
-//	int slot = -1;
-//
-//	bool operator >(const GhostSlot& a)
-//	{
-//		if (surface > a.surface) return true;
-//		return false;
-//	}
-//	bool operator <(const GhostSlot& a)
-//	{
-//		if (surface < a.surface) return true;
-//		return false;
-//	}
-//};
 
 class Physics
 {
-public:
+public: // Methods
 
 	Physics();
 
 	virtual ~Physics();
 
-	bool Start();
-
-	//Update and step your physics
-	bool Update(float dt);
+	void Update(float dt);
 
 	//Draw your physic bodies. First argument shows specific propierties from the given DynamicBody*
 	/*void Draw(float dt, DynamicBody* dB = nullptr);*/
 
 	bool CleanUp();
-
-public:
 
 	void SetGlobalGravity(Point gravity);
 	//Sets global restitution coeficient for all bodies. {0.0f, 0.0f} for perfect elastic restitution
@@ -141,19 +77,30 @@ public:
 	void ResetAllForces();
 	//Destroys de body setted as an input of this function
 	void DestroyBody(std::vector<Body*>::const_iterator it);
-	//Sets body as the main player, for specific functions of it. Returns false if there is already one body setted as player.
-	bool SetBodyAsPlayer(Body* b);
+
+public: // Getters & Setters
+
+	// Returns wether the physics are paused
+	inline bool GetGlobalPause() { return globals.Get(0); }
+
+	// Returns wether the global gravity is active
+	inline bool GetGlobalGravity() { return globals.Get(1); }
+
+	// Returns wether the global friction is active
+	inline bool GetGlobalFriction() { return globals.Get(2); }
+
+	// Returns wether the global restitution is active
+	inline bool GetGlobalRestitution() { return globals.Get(3); }
 
 public:
+
 	bool debug = false;
 	bool debugBools = false;
 
-	//// Debug
-	//void Step(float dt);
-	//void Integrate(DynamicBody* item, float dt);
-	//Body* CheckCollisions(Body* body, Point prevPos);
-	//Direction DirectionDetection(Point currPos, Point prevPos);
-	//Direction InvertDirection(Direction dir);
+	void Integrate(DynamicBody* item, float dt);
+	void CheckCollisions(Body* body, Point prevPos);
+	int DirectionDetection(Point currPos, Point prevPos);
+	int InvertDirection(int dir);
 	//void ChangeGravityAcceleration(Point acceleration);
 	//void ChangeRestitutionCoeficient(Point restCoeficient);
 	//void ChangeFrictionCoeficient(Point frictCoeficient);
@@ -162,13 +109,13 @@ public:
 	//void ResetBodyBools();
 
 	std::vector<Body*> bodies;
-
-private:
 	Point globalGravity = {};
 	Point globalRestitution = {};
 	Point globalFriction = {};
-	bool globalGravityActive = false;
-	bool globalRestitutionActive = false;
-	bool globalFrictionActive = false;
-	bool globalPause = false;
+
+private:
+
+	// Pause | Gravity | Friction | Restitution
+	Flag globals = {};
+
 };

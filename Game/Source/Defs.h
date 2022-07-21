@@ -38,12 +38,12 @@ typedef unsigned __int16 uint16;
 typedef unsigned __int32 uint32;
 typedef unsigned __int64 uint64;
 
-template <class VALUE_TYPE> void SWAP(VALUE_TYPE& a, VALUE_TYPE& b)
-{
-	VALUE_TYPE tmp = a;
-	a = b;
-	b = tmp;
-}
+//template <class VALUE_TYPE> void SWAP(VALUE_TYPE& a, VALUE_TYPE& b)
+//{
+//	VALUE_TYPE tmp = a;
+//	a = b;
+//	b = tmp;
+//}
 
 bool SameString(std::string a, std::string b);
 

@@ -1,0 +1,8 @@
+#pragma once
+
+enum class ScenarioPreset
+{
+	LIMITS_SCENARIO_PRESET,
+	PLATFORMER_SCENARIO_PRESET,
+	WALLJUMP_SCENARIO_PRESET,
+};

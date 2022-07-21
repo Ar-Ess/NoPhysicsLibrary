@@ -1,5 +1,12 @@
 #pragma once
 
+template <class VALUE_TYPE> void SWAP(VALUE_TYPE& a, VALUE_TYPE& b)
+{
+	VALUE_TYPE tmp = a;
+	a = b;
+	b = tmp;
+}
+
 #define DYN_ARRAY_BLOCK_SIZE 16
 
 #define MIN( a, b ) ( ((a) < (b)) ? (a) : (b) )

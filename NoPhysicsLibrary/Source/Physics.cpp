@@ -1,4 +1,6 @@
 #include "Physics.h"
+#include "GhostSlot.h"
+#include "MathUtils.h"
 
 Physics::Physics()
 {
@@ -7,34 +9,13 @@ Physics::Physics()
 Physics::~Physics()
 {}
 
-bool Physics::Start()
-{
-	return true;
-}
-
-bool Physics::Update(float dt)
-{
-	if (globalPause) return true;
-
-	//if (globalGravityActive) ChangeGravityAcceleration(globalGravity);
-
-	//if (globalRestitutionActive) ChangeRestitutionCoeficient(globalRestitution);
-	//else ChangeRestitutionCoeficient({ 1.0f, 1.0f });
-
-	//if (globalFrictionActive) ChangeFrictionCoeficient(globalFriction);
-
-	//Step(dt);
-
-	return true;
-}
-
 //void Physics::Draw(float dt, DynamicBody* dB)
 //{
 //	if (debug) DebugDraw();
 //	if (debugBools) DebugBools(dB, dt);
 //	ResetBodyBools();
 //}
-
+//
 //bool Physics::CleanUp()
 //{
 //	std::vector<Body*>::const_iterator it;
@@ -45,7 +26,7 @@ bool Physics::Update(float dt)
 //
 //	return true;
 //}
-
+//
 //void Physics::DebugDraw()
 //{
 //	std::vector<Body*>::const_iterator it;
@@ -215,80 +196,70 @@ bool Physics::Update(float dt)
 //	}
 //}
 //
-//void Physics::Integrate(DynamicBody* item, float dt)
-//{
-//	// Sum of all acceleration in both axis
-//	// sum of all forces
-//	// second law newton (divide by mass) and gett total acceleration
-//
-//	item->position.x += item->velocity.x * dt + 0.5f * item->acceleration.x * dt * dt;
-//	item->velocity.x += item->acceleration.x * dt;
-//
-//	item->position.y += item->velocity.y * dt + 0.5f * item->acceleration.y * dt * dt;
-//	item->velocity.y += item->acceleration.y * dt;
-//}
-//
-//void Physics::Step(float dt)
-//{
-//	std::vector<Body*>::const_iterator it;
-//	for (it = bodies.begin(); it != bodies.end(); ++it)
-//	{
-//		Body* body = (*it);
-//		switch (body->bodyType)
-//		{
-//		case BodyType::DYNAMIC_BODY:
-//			DynamicBody* dB = (DynamicBody*)body;
-//			// Correct angles rotation
-//			// dB->rotation = dB->ToPositiveAngle(dB->rotation);
-//
-//			//dynamicBody->ApplyHidroDrag();
-//			//dynamicBody->ApplyBuoyancy();
-//			if (globalFrictionActive) dB->ApplyFriction(dt);
-//			//dynamicBody->ApplyAeroLift();
-//
-//			// Second law newton
-//			dB->SecondNewton();
-//
-//			// First law Buxeda
-//			dB->FirstBuxeda();
-//
-//			// Applying gravity acceleration post second law newton
-//			dB->acceleration += dB->gravityAcceleration;
-//
-//			Point prevPosition = dB->position;
-//
-//			// Integrate
-//			Integrate(dB, dt);
-//
-//			// 
-//
-//			dB->acceleration = { 0.0f,0.0f };
-//
-//			// Setting rect collider position
-//			switch (dB->colliderType)
-//			{
-//			case CollisionType::RECTANGLE:
-//				dB->rect.x = (int)dB->position.x;
-//				dB->rect.y = (int)dB->position.y;
-//				break;
-//
-//			case CollisionType::CIRCLE:
-//				dB->circle.x = (int)dB->position.x;
-//				dB->circle.y = (int)dB->position.y;
-//				break;
-//			}
-//
-//			// Check Colls
-//			collidingPlayer = CheckCollisions(dB, prevPosition);
-//
-//			// onAir check
-//			if (!dB->onGround && !dB->onLeftWall && !dB->onRightWall && !dB->onRoof && !dB->onJump && !dB->onDoubleJump && !dB->onDash && !dB->onWallJump && !dB->onWater) dB->onAir = true;
-//			else dB->onAir = false;
-//			break;
-//		}
-//	}
-//}
-//
+
+void Physics::Integrate(DynamicBody* item, float dt)
+{
+	// Sum of all acceleration in both axis
+	// sum of all forces
+	// second law newton (divide by mass) and gett total acceleration
+
+	item->rect.x += item->velocity.x * dt + 0.5f * item->acceleration.x * dt * dt;
+	item->velocity.x += item->acceleration.x * dt;
+
+	item->rect.y += item->velocity.y * dt + 0.5f * item->acceleration.y * dt * dt;
+	item->velocity.y += item->acceleration.y * dt;
+}
+
+void Physics::Update(float dt)
+{
+	std::vector<Body*>::const_iterator it;
+	for (it = bodies.begin(); it != bodies.end(); ++it)
+	{
+		Body* body = (*it);
+		switch (body->GetBodyClass())
+		{
+		case BodyClass::DYNAMIC_BODY:
+
+			DynamicBody* dB = (DynamicBody*)body;
+
+			// -> if (globalFrictionActive) dB->ApplyFriction(dt);
+
+			// Second law newton
+			dB->SecondNewton();
+
+			// First law Buxeda
+			dB->FirstBuxeda();
+
+			// Applying gravity acceleration post second law newton
+			dB->acceleration += dB->gravityAcceleration;
+
+			Point prevPosition = dB->rect.GetPosition();
+
+			// Integrate
+			Integrate(dB, dt);
+
+			dB->acceleration = { 0.0f,0.0f };
+
+			// Check Colls
+			CheckCollisions(dB, prevPosition);
+
+			// onAir check
+			//if (!dB->onGround && !dB->onLeftWall && !dB->onRightWall && !dB->onRoof && !dB->onJump && !dB->onDoubleJump && !dB->onDash && !dB->onWallJump && !dB->onWater) dB->onAir = true;
+			//else dB->onAir = false;
+			break;
+		}
+	}
+}
+
+void Physics::DestroyBody(std::vector<Body*>::const_iterator it)
+{
+	Body* body = *it;
+	delete body;
+	bodies.erase(it);
+	body = nullptr;
+	bodies.shrink_to_fit();
+}
+
 //void Physics::SetGlobalGravity(Point gravity)
 //{
 //	if (gravity == Point{ 0.0f, 0.0f }) globalGravityActive = false;
@@ -393,60 +364,6 @@ bool Physics::Update(float dt)
 //	}
 //}
 //
-//void Physics::SetScenarioPreset(ScenarioPreset sPreset)
-//{
-//	DestroyScenario();
-//
-//	switch (sPreset)
-//	{
-//	case ScenarioPreset::LIMITS_1280x720_SCENARIO_PRESET:
-//		//Limits
-//		CreateBody(BodyType::STATIC_BODY, Point{ 0, 0 }, { 0, 0, 1280, 50 }, { 0, 0 }, { 0, 0 }, 1);
-//		CreateBody(BodyType::STATIC_BODY, Point{ 0, 0 }, { 0, 0, 50, 720 }, { 0, 0 }, { 0, 0 }, 1);
-//		CreateBody(BodyType::STATIC_BODY, Point{ 0, 670 }, { 0, 670, 1280, 50 }, { 0, 0 }, { 0, 0 }, 1);
-//		CreateBody(BodyType::STATIC_BODY, Point{ 1230, 0 }, { 1230, 0, 50, 720 }, { 0, 0 }, { 0, 0 }, 1);
-//		debugBools = false;
-//		break;
-//
-//	case ScenarioPreset::PLATFORMER_1280x720_SCENARIO_PRESET:
-//		//Limits
-//		CreateBody(BodyType::STATIC_BODY, Point{ 0, 0 }, { 0, 0, 1280, 50 }, { 0, 0 }, { 0, 0 }, 1);
-//		CreateBody(BodyType::STATIC_BODY, Point{ 0, 0 }, { 0, 0, 50, 720 }, { 0, 0 }, { 0, 0 }, 1);
-//		CreateBody(BodyType::STATIC_BODY, Point{ 0, 670 }, { 0, 670, 1280, 50 }, { 0, 0 }, { 0, 0 }, 1);
-//		CreateBody(BodyType::STATIC_BODY, Point{ 1230, 0 }, { 1230, 0, 50, 720 }, { 0, 0 }, { 0, 0 }, 1);
-//		//Obstacles
-//		CreateBody(BodyType::STATIC_BODY, Point{ 340, 490 }, { 340, 490, 600, 25 }, { 0, 0 }, { 0, 0 }, 1);
-//		CreateBody(BodyType::STATIC_BODY, Point{ 540, 220 }, { 540, 220, 200, 25 }, { 0, 0 }, { 0, 0 }, 1);
-//		debugBools = false;
-//		break;
-//
-//	case ScenarioPreset::WALLJUMP_1280x720_SCENARIO_PRESET:
-//		//Limits
-//		CreateBody(BodyType::STATIC_BODY, Point{ 0, 0 }, { 0, 0, 1280, 50 }, { 0, 0 }, { 0, 0 }, 1);
-//		CreateBody(BodyType::STATIC_BODY, Point{ 0, 0 }, { 0, 0, 50, 720 }, { 0, 0 }, { 0, 0 }, 1);
-//		CreateBody(BodyType::STATIC_BODY, Point{ 0, 670 }, { 0, 670, 1280, 50 }, { 0, 0 }, { 0, 0 }, 1);
-//		CreateBody(BodyType::STATIC_BODY, Point{ 1230, 0 }, { 1230, 0, 50, 720 }, { 0, 0 }, { 0, 0 }, 1);
-//		//Obstacles
-//		CreateBody(BodyType::STATIC_BODY, Point{ 200, 200 }, { 200, 200, 25, 400 }, { 0, 0 }, { 0, 0 }, 1);
-//		CreateBody(BodyType::STATIC_BODY, Point{ 500, 200 }, { 500, 200, 25, 400 }, { 0, 0 }, { 0, 0 }, 1);
-//		CreateBody(BodyType::STATIC_BODY, Point{ 780, 200 }, { 780, 200, 25, 400 }, { 0, 0 }, { 0, 0 }, 1);
-//		CreateBody(BodyType::STATIC_BODY, Point{ 1080, 200 }, { 1080, 200, 25, 400 }, { 0, 0 }, { 0, 0 }, 1);
-//		debugBools = false;
-//		break;
-//
-//	case ScenarioPreset::SPHERE_1280x720_SCENARIO_PRESET:
-//		//Limits
-//		CreateBody(BodyType::STATIC_BODY, Point{ 0, 0 }, { 0, 0, 1280, 50 }, { 0, 0 }, { 0, 0 }, 1);
-//		CreateBody(BodyType::STATIC_BODY, Point{ 0, 0 }, { 0, 0, 50, 720 }, { 0, 0 }, { 0, 0 }, 1);
-//		CreateBody(BodyType::STATIC_BODY, Point{ 0, 670 }, { 0, 670, 1280, 50 }, { 0, 0 }, { 0, 0 }, 1);
-//		CreateBody(BodyType::STATIC_BODY, Point{ 1230, 0 }, { 1230, 0, 50, 720 }, { 0, 0 }, { 0, 0 }, 1);
-//		//Sphere
-//		CreateBody(BodyType::STATIC_BODY, Point{ 640, 360 }, Circle{ 640, 390, 120}, { 0, 0 }, { 0, 0 }, 1);
-//		debugBools = false;
-//		break;
-//	}
-//}
-//
 //void Physics::DeathLimit(Rect limits)
 //{
 //	std::vector<Body*>::const_iterator it;
@@ -464,17 +381,6 @@ bool Physics::Update(float dt)
 //			break;
 //		}
 //	}
-//}
-//
-//void Physics::DestroyScenario()
-//{
-//	std::vector<Body*>::const_iterator it;
-//	for (it = bodies.begin(); it != bodies.end(); ++it)
-//	{
-//		Body* body = (*it);
-//		if (body->bodyType == BodyType::STATIC_BODY) DestroyBody(it);
-//	}
-//	return;
 //}
 //
 //void Physics::PausePhysics(bool pause)
@@ -501,16 +407,6 @@ bool Physics::Update(float dt)
 //		}
 //	}
 //}
-//
-//void Physics::DestroyBody(std::vector<Body*>::const_iterator it)
-//{
-//	Body* body = *it;
-//	delete body;
-//	bodies.erase(it);
-//	body = nullptr;
-//	bodies.shrink_to_fit();
-//}
-//
 //bool Physics::SetBodyAsPlayer(Body* b)
 //{
 //	std::vector<Body*>::const_iterator it;
@@ -519,116 +415,91 @@ bool Physics::Update(float dt)
 //	b->player = true;
 //	return true;
 //}
-//
-//Body* Physics::CheckCollisions(Body* b, Point prevPos)
-//{
-//	//ListItem<Body*>* bodyList1;
-//	std::vector<Body*> ghostColliders;
-//	DynArray<GhostSlot> slotList;
-//
-//	std::vector<Body*>::const_iterator it;
-//	for (it = bodies.begin(); it != bodies.end(); ++it)
-//	{
-//		Body* body = (*it);
-//		if (body != b)
-//		{
-//			if (body->colliderType == CollisionType::RECTANGLE && b->colliderType == CollisionType::RECTANGLE)
-//			{
-//				if (MathUtils::CheckCollision(body->rect, b->rect)) ghostColliders.push_back(body);
-//			}
-//			/*else if (bodyList1->data->colliderType == CIRCLE && b->colliderType == RECTANGLE)
-//			{
-//				if (collisionUtil.CheckCollision(bodyList1->data->circle, b->rect)) collided = true;
-//			}
-//			else if (bodyList1->data->colliderType == RECTANGLE && b->colliderType == CIRCLE)
-//			{
-//				if (collisionUtil.CheckCollision(bodyList1->data->rect, b->circle)) collided = true;
-//			}
-//			else if (bodyList1->data->colliderType == CIRCLE && b->colliderType == CIRCLE)
-//			{
-//				if (collisionUtil.CheckCollision(bodyList1->data->circle, b->circle)) collided = true;
-//			}
-//
-//			if (collided)
-//			{
-//				Direction dir = DirectionDetection(b->GetPosition(), prevPos);
-//				Direction invDir = InvertDirection(dir);
-//
-//				bodyList1->data->SolveCollision(*b, invDir);
-//				b->SolveCollision(*bodyList1->data, dir);
-//			}*/
-//		}
-//	}
-//
-//	if (ghostColliders.size() != 0)
-//	{
-//		short int i = 0;
-//		for (it = ghostColliders.begin(); it != ghostColliders.end(); ++it)
-//		{
-//			Body* body = (*it);
-//			Rect inter = MathUtils::IntersectRectangle(b->rect, body->rect);
-//			Direction dir = DirectionDetection(b->GetPosition(), prevPos);
-//			if (inter.h < 1) inter.h = 1;
-//			if (inter.w < 1) inter.w = 1;
-//			slotList.PushBack({ dir, (int)(inter.w * inter.h), i });
-//			i++;
-//		}
-//
-//		if (slotList.Count() > 2)
-//		{
-//			slotList.CombSort();
-//			slotList.Flip();
-//		}
-//		if (slotList.Count() == 2)
-//		{
-//			if (slotList[0] < slotList[1]) slotList.Flip();
-//		}
-//
-//		Direction invDir = InvertDirection(slotList[0].dir);
-//
-//		//bodyList1->data->SolveCollision(*b, invDir);
-//		b->SolveCollision(*ghostColliders.at(slotList[0].slot), slotList[0].dir);
-//
-//		if (b->player) return ghostColliders.at(slotList[0].slot);
-//		
-//		return nullptr;
-//	}
-//}
-//
-//Direction Physics::DirectionDetection(Point currPos, Point prevPos)
-//{
-//	if (prevPos.y - currPos.y < 0)
-//	{
-//		return Direction::DOWN; //COLLIDING UP TO DOWN
-//	}
-//	if (prevPos.x - currPos.x < 0)
-//	{
-//		return Direction::RIGHT; //COLLIDING LEFT TO RIGHT
-//	}
-//	if (prevPos.y - currPos.y > 0)
-//	{
-//		return Direction::UP; //COLLIDING DOWN TO UP
-//	}
-//	if (prevPos.x - currPos.x > 0)
-//	{
-//		return Direction::LEFT; //COLLIDING RIGHT TO LEFT
-//	}
-//
-//	return Direction();
-//}
-//
-//Direction Physics::InvertDirection(Direction dir)
-//{
-//	switch (dir)
-//	{
-//	case Direction::UP: return Direction::DOWN; break;
-//	case Direction::DOWN: return Direction::UP; break;
-//	case Direction::LEFT: return Direction::RIGHT; break;
-//	case Direction::RIGHT: return Direction::LEFT; break;
-//	}
-//
-//	return Direction();
-//}
+
+void Physics::CheckCollisions(Body* b, Point prevPos)
+{
+	std::vector<Body*> ghostColliders;
+	DynArray<GhostSlot> slotList;
+
+	std::vector<Body*>::const_iterator it;
+	for (it = bodies.begin(); it != bodies.end(); ++it)
+	{
+		Body* body = (*it);
+		if (body == b) continue;
+		
+		if (MathUtils::CheckCollision(body->rect, b->rect)) ghostColliders.push_back(body);
+	}
+
+	if (ghostColliders.size() != 0)
+	{
+		short int i = 0;
+		for (it = ghostColliders.begin(); it != ghostColliders.end(); ++it)
+		{
+			Body* body = (*it);
+			Rect inter = MathUtils::IntersectRectangle(b->rect, body->rect);
+			Direction dir = (Direction)DirectionDetection(b->GetPosition(), prevPos);
+			if (inter.h < 1) inter.h = 1;
+			if (inter.w < 1) inter.w = 1;
+			slotList.PushBack({ dir, (int)(inter.w * inter.h), i });
+			i++;
+		}
+
+		if (slotList.Count() > 2)
+		{
+			slotList.CombSort();
+			slotList.Flip();
+		}
+		if (slotList.Count() == 2)
+		{
+			if (slotList[0] < slotList[1]) slotList.Flip();
+		}
+
+		Direction invDir = (Direction)InvertDirection((int)slotList[0].dir);
+
+		//bodyList1->data->SolveCollision(*b, invDir);
+		b->SolveCollision(*ghostColliders.at(slotList[0].slot), (int)slotList[0].dir);
+
+		//if (b->player) return ghostColliders.at(slotList[0].slot);
+		
+		return;
+	}
+}
+
+int Physics::DirectionDetection(Point currPos, Point prevPos)
+{
+	if (prevPos.y - currPos.y < 0) // DOWN
+	{
+		return 1; //COLLIDING UP TO DOWN 
+	}
+	if (prevPos.x - currPos.x < 0) // RIGHT
+	{
+		return 3; //COLLIDING LEFT TO RIGHT
+	}
+	if (prevPos.y - currPos.y > 0) // UP
+	{
+		return 0; //COLLIDING DOWN TO UP
+	}
+	if (prevPos.x - currPos.x > 0) // LEFT
+	{
+		return 2; //COLLIDING RIGHT TO LEFT
+	}
+
+	return -1;
+}
+
+int Physics::InvertDirection(int dir)
+{
+	Direction direction = (Direction)dir;
+	switch (direction)
+	{
+	case Direction::UP: return 1; break;
+	case Direction::DOWN: return 0; break;
+	case Direction::LEFT: return 3; break;
+	case Direction::RIGHT: return 2; break;
+	}
+
+	return -1;
+}
 
 //void DynamicBody::SetGravityAcceleration(Point& gravity)
 //{
@@ -808,36 +679,6 @@ bool Physics::Update(float dt)
 //	this->forces.Clear();
 //}
 //
-//void DynamicBody::SecondNewton()
-//{
-//	for (int i = 0; i < forces.Count(); i++)
-//	{
-//		sumForces += *forces.At(i);
-//		forces.Pop(*forces.At(i));
-//	}
-//	forces.Clear();
-//
-//	acceleration.x += sumForces.x / mass;
-//	acceleration.y += sumForces.y / mass;
-//
-//	sumForces = { 0.0f,0.0f };
-//}
-//
-//void DynamicBody::FirstBuxeda()
-//{
-//	for (int i = 0; i < momentums.Count(); i++)
-//	{
-//		sumMomentum += *momentums.At(i);
-//		momentums.Pop(*momentums.At(i));
-//	}
-//	momentums.Clear();
-//
-//	velocity.x += sumMomentum.x / mass;
-//	velocity.y += sumMomentum.y / mass;
-//
-//	sumMomentum = { 0.0f,0.0f };
-//}
-//
 //void DynamicBody::ApplyFriction(float dt)
 //{
 //	//Soc molt bo. Estic calculant la força que necessito per parar el cos. La redueixo i la converteixo en friction
@@ -902,78 +743,6 @@ bool Physics::Update(float dt)
 //	this->onLeftWall = false;
 //	this->onRightWall = false;
 //}
-
-//void Body::SolveCollision(Body &body, Direction dir)
-//{
-//	this->DeClipper(body, dir); // First declip, then do anything 
-//}
-//
-//void Body::DeClipper(Body &body, Direction dir)
-//{
-//	if (body.isCollidable)
-//	{
-//		switch (this->bodyType)
-//		{
-//		case BodyType::DYNAMIC_BODY:
-//			DynamicBody* currentBody = (DynamicBody*)this;
-//			
-//			if (currentBody->colliderType == CollisionType::RECTANGLE && body.colliderType == CollisionType::RECTANGLE)
-//			{
-//				//TOP & DOWN & LEFT & RIGHT
-//				if ((currentBody->position.y + currentBody->rect.h > body.position.y) && (currentBody->position.y < body.position.y) && (currentBody->position.y + currentBody->rect.h < body.position.y + body.rect.h))
-//				{
-//					// Ground
-//					currentBody->position.y = body.rect.y - currentBody->rect.h;
-//					currentBody->velocity.y = -currentBody->velocity.y * currentBody->coeficientRestitution.y;
-//
-//					currentBody->onGround = true;
-//					currentBody->dashCount = 0;
-//					if (currentBody->onJump)
-//					{
-//						currentBody->onJump = false;
-//						if (currentBody->onDoubleJump) currentBody->onDoubleJump = false;
-//					}
-//					if (currentBody->onDoubleJump) currentBody->onDoubleJump = false;
-//					if (currentBody->onWallJump) currentBody->onWallJump = false;
-//					if (currentBody->onDash) currentBody->onDash = false;
-//				}
-//				else if ((currentBody->position.y < body.position.y + body.rect.h) && (currentBody->position.y + currentBody->rect.h > body.position.y + body.rect.h) && (currentBody->position.y > body.position.y))
-//				{
-//					// Top
-//					currentBody->position.y = body.rect.y + body.rect.h;
-//					currentBody->velocity.y = -currentBody->velocity.y * currentBody->coeficientRestitution.y;
-//
-//					currentBody->onRoof = true;
-//				}
-//				else if ((currentBody->position.x < body.position.x + body.rect.w) && (currentBody->position.x > body.position.x) && (currentBody->position.x + currentBody->rect.w > body.position.x + body.rect.w))
-//				{
-//					// Left wall
-//					currentBody->position.x = body.rect.x + body.rect.w;
-//					currentBody->velocity.x = -currentBody->velocity.x * currentBody->coeficientRestitution.x;
-//					currentBody->onLeftWall = true;
-//
-//					if (currentBody->onWallJump) currentBody->onWallJump = false;
-//				}
-//				else if ((currentBody->position.x + currentBody->rect.w > body.position.x) && (currentBody->position.x + currentBody->rect.w < body.position.x + body.rect.w) && (currentBody->position.x < body.position.x))
-//				{
-//					// Right wall
-//					currentBody->position.x = body.rect.x - currentBody->rect.w;
-//					currentBody->velocity.x = -currentBody->velocity.x * currentBody->coeficientRestitution.x;
-//					currentBody->onRightWall = true;
-//
-//					if (currentBody->onWallJump) currentBody->onWallJump = false;
-//				}
-//
-//				//POSITION SET
-//				currentBody->rect.x = (int)currentBody->position.x;
-//				currentBody->rect.y = (int)currentBody->position.y;
-//			}
-//
-//			break;
-//		}
-//	}
-//}
-//
 //double Body::ToPositiveAngle(double angle)
 //{
 //	angle = fmod(angle, 360);
@@ -983,7 +752,7 @@ bool Physics::Update(float dt)
 //
 //	return angle;
 //}
-
+//
 //else if (currentBody->colliderType == RECTANGLE && body.colliderType == CIRCLE)
 //			{
 //			//TOP & DOWN

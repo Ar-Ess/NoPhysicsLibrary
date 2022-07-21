@@ -67,9 +67,9 @@ private:
 	void ResetBools();
 
 private:
-
-	friend class Body;
 	friend class Physics;
+	friend class Body;
+
 	Point velocity;
 	Point gravityAcceleration;
 	Point acceleration = {};

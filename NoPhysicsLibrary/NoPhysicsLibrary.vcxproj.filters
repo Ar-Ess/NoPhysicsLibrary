@@ -16,6 +16,9 @@
     <Filter Include="Bodies">
       <UniqueIdentifier>{52485742-4c24-4130-b2a5-d981ba201e50}</UniqueIdentifier>
     </Filter>
+    <Filter Include="External">
+      <UniqueIdentifier>{292119d1-7b68-49d5-aaa0-08328ae34158}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\NoPhysicsLibrary.cpp">
@@ -67,6 +70,24 @@
     </ClInclude>
     <ClInclude Include="Source\BodyCreationAux.h">
       <Filter>Aux</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\External\miniaudio\miniaudio.h">
+      <Filter>External</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\GhostSlot.h">
+      <Filter>Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\DirectionEnum.h">
+      <Filter>Enums</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\MathUtils.h">
+      <Filter>Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\PhysicsPresetEnum.h">
+      <Filter>Enums</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\ScenarioPresetEnum.h">
+      <Filter>Enums</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

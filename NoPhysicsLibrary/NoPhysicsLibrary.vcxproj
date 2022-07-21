@@ -89,6 +89,7 @@
       <PreprocessorDefinitions>_HAS_ITERATOR_DEBUGGING=0;_ITERATOR_DEBUG_LEVEL=0</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <AdditionalIncludeDirectories>C:\Users\marti\OneDrive\Documents\GitHub\NoPhysicsLibrary\NoPhysicsLibrary\Source\External\miniaudio;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -104,6 +105,7 @@
       <PreprocessorDefinitions>_HAS_ITERATOR_DEBUGGING=0;_ITERATOR_DEBUG_LEVEL=0</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <AdditionalIncludeDirectories>C:\Users\marti\OneDrive\Documents\GitHub\NoPhysicsLibrary\NoPhysicsLibrary\Source\External\miniaudio;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -119,6 +121,7 @@
       <PreprocessorDefinitions>_HAS_ITERATOR_DEBUGGING=0;_ITERATOR_DEBUG_LEVEL=0</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <AdditionalIncludeDirectories>C:\Users\marti\OneDrive\Documents\GitHub\NoPhysicsLibrary\NoPhysicsLibrary\Source\External\miniaudio;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -134,6 +137,7 @@
       <PreprocessorDefinitions>_HAS_ITERATOR_DEBUGGING=0;_ITERATOR_DEBUG_LEVEL=0</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <AdditionalIncludeDirectories>C:\Users\marti\OneDrive\Documents\GitHub\NoPhysicsLibrary\NoPhysicsLibrary\Source\External\miniaudio;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -153,13 +157,19 @@
     <ClInclude Include="Source\Body.h" />
     <ClInclude Include="Source\BodyClassEnum.h" />
     <ClInclude Include="Source\BodyCreationAux.h" />
+    <ClInclude Include="Source\DirectionEnum.h" />
     <ClInclude Include="Source\DynamicBody.h" />
     <ClInclude Include="Source\DynArray.h" />
+    <ClInclude Include="Source\External\miniaudio\miniaudio.h" />
     <ClInclude Include="Source\Flag.h" />
+    <ClInclude Include="Source\GhostSlot.h" />
+    <ClInclude Include="Source\MathUtils.h" />
     <ClInclude Include="Source\NoPhysicsLibrary.h" />
     <ClInclude Include="Source\Physics.h" />
+    <ClInclude Include="Source\PhysicsPresetEnum.h" />
     <ClInclude Include="Source\Point.h" />
     <ClInclude Include="Source\Rect.h" />
+    <ClInclude Include="Source\ScenarioPresetEnum.h" />
     <ClInclude Include="Source\StaticBody.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
