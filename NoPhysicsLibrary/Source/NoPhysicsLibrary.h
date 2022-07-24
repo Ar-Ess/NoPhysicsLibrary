@@ -4,8 +4,12 @@
 #include "ScenarioPresetEnum.h"
 #include "PhysicsPresetEnum.h"
 
-namespace NPL
+class NPL
 {
+public:
+
+	NPL();
+
 	// Initialize the library
 	void Init();
 
@@ -16,12 +20,18 @@ namespace NPL
 	// Iterates the physics
 	//  - Call it in your main update function
 	bool Step(float dt);
-	
+
 	// Set a predesigned scenario
 	//  - This function destroys automatically the previous scenario
-	void SetScenarioPreset(ScenarioPreset preset, Point windowSize = {1080, 720});
+	void SetScenarioPreset(ScenarioPreset preset, Point windowSize = { 1080, 720 });
 
 	// Destroys all Static Bodies created
 	void DestroyScenario();
 
-}
+
+	Rect ReturnScenarioSize();
+
+private:
+
+	Physics* physics = nullptr;
+};

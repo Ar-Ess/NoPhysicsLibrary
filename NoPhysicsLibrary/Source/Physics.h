@@ -53,16 +53,32 @@ public: // Methods
 
 	void Update(float dt);
 
+private:
+
+	void UpdateDynamic(float dt, DynamicBody* body);
+
+	void UpdateLiquid(float dt);
+
+	void AutoApplyForces();
+
+	void AutoApplyAeroDrag();
+
+	void AutoApplyAeroLift();
+
+	void AutoApplyHydroDrag();
+
+	void AutoApplyHydroLift(); // Future idea, maybe implementable
+
+	void AutoApplyBuoyancy();
+
+public: // Bullshit :)
+
 	//Draw your physic bodies. First argument shows specific propierties from the given DynamicBody*
 	/*void Draw(float dt, DynamicBody* dB = nullptr);*/
 
 	bool CleanUp();
 
 	void SetGlobalGravity(Point gravity);
-	//Sets global restitution coeficient for all bodies. {0.0f, 0.0f} for perfect elastic restitution
-	void SetGlobalRestitution(Point restCoeficient);
-	//Sets global friction for all bodies. {0.0f, 0.0f} for no friction
-	void SetGlobalFriction(Point frictionCoeficient);
 	////Sets a default physics presset
 	//void SetPhysicsPreset(PhysicsPreset phPreset);
 	////Sets a default scenario presset

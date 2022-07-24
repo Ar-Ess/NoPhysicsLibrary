@@ -19,7 +19,8 @@ bool Scene::Start()
 	assets->Start();
 	texture->Start();
 	audio->Start();
-	NPL::Init();
+	NPL* npl = new NPL();
+
 
 	//FIRST SCENE
 	if (!SetScene(Scenes::LOGO_SCENE)) return false;
@@ -98,7 +99,6 @@ bool Scene::SetLogoScene()
 
 bool Scene::SetDebugScene()
 {
-	NPL::CreateBody({}, 1).Dynamic();
 	return true;
 }
 

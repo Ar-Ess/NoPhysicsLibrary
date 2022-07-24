@@ -22,9 +22,9 @@ public:
 	// Allow body to jump from a wall given an specific force. It needs an input conditional ("if (SPACE BAR PRESSED) WallJump(...)"). Input true/false for wall friction descendence
 	void WallJump(Point newtons = {200.0f, 200.0f}, bool wallFriction = false);
 	// Applies an specific force to this body
-	void ApplyForce(Point newtons);
+	inline void ApplyForce(Point newtons) { forces.PushBack(newtons); }
 	// Applies an specific force to this body
-	void ApplyForce(float newtonsX = 0, float newtonsY = 0);
+	inline void ApplyForce(float newtonsX, float newtonsY) { forces.PushBack({ newtonsX, newtonsY }); }
 	// Applies an specific force to this body
 	void ApplyMomentum(Point momentum);
 	// Applies an specific force to this body
@@ -78,7 +78,7 @@ private:
 	Point coeficientRestitution = { 1.0f,1.0f };
 	Point frictionCoeficient = { 0.0f,0.0f };
 	float hydroControlParameter = 0.0f;
-	DynArray<Point> forces = {};
+	DynArray<Point> forces = {}; // TODO: Canviar a std (forces, momentum)
 	DynArray<Point> momentums = {};
 	bool onGround = false, onRoof = false, onLeftWall = false, onRightWall = false, onJump = false, onDoubleJump = false, onWallJump = false, onDash = false, onAir = false, onWater = false;
 	int dashCount = 0;

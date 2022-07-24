@@ -1,7 +1,9 @@
 #include "NoPhysicsLibrary.h"
 #include "Physics.h"
 
-static Physics* physics = nullptr;
+NPL::NPL()
+{
+}
 
 void NPL::Init()
 {
@@ -44,6 +46,22 @@ void NPL::DestroyScenario()
 		if (body->GetBodyClass() == BodyClass::STATIC_BODY) physics->DestroyBody(it);
 	}
 	return;
+}
+
+Rect NPL::ReturnScenarioSize()
+{
+	// TODO: Funció per retornar el rectangla englobador de tots els cossos
+	for (Body* body : physics->bodies)
+	{
+		Point maxP = { 0, 0 };
+		Point minP = { 0, 0 };
+
+		Rect bodyRect = Rect{ body->GetPosition(), body->GetSize() }; // Cambiar a GetRect()
+		if (bodyRect.x + bodyRect.w > maxP.x) maxP.x = bodyRect.x;
+		if (bodyRect.y + bodyRect.h > maxP.y) maxP.y = bodyRect.y;
+	}
+
+	return Rect();
 }
 
 void NPL::SetScenarioPreset(ScenarioPreset sPreset, Point wSize)

@@ -36,6 +36,12 @@
     <ClCompile Include="Source\StaticBody.cpp">
       <Filter>Bodies</Filter>
     </ClCompile>
+    <ClCompile Include="Source\LiquidBody.cpp">
+      <Filter>Bodies</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\GasBody.cpp">
+      <Filter>Bodies</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\NoPhysicsLibrary.h">
@@ -88,6 +94,12 @@
     </ClInclude>
     <ClInclude Include="Source\ScenarioPresetEnum.h">
       <Filter>Enums</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\LiquidBody.h">
+      <Filter>Bodies</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\GasBody.h">
+      <Filter>Bodies</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

@@ -2,6 +2,8 @@
 #include <vector>
 #include "StaticBody.h"
 #include "DynamicBody.h"
+#include "LiquidBody.h"
+#include "GasBody.h"
 
 struct BodyCreation
 {
@@ -29,6 +31,20 @@ struct BodyCreation
 	DynamicBody* Dynamic(Point velocity = { 0, 0 }, Point gravity = {0, 0})
 	{
 		DynamicBody* body = new DynamicBody(rect, velocity, gravity, mass);
+		bodies->push_back(body);
+		return body;
+	}
+
+	LiquidBody* Liquid()
+	{
+		LiquidBody* body = new LiquidBody();
+		bodies->push_back(body);
+		return body;
+	}
+
+	GasBody* Gas()
+	{
+		GasBody* body = new GasBody();
 		bodies->push_back(body);
 		return body;
 	}

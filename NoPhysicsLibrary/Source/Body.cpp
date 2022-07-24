@@ -7,7 +7,9 @@ Body::Body(BodyClass clas, Rect rect, float mass)
 	this->clas = clas;
 	this->rect = rect;
 
-	if (mass <= 0.0f) mass = 1.0f;
+	// You idiot, mass can not be zero :}
+	assert(mass != 0);
+
 	this->mass = mass;
 
 	this->properties.Set(true, 0);

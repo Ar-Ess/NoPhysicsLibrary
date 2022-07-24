@@ -197,58 +197,86 @@ Physics::~Physics()
 //}
 //
 
-void Physics::Integrate(DynamicBody* item, float dt)
+void Physics::Integrate(DynamicBody* body, float dt)
 {
-	// Sum of all acceleration in both axis
-	// sum of all forces
-	// second law newton (divide by mass) and gett total acceleration
+	// Second Order Red Velvet Integrator
 
-	item->rect.x += item->velocity.x * dt + 0.5f * item->acceleration.x * dt * dt;
-	item->velocity.x += item->acceleration.x * dt;
+	body->rect.x += body->velocity.x * dt + 0.5f * body->acceleration.x * dt * dt;
+	body->velocity.x += body->acceleration.x * dt;
 
-	item->rect.y += item->velocity.y * dt + 0.5f * item->acceleration.y * dt * dt;
-	item->velocity.y += item->acceleration.y * dt;
+	body->rect.y += body->velocity.y * dt + 0.5f * body->acceleration.y * dt * dt;
+	body->velocity.y += body->acceleration.y * dt;
 }
 
 void Physics::Update(float dt)
 {
-	std::vector<Body*>::const_iterator it;
-	for (it = bodies.begin(); it != bodies.end(); ++it)
+	for (Body* body : bodies)
 	{
-		Body* body = (*it);
 		switch (body->GetBodyClass())
 		{
-		case BodyClass::DYNAMIC_BODY:
-
-			DynamicBody* dB = (DynamicBody*)body;
-
-			// -> if (globalFrictionActive) dB->ApplyFriction(dt);
-
-			// Second law newton
-			dB->SecondNewton();
-
-			// First law Buxeda
-			dB->FirstBuxeda();
-
-			// Applying gravity acceleration post second law newton
-			dB->acceleration += dB->gravityAcceleration;
-
-			Point prevPosition = dB->rect.GetPosition();
-
-			// Integrate
-			Integrate(dB, dt);
-
-			dB->acceleration = { 0.0f,0.0f };
-
-			// Check Colls
-			CheckCollisions(dB, prevPosition);
-
-			// onAir check
-			//if (!dB->onGround && !dB->onLeftWall && !dB->onRightWall && !dB->onRoof && !dB->onJump && !dB->onDoubleJump && !dB->onDash && !dB->onWallJump && !dB->onWater) dB->onAir = true;
-			//else dB->onAir = false;
-			break;
+		case BodyClass::DYNAMIC_BODY: UpdateDynamic(dt, (DynamicBody*)body); break;
+		case BodyClass::LIQUID_BODY: UpdateLiquid(dt); break;
 		}
 	}
+}
+
+void Physics::UpdateDynamic(float dt, DynamicBody* body)
+{
+	AutoApplyForces(); // Future
+
+	// Multiplying gravity * mass to acquire the force
+	body->ApplyForce(body->gravityAcceleration.Multiply(body->mass)); // TODO: Canviar perquè sigui guai pel david :)
+
+	// Second law newton
+	body->SecondNewton(); // Suma de forces a acceleració
+
+	// First law Buxeda
+	body->FirstBuxeda(); // Suma de momentum a velocity
+
+	// TODO: Copia body del frame anterior (position, velocity, acceleration, sumMomentum & sumForces)
+	Point prevPosition = body->rect.GetPosition(); // Borrar, canviar per una funció tipo body->BackUp();
+
+	// Integrate
+	Integrate(body, dt);
+
+	// Check Collisions
+	CheckCollisions(body, prevPosition);
+
+}
+
+void Physics::UpdateLiquid(float dt)
+{
+}
+
+void Physics::AutoApplyForces()
+{
+	// TODO: Iteration check collision with environment
+
+	AutoApplyHydroDrag();
+	AutoApplyHydroLift();
+	AutoApplyAeroDrag();
+	AutoApplyAeroLift();
+	AutoApplyBuoyancy();
+}
+
+void Physics::AutoApplyAeroDrag()
+{
+}
+
+void Physics::AutoApplyAeroLift()
+{
+}
+
+void Physics::AutoApplyHydroDrag()
+{
+}
+
+void Physics::AutoApplyHydroLift()
+{
+}
+
+void Physics::AutoApplyBuoyancy()
+{
 }
 
 void Physics::DestroyBody(std::vector<Body*>::const_iterator it)
@@ -647,19 +675,6 @@ int Physics::InvertDirection(int dir)
 //	}
 //}
 //
-//void DynamicBody::ApplyForce(Point newtons)
-//{
-//	newtons *= NEWTONS_MULTIPLIER;
-//	forces.PushBack(newtons);
-//}
-//
-//void DynamicBody::ApplyForce(float newtonsX, float newtonsY)
-//{
-//	Point newtons = {newtonsX, newtonsY};
-//	newtons *= NEWTONS_MULTIPLIER;
-//	forces.PushBack(newtons);
-//}
-//
 //void DynamicBody::ApplyMomentum(Point momentum)
 //{
 //	momentums.PushBack(momentum);
@@ -678,7 +693,7 @@ int Physics::InvertDirection(int dir)
 //	this->sumForces.Zero();
 //	this->forces.Clear();
 //}
-//
+
 //void DynamicBody::ApplyFriction(float dt)
 //{
 //	//Soc molt bo. Estic calculant la força que necessito per parar el cos. La redueixo i la converteixo en friction
@@ -691,7 +706,7 @@ int Physics::InvertDirection(int dir)
 //
 //	forces.PushBack(dragForce);
 //}
-//
+
 //void DynamicBody::ApplyBuoyancy()
 //{
 //	if (buoyancyActive)

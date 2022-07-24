@@ -8,30 +8,34 @@ DynamicBody::DynamicBody(Rect rect, Point velocity, Point gravity, float mass) :
 
 void DynamicBody::SecondNewton()
 {
-	for (int i = 0; i < forces.Count(); i++)
-	{
-		sumForces += *forces.At(i);
-		forces.Pop(*forces.At(i));
-	}
-	forces.Clear();
-
-	acceleration.x += sumForces.x / mass;
-	acceleration.y += sumForces.y / mass;
+	// TODO: Crear struct force, amb info del Point, el mòdul, qui l'ha aplicat, quin tipus (buoyancy, aerodrag...)
 
 	sumForces = { 0.0f,0.0f };
+
+	for (int i = 0; i < forces.Count(); i++) sumForces += *forces.At(i);
+	forces.Clear();
+
+	// You idiot, mass can not be zero :}
+	assert(mass != 0);
+
+	// SUM Forces = massa * acceleració
+	acceleration.x = sumForces.x / mass;
+	acceleration.y = sumForces.y / mass;
 }
 
 void DynamicBody::FirstBuxeda()
 {
-	for (int i = 0; i < momentums.Count(); i++)
-	{
-		sumMomentum += *momentums.At(i);
-		momentums.Pop(*momentums.At(i));
-	}
-	momentums.Clear();
-
-	velocity.x += sumMomentum.x / mass;
-	velocity.y += sumMomentum.y / mass;
+	// TODO: Crear struct momentum, amb info del Point, el mòdul, qui l'ha aplicat, quin tipus (buoyancy, aerodrag...)
 
 	sumMomentum = { 0.0f,0.0f };
+
+	for (int i = 0; i < momentums.Count(); i++) sumMomentum += *momentums.At(i);
+	momentums.Clear();
+
+	// You idiot, mass can not be zero :}
+	assert(mass != 0);
+
+	// SUM Momentum = massa * velocity
+	velocity.x += sumMomentum.x / mass;
+	velocity.y += sumMomentum.y / mass;
 }
