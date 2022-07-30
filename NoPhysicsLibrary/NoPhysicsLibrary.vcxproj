@@ -157,6 +157,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\Body.h" />
+    <ClInclude Include="Source\BodyBackUp.h" />
     <ClInclude Include="Source\BodyClassEnum.h" />
     <ClInclude Include="Source\BodyCreationAux.h" />
     <ClInclude Include="Source\DirectionEnum.h" />

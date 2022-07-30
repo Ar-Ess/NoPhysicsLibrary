@@ -48,20 +48,21 @@ void NPL::DestroyScenario()
 	return;
 }
 
-Rect NPL::ReturnScenarioSize()
+Rect NPL::ReturnScenarioRect()
 {
-	// TODO: Funció per retornar el rectangla englobador de tots els cossos
+	Point minP = { 0, 0 };
+	Point maxP = { 0, 0 };
+
 	for (Body* body : physics->bodies)
 	{
-		Point maxP = { 0, 0 };
-		Point minP = { 0, 0 };
-
-		Rect bodyRect = Rect{ body->GetPosition(), body->GetSize() }; // Cambiar a GetRect()
-		if (bodyRect.x + bodyRect.w > maxP.x) maxP.x = bodyRect.x;
-		if (bodyRect.y + bodyRect.h > maxP.y) maxP.y = bodyRect.y;
+		Rect bodyRect = body->GetRect();
+		if (bodyRect.x + bodyRect.w > maxP.x) maxP.x = bodyRect.x + bodyRect.w;
+		if (bodyRect.y + bodyRect.h > maxP.y) maxP.y = bodyRect.y + bodyRect.h;
+		if (bodyRect.x < minP.x) minP.x = bodyRect.x;
+		if (bodyRect.y < minP.y) minP.y = bodyRect.y;
 	}
 
-	return Rect();
+	return Rect{ minP.x, minP.y, maxP.x - minP.x, maxP.y - minP.y};
 }
 
 void NPL::SetScenarioPreset(ScenarioPreset sPreset, Point wSize)

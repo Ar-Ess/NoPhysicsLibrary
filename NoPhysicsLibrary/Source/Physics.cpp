@@ -1,6 +1,7 @@
 #include "Physics.h"
 #include "GhostSlot.h"
 #include "MathUtils.h"
+#include "DynArray.h"
 
 Physics::Physics()
 {
@@ -225,7 +226,7 @@ void Physics::UpdateDynamic(float dt, DynamicBody* body)
 	AutoApplyForces(); // Future
 
 	// Multiplying gravity * mass to acquire the force
-	body->ApplyForce(body->gravityAcceleration.Multiply(body->mass)); // TODO: Canviar perquè sigui guai pel david :)
+	body->ApplyForce(body->gravityAcceleration * body->mass);
 
 	// Second law newton
 	body->SecondNewton(); // Suma de forces a acceleració
@@ -233,14 +234,13 @@ void Physics::UpdateDynamic(float dt, DynamicBody* body)
 	// First law Buxeda
 	body->FirstBuxeda(); // Suma de momentum a velocity
 
-	// TODO: Copia body del frame anterior (position, velocity, acceleration, sumMomentum & sumForces)
-	Point prevPosition = body->rect.GetPosition(); // Borrar, canviar per una funció tipo body->BackUp();
+	BodyBackUp backup = body->BackUp();
 
 	// Integrate
 	Integrate(body, dt);
 
 	// Check Collisions
-	CheckCollisions(body, prevPosition);
+	CheckCollisions(body, backup);
 
 }
 
@@ -444,7 +444,7 @@ void Physics::DestroyBody(std::vector<Body*>::const_iterator it)
 //	return true;
 //}
 
-void Physics::CheckCollisions(Body* b, Point prevPos)
+void Physics::CheckCollisions(Body* b, BodyBackUp backup)
 {
 	std::vector<Body*> ghostColliders;
 	DynArray<GhostSlot> slotList;
@@ -465,7 +465,7 @@ void Physics::CheckCollisions(Body* b, Point prevPos)
 		{
 			Body* body = (*it);
 			Rect inter = MathUtils::IntersectRectangle(b->rect, body->rect);
-			Direction dir = (Direction)DirectionDetection(b->GetPosition(), prevPos);
+			Direction dir = (Direction)DirectionDetection(b->GetPosition(), backup.rect.GetPosition());
 			if (inter.h < 1) inter.h = 1;
 			if (inter.w < 1) inter.w = 1;
 			slotList.PushBack({ dir, (int)(inter.w * inter.h), i });

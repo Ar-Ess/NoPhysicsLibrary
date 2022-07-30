@@ -1,7 +1,7 @@
 #pragma once
 
 //#include "DynArray.h"
-#include "Rect.h"
+#include "BodyBackUp.h"
 #include <vector>
 #include "DynamicBody.h"
 #include "StaticBody.h"
@@ -114,7 +114,7 @@ public:
 	bool debugBools = false;
 
 	void Integrate(DynamicBody* item, float dt);
-	void CheckCollisions(Body* body, Point prevPos);
+	void CheckCollisions(Body* body, BodyBackUp backup);
 	int DirectionDetection(Point currPos, Point prevPos);
 	int InvertDirection(int dir);
 	//void ChangeGravityAcceleration(Point acceleration);

@@ -29,7 +29,7 @@ public:
 	void DestroyScenario();
 
 
-	Rect ReturnScenarioSize();
+	Rect ReturnScenarioRect();
 
 private:
 

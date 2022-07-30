@@ -1,8 +1,9 @@
 #pragma once
 
 #include "BodyClassEnum.h"
-#include "Rect.h"
+#include "BodyBackup.h"
 #include "Flag.h"
+#include "Body.h"
 
 
 class Body
@@ -22,6 +23,9 @@ public: //Getters
 
 	// Returns the width & height of the body
 	inline Point GetSize() const { return rect.GetSize(); }
+
+	// Returns the rectanfle of the body
+	inline Rect GetRect() const { return rect; }
 
 	// Returns the body class enum
 	inline BodyClass GetBodyClass() const { return clas; }

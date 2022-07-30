@@ -6,14 +6,19 @@ DynamicBody::DynamicBody(Rect rect, Point velocity, Point gravity, float mass) :
 	this->gravityAcceleration = gravity;
 }
 
+BodyBackUp DynamicBody::BackUp()
+{
+	return BodyBackUp(rect, velocity, acceleration, sumMomentum, sumForces);
+}
+
 void DynamicBody::SecondNewton()
 {
 	// TODO: Crear struct force, amb info del Point, el mòdul, qui l'ha aplicat, quin tipus (buoyancy, aerodrag...)
 
 	sumForces = { 0.0f,0.0f };
 
-	for (int i = 0; i < forces.Count(); i++) sumForces += *forces.At(i);
-	forces.Clear();
+	for (Point p : forces) sumForces += p;
+	forces.clear();
 
 	// You idiot, mass can not be zero :}
 	assert(mass != 0);
@@ -29,8 +34,8 @@ void DynamicBody::FirstBuxeda()
 
 	sumMomentum = { 0.0f,0.0f };
 
-	for (int i = 0; i < momentums.Count(); i++) sumMomentum += *momentums.At(i);
-	momentums.Clear();
+	for (Point m : momentums) sumMomentum += m;
+	momentums.clear();
 
 	// You idiot, mass can not be zero :}
 	assert(mass != 0);

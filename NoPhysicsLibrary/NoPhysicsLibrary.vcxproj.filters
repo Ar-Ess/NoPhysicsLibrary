@@ -101,5 +101,8 @@
     <ClInclude Include="Source\GasBody.h">
       <Filter>Bodies</Filter>
     </ClInclude>
+    <ClInclude Include="Source\BodyBackUp.h">
+      <Filter>Bodies</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

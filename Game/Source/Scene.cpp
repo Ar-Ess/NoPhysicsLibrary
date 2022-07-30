@@ -20,6 +20,7 @@ bool Scene::Start()
 	texture->Start();
 	audio->Start();
 	NPL* npl = new NPL();
+	npl->Init();
 
 
 	//FIRST SCENE
