@@ -226,7 +226,7 @@ void Physics::UpdateDynamic(float dt, DynamicBody* body)
 	AutoApplyForces(); // Future
 
 	// Multiplying gravity * mass to acquire the force
-	body->ApplyForce(body->gravityAcceleration * body->mass);
+	body->ApplyForce(body->gravity.x * body->mass, body->gravity.y * body->mass);
 
 	// Second law newton
 	body->SecondNewton(); // Suma de forces a acceleració
@@ -310,7 +310,7 @@ void Physics::DestroyBody(std::vector<Body*>::const_iterator it)
 //		case BodyType::DYNAMIC_BODY:
 //			DynamicBody* dB = (DynamicBody*)body;
 //			acc *= REALITY_MULTIPLIER;
-//			dB->gravityAcceleration = acc;
+//			dB->gravity = acc;
 //			break;
 //		}
 //	}
@@ -531,7 +531,7 @@ int Physics::InvertDirection(int dir)
 
 //void DynamicBody::SetGravityAcceleration(Point& gravity)
 //{
-//	this->gravityAcceleration = gravity;
+//	this->gravity = gravity;
 //}
 //
 //void DynamicBody::SetConstantVelocity(Point& constVelocity)
@@ -711,16 +711,16 @@ int Physics::InvertDirection(int dir)
 //{
 //	if (buoyancyActive)
 //	{
-//		Point buoyancyForce = this->gravityAcceleration;
+//		Point buoyancyForce = this->gravity;
 //
-//		float magnitude = sqrt(pow(this->gravityAcceleration.x, 2) + pow(this->gravityAcceleration.y, 2));
+//		float magnitude = sqrt(pow(this->gravity.x, 2) + pow(this->gravity.y, 2));
 //
 //		buoyancyForce = { buoyancyForce.x / magnitude, buoyancyForce.y / magnitude };
 //		buoyancyForce.Negate();
 //
 //		Point buoyancyForceMagnitude = { 0,0 };
-//		buoyancyForceMagnitude.x = mass * this->gravityAcceleration.x * velocity.x - mass * this->gravityAcceleration.x;
-//		buoyancyForceMagnitude.y = mass * this->gravityAcceleration.y * velocity.y - mass * this->gravityAcceleration.y;
+//		buoyancyForceMagnitude.x = mass * this->gravity.x * velocity.x - mass * this->gravity.x;
+//		buoyancyForceMagnitude.y = mass * this->gravity.y * velocity.y - mass * this->gravity.y;
 //
 //		buoyancyForce.x = buoyancyForce.x * buoyancyForceMagnitude.x;
 //		buoyancyForce.y = buoyancyForce.y * buoyancyForceMagnitude.y;

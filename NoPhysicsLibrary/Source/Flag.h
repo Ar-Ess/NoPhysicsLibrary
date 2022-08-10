@@ -3,6 +3,7 @@
 #include <assert.h>
 #include <stdint.h>
 
+// 8 slots bit-wise manager
 class Flag
 {
 public:
@@ -35,7 +36,7 @@ public:
 	inline void Set(uint8_t flag) { this->flag = flag; }
 
 	// Get an specific flag
-	bool Get(short int index)
+	bool Get(short int index) const
 	{
 		// Flags only have 8 slots available
 		assert(index >= 0 && index < 8);
@@ -50,6 +51,10 @@ public:
 
 	// Inverts the state of all the flags
 	inline void Invert() { flag = ~flag; }
+
+	inline bool IsAnyTrue() const { return flag != 0; };
+
+	inline void Clear() { flag = 0; };
 
 private:
 

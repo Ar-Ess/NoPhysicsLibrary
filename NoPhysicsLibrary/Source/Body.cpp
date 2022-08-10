@@ -37,16 +37,7 @@ void Body::DeClipper(Body &body, int dir)
 				currentBody->rect.y = body.rect.y - currentBody->rect.h;
 				currentBody->velocity.y = -currentBody->velocity.y * currentBody->coeficientRestitution.y;
 
-				currentBody->onGround = true;
-				currentBody->dashCount = 0;
-				if (currentBody->onJump)
-				{
-					currentBody->onJump = false;
-					if (currentBody->onDoubleJump) currentBody->onDoubleJump = false;
-				}
-				if (currentBody->onDoubleJump) currentBody->onDoubleJump = false;
-				if (currentBody->onWallJump) currentBody->onWallJump = false;
-				if (currentBody->onDash) currentBody->onDash = false;
+				currentBody->collisionFlags.Set(true, (int)CollideBool::GROUND);
 			}
 			else if ((currentBody->rect.y < body.rect.y + body.rect.h) && (currentBody->rect.y + currentBody->rect.h > body.rect.y + body.rect.h) && (currentBody->rect.y > body.rect.y))
 			{
@@ -54,25 +45,23 @@ void Body::DeClipper(Body &body, int dir)
 				currentBody->rect.y = body.rect.y + body.rect.h;
 				currentBody->velocity.y = -currentBody->velocity.y * currentBody->coeficientRestitution.y;
 
-				currentBody->onRoof = true;
+				currentBody->collisionFlags.Set(true, (int)CollideBool::ROOF);
 			}
 			else if ((currentBody->rect.x < body.rect.x + body.rect.w) && (currentBody->rect.x > body.rect.x) && (currentBody->rect.x + currentBody->rect.w > body.rect.x + body.rect.w))
 			{
 				// Left wall
 				currentBody->rect.x = body.rect.x + body.rect.w;
 				currentBody->velocity.x = -currentBody->velocity.x * currentBody->coeficientRestitution.x;
-				currentBody->onLeftWall = true;
-
-				if (currentBody->onWallJump) currentBody->onWallJump = false;
+				
+				currentBody->collisionFlags.Set(true, (int)CollideBool::LEFT);
 			}
 			else if ((currentBody->rect.x + currentBody->rect.w > body.rect.x) && (currentBody->rect.x + currentBody->rect.w < body.rect.x + body.rect.w) && (currentBody->rect.x < body.rect.x))
 			{
 				// Right wall
 				currentBody->rect.x = body.rect.x - currentBody->rect.w;
 				currentBody->velocity.x = -currentBody->velocity.x * currentBody->coeficientRestitution.x;
-				currentBody->onRightWall = true;
-
-				if (currentBody->onWallJump) currentBody->onWallJump = false;
+				
+				currentBody->collisionFlags.Set(true, (int)CollideBool::RIGHT);
 			}
 
 		break;

@@ -19,30 +19,6 @@
 #define REALITY_MULTIPLIER 60
 #define NEWTONS_MULTIPLIER 100
 
-//enum class DashDirection
-//{
-//	UP = 0,
-//	DOWN,
-//	LEFT,
-//	RIGHT,
-//	UPLEFT,
-//	DOWNLEFT,
-//	UPRIGHT,
-//	DOWNRIGHT
-//};
-//
-//enum class DebugBools
-//{
-//	GROUND,
-//	ROOF,
-//	LEFT_WALL,
-//	RIGHT_WALL,
-//	JUMP,
-//	DOUBLE_JUMP,
-//	WALL_JUMP,
-//	DASH
-//};
-
 class Physics
 {
 public: // Methods
@@ -73,11 +49,6 @@ private:
 
 public: // Bullshit :)
 
-	//Draw your physic bodies. First argument shows specific propierties from the given DynamicBody*
-	/*void Draw(float dt, DynamicBody* dB = nullptr);*/
-
-	bool CleanUp();
-
 	void SetGlobalGravity(Point gravity);
 	////Sets a default physics presset
 	//void SetPhysicsPreset(PhysicsPreset phPreset);
@@ -97,21 +68,18 @@ public: // Bullshit :)
 public: // Getters & Setters
 
 	// Returns wether the physics are paused
-	inline bool GetGlobalPause() { return globals.Get(0); }
+	inline bool GetGlobalPause() const { return globals.Get(0); }
 
 	// Returns wether the global gravity is active
-	inline bool GetGlobalGravity() { return globals.Get(1); }
+	inline bool GetGlobalGravity() const { return globals.Get(1); }
 
 	// Returns wether the global friction is active
-	inline bool GetGlobalFriction() { return globals.Get(2); }
+	inline bool GetGlobalFriction() const { return globals.Get(2); }
 
 	// Returns wether the global restitution is active
-	inline bool GetGlobalRestitution() { return globals.Get(3); }
+	inline bool GetGlobalRestitution() const { return globals.Get(3); }
 
 public:
-
-	bool debug = false;
-	bool debugBools = false;
 
 	void Integrate(DynamicBody* item, float dt);
 	void CheckCollisions(Body* body, BodyBackUp backup);
@@ -124,7 +92,11 @@ public:
 	//void DebugBools(DynamicBody* dB = nullptr, float dt = 0.0f);
 	//void ResetBodyBools();
 
+	// TODO: Investigate about vector. Maybe not the best option if users has to save a pointer to data
+	// inside here. Vectors reorder themselves if they don't find enough space. And Idk if that could
+	// lead to a "nullptr" error. Look video: https://www.youtube.com/watch?v=6OoSgY6NVVk&t=1550s&ab_channel=javidx9
 	std::vector<Body*> bodies;
+
 	Point globalGravity = {};
 	Point globalRestitution = {};
 	Point globalFriction = {};

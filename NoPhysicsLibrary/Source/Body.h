@@ -3,8 +3,6 @@
 #include "BodyClassEnum.h"
 #include "BodyBackup.h"
 #include "Flag.h"
-#include "Body.h"
-
 
 class Body
 {

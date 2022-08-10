@@ -44,6 +44,11 @@ struct Point
 		return (float)sqrt(double(xx) + yy);
 	}
 
+	float Module()
+	{
+		return (float)sqrt(pow(double(x), 2) + pow(double(y), 2));
+	}
+
 	void Zero()
 	{
 		this->x = 0;

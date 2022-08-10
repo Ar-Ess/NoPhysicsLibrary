@@ -104,5 +104,14 @@
     <ClInclude Include="Source\BodyBackUp.h">
       <Filter>Bodies</Filter>
     </ClInclude>
+    <ClInclude Include="Source\Force.h">
+      <Filter>Bodies</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Momentum.h">
+      <Filter>Bodies</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\CollideBool.h">
+      <Filter>Enums</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
