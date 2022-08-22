@@ -7,6 +7,7 @@
 #include "Audio.h"
 #include "Textures.h"
 #include "AssetsManager.h"
+#include "NoPhysicsLibrary.h"
 
 enum class Scenes
 {
@@ -59,6 +60,9 @@ private: // Variables
 	AssetsManager* assets = nullptr;
 	Window* window = nullptr;
 	Audio* audio = nullptr;
+
+	NPL* physics = nullptr;
+	std::vector<Body*> bodies;
 
 	bool exit = false;
 	bool activeContinue = false;

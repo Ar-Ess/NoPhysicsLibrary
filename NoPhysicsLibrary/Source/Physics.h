@@ -49,7 +49,6 @@ private:
 
 public: // Bullshit :)
 
-	void SetGlobalGravity(Point gravity);
 	////Sets a default physics presset
 	//void SetPhysicsPreset(PhysicsPreset phPreset);
 	////Sets a default scenario presset
@@ -64,20 +63,6 @@ public: // Bullshit :)
 	void ResetAllForces();
 	//Destroys de body setted as an input of this function
 	void DestroyBody(std::vector<Body*>::const_iterator it);
-
-public: // Getters & Setters
-
-	// Returns wether the physics are paused
-	inline bool GetGlobalPause() const { return globals.Get(0); }
-
-	// Returns wether the global gravity is active
-	inline bool GetGlobalGravity() const { return globals.Get(1); }
-
-	// Returns wether the global friction is active
-	inline bool GetGlobalFriction() const { return globals.Get(2); }
-
-	// Returns wether the global restitution is active
-	inline bool GetGlobalRestitution() const { return globals.Get(3); }
 
 public:
 
@@ -101,9 +86,7 @@ public:
 	Point globalRestitution = {};
 	Point globalFriction = {};
 
-private:
-
-	// Pause | Gravity | Friction | Restitution
+	// Pause 0
 	Flag globals = {};
 
 };

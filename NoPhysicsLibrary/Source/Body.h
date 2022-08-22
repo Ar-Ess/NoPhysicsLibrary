@@ -22,7 +22,7 @@ public: //Getters
 	// Returns the width & height of the body
 	inline Point GetSize() const { return rect.GetSize(); }
 
-	// Returns the rectanfle of the body
+	// Returns the pointer to the rectangle of the body
 	inline Rect GetRect() const { return rect; }
 
 	// Returns the body class enum

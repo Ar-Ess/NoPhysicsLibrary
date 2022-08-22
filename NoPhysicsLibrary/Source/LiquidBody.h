@@ -6,6 +6,6 @@ class LiquidBody : public Body
 {
 public:
 
-	LiquidBody();
+	LiquidBody(Rect rect, float mass);
 
 };

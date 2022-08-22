@@ -13,13 +13,6 @@ struct BodyCreation
 		this->rect = rect;
 		this->bodies = bodies;
 	}
-	
-	Body* Empty()
-	{
-		Body* body = new Body(BodyClass::EMPTY_BODY, rect, mass);
-		bodies->push_back(body);
-		return body;
-	}
 
 	StaticBody* Static()
 	{
@@ -37,14 +30,14 @@ struct BodyCreation
 
 	LiquidBody* Liquid()
 	{
-		LiquidBody* body = new LiquidBody();
+		LiquidBody* body = new LiquidBody(rect, mass);
 		bodies->push_back(body);
 		return body;
 	}
 
 	GasBody* Gas()
 	{
-		GasBody* body = new GasBody();
+		GasBody* body = new GasBody(rect, mass);
 		bodies->push_back(body);
 		return body;
 	}

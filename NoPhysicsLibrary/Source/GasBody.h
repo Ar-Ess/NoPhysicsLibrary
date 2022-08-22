@@ -6,6 +6,6 @@ class GasBody : public Body
 {
 public:
 
-	GasBody();
+	GasBody(Rect rect, float mass);
 
 };

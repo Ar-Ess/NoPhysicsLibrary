@@ -1,5 +1,4 @@
 #include "Scene.h"
-#include "NoPhysicsLibrary.h"
 
 Scene::Scene(Render* render, Input* input, Window* window)
 {
@@ -9,6 +8,7 @@ Scene::Scene(Render* render, Input* input, Window* window)
 	this->render = render;
 	this->input = input;
 	this->window = window;
+	this->physics = new NPL();
 }
 
 Scene::~Scene()
@@ -19,8 +19,7 @@ bool Scene::Start()
 	assets->Start();
 	texture->Start();
 	audio->Start();
-	NPL* npl = new NPL();
-	npl->Init();
+	physics->Init();
 
 
 	//FIRST SCENE
@@ -100,6 +99,12 @@ bool Scene::SetLogoScene()
 
 bool Scene::SetDebugScene()
 {
+	bodies.push_back(physics->CreateBody(Rect{ 100, 167, 200, 67 }, 1).Static());
+	bodies.push_back(physics->CreateBody(Rect{ 706, 420, 60, 98 }, 1).Dynamic());
+	bodies.push_back(physics->CreateBody(Rect{ 1000, 600, 20, 100 }, 1).Liquid());
+	bodies.push_back(physics->CreateBody(physics->ReturnScenarioRect(), 1).Gas());
+	physics->SetGlobalGravity({0, 10000});
+
 	return true;
 }
 
@@ -115,6 +120,23 @@ bool Scene::UpdateLogoScene(float dt)
 bool Scene::UpdateDebugScene(float dt)
 {
 	bool ret = true;
+
+	physics->Step(dt);
+
+	for (Body* b : bodies)
+	{
+		SDL_Color color = {0, 0, 0, 50};
+
+		switch (b->GetBodyClass())
+		{
+		case BodyClass::STATIC_BODY:  color = { 255,   0,   0, color.a }; break;
+		case BodyClass::DYNAMIC_BODY: color = {   0, 255,   0, color.a }; break;
+		case BodyClass::LIQUID_BODY:  color = { 100, 100, 255, color.a }; break;
+		case BodyClass::GAS_BODY:     color = { 255, 255, 255, color.a }; break;
+		}
+
+		render->DrawRectangle(b->GetRect(), color);
+	}
 
 	return ret;
 }

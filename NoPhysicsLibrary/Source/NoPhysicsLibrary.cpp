@@ -21,20 +21,12 @@ BodyCreation NPL::CreateBody(Rect rectangle, float mass)
 	return BodyCreation(rectangle, mass, &physics->bodies);
 }
 
-bool NPL::Step(float dt)
+void NPL::Step(float dt)
 {
-	if (physics->GetGlobalPause()) return true;
-
-	if (physics->GetGlobalGravity()) int i = 0; // ChangeGravityAcceleration(globalGravity);
-
-	if (physics->GetGlobalRestitution()) int i = 0;// ChangeRestitutionCoeficient(globalRestitution);
-	//else ChangeRestitutionCoeficient({ 1.0f, 1.0f });
-
-	if (physics->GetGlobalFriction()) int i = 0; // ChangeFrictionCoeficient(globalFriction);
+	if (GetGlobalPause()) return;
 
 	physics->Update(dt);
 
-	return false;
 }
 
 void NPL::DestroyScenario()
@@ -50,8 +42,9 @@ void NPL::DestroyScenario()
 
 Rect NPL::ReturnScenarioRect()
 {
-	Point minP = { 0, 0 };
-	Point maxP = { 0, 0 };
+	Rect first = physics->bodies.front()->GetRect();
+	Point minP = { first.x, first.y };
+	Point maxP = { first.x + first.w, first.y + first.h};
 
 	for (Body* body : physics->bodies)
 	{
@@ -63,6 +56,47 @@ Rect NPL::ReturnScenarioRect()
 	}
 
 	return Rect{ minP.x, minP.y, maxP.x - minP.x, maxP.y - minP.y};
+}
+
+inline bool NPL::GetGlobalPause() const
+{
+	return physics->globals.Get(0);
+
+}
+
+inline void NPL::SetGlobalPause(bool set)
+{
+	physics->globals.Set(0, set);
+}
+
+inline Point NPL::GetGlobalGravity() const
+{
+	return physics->globalGravity;
+}
+
+void NPL::SetGlobalGravity(Point magnitude)
+{
+	physics->globalGravity = magnitude;
+}
+
+inline Point NPL::GetGlobalFriction() const
+{
+	return physics->globalFriction;
+}
+
+inline void NPL::SetGlobalFriction(Point magnitude)
+{
+	physics->globalFriction = magnitude;
+}
+
+inline Point NPL::GetGlobalRestitution() const
+{
+	return physics->globalRestitution;
+}
+
+inline void NPL::SetGlobalRestitution(Point magnitude)
+{
+	physics->globalRestitution = magnitude;
 }
 
 void NPL::SetScenarioPreset(ScenarioPreset sPreset, Point wSize)
