@@ -1,5 +1,6 @@
 #include "NoPhysicsLibrary.h"
 #include "Physics.h"
+#include <stdint.h>
 
 NPL::NPL()
 {
@@ -11,6 +12,12 @@ void NPL::Init()
 	assert(physics == nullptr);
 
 	physics = new Physics();
+}
+
+void NPL::CleanUp()
+{
+	physics->CleanUp();
+	// MiniAudio CleanUp
 }
 
 BodyCreation NPL::CreateBody(Rect rectangle, float mass)
@@ -31,13 +38,10 @@ void NPL::Step(float dt)
 
 void NPL::DestroyScenario()
 {
-	std::vector<Body*>::const_iterator it;
-	for (it = physics->bodies.begin(); it != physics->bodies.end(); ++it)
+	for (Body* b : physics->bodies)
 	{
-		Body* body = (*it);
-		if (body->GetBodyClass() == BodyClass::STATIC_BODY) physics->DestroyBody(it);
+		if (b->GetClass() == BodyClass::STATIC_BODY) physics->DestroyBody(b);
 	}
-	return;
 }
 
 Rect NPL::ReturnScenarioRect()
@@ -62,11 +66,6 @@ inline bool NPL::GetGlobalPause() const
 {
 	return physics->globals.Get(0);
 
-}
-
-inline void NPL::SetGlobalPause(bool set)
-{
-	physics->globals.Set(0, set);
 }
 
 inline Point NPL::GetGlobalGravity() const
@@ -97,6 +96,30 @@ inline Point NPL::GetGlobalRestitution() const
 inline void NPL::SetGlobalRestitution(Point magnitude)
 {
 	physics->globalRestitution = magnitude;
+}
+
+bool NPL::DeathLimit(Rect limits)
+{
+	for (Body* b : physics->bodies)
+	{
+		if (b->GetClass() == BodyClass::DYNAMIC_BODY && !physics->CheckCollision(b->GetRect(), limits))
+		{
+			DestroyBody(b);
+			return true;
+		}
+	}
+
+	return false;
+}
+
+bool NPL::DestroyBody(Body* body)
+{
+	return DestroyBody(body);
+}
+
+void NPL::PausePhysics(bool pause)
+{
+	physics->globals.Set(0, pause);
 }
 
 void NPL::SetScenarioPreset(ScenarioPreset sPreset, Point wSize)

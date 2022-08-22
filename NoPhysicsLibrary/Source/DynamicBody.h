@@ -10,21 +10,25 @@ public: // Methods
 
 	DynamicBody(Rect rect = { 0.0f, 0.0f, 1.0f, 1.0f }, Point velocity = { 0, 0 }, Point gravity = {0, 0}, float mass = 1.0f);
 
+	~DynamicBody() override;
+
 	BodyBackUp BackUp();
 
-	// Returns if this body is colliding with any other body
-	// in the specified way
+	// Returns if this body is colliding with any other body in the specified situation
 	inline bool IsColliding(CollideBool collision);
 
-	// Returns if this body is colliding with any other body
-	// in any possible way
+	// Returns if this body is colliding with any other body in any possible way
 	inline bool IsColliding();
 	
 	// Applies an specific force to this body
-	inline void ApplyForce(float newtonsX, float newtonsY) { forces.push_back(new Force({newtonsX, newtonsY})); }
+	inline void ApplyForce(float newtonsX, float newtonsY) { if (newtonsX != 0 || newtonsY != 0) forces.push_back(new Force({newtonsX, newtonsY})); }
+	// Applies an specific force to this body
+	inline void ApplyForce(Point newtons) { if (!newtons.IsZero()) forces.push_back(new Force({ newtons.x, newtons.y })); }
 
 	// Applies an specific force to this body
-	inline void ApplyMomentum(float momentumX, float momentumY) { momentums.push_back(new Momentum({ momentumX, momentumY })); }
+	inline void ApplyMomentum(float momentumX, float momentumY) { if (momentumX != 0 || momentumY != 0) momentums.push_back(new Momentum({ momentumX, momentumY })); }
+	// Applies an specific force to this body
+	inline void ApplyMomentun(Point momentum) { if (!momentum.IsZero()) forces.push_back(new Force({ momentum.x, momentum.y })); }
 
 	// Set an specific gravity for this body. Not compatible with SetGlobalGravity() being active. Desable SetGlobalgravity() by inputting SetGlobalGravity(0.0f, 0.0f); or deleting the function
 	//void SetGravityAcceleration(Point& gravity);*/
@@ -79,7 +83,7 @@ private: // Variables
 	friend class Physics;
 	friend class Body;
 
-	// TODONE: check which ones are necessary
+	// -TODONE: check which ones are necessary
 	Point velocity = {};
 	Point gravity = {};
 	Point acceleration = {};
@@ -91,7 +95,7 @@ private: // Variables
 	Force totalForces = {};
 	Momentum totalMomentum = {};
 
-	// TODONE: Transform this into a flag
+	// -TODONE: Transform this into a flag
 	// Air | Ground | Roof | Left | Right | Water
 	Flag collisionFlags = {};
 };

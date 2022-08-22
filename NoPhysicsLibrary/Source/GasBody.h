@@ -8,4 +8,5 @@ public:
 
 	GasBody(Rect rect, float mass);
 
+	~GasBody() override;
 };

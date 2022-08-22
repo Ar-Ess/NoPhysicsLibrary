@@ -13,6 +13,8 @@ Body::Body(BodyClass clas, Rect rect, float mass)
 	this->mass = mass;
 
 	this->properties.Set(true, 0);
+
+	id = reinterpret_cast<int>(this);
 }
 
 void Body::SolveCollision(Body& body, int dir)

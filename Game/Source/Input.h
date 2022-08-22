@@ -10,8 +10,6 @@
 #define MAX_PADS 1
 
 struct SDL_Rect;
-struct _SDL_GameController;
-struct _SDL_Haptic;
 
 enum class EventWindow
 {
@@ -27,45 +25,6 @@ enum class KeyState
 	KEY_DOWN,
 	KEY_REPEAT,
 	KEY_UP
-};
-
-enum class GamePadInput
-{
-	A = 0,
-	B,
-	X,
-	Y,
-	UP_PAD,
-	DOWN_PAD,
-	LEFT_PAD,
-	RIGHT_PAD,
-	L1,
-	R1,
-	L3,
-	R3,
-	START,
-	GUIDE,
-	BACK,
-};
-
-struct GamePad
-{
-	//Input data
-	//bool start, back, guide;
-	//bool x, y, a, b, l1, r1, l3, r3;
-	//bool up, down, left, right;
-	float l2 = 0.0f, r2 = 0.0f;
-	float leftX = 0.0f, leftY = 0.0f, rightX = 0.0f, rightY = 0.0f, leftDeadZone = 0.0f, rightDeadZone = 0.0f;
-
-	//Controller data
-	bool enabled = false;
-	int index = 0;
-	_SDL_GameController* sdlController = nullptr;
-	_SDL_Haptic* haptic = nullptr;
-
-	//Rumble controller
-	int rumbleCountdown = 0;
-	float rumbleStrength = 0.0f;
 };
 
 class Input : public Module
@@ -84,8 +43,6 @@ public:
 
 	void UpdateMouseInput();
 
-	uint8_t* UpdateGamepadsInput();
-
 	bool CleanUp();
 
 	inline KeyState GetKey(int id) const
@@ -93,24 +50,10 @@ public:
 		return keyboard[id];
 	}
 
-	inline KeyState GetControl(int id) const
-	{
-		return controllerButtons[id];
-	}
-
 	inline KeyState GetMouseButtonDown(int id) const
 	{
 		return mouseButtons[id - 1];
 	}
-
-	inline bool GetPadEnabled() const
-	{
-		return pad.enabled;
-	}
-
-	void ControllerPressedStateLogic(int id);
-
-	void ControllerReleasedStateLogic(int id);
 
 	bool GetWindowEvent(EventWindow ev);
 
@@ -122,25 +65,14 @@ public:
 
 	Point GetMouseMotion() const;
 
-	void HandleDeviceConnection(int index);
-
-	void HandleDeviceRemoval(int index);
-
-	bool ShakeController(int id, int duration, float strength = 0.5f);
-
-	const char* GetControllerName(int id) const;
-
 private:
 
 	Window* window = nullptr;
 
-	bool windowEvents[(int)EventWindow::WE_COUNT];
+	bool windowEvents[(int)EventWindow::WE_COUNT] = {false, false, true};
 
 	KeyState* keyboard = nullptr;	
 	KeyState* mouseButtons = nullptr;
-
-	GamePad pad;
-	KeyState* controllerButtons = nullptr;
 		
 	Point mouseMotion = {};
 	Point mouse = {};

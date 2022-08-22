@@ -1,7 +1,7 @@
 #include "Physics.h"
 #include "GhostSlot.h"
-#include "MathUtils.h"
 #include "DynArray.h"
+#include "MathUtils.h"
 
 Physics::Physics()
 {
@@ -213,12 +213,19 @@ void Physics::Update(float dt)
 {
 	for (Body* body : bodies)
 	{
-		switch (body->GetBodyClass())
+		switch (body->GetClass())
 		{
 		case BodyClass::DYNAMIC_BODY: UpdateDynamic(dt, (DynamicBody*)body); break;
 		case BodyClass::LIQUID_BODY: UpdateLiquid(dt); break;
 		}
 	}
+}
+
+void Physics::CleanUp()
+{
+	for (Body* b : bodies) RELEASE(b);
+	bodies.clear();
+	bodies.shrink_to_fit();
 }
 
 void Physics::UpdateDynamic(float dt, DynamicBody* body)
@@ -242,6 +249,9 @@ void Physics::UpdateDynamic(float dt, DynamicBody* body)
 	// Integrate
 	Integrate(body, dt);
 
+	// -TOCHECK: Sum previous gravity force to body
+	body->gravity += globalGravity;
+
 	// Check Collisions
 	//CheckCollisions(body, backup);
 
@@ -253,7 +263,7 @@ void Physics::UpdateLiquid(float dt)
 
 void Physics::AutoApplyForces()
 {
-	// TODO: Iteration check collision with environment
+	// -TODO: Iteration check collision with environment
 
 	AutoApplyHydroDrag();
 	AutoApplyHydroLift();
@@ -282,25 +292,38 @@ void Physics::AutoApplyBuoyancy()
 {
 }
 
-void Physics::DestroyBody(std::vector<Body*>::const_iterator it)
+bool Physics::DestroyBody(Body* body)
 {
-	Body* body = *it;
-	delete body;
-	bodies.erase(it);
-	body = nullptr;
-	bodies.shrink_to_fit();
+	if (EraseBody(body))
+	{
+		RELEASE(body);
+		return true;
+	}
+
+	return false;
 }
 
-//void Physics::SetGlobalGravity(Point gravity)
-//{
-//	if (gravity == Point{ 0.0f, 0.0f }) globalGravityActive = false;
-//	else
-//	{
-//		globalGravityActive = true;
-//		globalGravity = gravity;
-//	}
-//}
-//
+bool Physics::EraseBody(Body* body)
+{
+	std::vector<Body*>::const_iterator it;
+	for (it = bodies.begin(); it != bodies.end(); ++it)
+	{
+		if (body->id == (*it)->id)
+		{
+			bodies.erase(it);
+			bodies.shrink_to_fit();
+			return true;
+		}
+	}
+
+	return false;
+}
+
+bool Physics::CheckCollision(Rect rect1, Rect rect2)
+{
+	return MathUtils::CheckCollision(rect1, rect2);
+}
+
 //void Physics::ChangeGravityAcceleration(Point acceleration)
 //{
 //	std::vector<Body*>::const_iterator it;
@@ -392,25 +415,6 @@ void Physics::DestroyBody(std::vector<Body*>::const_iterator it)
 //		SetGlobalRestitution(Point{ 1.0f, 1.0f });
 //		SetGlobalFriction(Point{ 0.0f, 0.0f });
 //		break;
-//	}
-//}
-//
-//void Physics::DeathLimit(Rect limits)
-//{
-//	std::vector<Body*>::const_iterator it;
-//	for (it = bodies.begin(); it != bodies.end(); ++it)
-//	{
-//		Body* body = (*it);
-//		switch (body->colliderType)
-//		{
-//		case CollisionType::RECTANGLE:
-//			if (!MathUtils::CheckCollision(body->rect, limits)) DestroyBody(it);
-//			break;
-//
-//		case CollisionType::CIRCLE:
-//			if (!MathUtils::CheckCollision(body->circle, limits)) DestroyBody(it);
-//			break;
-//		}
 //	}
 //}
 //

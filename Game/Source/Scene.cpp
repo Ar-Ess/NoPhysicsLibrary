@@ -60,6 +60,9 @@ bool Scene::CleanUp()
 		break;
 
 	case Scenes::DEBUG_SCENE:
+		physics->CleanUp();
+		bodies.clear();
+		bodies.shrink_to_fit();
 		break;
 	}
 
@@ -100,10 +103,10 @@ bool Scene::SetLogoScene()
 bool Scene::SetDebugScene()
 {
 	bodies.push_back(physics->CreateBody(Rect{ 100, 167, 200, 67 }, 1).Static());
-	bodies.push_back(physics->CreateBody(Rect{ 706, 420, 60, 98 }, 1).Dynamic());
+	bodies.push_back(physics->CreateBody(Rect{ 706, 120, 60, 98 }, 1).Dynamic());
 	bodies.push_back(physics->CreateBody(Rect{ 1000, 600, 20, 100 }, 1).Liquid());
 	bodies.push_back(physics->CreateBody(physics->ReturnScenarioRect(), 1).Gas());
-	physics->SetGlobalGravity({0, 10000});
+	physics->SetGlobalGravity({0, 8000});
 
 	return true;
 }
@@ -112,7 +115,7 @@ bool Scene::UpdateLogoScene(float dt)
 {
 	bool ret = true;
 
-	if (input->GetKey(SDL_SCANCODE_SPACE) == KeyState::KEY_DOWN) ret = SetScene(Scenes::DEBUG_SCENE);
+	if (input->GetKey(SDL_SCANCODE_RETURN) == KeyState::KEY_DOWN) ret = SetScene(Scenes::DEBUG_SCENE);
 
 	return ret;
 }
@@ -120,14 +123,17 @@ bool Scene::UpdateLogoScene(float dt)
 bool Scene::UpdateDebugScene(float dt)
 {
 	bool ret = true;
+	static bool pause = false;
 
+	// Steps the physics
 	physics->Step(dt);
 
+	// Draws the bodies
 	for (Body* b : bodies)
 	{
 		SDL_Color color = {0, 0, 0, 50};
 
-		switch (b->GetBodyClass())
+		switch (b->GetClass())
 		{
 		case BodyClass::STATIC_BODY:  color = { 255,   0,   0, color.a }; break;
 		case BodyClass::DYNAMIC_BODY: color = {   0, 255,   0, color.a }; break;
@@ -137,6 +143,18 @@ bool Scene::UpdateDebugScene(float dt)
 
 		render->DrawRectangle(b->GetRect(), color);
 	}
+
+	// Pauses the physics
+	if (input->GetKey(SDL_SCANCODE_SPACE) == KeyState::KEY_DOWN)
+	{
+		pause = !pause;
+		physics->PausePhysics(pause);
+	}
+
+	// Sets death limits
+	if (physics->DeathLimit(render->camera)) LOG("Destroyed");
+
+	if (input->GetKey(SDL_SCANCODE_RETURN) == KeyState::KEY_DOWN) SetScene(Scenes::LOGO_SCENE);
 
 	return ret;
 }

@@ -19,7 +19,7 @@ public:
 	}
 
 	// Set an specific flag from slot 0 to 7
-	void Set(bool state, short int index)
+	void Set(short int index, bool state)
 	{
 		// Flags only have 8 slots available
 		assert(index >= 0 && index < 8);

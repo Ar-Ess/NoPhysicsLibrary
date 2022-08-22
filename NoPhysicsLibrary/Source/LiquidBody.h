@@ -8,4 +8,6 @@ public:
 
 	LiquidBody(Rect rect, float mass);
 
+	~LiquidBody() override;
+
 };

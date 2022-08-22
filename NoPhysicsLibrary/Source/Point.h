@@ -55,6 +55,11 @@ struct Point
 		this->y = 0;
 	}
 
+	bool IsZero()
+	{
+		return (x == 0 && y == 0);
+	}
+
 	void Negate()
 	{
 		this->x *= -1;

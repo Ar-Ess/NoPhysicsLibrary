@@ -13,6 +13,9 @@ public:
 	// Initialize the library
 	void Init();
 
+	// Clean Up and reset the library
+	void CleanUp();
+
 	// Create a new body
 	//  - Follow this function with a "." to choose the body type
 	BodyCreation CreateBody(Rect rectangle, float mass);
@@ -33,8 +36,8 @@ public:
 
 	// Returns wether the physics are paused
 	bool GetGlobalPause() const;
-	// Sets wether the physics are paused or not
-	void SetGlobalPause(bool set);
+	// Allows to pause or unpause the physics
+	void PausePhysics(bool pause);
 
 	// Returns the global gravity magnitude
 	Point GetGlobalGravity() const;
@@ -50,6 +53,13 @@ public:
 	Point GetGlobalRestitution() const;
 	// Sets if global restitution is active and its magnitude
 	void SetGlobalRestitution(Point magnitude);
+
+	// Destroys a body whenever it's outside the rectangle setted. 
+	//    Returns true when a body is destroyed
+	bool DeathLimit(Rect limits);
+
+	// Destroy a body, returns true if the body has been successfully deleted
+	bool DestroyBody(Body* body);
 
 private:
 

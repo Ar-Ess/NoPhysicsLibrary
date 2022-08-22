@@ -6,6 +6,14 @@ DynamicBody::DynamicBody(Rect rect, Point velocity, Point gravity, float mass) :
 	this->gravity = gravity;
 }
 
+DynamicBody::~DynamicBody()
+{
+	forces.clear();
+	forces.shrink_to_fit();
+	momentums.clear();
+	momentums.shrink_to_fit();
+}
+
 BodyBackUp DynamicBody::BackUp()
 {
 	return BodyBackUp(rect, velocity, acceleration, totalMomentum, totalForces);
@@ -23,7 +31,7 @@ bool DynamicBody::IsColliding()
 
 void DynamicBody::SecondNewton()
 {
-	// TODONE: Crear struct force, amb info del Point, el mòdul, qui l'ha aplicat, quin tipus (buoyancy, aerodrag...)
+	// -TODONE: Crear struct force, amb info del Point, el mòdul, qui l'ha aplicat, quin tipus (buoyancy, aerodrag...)
 
 	totalForces.Clear();
 
@@ -41,7 +49,7 @@ void DynamicBody::SecondNewton()
 
 void DynamicBody::FirstBuxeda()
 {
-	// TODONE: Crear struct momentum, amb info del Point, el mòdul, qui l'ha aplicat, quin tipus (buoyancy, aerodrag...)
+	// -TODONE: Crear struct momentum, amb info del Point, el mòdul, qui l'ha aplicat, quin tipus (buoyancy, aerodrag...)
 
 	totalMomentum.Clear();
 

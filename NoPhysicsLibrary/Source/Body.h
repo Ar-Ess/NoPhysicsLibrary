@@ -10,6 +10,8 @@ public: // Methods
 
 	Body(BodyClass clas = BodyClass::EMPTY_BODY, Rect rect = { 0.0f, 0.0f, 1.0f, 1.0f }, float mass = 1.0f);
 
+	virtual ~Body() {}
+
 	void SolveCollision(Body& body, int dir);
 
 	void DeClipper(Body& body, int dir);
@@ -26,7 +28,7 @@ public: //Getters
 	inline Rect GetRect() const { return rect; }
 
 	// Returns the body class enum
-	inline BodyClass GetBodyClass() const { return clas; }
+	inline BodyClass GetClass() const { return clas; }
 
 	// Returns the mass of the body
 	inline float GetMass() const { return mass; }
@@ -44,6 +46,7 @@ protected:
 	Rect rect = {};
 	BodyClass clas = BodyClass::EMPTY_BODY;
 	float mass = 1.0f;
+	intptr_t id = 0;
 
 	// Collidable | 
 	Flag properties = {};
