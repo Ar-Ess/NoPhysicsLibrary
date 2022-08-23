@@ -4,7 +4,6 @@
 
 #include "Input.h"
 #include "Window.h"
-#include "Audio.h"
 #include "Textures.h"
 #include "AssetsManager.h"
 #include "NoPhysicsLibrary.h"
@@ -59,9 +58,8 @@ private: // Variables
 	Textures* texture = nullptr;
 	AssetsManager* assets = nullptr;
 	Window* window = nullptr;
-	Audio* audio = nullptr;
 
-	NPL* physics = nullptr;
+	NPL* npl = nullptr;
 	std::vector<Body*> bodies;
 
 	bool exit = false;

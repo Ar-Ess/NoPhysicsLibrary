@@ -27,9 +27,6 @@
     <ClCompile Include="Source\Scene.cpp">
       <Filter>Modules</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Audio.cpp">
-      <Filter>Audio System</Filter>
-    </ClCompile>
     <ClCompile Include="Source\Textures.cpp">
       <Filter>Assets Manager</Filter>
     </ClCompile>
@@ -72,9 +69,6 @@
     <ClInclude Include="Source\Circle.h">
       <Filter>Utils</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Audio.h">
-      <Filter>Audio System</Filter>
-    </ClInclude>
     <ClInclude Include="Source\Textures.h">
       <Filter>Assets Manager</Filter>
     </ClInclude>
@@ -94,9 +88,6 @@
     </Filter>
     <Filter Include="Assets Manager">
       <UniqueIdentifier>{1a899daa-a751-4a1e-a203-925337f47feb}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Audio System">
-      <UniqueIdentifier>{d5b452e9-7f2c-45f6-929f-db32fce171e5}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

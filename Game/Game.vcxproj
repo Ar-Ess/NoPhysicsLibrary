@@ -95,7 +95,6 @@
     <ClCompile Include="Source\Easing.cpp" />
     <ClCompile Include="Source\Main.cpp" />
     <ClCompile Include="Source\App.cpp" />
-    <ClCompile Include="Source\Audio.cpp" />
     <ClCompile Include="Source\Input.cpp" />
     <ClCompile Include="Source\PerfTimer.cpp" />
     <ClCompile Include="Source\Render.cpp" />
@@ -107,7 +106,6 @@
     <ClInclude Include="Source\Circle.h" />
     <ClInclude Include="Source\Easing.h" />
     <ClInclude Include="Source\PerfTimer.h" />
-    <ClInclude Include="Source\Audio.h" />
     <ClInclude Include="Source\Input.h" />
     <ClInclude Include="Source\App.h" />
     <ClInclude Include="Source\Module.h" />

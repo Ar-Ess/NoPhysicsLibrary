@@ -9,9 +9,10 @@ NPL::NPL()
 void NPL::Init()
 {
 	// You've alreay initialized the library once
-	assert(physics == nullptr);
+	assert(physics == nullptr && audio == nullptr);
 
 	physics = new Physics();
+	audio = new Audio();
 }
 
 void NPL::CleanUp()
@@ -114,7 +115,7 @@ bool NPL::DeathLimit(Rect limits)
 
 bool NPL::DestroyBody(Body* body)
 {
-	return DestroyBody(body);
+	return physics->DestroyBody(body);
 }
 
 void NPL::PausePhysics(bool pause)

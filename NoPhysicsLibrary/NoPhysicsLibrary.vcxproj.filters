@@ -19,6 +19,12 @@
     <Filter Include="External">
       <UniqueIdentifier>{292119d1-7b68-49d5-aaa0-08328ae34158}</UniqueIdentifier>
     </Filter>
+    <Filter Include="External\Miniaudio">
+      <UniqueIdentifier>{e428adcf-6f37-4d08-aa09-cac9567e7295}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="External\Dr Libs">
+      <UniqueIdentifier>{7e503b62-bf71-4e87-8152-701f27df4b70}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\NoPhysicsLibrary.cpp">
@@ -41,6 +47,15 @@
     </ClCompile>
     <ClCompile Include="Source\GasBody.cpp">
       <Filter>Bodies</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Audio.cpp">
+      <Filter>Core</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Log.cpp">
+      <Filter>Utils</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\miniaudio_impl.c">
+      <Filter>External\Miniaudio</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -77,9 +92,6 @@
     <ClInclude Include="Source\BodyCreationAux.h">
       <Filter>Aux</Filter>
     </ClInclude>
-    <ClInclude Include="Source\External\miniaudio\miniaudio.h">
-      <Filter>External</Filter>
-    </ClInclude>
     <ClInclude Include="Source\GhostSlot.h">
       <Filter>Utils</Filter>
     </ClInclude>
@@ -112,6 +124,24 @@
     </ClInclude>
     <ClInclude Include="Source\CollideBool.h">
       <Filter>Enums</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Audio.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Log.h">
+      <Filter>Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\External\miniaudio\miniaudio.h">
+      <Filter>External\Miniaudio</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\External\dr_libs\dr_flac.h">
+      <Filter>External\Dr Libs</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\External\dr_libs\dr_mp3.h">
+      <Filter>External\Dr Libs</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\External\dr_libs\dr_wav.h">
+      <Filter>External\Dr Libs</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

@@ -27,7 +27,7 @@ void data_callback(ma_device* pDevice, void* pOutput, const void* pInput, ma_uin
     (void)pInput;
 }
 
-int main(int argc, char** argv)
+int ain(int argc, char** argv)
 {
     ma_result result;
     ma_decoder decoder;

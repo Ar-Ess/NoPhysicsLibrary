@@ -3,6 +3,7 @@
 #include "Body.h"
 #include "ScenarioPresetEnum.h"
 #include "PhysicsPresetEnum.h"
+#include "Audio.h"
 
 class NPL
 {
@@ -61,7 +62,14 @@ public:
 	// Destroy a body, returns true if the body has been successfully deleted
 	bool DestroyBody(Body* body);
 
+	void TemporalAudioPlay(const char* path)
+	{
+		audio->LoadAudio(path);
+	}
+
 private:
 
 	Physics* physics = nullptr;
+	Audio* audio = nullptr;
+
 };

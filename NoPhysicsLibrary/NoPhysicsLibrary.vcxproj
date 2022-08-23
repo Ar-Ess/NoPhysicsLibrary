@@ -89,7 +89,7 @@
       <PreprocessorDefinitions>_HAS_ITERATOR_DEBUGGING=0;_ITERATOR_DEBUG_LEVEL=0</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
-      <AdditionalIncludeDirectories>C:\Users\marti\OneDrive\Documents\GitHub\NoPhysicsLibrary\NoPhysicsLibrary\Source\External\miniaudio;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)NoPhysicsLibrary\Source\External\dr_libs;$(SolutionDir)NoPhysicsLibrary\Source\External\miniaudio;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -105,7 +105,7 @@
       <PreprocessorDefinitions>_HAS_ITERATOR_DEBUGGING=0;_ITERATOR_DEBUG_LEVEL=0</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
-      <AdditionalIncludeDirectories>C:\Users\marti\OneDrive\Documents\GitHub\NoPhysicsLibrary\NoPhysicsLibrary\Source\External\miniaudio;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)NoPhysicsLibrary\Source\External\dr_libs;$(SolutionDir)NoPhysicsLibrary\Source\External\miniaudio;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -147,15 +147,19 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Source\Audio.cpp" />
     <ClCompile Include="Source\Body.cpp" />
     <ClCompile Include="Source\DynamicBody.cpp" />
     <ClCompile Include="Source\GasBody.cpp" />
     <ClCompile Include="Source\LiquidBody.cpp" />
+    <ClCompile Include="Source\Log.cpp" />
+    <ClCompile Include="Source\miniaudio_impl.c" />
     <ClCompile Include="Source\NoPhysicsLibrary.cpp" />
     <ClCompile Include="Source\Physics.cpp" />
     <ClCompile Include="Source\StaticBody.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Source\Audio.h" />
     <ClInclude Include="Source\Body.h" />
     <ClInclude Include="Source\BodyBackUp.h" />
     <ClInclude Include="Source\BodyClassEnum.h" />
@@ -164,12 +168,16 @@
     <ClInclude Include="Source\DirectionEnum.h" />
     <ClInclude Include="Source\DynamicBody.h" />
     <ClInclude Include="Source\DynArray.h" />
+    <ClInclude Include="Source\External\dr_libs\dr_flac.h" />
+    <ClInclude Include="Source\External\dr_libs\dr_mp3.h" />
+    <ClInclude Include="Source\External\dr_libs\dr_wav.h" />
     <ClInclude Include="Source\External\miniaudio\miniaudio.h" />
     <ClInclude Include="Source\Flag.h" />
     <ClInclude Include="Source\Force.h" />
     <ClInclude Include="Source\GasBody.h" />
     <ClInclude Include="Source\GhostSlot.h" />
     <ClInclude Include="Source\LiquidBody.h" />
+    <ClInclude Include="Source\Log.h" />
     <ClInclude Include="Source\MathUtils.h" />
     <ClInclude Include="Source\Momentum.h" />
     <ClInclude Include="Source\NoPhysicsLibrary.h" />

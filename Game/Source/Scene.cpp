@@ -4,11 +4,10 @@ Scene::Scene(Render* render, Input* input, Window* window)
 {
 	this->assets = new AssetsManager();
 	this->texture = new Textures(render, assets);
-	this->audio = new Audio(assets);
 	this->render = render;
 	this->input = input;
 	this->window = window;
-	this->physics = new NPL();
+	this->npl = new NPL();
 }
 
 Scene::~Scene()
@@ -18,9 +17,7 @@ bool Scene::Start()
 {
 	assets->Start();
 	texture->Start();
-	audio->Start();
-	physics->Init();
-
+	npl->Init();
 
 	//FIRST SCENE
 	if (!SetScene(Scenes::LOGO_SCENE)) return false;
@@ -60,7 +57,7 @@ bool Scene::CleanUp()
 		break;
 
 	case Scenes::DEBUG_SCENE:
-		physics->CleanUp();
+		npl->CleanUp();
 		bodies.clear();
 		bodies.shrink_to_fit();
 		break;
@@ -102,11 +99,13 @@ bool Scene::SetLogoScene()
 
 bool Scene::SetDebugScene()
 {
-	bodies.push_back(physics->CreateBody(Rect{ 100, 167, 200, 67 }, 1).Static());
-	bodies.push_back(physics->CreateBody(Rect{ 706, 120, 60, 98 }, 1).Dynamic());
-	bodies.push_back(physics->CreateBody(Rect{ 1000, 600, 20, 100 }, 1).Liquid());
-	bodies.push_back(physics->CreateBody(physics->ReturnScenarioRect(), 1).Gas());
-	physics->SetGlobalGravity({0, 8000});
+	bodies.push_back(npl->CreateBody(Rect{ 100, 167, 200, 67 }, 1).Static());
+	bodies.push_back(npl->CreateBody(Rect{ 706, 120, 60, 98 }, 1).Dynamic());
+	bodies.push_back(npl->CreateBody(Rect{ 1000, 600, 20, 100 }, 1).Liquid());
+	bodies.push_back(npl->CreateBody(npl->ReturnScenarioRect(), 1).Gas());
+	npl->SetGlobalGravity({0, 8000});
+
+	npl->TemporalAudioPlay("Assets/Audio/SplitDuty_FinalBoss_Mono_Soundtrack.mp3");
 
 	return true;
 }
@@ -126,7 +125,7 @@ bool Scene::UpdateDebugScene(float dt)
 	static bool pause = false;
 
 	// Steps the physics
-	physics->Step(dt);
+	npl->Step(dt);
 
 	// Draws the bodies
 	for (Body* b : bodies)
@@ -148,11 +147,11 @@ bool Scene::UpdateDebugScene(float dt)
 	if (input->GetKey(SDL_SCANCODE_SPACE) == KeyState::KEY_DOWN)
 	{
 		pause = !pause;
-		physics->PausePhysics(pause);
+		npl->PausePhysics(pause);
 	}
 
 	// Sets death limits
-	if (physics->DeathLimit(render->camera)) LOG("Destroyed");
+	if (npl->DeathLimit(render->camera)) LOG("Destroyed");
 
 	if (input->GetKey(SDL_SCANCODE_RETURN) == KeyState::KEY_DOWN) SetScene(Scenes::LOGO_SCENE);
 
