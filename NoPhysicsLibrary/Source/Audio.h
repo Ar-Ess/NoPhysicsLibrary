@@ -15,4 +15,12 @@ public:
 
 	void LoadAudio(const char* filePath);
 
+	void PlayAudio();
+
+	void UnloadAudio();
+
+	ma_device device;
+	ma_decoder decoder;
+	ma_device_config deviceConfig;
+
 };

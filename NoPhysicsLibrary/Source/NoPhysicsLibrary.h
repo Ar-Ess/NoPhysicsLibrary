@@ -62,10 +62,22 @@ public:
 	// Destroy a body, returns true if the body has been successfully deleted
 	bool DestroyBody(Body* body);
 
-	void TemporalAudioPlay(const char* path)
+	void ShowcaseLoadAudio(const char* path)
 	{
 		audio->LoadAudio(path);
 	}
+
+	void ShowcasePlayAudio()
+	{
+		audio->PlayAudio();
+	}
+
+	void ShowcaseUnloadAudio()
+	{
+		audio->UnloadAudio();
+	}
+
+
 
 private:
 

@@ -58,6 +58,7 @@ bool Scene::CleanUp()
 
 	case Scenes::DEBUG_SCENE:
 		npl->CleanUp();
+		npl->ShowcaseUnloadAudio();
 		bodies.clear();
 		bodies.shrink_to_fit();
 		break;
@@ -105,7 +106,7 @@ bool Scene::SetDebugScene()
 	bodies.push_back(npl->CreateBody(npl->ReturnScenarioRect(), 1).Gas());
 	npl->SetGlobalGravity({0, 8000});
 
-	npl->TemporalAudioPlay("Assets/Audio/SplitDuty_FinalBoss_Mono_Soundtrack.mp3");
+	npl->ShowcaseLoadAudio("Assets/Audio/bounce.wav");
 
 	return true;
 }
@@ -123,6 +124,8 @@ bool Scene::UpdateDebugScene(float dt)
 {
 	bool ret = true;
 	static bool pause = false;
+
+	if (input->GetKey(SDL_SCANCODE_1) == KeyState::KEY_DOWN) npl->ShowcasePlayAudio();
 
 	// Steps the physics
 	npl->Step(dt);
