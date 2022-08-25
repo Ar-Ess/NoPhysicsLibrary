@@ -61,6 +61,7 @@ private: // Variables
 
 	NPL* npl = nullptr;
 	std::vector<Body*> bodies;
+	DynamicBody* test = nullptr;
 
 	bool exit = false;
 	bool activeContinue = false;

@@ -62,19 +62,28 @@ public:
 	// Destroy a body, returns true if the body has been successfully deleted
 	bool DestroyBody(Body* body);
 
-	void ShowcaseLoadAudio(const char* path)
+	void ShowcaseLoadAudio(const char* path, bool engine)
 	{
-		audio->LoadAudio(path);
+		if (engine) 
+			audio->LoadAudioSound(path);
+		else
+			audio->LoadAudio(path);
 	}
 
-	void ShowcasePlayAudio()
+	void ShowcasePlayAudio(bool engine, float distance = 0, bool shiftVolume = false, bool shiftBoth = false)
 	{
-		audio->PlayAudio();
+		if (engine)
+			audio->PlayAudioSound(distance, shiftVolume, shiftBoth);
+		else
+			audio->PlayAudio();
 	}
 
-	void ShowcaseUnloadAudio()
+	void ShowcaseUnloadAudio(bool engine)
 	{
-		audio->UnloadAudio();
+		if (engine)
+			audio->UnloadAudioSound();
+		else
+			audio->UnloadAudio();
 	}
 
 

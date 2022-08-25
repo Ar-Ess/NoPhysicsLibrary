@@ -15,12 +15,20 @@ public:
 
 	void LoadAudio(const char* filePath);
 
+	void LoadAudioSound(const char* filePath);
+
 	void PlayAudio();
+
+	void PlayAudioSound(float distance, bool shiftVolume, bool shiftBoth);
 
 	void UnloadAudio();
 
-	ma_device device;
+	void UnloadAudioSound();
+
 	ma_decoder decoder;
-	ma_device_config deviceConfig;
+	ma_device device;
+
+	ma_engine engine;
+	ma_sound sound;
 
 };

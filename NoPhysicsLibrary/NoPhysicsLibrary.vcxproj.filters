@@ -25,12 +25,15 @@
     <Filter Include="External\Dr Libs">
       <UniqueIdentifier>{7e503b62-bf71-4e87-8152-701f27df4b70}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Core\Audio">
+      <UniqueIdentifier>{eaebb9be-db7b-43cf-8eec-19b1910553e4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Core\Physics">
+      <UniqueIdentifier>{e635d485-32e6-4ee0-87ad-a58144e173b3}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\NoPhysicsLibrary.cpp">
-      <Filter>Core</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Physics.cpp">
       <Filter>Core</Filter>
     </ClCompile>
     <ClCompile Include="Source\Body.cpp">
@@ -48,21 +51,21 @@
     <ClCompile Include="Source\GasBody.cpp">
       <Filter>Bodies</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Audio.cpp">
-      <Filter>Core</Filter>
-    </ClCompile>
     <ClCompile Include="Source\Log.cpp">
       <Filter>Utils</Filter>
     </ClCompile>
     <ClCompile Include="Source\miniaudio_impl.c">
       <Filter>External\Miniaudio</Filter>
     </ClCompile>
+    <ClCompile Include="Source\Audio.cpp">
+      <Filter>Core\Audio</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Physics.cpp">
+      <Filter>Core\Physics</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\NoPhysicsLibrary.h">
-      <Filter>Core</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Physics.h">
       <Filter>Core</Filter>
     </ClInclude>
     <ClInclude Include="Source\Point.h">
@@ -125,9 +128,6 @@
     <ClInclude Include="Source\CollideBool.h">
       <Filter>Enums</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Audio.h">
-      <Filter>Core</Filter>
-    </ClInclude>
     <ClInclude Include="Source\Log.h">
       <Filter>Utils</Filter>
     </ClInclude>
@@ -142,6 +142,12 @@
     </ClInclude>
     <ClInclude Include="Source\External\dr_libs\dr_wav.h">
       <Filter>External\Dr Libs</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Audio.h">
+      <Filter>Core\Audio</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Physics.h">
+      <Filter>Core\Physics</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
