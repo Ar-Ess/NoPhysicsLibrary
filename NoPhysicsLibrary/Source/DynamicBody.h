@@ -8,7 +8,7 @@ class DynamicBody : public Body
 {
 public: // Methods
 
-	DynamicBody(Rect rect = { 0.0f, 0.0f, 1.0f, 1.0f }, Point velocity = { 0, 0 }, Point gravity = {0, 0}, float mass = 1.0f);
+	DynamicBody(Rect rect, Point velocity, Point gravity, float mass, Flag* globals);
 
 	~DynamicBody() override;
 
@@ -21,14 +21,14 @@ public: // Methods
 	inline bool IsColliding();
 	
 	// Applies an specific force to this body
-	inline void ApplyForce(float newtonsX, float newtonsY) { if (newtonsX != 0 || newtonsY != 0) forces.push_back(new Force({newtonsX, newtonsY})); }
+	void ApplyForce(float newtonsX, float newtonsY);
 	// Applies an specific force to this body
-	inline void ApplyForce(Point newtons) { if (!newtons.IsZero()) forces.push_back(new Force({ newtons.x, newtons.y })); }
+	void ApplyForce(Point newtons);
 
 	// Applies an specific force to this body
-	inline void ApplyMomentum(float momentumX, float momentumY) { if (momentumX != 0 || momentumY != 0) momentums.push_back(new Momentum({ momentumX, momentumY })); }
+	void ApplyMomentum(float momentumX, float momentumY);
 	// Applies an specific force to this body
-	inline void ApplyMomentun(Point momentum) { if (!momentum.IsZero()) forces.push_back(new Force({ momentum.x, momentum.y })); }
+	void ApplyMomentun(Point momentum);
 
 	// Set an specific gravity for this body. Not compatible with SetGlobalGravity() being active. Desable SetGlobalgravity() by inputting SetGlobalGravity(0.0f, 0.0f); or deleting the function
 	//void SetGravityAcceleration(Point& gravity);*/
@@ -98,4 +98,6 @@ private: // Variables
 	// -TODONE: Transform this into a flag
 	// Air | Ground | Roof | Left | Right | Water
 	Flag collisionFlags = {};
+
+	Flag* globals = nullptr;
 };

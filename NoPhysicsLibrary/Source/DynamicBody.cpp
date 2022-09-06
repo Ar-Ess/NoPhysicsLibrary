@@ -1,9 +1,10 @@
 #include "DynamicBody.h"
 
-DynamicBody::DynamicBody(Rect rect, Point velocity, Point gravity, float mass) : Body(BodyClass::DYNAMIC_BODY, rect, mass)
+DynamicBody::DynamicBody(Rect rect, Point velocity, Point gravity, float mass, Flag* globals) : Body(BodyClass::DYNAMIC_BODY, rect, mass)
 {
 	this->velocity = velocity;
 	this->gravity = gravity;
+	this->globals = globals;
 }
 
 DynamicBody::~DynamicBody()
@@ -27,6 +28,40 @@ bool DynamicBody::IsColliding(CollideBool collision)
 bool DynamicBody::IsColliding()
 {
 	return collisionFlags.IsAnyTrue();
+}
+
+void DynamicBody::ApplyForce(float newtonsX, float newtonsY)
+{
+	//-TODONE: Bodies accumulate force while physics paused
+	if (globals->Get(0)) return; // Physics are paused
+	if (newtonsX == 0 && newtonsY == 0) return; // If force is null
+		
+	forces.push_back(new Force({ newtonsX, newtonsY })); 
+}
+
+void DynamicBody::ApplyForce(Point newtons)
+{
+	if (globals->Get(0)) return; // Physics are paused
+	if (!newtons.IsZero()) return; // If force is null
+
+	forces.push_back(new Force({ newtons.x, newtons.y }));
+}
+
+void DynamicBody::ApplyMomentum(float momentumX, float momentumY)
+{
+	//-TODONE: Bodies accumulate momentum while physics paused
+	if (globals->Get(0)) return; // Physics are paused
+	if (momentumX == 0 && momentumY == 0) return; // If momentum is null
+
+	momentums.push_back(new Momentum({ momentumX, momentumY }));
+}
+
+void DynamicBody::ApplyMomentun(Point momentum)
+{
+	if (globals->Get(0)) return; // Physics are paused
+	if (!momentum.IsZero()) return; // If momentum is null
+
+	forces.push_back(new Force({ momentum.x, momentum.y }));
 }
 
 void DynamicBody::SecondNewton()
