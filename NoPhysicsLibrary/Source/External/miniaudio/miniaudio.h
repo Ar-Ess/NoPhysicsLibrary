@@ -93,9 +93,9 @@ device on the stack, but you could allocate it on the heap if that suits your si
     ```
 
 In the example above, `data_callback()` is where audio data is written and read from the device.
-The idea is in playback mode you cause sound to be emitted from the speakers by writing audio data
+The idea is in playback mode you cause testSound to be emitted from the speakers by writing audio data
 to the output buffer (`pOutput` in the example). In capture mode you read data from the input
-buffer (`pInput`) to extract sound captured by the microphone. The `frameCount` parameter tells you
+buffer (`pInput`) to extract testSound captured by the microphone. The `frameCount` parameter tells you
 how many frames can be written to the output buffer and read from the input buffer. A "frame" is
 one sample for each channel. For example, in a stereo stream (2 channels), one frame is 2
 samples: one for the left, one for the right. The channel count is defined by the device config.
@@ -190,7 +190,7 @@ These are the available device types and how you should handle the buffers in th
 You will notice in the example above that the sample format and channel count is specified
 separately for playback and capture. This is to support different data formats between the playback
 and capture devices in a full-duplex system. An example may be that you want to capture audio data
-as a monaural stream (one channel), but output sound to a stereo speaker system. Note that if you
+as a monaural stream (one channel), but output testSound to a stereo speaker system. Note that if you
 use different formats between playback and capture in a full-duplex configuration you will need to
 convert the data yourself. There are functions available to help you do this which will be
 explained later.
@@ -289,7 +289,7 @@ The high level API consists of three main parts:
 
 The resource manager (`ma_resource_manager`) is used for loading sounds. It supports loading sounds
 fully into memory and also streaming. It will also deal with reference counting for you which
-avoids the same sound being loaded multiple times.
+avoids the same testSound being loaded multiple times.
 
 The node graph is used for mixing and effect processing. The idea is that you connect a number of
 nodes into the graph by connecting each node's outputs to another node's inputs. Each node can
@@ -354,40 +354,40 @@ This is particularly useful if you want to have multiple engine's share the same
 The engine must be uninitialized with `ma_engine_uninit()` when it's no longer needed.
 
 By default the engine will be started, but nothing will be playing because no sounds have been
-initialized. The easiest but least flexible way of playing a sound is like so:
+initialized. The easiest but least flexible way of playing a testSound is like so:
 
     ```c
     ma_engine_play_sound(&engine, "my_sound.wav", NULL);
     ```
 
-This plays what miniaudio calls an "inline" sound. It plays the sound once, and then puts the
-internal sound up for recycling. The last parameter is used to specify which sound group the sound
-should be associated with which will be explained later. This particular way of playing a sound is
-simple, but lacks flexibility and features. A more flexible way of playing a sound is to first 
-initialize a sound:
+This plays what miniaudio calls an "inline" testSound. It plays the testSound once, and then puts the
+internal testSound up for recycling. The last parameter is used to specify which testSound group the testSound
+should be associated with which will be explained later. This particular way of playing a testSound is
+simple, but lacks flexibility and features. A more flexible way of playing a testSound is to first 
+initialize a testSound:
 
     ```c
     ma_result result;
-    ma_sound sound;
+    ma_sound testSound;
 
-    result = ma_sound_init_from_file(&engine, "my_sound.wav", 0, NULL, NULL, &sound);
+    result = ma_sound_init_from_file(&engine, "my_sound.wav", 0, NULL, NULL, &testSound);
     if (result != MA_SUCCESS) {
         return result;
     }
 
-    ma_sound_start(&sound);
+    ma_sound_start(&testSound);
     ```
 
-This returns a `ma_sound` object which represents a single instance of the specified sound file. If
-you want to play the same file multiple times simultaneously, you need to create one sound for each
+This returns a `ma_sound` object which represents a single instance of the specified testSound file. If
+you want to play the same file multiple times simultaneously, you need to create one testSound for each
 instance.
 
 Sounds should be uninitialized with `ma_sound_uninit()`.
 
-Sounds are not started by default. Start a sound with `ma_sound_start()` and stop it with
-`ma_sound_stop()`. When a sound is stopped, it is not rewound to the start. Use
-`ma_sound_seek_to_pcm_frames(&sound, 0)` to seek back to the start of a sound. By default, starting
-and stopping sounds happens immediately, but sometimes it might be convenient to schedule the sound
+Sounds are not started by default. Start a testSound with `ma_sound_start()` and stop it with
+`ma_sound_stop()`. When a testSound is stopped, it is not rewound to the start. Use
+`ma_sound_seek_to_pcm_frames(&testSound, 0)` to seek back to the start of a testSound. By default, starting
+and stopping sounds happens immediately, but sometimes it might be convenient to schedule the testSound
 the be started and/or stopped at a specific time. This can be done with the following functions:
 
     ```c
@@ -404,41 +404,41 @@ required. Note that scheduling a start time still requires an explicit call to `
 before anything will play:
 
     ```c
-    ma_sound_set_start_time_in_pcm_frames(&sound, ma_engine_get_time(&engine) + (ma_engine_get_sample_rate(&engine) * 2);
-    ma_sound_start(&sound);
+    ma_sound_set_start_time_in_pcm_frames(&testSound, ma_engine_get_time(&engine) + (ma_engine_get_sample_rate(&engine) * 2);
+    ma_sound_start(&testSound);
     ```
 
-The third parameter of `ma_sound_init_from_file()` is a set of flags that control how the sound be
-loaded and a few options on which features should be enabled for that sound. By default, the sound
+The third parameter of `ma_sound_init_from_file()` is a set of flags that control how the testSound be
+loaded and a few options on which features should be enabled for that testSound. By default, the testSound
 is synchronously loaded fully into memory straight from the file system without any kind of
-decoding. If you want to decode the sound before storing it in memory, you need to specify the
+decoding. If you want to decode the testSound before storing it in memory, you need to specify the
 `MA_SOUND_FLAG_DECODE` flag. This is useful if you want to incur the cost of decoding at an earlier
 stage, such as a loading stage. Without this option, decoding will happen dynamically at mixing
 time which might be too expensive on the audio thread.
 
-If you want to load the sound asynchronously, you can specify the `MA_SOUND_FLAG_ASYNC` flag. This
-will result in `ma_sound_init_from_file()` returning quickly, but the sound will not start playing
-until the sound has had some audio decoded.
+If you want to load the testSound asynchronously, you can specify the `MA_SOUND_FLAG_ASYNC` flag. This
+will result in `ma_sound_init_from_file()` returning quickly, but the testSound will not start playing
+until the testSound has had some audio decoded.
 
-The fourth parameter is a pointer to sound group. A sound group is used as a mechanism to organise
+The fourth parameter is a pointer to testSound group. A testSound group is used as a mechanism to organise
 sounds into groups which have their own effect processing and volume control. An example is a game
 which might have separate groups for sfx, voice and music. Each of these groups have their own
 independent volume control. Use `ma_sound_group_init()` or `ma_sound_group_init_ex()` to initialize
-a sound group.
+a testSound group.
 
-Sounds and sound groups are nodes in the engine's node graph and can be plugged into any `ma_node`
-API. This makes it possible to connect sounds and sound groups to effect nodes to produce complex
+Sounds and testSound groups are nodes in the engine's node graph and can be plugged into any `ma_node`
+API. This makes it possible to connect sounds and testSound groups to effect nodes to produce complex
 effect chains.
 
-A sound can have it's volume changed with `ma_sound_set_volume()`. If you prefer decibel volume
+A testSound can have it's volume changed with `ma_sound_set_volume()`. If you prefer decibel volume
 control you can use `ma_volume_db_to_linear()` to convert from decibel representation to linear.
 
 Panning and pitching is supported with `ma_sound_set_pan()` and `ma_sound_set_pitch()`. If you know
-a sound will never have it's pitch changed with `ma_sound_set_pitch()` or via the doppler effect,
-you can specify the `MA_SOUND_FLAG_NO_PITCH` flag when initializing the sound for an optimization.
+a testSound will never have it's pitch changed with `ma_sound_set_pitch()` or via the doppler effect,
+you can specify the `MA_SOUND_FLAG_NO_PITCH` flag when initializing the testSound for an optimization.
 
-By default, sounds and sound groups have spatialization enabled. If you don't ever want to
-spatialize your sounds, initialize the sound with the `MA_SOUND_FLAG_NO_SPATIALIZATION` flag. The
+By default, sounds and testSound groups have spatialization enabled. If you don't ever want to
+spatialize your sounds, initialize the testSound with the `MA_SOUND_FLAG_NO_SPATIALIZATION` flag. The
 spatialization model is fairly simple and is roughly on feature parity with OpenAL. HRTF and
 environmental occlusion are not currently supported, but planned for the future. The supported
 features include:
@@ -449,9 +449,9 @@ features include:
 
 Sounds can be faded in and out with `ma_sound_set_fade_in_pcm_frames()`.
 
-To check if a sound is currently playing, you can use `ma_sound_is_playing()`. To check if a sound
-is at the end, use `ma_sound_at_end()`. Looping of a sound can be controlled with
-`ma_sound_set_looping()`. Use `ma_sound_is_looping()` to check whether or not the sound is looping.
+To check if a testSound is currently playing, you can use `ma_sound_is_playing()`. To check if a testSound
+is at the end, use `ma_sound_at_end()`. Looping of a testSound can be controlled with
+`ma_sound_set_looping()`. Use `ma_sound_is_looping()` to check whether or not the testSound is looping.
 
 
 
@@ -677,7 +677,7 @@ floating point number.
 3.2. Frame / PCM Frame
 ----------------------
 A frame is a group of samples equal to the number of channels. For a stereo stream a frame is 2
-samples, a mono frame is 1 sample, a 5.1 surround sound frame is 6 samples, etc. The terms "frame"
+samples, a mono frame is 1 sample, a 5.1 surround testSound frame is 6 samples, etc. The terms "frame"
 and "PCM frame" are the same thing in miniaudio. Note that this is different to a compressed frame.
 If ever miniaudio needs to refer to a compressed frame, such as a FLAC frame, it will always
 clarify what it's referring to with something like "FLAC frame".
@@ -686,7 +686,7 @@ clarify what it's referring to with something like "FLAC frame".
 ------------
 A stream of monaural audio that is emitted from an individual speaker in a speaker system, or
 received from an individual microphone in a microphone system. A stereo stream has two channels (a
-left channel, and a right channel), a 5.1 surround sound system has 6 channels, etc. Some audio
+left channel, and a right channel), a 5.1 surround testSound system has 6 channels, etc. Some audio
 systems refer to a channel as a complex audio stream that's mixed with other channels to produce
 the final mix - this is completely different to miniaudio's use of the term "channel" and should
 not be confused.
@@ -812,7 +812,7 @@ retrieved like so:
 
 If you do not need a specific data format property, just pass in NULL to the respective parameter.
 
-There may be cases where you want to implement something like a sound bank where you only want to
+There may be cases where you want to implement something like a testSound bank where you only want to
 read data within a certain range of the underlying data. To do this you can use a range:
 
     ```c
@@ -822,7 +822,7 @@ read data within a certain range of the underlying data. To do this you can use 
     }
     ```
 
-This is useful if you have a sound bank where many sounds are stored in the same file and you want
+This is useful if you have a testSound bank where many sounds are stored in the same file and you want
 the data source to only play one of those sub-sounds.
 
 Custom loop points can also be used with data sources. By default, data sources will loop after
@@ -875,7 +875,7 @@ Note that setting up chaining is not thread safe, so care needs to be taken if y
 changing links while the audio thread is in the middle of reading.
 
 Do not use `ma_decoder_seek_to_pcm_frame()` as a means to reuse a data source to play multiple
-instances of the same sound simultaneously. Instead, initialize multiple data sources for each
+instances of the same testSound simultaneously. Instead, initialize multiple data sources for each
 instance. This can be extremely inefficient depending on the data source and can result in
 glitching due to subtle changes to the state of internal filters.
 
@@ -1044,7 +1044,7 @@ normally). When not using a device, you need to use `ma_engine_read_pcm_frames()
 data from the engine. This kind of setup is useful if you want to do something like offline
 processing.
 
-When a sound is loaded it goes through a resource manager. By default the engine will initialize a
+When a testSound is loaded it goes through a resource manager. By default the engine will initialize a
 resource manager internally, but you can also specify a pre-initialized resource manager:
 
     ```c
@@ -1089,7 +1089,7 @@ The master volume of the engine can be controlled with `ma_engine_set_volume()` 
 linear scale, with 0 resulting in silence and anything above 1 resulting in amplification. If you
 prefer decibel based volume control, use `ma_volume_db_to_linear()` to convert from dB to linear.
 
-When a sound is spatialized, it is done so relative to a listener. An engine can be configured to
+When a testSound is spatialized, it is done so relative to a listener. An engine can be configured to
 have multiple listeners which can be configured via the config:
 
     ```c
@@ -1097,7 +1097,7 @@ have multiple listeners which can be configured via the config:
     ```
 
 The maximum number of listeners is restricted to `MA_ENGINE_MAX_LISTENERS`. By default, when a
-sound is spatialized, it will be done so relative to the closest listener. You can also pin a sound
+testSound is spatialized, it will be done so relative to the closest listener. You can also pin a testSound
 to a specific listener which will be explained later. Listener's have a position, direction, cone,
 and velocity (for doppler effect). A listener is referenced by an index, the meaning of which is up
 to the caller (the index is 0 based and cannot go beyond the listener count, minus 1). The
@@ -1115,64 +1115,64 @@ specified and defaults to +1 on the Y axis.
     ma_engine_listener_set_world_up(&engine, listenerIndex, 0, 1, 0);
     ```
 
-The engine supports directional attenuation. The listener can have a cone the controls how sound is
-attenuated based on the listener's direction. When a sound is between the inner and outer cones, it
+The engine supports directional attenuation. The listener can have a cone the controls how testSound is
+attenuated based on the listener's direction. When a testSound is between the inner and outer cones, it
 will be attenuated between 1 and the cone's outer gain:
 
     ```c
     ma_engine_listener_set_cone(&engine, listenerIndex, innerAngleInRadians, outerAngleInRadians, outerGain);
     ```
 
-When a sound is inside the inner code, no directional attenuation is applied. When the sound is
+When a testSound is inside the inner code, no directional attenuation is applied. When the testSound is
 outside of the outer cone, the attenuation will be set to `outerGain` in the example above. When
-the sound is in between the inner and outer cones, the attenuation will be interpolated between 1
+the testSound is in between the inner and outer cones, the attenuation will be interpolated between 1
 and the outer gain.
 
 The engine's coordinate system follows the OpenGL coordinate system where positive X points right,
 positive Y points up and negative Z points forward.
 
-The simplest and least flexible way to play a sound is like so:
+The simplest and least flexible way to play a testSound is like so:
 
     ```c
     ma_engine_play_sound(&engine, "my_sound.wav", pGroup);
     ```
 
 This is a "fire and forget" style of function. The engine will manage the `ma_sound` object
-internally. When the sound finishes playing, it'll be put up for recycling. For more flexibility
-you'll want to initialize a sound object:
+internally. When the testSound finishes playing, it'll be put up for recycling. For more flexibility
+you'll want to initialize a testSound object:
 
     ```c
-    ma_sound sound;
+    ma_sound testSound;
 
-    result = ma_sound_init_from_file(&engine, "my_sound.wav", flags, pGroup, NULL, &sound);
+    result = ma_sound_init_from_file(&engine, "my_sound.wav", flags, pGroup, NULL, &testSound);
     if (result != MA_SUCCESS) {
-        return result;  // Failed to load sound.
+        return result;  // Failed to load testSound.
     }
     ```
 
 Sounds need to be uninitialized with `ma_sound_uninit()`.
 
-The example above loads a sound from a file. If the resource manager has been disabled you will not
-be able to use this function and instead you'll need to initialize a sound directly from a data
+The example above loads a testSound from a file. If the resource manager has been disabled you will not
+be able to use this function and instead you'll need to initialize a testSound directly from a data
 source:
 
     ```c
-    ma_sound sound;
+    ma_sound testSound;
 
-    result = ma_sound_init_from_data_source(&engine, &dataSource, flags, pGroup, &sound);
+    result = ma_sound_init_from_data_source(&engine, &dataSource, flags, pGroup, &testSound);
     if (result != MA_SUCCESS) {
         return result;
     }
     ```
 
-Each `ma_sound` object represents a single instance of the sound. If you want to play the same
-sound multiple times at the same time, you need to initialize a separate `ma_sound` object.
+Each `ma_sound` object represents a single instance of the testSound. If you want to play the same
+testSound multiple times at the same time, you need to initialize a separate `ma_sound` object.
 
 For the most flexibility when initializing sounds, use `ma_sound_init_ex()`. This uses miniaudio's
 standard config/init pattern:
 
     ```c
-    ma_sound sound;
+    ma_sound testSound;
     ma_sound_config soundConfig;
 
     soundConfig = ma_sound_config_init();
@@ -1183,42 +1183,42 @@ standard config/init pattern:
     soundConfig.channelsIn  = 1;
     soundConfig.channelsOut = 0;    // Set to 0 to use the engine's native channel count.
 
-    result = ma_sound_init_ex(&soundConfig, &sound);
+    result = ma_sound_init_ex(&soundConfig, &testSound);
     if (result != MA_SUCCESS) {
         return result;
     }
     ```
 
-In the example above, the sound is being initialized without a file nor a data source. This is
-valid, in which case the sound acts as a node in the middle of the node graph. This means you can
-connect other sounds to this sound and allow it to act like a sound group. Indeed, this is exactly
+In the example above, the testSound is being initialized without a file nor a data source. This is
+valid, in which case the testSound acts as a node in the middle of the node graph. This means you can
+connect other sounds to this testSound and allow it to act like a testSound group. Indeed, this is exactly
 what a `ma_sound_group` is.
 
-When loading a sound, you specify a set of flags that control how the sound is loaded and what
-features are enabled for that sound. When no flags are set, the sound will be fully loaded into
+When loading a testSound, you specify a set of flags that control how the testSound is loaded and what
+features are enabled for that testSound. When no flags are set, the testSound will be fully loaded into
 memory in exactly the same format as how it's stored on the file system. The resource manager will
 allocate a block of memory and then load the file directly into it. When reading audio data, it
 will be decoded dynamically on the fly. In order to save processing time on the audio thread, it
-might be beneficial to pre-decode the sound. You can do this with the `MA_SOUND_FLAG_DECODE` flag:
+might be beneficial to pre-decode the testSound. You can do this with the `MA_SOUND_FLAG_DECODE` flag:
 
     ```c
-    ma_sound_init_from_file(&engine, "my_sound.wav", MA_SOUND_FLAG_DECODE, pGroup, NULL, &sound);
+    ma_sound_init_from_file(&engine, "my_sound.wav", MA_SOUND_FLAG_DECODE, pGroup, NULL, &testSound);
     ```
 
 By default, sounds will be loaded synchronously, meaning `ma_sound_init_*()` will not return until
-the sound has been fully loaded. If this is prohibitive you can instead load sounds asynchronously
+the testSound has been fully loaded. If this is prohibitive you can instead load sounds asynchronously
 by specificying the `MA_SOUND_FLAG_ASYNC` flag:
 
     ```c
-    ma_sound_init_from_file(&engine, "my_sound.wav", MA_SOUND_FLAG_DECODE | MA_SOUND_FLAG_ASYNC, pGroup, NULL, &sound);
+    ma_sound_init_from_file(&engine, "my_sound.wav", MA_SOUND_FLAG_DECODE | MA_SOUND_FLAG_ASYNC, pGroup, NULL, &testSound);
     ```
 
-This will result in `ma_sound_init_*()` returning quickly, but the sound won't yet have been fully
-loaded. When you start the sound, it won't output anything until some sound is available. The sound
-will start outputting audio before the sound has been fully decoded when the `MA_SOUND_FLAG_DECODE`
+This will result in `ma_sound_init_*()` returning quickly, but the testSound won't yet have been fully
+loaded. When you start the testSound, it won't output anything until some testSound is available. The testSound
+will start outputting audio before the testSound has been fully decoded when the `MA_SOUND_FLAG_DECODE`
 is specified.
 
-If you need to wait for an asynchronously loaded sound to be fully loaded, you can use a fence. A
+If you need to wait for an asynchronously loaded testSound to be fully loaded, you can use a fence. A
 fence in miniaudio is a simple synchronization mechanism which simply blocks until it's internal
 counter hit's zero. You can specify a fence like so:
 
@@ -1243,92 +1243,92 @@ counter hit's zero. You can specify a fence like so:
     ma_fence_wait(&fence);
     ```
 
-If loading the entire sound into memory is prohibitive, you can also configure the engine to stream
+If loading the entire testSound into memory is prohibitive, you can also configure the engine to stream
 the audio data:
 
     ```c
-    ma_sound_init_from_file(&engine, "my_sound.wav", MA_SOUND_FLAG_STREAM, pGroup, NULL, &sound);
+    ma_sound_init_from_file(&engine, "my_sound.wav", MA_SOUND_FLAG_STREAM, pGroup, NULL, &testSound);
     ```
 
 When streaming sounds, 2 seconds worth of audio data is stored in memory. Although it should work
 fine, it's inefficient to use streaming for short sounds. Streaming is useful for things like music
 tracks in games.
 
-When you initialize a sound, if you specify a sound group the sound will be attached to that group
+When you initialize a testSound, if you specify a testSound group the testSound will be attached to that group
 automatically. If you set it to NULL, it will be automatically attached to the engine's endpoint.
-If you would instead rather leave the sound unattached by default, you can can specify the
+If you would instead rather leave the testSound unattached by default, you can can specify the
 `MA_SOUND_FLAG_NO_DEFAULT_ATTACHMENT` flag. This is useful if you want to set up a complex node
 graph.
 
-Sounds are not started by default. To start a sound, use `ma_sound_start()`. Stop a sound with
+Sounds are not started by default. To start a testSound, use `ma_sound_start()`. Stop a testSound with
 `ma_sound_stop()`.
 
 Sounds can have their volume controlled with `ma_sound_set_volume()` in the same way as the
 engine's master volume.
 
 Sounds support stereo panning and pitching. Set the pan with `ma_sound_set_pan()`. Setting the pan
-to 0 will result in an unpanned sound. Setting it to -1 will shift everything to the left, whereas
+to 0 will result in an unpanned testSound. Setting it to -1 will shift everything to the left, whereas
 +1 will shift it to the right. The pitch can be controlled with `ma_sound_set_pitch()`. A larger
 value will result in a higher pitch. The pitch must be greater than 0.
 
 The engine supports 3D spatialization of sounds. By default sounds will have spatialization
-enabled, but if a sound does not need to be spatialized it's best to disable it. There are two ways
-to disable spatialization of a sound:
+enabled, but if a testSound does not need to be spatialized it's best to disable it. There are two ways
+to disable spatialization of a testSound:
 
     ```c
     // Disable spatialization at initialization time via a flag:
-    ma_sound_init_from_file(&engine, "my_sound.wav", MA_SOUND_FLAG_NO_SPATIALIZATION, NULL, NULL, &sound);
+    ma_sound_init_from_file(&engine, "my_sound.wav", MA_SOUND_FLAG_NO_SPATIALIZATION, NULL, NULL, &testSound);
 
     // Dynamically disable or enable spatialization post-initialization:
-    ma_sound_set_spatialization_enabled(&sound, isSpatializationEnabled);
+    ma_sound_set_spatialization_enabled(&testSound, isSpatializationEnabled);
     ```
 
-By default sounds will be spatialized based on the closest listener. If a sound should always be
+By default sounds will be spatialized based on the closest listener. If a testSound should always be
 spatialized relative to a specific listener it can be pinned to one:
 
     ```c
-    ma_sound_set_pinned_listener_index(&sound, listenerIndex);
+    ma_sound_set_pinned_listener_index(&testSound, listenerIndex);
     ```
 
-Like listeners, sounds have a position. By default, the position of a sound is in absolute space,
+Like listeners, sounds have a position. By default, the position of a testSound is in absolute space,
 but it can be changed to be relative to a listener:
 
     ```c
-    ma_sound_set_positioning(&sound, ma_positioning_relative);
+    ma_sound_set_positioning(&testSound, ma_positioning_relative);
     ```
 
-Note that relative positioning of a sound only makes sense if there is either only one listener, or
-the sound is pinned to a specific listener. To set the position of a sound:
+Note that relative positioning of a testSound only makes sense if there is either only one listener, or
+the testSound is pinned to a specific listener. To set the position of a testSound:
 
     ```c
-    ma_sound_set_position(&sound, posX, posY, posZ);
+    ma_sound_set_position(&testSound, posX, posY, posZ);
     ```
 
-The direction works the same way as a listener and represents the sound's forward direction:
+The direction works the same way as a listener and represents the testSound's forward direction:
 
     ```c
-    ma_sound_set_direction(&sound, forwardX, forwardY, forwardZ);
+    ma_sound_set_direction(&testSound, forwardX, forwardY, forwardZ);
     ```
 
 Sound's also have a cone for controlling directional attenuation. This works exactly the same as
 listeners:
 
     ```c
-    ma_sound_set_cone(&sound, innerAngleInRadians, outerAngleInRadians, outerGain);
+    ma_sound_set_cone(&testSound, innerAngleInRadians, outerAngleInRadians, outerGain);
     ```
 
-The velocity of a sound is used for doppler effect and can be set as such:
+The velocity of a testSound is used for doppler effect and can be set as such:
 
     ```c
-    ma_sound_set_velocity(&sound, velocityX, velocityY, velocityZ);
+    ma_sound_set_velocity(&testSound, velocityX, velocityY, velocityZ);
     ```
 
-The engine supports different attenuation models which can be configured on a per-sound basis. By
+The engine supports different attenuation models which can be configured on a per-testSound basis. By
 default the attenuation model is set to `ma_attenuation_model_inverse` which is the equivalent to
 OpenAL's `AL_INVERSE_DISTANCE_CLAMPED`. Configure the attenuation model like so:
 
     ```c
-    ma_sound_set_attenuation_model(&sound, ma_attenuation_model_inverse);
+    ma_sound_set_attenuation_model(&testSound, ma_attenuation_model_inverse);
     ```
 
 The supported attenuation models include the following:
@@ -1343,18 +1343,18 @@ The supported attenuation models include the following:
     | ma_attenuation_model_exponential | Exponential attenuation.                     |
     +----------------------------------+----------------------------------------------+
 
-To control how quickly a sound rolls off as it moves away from the listener, you need to configure
+To control how quickly a testSound rolls off as it moves away from the listener, you need to configure
 the rolloff:
 
     ```c
-    ma_sound_set_rolloff(&sound, rolloff);
+    ma_sound_set_rolloff(&testSound, rolloff);
     ```
 
 You can control the minimum and maximum gain to apply from spatialization:
 
     ```c
-    ma_sound_set_min_gain(&sound, minGain);
-    ma_sound_set_max_gain(&sound, maxGain);
+    ma_sound_set_min_gain(&testSound, minGain);
+    ma_sound_set_max_gain(&testSound, maxGain);
     ```
 
 Likewise, in the calculation of attenuation, you can control the minimum and maximum distances for
@@ -1363,15 +1363,15 @@ volume after the listener moves further away and to have sounds play a maximum v
 listener is within a certain distance:
 
     ```c
-    ma_sound_set_min_distance(&sound, minDistance);
-    ma_sound_set_max_distance(&sound, maxDistance);
+    ma_sound_set_min_distance(&testSound, minDistance);
+    ma_sound_set_max_distance(&testSound, maxDistance);
     ```
 
 The engine's spatialization system supports doppler effect. The doppler factor can be configure on
-a per-sound basis like so:
+a per-testSound basis like so:
 
     ```c
-    ma_sound_set_doppler_factor(&sound, dopplerFactor);
+    ma_sound_set_doppler_factor(&testSound, dopplerFactor);
     ```
 
 You can fade sounds in and out with `ma_sound_set_fade_in_pcm_frames()` and
@@ -1380,23 +1380,23 @@ starting volume:
 
     ```c
     // Fade in over 1 second.
-    ma_sound_set_fade_in_milliseconds(&sound, 0, 1, 1000);
+    ma_sound_set_fade_in_milliseconds(&testSound, 0, 1, 1000);
 
     // ... sometime later ...
 
     // Fade out over 1 second, starting from the current volume.
-    ma_sound_set_fade_in_milliseconds(&sound, -1, 0, 1000);
+    ma_sound_set_fade_in_milliseconds(&testSound, -1, 0, 1000);
     ```
 
 By default sounds will start immediately, but sometimes for timing and synchronization purposes it
-can be useful to schedule a sound to start or stop:
+can be useful to schedule a testSound to start or stop:
 
     ```c
-    // Start the sound in 1 second from now.
-    ma_sound_set_start_time_in_pcm_frames(&sound, ma_engine_get_time(&engine) + (ma_engine_get_sample_rate(&engine) * 1));
+    // Start the testSound in 1 second from now.
+    ma_sound_set_start_time_in_pcm_frames(&testSound, ma_engine_get_time(&engine) + (ma_engine_get_sample_rate(&engine) * 1));
 
-    // Stop the sound in 2 seconds from now.
-    ma_sound_set_stop_time_in_pcm_frames(&sound, ma_engine_get_time(&engine) + (ma_engine_get_sample_rate(&engine) * 2));
+    // Stop the testSound in 2 seconds from now.
+    ma_sound_set_stop_time_in_pcm_frames(&testSound, ma_engine_get_time(&engine) + (ma_engine_get_sample_rate(&engine) * 2));
     ```
 
 Note that scheduling a start time still requires an explicit call to `ma_sound_start()` before
@@ -1407,29 +1407,29 @@ current time with `ma_engine_get_time()`. The engine's global time is incremente
 audio data is read, but it can be reset with `ma_engine_set_time()` in case it needs to be
 resynchronized for some reason.
 
-To determine whether or not a sound is currently playing, use `ma_sound_is_playing()`. This will
+To determine whether or not a testSound is currently playing, use `ma_sound_is_playing()`. This will
 take the scheduled start and stop times into account.
 
-Whether or not a sound should loop can be controlled with `ma_sound_set_looping()`. Sounds will not
-be looping by default. Use `ma_sound_is_looping()` to determine whether or not a sound is looping.
+Whether or not a testSound should loop can be controlled with `ma_sound_set_looping()`. Sounds will not
+be looping by default. Use `ma_sound_is_looping()` to determine whether or not a testSound is looping.
 
-Use `ma_sound_at_end()` to determine whether or not a sound is currently at the end. For a looping
-sound this should never return true.
+Use `ma_sound_at_end()` to determine whether or not a testSound is currently at the end. For a looping
+testSound this should never return true.
 
-Internally a sound wraps around a data source. Some APIs exist to control the underlying data
+Internally a testSound wraps around a data source. Some APIs exist to control the underlying data
 source, mainly for convenience:
 
     ```c
-    ma_sound_seek_to_pcm_frame(&sound, frameIndex);
-    ma_sound_get_data_format(&sound, &format, &channels, &sampleRate, pChannelMap, channelMapCapacity);
-    ma_sound_get_cursor_in_pcm_frames(&sound, &cursor);
-    ma_sound_get_length_in_pcm_frames(&sound, &length);
+    ma_sound_seek_to_pcm_frame(&testSound, frameIndex);
+    ma_sound_get_data_format(&testSound, &format, &channels, &sampleRate, pChannelMap, channelMapCapacity);
+    ma_sound_get_cursor_in_pcm_frames(&testSound, &cursor);
+    ma_sound_get_length_in_pcm_frames(&testSound, &length);
     ```
 
 Sound groups have the same API as sounds, only they are called `ma_sound_group`, and since they do
 not have any notion of a data source, anything relating to a data source is unavailable.
 
-Internally, sound data is loaded via the `ma_decoder` API which means by default in only supports
+Internally, testSound data is loaded via the `ma_decoder` API which means by default in only supports
 file formats that have built-in support in miniaudio. You can extend this to support any kind of
 file format through the use of custom decoders. To do this you'll need to use a self-managed
 resource manager and configure it appropriately. See the "Resource Management" section below for
@@ -1438,18 +1438,18 @@ details on how to set this up.
 
 6. Resource Management
 ======================
-Many programs will want to manage sound resources for things such as reference counting and
+Many programs will want to manage testSound resources for things such as reference counting and
 streaming. This is supported by miniaudio via the `ma_resource_manager` API.
 
 The resource manager is mainly responsible for the following:
 
-  * Loading of sound files into memory with reference counting.
-  * Streaming of sound data
+  * Loading of testSound files into memory with reference counting.
+  * Streaming of testSound data
 
-When loading a sound file, the resource manager will give you back a `ma_data_source` compatible
+When loading a testSound file, the resource manager will give you back a `ma_data_source` compatible
 object called `ma_resource_manager_data_source`. This object can be passed into any
-`ma_data_source` API which is how you can read and seek audio data. When loading a sound file, you
-specify whether or not you want the sound to be fully loaded into memory (and optionally
+`ma_data_source` API which is how you can read and seek audio data. When loading a testSound file, you
+specify whether or not you want the testSound to be fully loaded into memory (and optionally
 pre-decoded) or streamed. When loading into memory, you can also specify whether or not you want
 the data to be loaded asynchronously.
 
@@ -1580,9 +1580,9 @@ This is particularly useful in programs like games where you want to read straig
 rather than the normal file system. If you do not specify a custom VFS, the resource manager will
 use the operating system's normal file operations. This is default.
 
-To load a sound file and create a data source, call `ma_resource_manager_data_source_init()`. When
-loading a sound you need to specify the file path and options for how the sounds should be loaded.
-By default a sound will be loaded synchronously. The returned data source is owned by the caller
+To load a testSound file and create a data source, call `ma_resource_manager_data_source_init()`. When
+loading a testSound you need to specify the file path and options for how the sounds should be loaded.
+By default a testSound will be loaded synchronously. The returned data source is owned by the caller
 which means the caller is responsible for the allocation and freeing of the data source. Below is
 an example for initializing a data source:
 
@@ -1607,7 +1607,7 @@ an example for initializing a data source:
     ma_resource_manager_data_source_uninit(pResourceManager, &dataSource);
     ```
 
-The `flags` parameter specifies how you want to perform loading of the sound file. It can be a
+The `flags` parameter specifies how you want to perform loading of the testSound file. It can be a
 combination of the following flags:
 
     ```
@@ -1617,13 +1617,13 @@ combination of the following flags:
     MA_RESOURCE_MANAGER_DATA_SOURCE_FLAG_WAIT_INIT
     ```
 
-When no flags are specified (set to 0), the sound will be fully loaded into memory, but not
+When no flags are specified (set to 0), the testSound will be fully loaded into memory, but not
 decoded, meaning the raw file data will be stored in memory, and then dynamically decoded when
 `ma_data_source_read_pcm_frames()` is called. To instead decode the audio data before storing it in
-memory, use the `MA_RESOURCE_MANAGER_DATA_SOURCE_FLAG_DECODE` flag. By default, the sound file will
+memory, use the `MA_RESOURCE_MANAGER_DATA_SOURCE_FLAG_DECODE` flag. By default, the testSound file will
 be loaded synchronously, meaning `ma_resource_manager_data_source_init()` will only return after
 the entire file has been loaded. This is good for simplicity, but can be prohibitively slow. You
-can instead load the sound asynchronously using the `MA_RESOURCE_MANAGER_DATA_SOURCE_ASYNC` flag.
+can instead load the testSound asynchronously using the `MA_RESOURCE_MANAGER_DATA_SOURCE_ASYNC` flag.
 This will result in `ma_resource_manager_data_source_init()` returning quickly, but no data will be
 returned by `ma_data_source_read_pcm_frames()` until some data is available. When no data is
 available because the asynchronous decoding hasn't caught up, `MA_BUSY` will be returned by
@@ -1660,16 +1660,16 @@ flag with a self-managed data pointer.
 ---------------------------------------------
 When loading asynchronously, it can be useful to poll whether or not loading has finished. Use
 `ma_resource_manager_data_source_result()` to determine this. For in-memory sounds, this will
-return `MA_SUCCESS` when the file has been *entirely* decoded. If the sound is still being decoded,
-`MA_BUSY` will be returned. Otherwise, some other error code will be returned if the sound failed
+return `MA_SUCCESS` when the file has been *entirely* decoded. If the testSound is still being decoded,
+`MA_BUSY` will be returned. Otherwise, some other error code will be returned if the testSound failed
 to load. For streaming data sources, `MA_SUCCESS` will be returned when the first page has been
-decoded and the sound is ready to be played. If the first page is still being decoded, `MA_BUSY`
-will be returned. Otherwise, some other error code will be returned if the sound failed to load.
+decoded and the testSound is ready to be played. If the first page is still being decoded, `MA_BUSY`
+will be returned. Otherwise, some other error code will be returned if the testSound failed to load.
 
 In addition to polling, you can also use a simple synchronization object called a "fence" to wait
 for asynchronously loaded sounds to finish. This is called `ma_fence`. The advantage to using a
 fence is that it can be used to wait for a group of sounds to finish loading rather than waiting
-for sounds on an individual basis. There are two stages to loading a sound:
+for sounds on an individual basis. There are two stages to loading a testSound:
 
   * Initialization of the internal decoder; and
   * Completion of decoding of the file (the file is fully decoded)
@@ -1685,7 +1685,7 @@ The example below shows how you could use a fence when loading a number of sound
     ma_fence fence;
     ma_fence_init(&fence);
 
-    // This will be passed into the initialization routine for each sound.
+    // This will be passed into the initialization routine for each testSound.
     ma_resource_manager_pipeline_notifications notifications = ma_resource_manager_pipeline_notifications_init();
     notifications.done.pFence = &fence;
 
@@ -1709,7 +1709,7 @@ you only need to wait for the initialization of the internal decoder to complete
     ```
 
 If a fence is not appropriate for your situation, you can instead use a callback that is fired on
-an individual sound basis. This is done in a very similar way to fences:
+an individual testSound basis. This is done in a very similar way to fences:
 
     ```c
     typedef struct
@@ -1722,7 +1722,7 @@ an individual sound basis. This is done in a very similar way to fences:
     {
         my_notification* pMyNotification = (my_notification*)pNotification;
 
-        // Do something in response to the sound finishing loading.
+        // Do something in response to the testSound finishing loading.
     }
 
     ...
@@ -1749,7 +1749,7 @@ your `ma_async_notification_callbacks` object stays valid.
 --------------------------------------------
 Resources are managed in two main ways:
 
-  * By storing the entire sound inside an in-memory buffer (referred to as a data buffer)
+  * By storing the entire testSound inside an in-memory buffer (referred to as a data buffer)
   * By streaming audio data on the fly (referred to as a data stream)
 
 A resource managed data source (`ma_resource_manager_data_source`) encapsulates a data buffer or
@@ -1768,14 +1768,14 @@ posted to the queue which is then read by a job thread. The number of job thread
 configured for improved scalability, and job threads can all run in parallel without needing to
 worry about the order of execution (how this is achieved is explained below).
 
-When a sound is being loaded asynchronously, playback can begin before the sound has been fully
-decoded. This enables the application to start playback of the sound quickly, while at the same
+When a testSound is being loaded asynchronously, playback can begin before the testSound has been fully
+decoded. This enables the application to start playback of the testSound quickly, while at the same
 time allowing to resource manager to keep loading in the background. Since there may be less
 threads than the number of sounds being loaded at a given time, a simple scheduling system is used
 to keep decoding time balanced and fair. The resource manager solves this by splitting decoding
 into chunks called pages. By default, each page is 1 second long. When a page has been decoded, a
 new job will be posted to start decoding the next page. By dividing up decoding into pages, an
-individual sound shouldn't ever delay every other sound from having their first page decoded. Of
+individual testSound shouldn't ever delay every other testSound from having their first page decoded. Of
 course, when loading many sounds at the same time, there will always be an amount of time required
 to process jobs in the queue so in heavy load situations there will still be some delay. To
 determine if a data source is ready to have some frames read, use
@@ -1799,7 +1799,7 @@ processed, it checks if the execution counter of the job equals the execution co
 owning object and if so, processes the job. If the counters are not equal, the job will be posted
 back onto the job queue for later processing. When the job finishes processing the execution order
 of the main object is incremented. This system means the no matter how many job threads are
-executing, decoding of an individual sound will always get processed serially. The advantage to
+executing, decoding of an individual testSound will always get processed serially. The advantage to
 having multiple threads comes into play when loading multiple sounds at the same time.
 
 The resource manager's job queue is not 100% lock-free and will use a spinlock to achieve
@@ -1836,7 +1836,7 @@ it will first check if the specified file is already loaded. If so, it will incr
 counter and just use the already loaded data. This saves both time and memory. When the data buffer
 is uninitialized, the reference counter will be decremented. If the counter hits zero, the file
 will be unloaded. This is a detail to keep in mind because it could result in excessive loading and
-unloading of a sound. For example, the following sequence will result in a file be loaded twice,
+unloading of a testSound. For example, the following sequence will result in a file be loaded twice,
 once after the other:
 
     ```c
@@ -1855,11 +1855,11 @@ due to the random nature of the hash. The disadvantage is that file names are ca
 this is an issue, you should normalize your file names to upper- or lower-case before initializing
 your data sources.
 
-When a sound file has not already been loaded and the `MA_RESOURCE_MANAGER_DATA_SOURCE_FLAG_ASYNC`
+When a testSound file has not already been loaded and the `MA_RESOURCE_MANAGER_DATA_SOURCE_FLAG_ASYNC`
 flag is excluded, the file will be decoded synchronously by the calling thread. There are two
 options for controlling how the audio is stored in the data buffer - encoded or decoded. When the
 `MA_RESOURCE_MANAGER_DATA_SOURCE_FLAG_DECODE` option is excluded, the raw file data will be stored
-in memory. Otherwise the sound will be decoded before storing it in memory. Synchronous loading is
+in memory. Otherwise the testSound will be decoded before storing it in memory. Synchronous loading is
 a very simple and standard process of simply adding an item to the BST, allocating a block of
 memory and then decoding (if `MA_RESOURCE_MANAGER_DATA_SOURCE_FLAG_DECODE` is specified).
 
@@ -1881,12 +1881,12 @@ other hand, when the file is being decoded, it will first allocate a decoder on 
 initialize it. Then it will check if the length of the file is known. If so it will allocate a
 block of memory to store the decoded output and initialize it to silence. If the size is unknown,
 it will allocate room for one page. After memory has been allocated, the first page will be
-decoded. If the sound is shorter than a page, the result code will be set to `MA_SUCCESS` and the
+decoded. If the testSound is shorter than a page, the result code will be set to `MA_SUCCESS` and the
 completion event will be signalled and loading is now complete. If, however, there is more to
 decode, a job with the code `MA_JOB_TYPE_RESOURCE_MANAGER_PAGE_DATA_BUFFER_NODE` is posted. This job
 will decode the next page and perform the same process if it reaches the end. If there is more to
 decode, the job will post another `MA_JOB_TYPE_RESOURCE_MANAGER_PAGE_DATA_BUFFER_NODE` job which will
-keep on happening until the sound has been fully decoded. For sounds of an unknown length, each
+keep on happening until the testSound has been fully decoded. For sounds of an unknown length, each
 page will be linked together as a linked list. Internally this is implemented via the
 `ma_paged_audio_buffer` object.
 
@@ -2746,7 +2746,7 @@ Predefined channel maps can be retrieved with `ma_channel_map_init_standard()`. 
     | ma_standard_channel_map_rfc3551   | RFC 3551. Based on AIFF.                                  |
     | ma_standard_channel_map_flac      | FLAC channel map.                                         |
     | ma_standard_channel_map_vorbis    | Vorbis channel map.                                       |
-    | ma_standard_channel_map_sound4    | FreeBSD's sound(4).                                       |
+    | ma_standard_channel_map_sound4    | FreeBSD's testSound(4).                                       |
     | ma_standard_channel_map_sndio     | sndio channel map. http://www.sndio.org/tips.html.        |
     | ma_standard_channel_map_webaudio  | https://webaudio.github.io/web-audio-api/#ChannelOrdering |
     +-----------------------------------+-----------------------------------------------------------+
@@ -3600,9 +3600,9 @@ Some backends have some nuance details you may want to be aware of.
 
 16.1. High Level API
 --------------------
-- If a sound does not require doppler or pitch shifting, consider disabling pitching by
-  initializing the sound with the `MA_SOUND_FLAG_NO_PITCH` flag.
-- If a sound does not require spatialization, disable it by initialzing the sound with the
+- If a testSound does not require doppler or pitch shifting, consider disabling pitching by
+  initializing the testSound with the `MA_SOUND_FLAG_NO_PITCH` flag.
+- If a testSound does not require spatialization, disable it by initialzing the testSound with the
   `MA_SOUND_FLAG_NO_SPATIALIZATION` flag. It can be renabled again post-initialization with
   `ma_sound_set_spatialization_enabled()`.
 
@@ -4134,7 +4134,7 @@ typedef enum
     ma_standard_channel_map_rfc3551,   /* Based off AIFF. */
     ma_standard_channel_map_flac,
     ma_standard_channel_map_vorbis,
-    ma_standard_channel_map_sound4,    /* FreeBSD's sound(4). */
+    ma_standard_channel_map_sound4,    /* FreeBSD's testSound(4). */
     ma_standard_channel_map_sndio,     /* www.sndio.org/tips.html */
     ma_standard_channel_map_webaudio = ma_standard_channel_map_flac, /* https://webaudio.github.io/web-audio-api/#ChannelOrdering. Only 1, 2, 4 and 6 channels are defined, but can fill in the gaps with logical assumptions. */
     ma_standard_channel_map_default = ma_standard_channel_map_microsoft
@@ -4799,7 +4799,7 @@ MA_API ma_result ma_gainer_set_gains(ma_gainer* pGainer, float* pNewGains);
 typedef enum
 {
     ma_pan_mode_balance = 0,    /* Does not blend one side with the other. Technically just a balance. Compatible with other popular audio engines and therefore the default. */
-    ma_pan_mode_pan             /* A true pan. The sound from one side will "move" to the other side and blend with it. */
+    ma_pan_mode_pan             /* A true pan. The testSound from one side will "move" to the other side and blend with it. */
 } ma_pan_mode;
 
 typedef struct
@@ -10749,18 +10749,18 @@ typedef struct
     const char* pFilePath;                      /* Set this to load from the resource manager. */
     const wchar_t* pFilePathW;                  /* Set this to load from the resource manager. */
     ma_data_source* pDataSource;                /* Set this to load from an existing data source. */
-    ma_node* pInitialAttachment;                /* If set, the sound will be attached to an input of this node. This can be set to a ma_sound. If set to NULL, the sound will be attached directly to the endpoint unless MA_SOUND_FLAG_NO_DEFAULT_ATTACHMENT is set in `flags`. */
-    ma_uint32 initialAttachmentInputBusIndex;   /* The index of the input bus of pInitialAttachment to attach the sound to. */
+    ma_node* pInitialAttachment;                /* If set, the testSound will be attached to an input of this node. This can be set to a ma_sound. If set to NULL, the testSound will be attached directly to the endpoint unless MA_SOUND_FLAG_NO_DEFAULT_ATTACHMENT is set in `flags`. */
+    ma_uint32 initialAttachmentInputBusIndex;   /* The index of the input bus of pInitialAttachment to attach the testSound to. */
     ma_uint32 channelsIn;                       /* Ignored if using a data source as input (the data source's channel count will be used always). Otherwise, setting to 0 will cause the engine's channel count to be used. */
     ma_uint32 channelsOut;                      /* Set this to 0 (default) to use the engine's channel count. Set to MA_SOUND_SOURCE_CHANNEL_COUNT to use the data source's channel count (only used if using a data source as input). */
     ma_uint32 flags;                            /* A combination of MA_SOUND_FLAG_* flags. */
-    ma_uint64 initialSeekPointInPCMFrames;      /* Initializes the sound such that it's seeked to this location by default. */
+    ma_uint64 initialSeekPointInPCMFrames;      /* Initializes the testSound such that it's seeked to this location by default. */
     ma_uint64 rangeBegInPCMFrames;
     ma_uint64 rangeEndInPCMFrames;
     ma_uint64 loopPointBegInPCMFrames;
     ma_uint64 loopPointEndInPCMFrames;
     ma_bool32 isLooping;
-    ma_fence* pDoneFence;                       /* Released when the resource manager has finished decoding the entire sound. Not used with streams. */
+    ma_fence* pDoneFence;                       /* Released when the resource manager has finished decoding the entire testSound. Not used with streams. */
 } ma_sound_config;
 
 MA_API ma_sound_config ma_sound_config_init(void);
@@ -10775,7 +10775,7 @@ struct ma_sound
 
     /*
     We're declaring a resource manager data source object here to save us a malloc when loading a
-    sound via the resource manager, which I *think* will be the most common scenario.
+    testSound via the resource manager, which I *think* will be the most common scenario.
     */
 #ifndef MA_NO_RESOURCE_MANAGER
     ma_resource_manager_data_source* pResourceManagerDataSource;
@@ -10791,7 +10791,7 @@ struct ma_sound_inlined
     ma_sound_inlined* pPrev;
 };
 
-/* A sound group is just a sound. */
+/* A testSound group is just a testSound. */
 typedef ma_sound_config ma_sound_group_config;
 typedef ma_sound        ma_sound_group;
 
@@ -10819,7 +10819,7 @@ typedef struct
     ma_allocation_callbacks allocationCallbacks;
     ma_bool32 noAutoStart;                      /* When set to true, requires an explicit call to ma_engine_start(). This is false by default, meaning the engine will be started automatically in ma_engine_init(). */
     ma_bool32 noDevice;                         /* When set to true, don't create a default device. ma_engine_read_pcm_frames() can be called manually to read data. */
-    ma_mono_expansion_mode monoExpansionMode;   /* Controls how the mono channel should be expanded to other channels when spatialization is disabled on a sound. */
+    ma_mono_expansion_mode monoExpansionMode;   /* Controls how the mono channel should be expanded to other channels when spatialization is disabled on a testSound. */
     ma_vfs* pResourceManagerVFS;                /* A pointer to a pre-allocated VFS object to use with the resource manager. This is ignored if pResourceManager is not NULL. */
 } ma_engine_config;
 
@@ -10842,9 +10842,9 @@ struct ma_engine
     ma_allocation_callbacks allocationCallbacks;
     ma_bool8 ownsResourceManager;
     ma_bool8 ownsDevice;
-    ma_spinlock inlinedSoundLock;               /* For synchronizing access so the inlined sound list. */
-    ma_sound_inlined* pInlinedSoundHead;        /* The first inlined sound. Inlined sounds are tracked in a linked list. */
-    MA_ATOMIC(4, ma_uint32) inlinedSoundCount;  /* The total number of allocated inlined sound objects. Used for debugging. */
+    ma_spinlock inlinedSoundLock;               /* For synchronizing access so the inlined testSound list. */
+    ma_sound_inlined* pInlinedSoundHead;        /* The first inlined testSound. Inlined sounds are tracked in a linked list. */
+    MA_ATOMIC(4, ma_uint32) inlinedSoundCount;  /* The total number of allocated inlined testSound objects. Used for debugging. */
     ma_uint32 gainSmoothTimeInFrames;           /* The number of frames to interpolate the gain of spatialized sounds across. */
     ma_mono_expansion_mode monoExpansionMode;
 };
@@ -23434,8 +23434,8 @@ static ma_result ma_device_init__dsound(ma_device* pDevice, const ma_device_conf
           another application, even if the new application uses DirectSound.
 
         DSBCAPS_GETCURRENTPOSITION2
-          In the first version of DirectSound, the play cursor was significantly ahead of the actual playing sound on emulated
-          sound cards; it was directly behind the write cursor. Now, if the DSBCAPS_GETCURRENTPOSITION2 flag is specified, the
+          In the first version of DirectSound, the play cursor was significantly ahead of the actual playing testSound on emulated
+          testSound cards; it was directly behind the write cursor. Now, if the DSBCAPS_GETCURRENTPOSITION2 flag is specified, the
           application can get a more accurate play cursor.
         */
         MA_ZERO_OBJECT(&descDS);
@@ -27167,7 +27167,7 @@ in the PulseAudio backend. I apologize if this gets a bit ranty for your liking 
 
 PulseAudio has something they call the "Simple API", which unfortunately isn't suitable for miniaudio. I've not seen anywhere where it
 allows you to enumerate over devices, nor does it seem to support the ability to stop and start streams. Looking at the documentation, it
-appears as though the stream is constantly running and you prevent sound from being emitted or captured by simply not calling the read or
+appears as though the stream is constantly running and you prevent testSound from being emitted or captured by simply not calling the read or
 write functions. This is not a professional solution as it would be much better to *actually* stop the underlying stream. Perhaps the
 simple API has some smarts to do this automatically, but I'm not sure. Another limitation with the simple API is that it seems inefficient
 when you want to have multiple streams to a single context. For these reasons, miniaudio is not using the simple API.
@@ -32148,7 +32148,7 @@ static void on_start_stop__coreaudio(void* pUserData, AudioUnit audioUnit, Audio
                 ((audioUnit == pDevice->coreaudio.audioUnitCapture)  && pDevice->coreaudio.isDefaultCaptureDevice)) {
                 /*
                 It looks like the device is switching through an external event, such as the user unplugging the device or changing the default device
-                via the operating system's sound settings. If we're re-initializing the device, we just terminate because we want the stopping of the
+                via the operating system's testSound settings. If we're re-initializing the device, we just terminate because we want the stopping of the
                 device to be seamless to the client (we don't want them receiving the stopped event and thinking that the device has stopped when it
                 hasn't!).
                 */
@@ -33519,7 +33519,7 @@ sndio Backend
 /*
 Only supporting OpenBSD. This did not work very well at all on FreeBSD when I tried it. Not sure if this is due
 to miniaudio's implementation or if it's some kind of system configuration issue, but basically the default device
-just doesn't emit any sound, or at times you'll hear tiny pieces. I will consider enabling this when there's
+just doesn't emit any testSound, or at times you'll hear tiny pieces. I will consider enabling this when there's
 demand for it or if I can get it tested and debugged more thoroughly.
 */
 #if 0
@@ -38338,7 +38338,7 @@ static ma_result ma_device_init_by_type__webaudio(ma_device* pDevice, const ma_d
                     device.intermediaryBufferView = new Float32Array(Module.HEAPF32.buffer, device.intermediaryBuffer, device.intermediaryBufferSizeInBytes);
                 }
 
-                /* Make sure silence it output to the AudioContext destination. Not doing this will cause sound to come out of the speakers! */
+                /* Make sure silence it output to the AudioContext destination. Not doing this will cause testSound to come out of the speakers! */
                 for (var iChannel = 0; iChannel < e.outputBuffer.numberOfChannels; ++iChannel) {
                     e.outputBuffer.getChannelData(iChannel).fill(0.0);
                 }
@@ -48382,13 +48382,13 @@ MA_API ma_result ma_spatializer_process_pcm_frames(ma_spatializer* pSpatializer,
         pSpatializer->dopplerPitch = 1;
     } else {
         /*
-        Let's first determine which listener the sound is closest to. Need to keep in mind that we
+        Let's first determine which listener the testSound is closest to. Need to keep in mind that we
         might not have a world or any listeners, in which case we just spatializer based on the
         listener being positioned at the origin (0, 0, 0).
         */
         ma_vec3f relativePosNormalized;
         ma_vec3f relativePos;   /* The position relative to the listener. */
-        ma_vec3f relativeDir;   /* The direction of the sound, relative to the listener. */
+        ma_vec3f relativeDir;   /* The direction of the testSound, relative to the listener. */
         ma_vec3f listenerVel;   /* The volocity of the listener. For doppler pitch calculation. */
         float speedOfSound;
         float distance = 0;
@@ -48402,7 +48402,7 @@ MA_API ma_result ma_spatializer_process_pcm_frames(ma_spatializer* pSpatializer,
         float dopplerFactor = ma_spatializer_get_doppler_factor(pSpatializer);
 
         /*
-        We'll need the listener velocity for doppler pitch calculations. The speed of sound is
+        We'll need the listener velocity for doppler pitch calculations. The speed of testSound is
         defined by the listener, so we'll grab that here too.
         */
         if (pListener != NULL) {
@@ -48420,7 +48420,7 @@ MA_API ma_result ma_spatializer_process_pcm_frames(ma_spatializer* pSpatializer,
         } else {
             /*
             We've found a listener and we're using absolute positioning. We need to transform the
-            sound's position and direction so that it's relative to listener. Later on we'll use
+            testSound's position and direction so that it's relative to listener. Later on we'll use
             this for determining the factors to apply to each channel to apply the panning effect.
             */
             ma_spatializer_get_relative_position_and_direction(pSpatializer, pListener, &relativePos, &relativeDir);
@@ -48505,7 +48505,7 @@ MA_API ma_result ma_spatializer_process_pcm_frames(ma_spatializer* pSpatializer,
                 gain *= ma_calculate_angular_gain(listenerDirection, relativePosNormalized, listenerInnerAngle, listenerOuterAngle, listenerOuterGain);
             }
         } else {
-            /* The sound is right on top of the listener. Don't do any angular attenuation. */
+            /* The testSound is right on top of the listener. Don't do any angular attenuation. */
         }
 
 
@@ -48528,10 +48528,10 @@ MA_API ma_result ma_spatializer_process_pcm_frames(ma_spatializer* pSpatializer,
         the code below is not based on any specific algorithm. I'm just implementing this off the top of my head and
         seeing how it goes. There might be better ways to do this.
 
-        To determine the direction of the sound relative to a speaker I'm using dot products. Each speaker is given a
+        To determine the direction of the testSound relative to a speaker I'm using dot products. Each speaker is given a
         direction. For example, the left channel in a stereo system will be -1 on the X axis and the right channel will
         be +1 on the X axis. A dot product is performed against the direction vector of the channel and the normalized
-        position of the sound.
+        position of the testSound.
         */
         for (iChannel = 0; iChannel < channelsOut; iChannel += 1) {
             pSpatializer->pNewChannelGainsOut[iChannel] = gain;
@@ -48548,7 +48548,7 @@ MA_API ma_result ma_spatializer_process_pcm_frames(ma_spatializer* pSpatializer,
         }
 
         /*
-        Calculate our per-channel gains. We do this based on the normalized relative position of the sound and it's
+        Calculate our per-channel gains. We do this based on the normalized relative position of the testSound and it's
         relation to the direction of the channel.
         */
         if (distance > 0) {
@@ -48585,31 +48585,31 @@ MA_API ma_result ma_spatializer_process_pcm_frames(ma_spatializer* pSpatializer,
                 dMin = 0.2f;  /* TODO: Consider making this configurable. */
 
                 /*
-                At this point, "d" will be positive if the sound is on the same side as the channel and negative if
+                At this point, "d" will be positive if the testSound is on the same side as the channel and negative if
                 it's on the opposite side. It will be in the range of -1..1. There's two ways I can think of to
                 calculate a panning value. The first is to simply convert it to 0..1, however this has a problem
-                which I'm not entirely happy with. Considering a stereo system, when a sound is positioned right
+                which I'm not entirely happy with. Considering a stereo system, when a testSound is positioned right
                 in front of the listener it'll result in each speaker getting a gain of 0.5. I don't know if I like
-                the idea of having a scaling factor of 0.5 being applied to a sound when it's sitting right in front
+                the idea of having a scaling factor of 0.5 being applied to a testSound when it's sitting right in front
                 of the listener. I would intuitively expect that to be played at full volume, or close to it.
 
-                The second idea I think of is to only apply a reduction in gain when the sound is on the opposite
+                The second idea I think of is to only apply a reduction in gain when the testSound is on the opposite
                 side of the speaker. That is, reduce the gain only when the dot product is negative. The problem
-                with this is that there will not be any attenuation as the sound sweeps around the 180 degrees
+                with this is that there will not be any attenuation as the testSound sweeps around the 180 degrees
                 where the dot product is positive. The idea with this option is that you leave the gain at 1 when
-                the sound is being played on the same side as the speaker and then you just reduce the volume when
-                the sound is on the other side.
+                the testSound is being played on the same side as the speaker and then you just reduce the volume when
+                the testSound is on the other side.
 
                 The summarize, I think the first option should give a better sense of spatialization, but the second
-                option is better for preserving the sound's power.
+                option is better for preserving the testSound's power.
 
-                UPDATE: In my testing, I find the first option to sound better. You can feel the sense of space a
+                UPDATE: In my testing, I find the first option to testSound better. You can feel the sense of space a
                 bit better, but you can also hear the reduction in volume when it's right in front.
                 */
                 #if 1
                 {
                     /*
-                    Scale the dot product from -1..1 to 0..1. Will result in a sound directly in front losing power
+                    Scale the dot product from -1..1 to 0..1. Will result in a testSound directly in front losing power
                     by being played at 0.5 gain.
                     */
                     d = (d + 1) * 0.5f;  /* -1..1 to 0..1 */
@@ -48619,7 +48619,7 @@ MA_API ma_result ma_spatializer_process_pcm_frames(ma_spatializer* pSpatializer,
                 #else
                 {
                     /*
-                    Only reduce the volume of the sound if it's on the opposite side. This path keeps the volume more
+                    Only reduce the volume of the testSound if it's on the opposite side. This path keeps the volume more
                     consistent, but comes at the expense of a worse sense of space and positioning.
                     */
                     if (d < 0) {
@@ -48631,7 +48631,7 @@ MA_API ma_result ma_spatializer_process_pcm_frames(ma_spatializer* pSpatializer,
                 #endif
             }
         } else {
-            /* Assume the sound is right on top of us. Don't do any panning. */
+            /* Assume the testSound is right on top of us. Don't do any panning. */
         }
 
         /* Now we need to apply the volume to each channel. This needs to run through the gainer to ensure we get a smooth volume transition. */
@@ -48962,7 +48962,7 @@ MA_API void ma_spatializer_get_relative_position_and_direction(const ma_spatiali
         The calculation of axisX above can result in a zero-length vector if the listener is
         looking straight up on the Y axis. We'll need to fall back to a +X in this case so that
         the calculations below don't fall apart. This is where a quaternion based listener and
-        sound orientation would come in handy.
+        testSound orientation would come in handy.
         */
         if (ma_vec3f_len2(axisX) == 0) {
             axisX = ma_vec3f_init_3f(1, 0, 0);
@@ -48987,7 +48987,7 @@ MA_API void ma_spatializer_get_relative_position_and_direction(const ma_spatiali
 
         /*
         Multiply the lookat matrix by the spatializer position to transform it to listener
-        space. This allows calculations to work based on the sound being relative to the
+        space. This allows calculations to work based on the testSound being relative to the
         origin which makes things simpler.
         */
         if (pRelativePos != NULL) {
@@ -48998,7 +48998,7 @@ MA_API void ma_spatializer_get_relative_position_and_direction(const ma_spatiali
         }
 
         /*
-        The direction of the sound needs to also be transformed so that it's relative to the
+        The direction of the testSound needs to also be transformed so that it's relative to the
         rotation of the listener.
         */
         if (pRelativeDir != NULL) {
@@ -55027,7 +55027,7 @@ MA_API ma_result ma_data_source_get_length_in_pcm_frames(ma_data_source* pDataSo
     /*
     If we have a range defined we'll use that to determine the length. This is one of rare times
     where we'll actually trust the caller. If they've set the range, I think it's mostly safe to
-    assume they've set it based on some higher level knowledge of the structure of the sound bank.
+    assume they've set it based on some higher level knowledge of the structure of the testSound bank.
     */
     if (pDataSourceBase->rangeEndInFrames != ~((ma_uint64)0)) {
         *pLength = pDataSourceBase->rangeEndInFrames - pDataSourceBase->rangeBegInFrames;
@@ -65143,7 +65143,7 @@ static ma_result ma_resource_manager_data_buffer_node_init_supply_decoded(ma_res
     At this point we have the decoder and we now need to initialize the data supply. This will
     be either a decoded buffer, or a decoded paged buffer. A regular buffer is just one big heap
     allocated buffer, whereas a paged buffer is a linked list of paged-sized buffers. The latter
-    is used when the length of a sound is unknown until a full decode has been performed.
+    is used when the length of a testSound is unknown until a full decode has been performed.
     */
     if ((flags & MA_RESOURCE_MANAGER_DATA_SOURCE_FLAG_UNKNOWN_LENGTH) == 0) {
         result = ma_decoder_get_length_in_pcm_frames(pDecoder, &totalFrameCount);
@@ -65509,7 +65509,7 @@ static ma_result ma_resource_manager_data_buffer_node_acquire(ma_resource_manage
 
         if (pDataBufferNode->isDataOwnedByResourceManager) {
             if ((flags & MA_RESOURCE_MANAGER_DATA_SOURCE_FLAG_ASYNC) == 0) {
-                /* Loading synchronously. Load the sound in it's entirety here. */
+                /* Loading synchronously. Load the testSound in it's entirety here. */
                 if ((flags & MA_RESOURCE_MANAGER_DATA_SOURCE_FLAG_DECODE) == 0) {
                     /* No decoding. This is the simple case - just store the file contents in memory. */
                     result = ma_resource_manager_data_buffer_node_init_supply_encoded(pResourceManager, pDataBufferNode, pFilePath, pFilePathW);
@@ -65648,7 +65648,7 @@ stage2:
     */
     if (refCount == 0) {
         if (ma_resource_manager_data_buffer_node_result(pDataBufferNode) == MA_BUSY) {
-            /* The sound is still loading. We need to delay the freeing of the node to a safe time. */
+            /* The testSound is still loading. We need to delay the freeing of the node to a safe time. */
             ma_job job;
 
             /* We need to mark the node as unavailable for the sake of the resource manager worker threads. */
@@ -65678,7 +65678,7 @@ stage2:
                 /* Threading is enabled. The job queue will deal with the rest of the cleanup from here. */
             }
         } else {
-            /* The sound isn't loading so we can just free the node here. */
+            /* The testSound isn't loading so we can just free the node here. */
             ma_resource_manager_data_buffer_node_free(pResourceManager, pDataBufferNode);
         }
     }
@@ -65794,7 +65794,7 @@ static ma_result ma_resource_manager_data_buffer_init_ex_internal(ma_resource_ma
     */
     ma_resource_manager_pipeline_notifications_acquire_all_fences(&notifications);
     {
-        /* We first need to acquire a node. If ASYNC is not set, this will not return until the entire sound has been loaded. */
+        /* We first need to acquire a node. If ASYNC is not set, this will not return until the entire testSound has been loaded. */
         result = ma_resource_manager_data_buffer_node_acquire(pResourceManager, pConfig->pFilePath, pConfig->pFilePathW, hashedName32, flags, NULL, notifications.init.pFence, notifications.done.pFence, &pDataBufferNode);
         if (result != MA_SUCCESS) {
             ma_resource_manager_pipeline_notifications_signal_all_notifications(&notifications);
@@ -66085,7 +66085,7 @@ MA_API ma_result ma_resource_manager_data_buffer_read_pcm_frames(ma_resource_man
     }
 
     /*
-    If we returned MA_AT_END, but the node is still loading, we don't want to return that code or else the caller will interpret the sound
+    If we returned MA_AT_END, but the node is still loading, we don't want to return that code or else the caller will interpret the testSound
     as at the end and terminate decoding.
     */
     if (result == MA_AT_END) {
@@ -67428,7 +67428,7 @@ static ma_result ma_job_process__resource_manager__load_data_buffer_node(ma_job*
         Decoding. This is the complex case because we're not going to be doing the entire decoding
         process here. Instead it's going to be split of multiple jobs and loaded in pages. The
         reason for this is to evenly distribute decoding time across multiple sounds, rather than
-        having one huge sound hog all the available processing resources.
+        having one huge testSound hog all the available processing resources.
 
         The first thing we do is initialize a decoder. This is allocated on the heap and is passed
         around to the paging jobs. When the last paging job has completed it's processing, it'll
@@ -67610,7 +67610,7 @@ static ma_result ma_job_process__resource_manager__page_data_buffer_node(ma_job*
 
         result = ma_resource_manager_post_job(pResourceManager, &newJob);
 
-        /* Since the sound isn't yet fully decoded we want the status to be set to busy. */
+        /* Since the testSound isn't yet fully decoded we want the status to be set to busy. */
         if (result == MA_SUCCESS) {
             result  = MA_BUSY;
         }
@@ -71130,7 +71130,7 @@ static void ma_engine_node_process_pcm_frames__general(ma_engine_node* pEngineNo
             ma_uint32 iListener;
 
             /*
-            When determining the listener to use, we first check to see if the sound is pinned to a
+            When determining the listener to use, we first check to see if the testSound is pinned to a
             specific listener. If so, we use that. Otherwise we just use the closest listener.
             */
             if (pEngineNode->pinnedListenerIndex != MA_LISTENER_INDEX_CLOSEST && pEngineNode->pinnedListenerIndex < ma_engine_get_listener_count(pEngineNode->pEngine)) {
@@ -71190,7 +71190,7 @@ static void ma_engine_node_process_pcm_frames__sound(ma_node* pNode, const float
     (void)ppFramesIn;
     (void)pFrameCountIn;
 
-    /* If we're marked at the end we need to stop the sound and do nothing. */
+    /* If we're marked at the end we need to stop the testSound and do nothing. */
     if (ma_sound_at_end(pSound)) {
         ma_sound_stop(pSound);
         *pFrameCountOut = 0;
@@ -71248,7 +71248,7 @@ static void ma_engine_node_process_pcm_frames__sound(ma_node* pNode, const float
 
             result = ma_data_source_read_pcm_frames(pSound->pDataSource, temp, framesToRead, &framesJustRead);
 
-            /* If we reached the end of the sound we'll want to mark it as at the end and stop it. This should never be returned for looping sounds. */
+            /* If we reached the end of the testSound we'll want to mark it as at the end and stop it. This should never be returned for looping sounds. */
             if (result == MA_AT_END) {
                 c89atomic_exchange_32(&pSound->atEnd, MA_TRUE); /* This will be set to false in ma_sound_start(). */
             }
@@ -71678,7 +71678,7 @@ static void ma_engine_data_callback_internal(ma_device* pDevice, void* pFramesOu
 
         2) It's an attempt at working around an issue where processing jobs on the Emscripten main
            loop doesn't work as well as it should. When trying to load sounds without the `DECODE`
-           flag or with the `ASYNC` flag, the sound data is just not able to be loaded in time
+           flag or with the `ASYNC` flag, the testSound data is just not able to be loaded in time
            before the callback is processed. I think it's got something to do with the single-
            threaded nature of Web, but I'm not entirely sure.
     */
@@ -72360,15 +72360,15 @@ MA_API ma_result ma_engine_play_sound_ex(ma_engine* pEngine, const char* pFilePa
     }
 
     /*
-    We want to check if we can recycle an already-allocated inlined sound. Since this is just a
+    We want to check if we can recycle an already-allocated inlined testSound. Since this is just a
     helper I'm not *too* concerned about performance here and I'm happy to use a lock to keep
     the implementation simple. Maybe this can be optimized later if there's enough demand, but
     if this function is being used it probably means the caller doesn't really care too much.
 
-    What we do is check the atEnd flag. When this is true, we can recycle the sound. Otherwise
-    we just keep iterating. If we reach the end without finding a sound to recycle we just
+    What we do is check the atEnd flag. When this is true, we can recycle the testSound. Otherwise
+    we just keep iterating. If we reach the end without finding a testSound to recycle we just
     allocate a new one. This doesn't scale well for a massive number of sounds being played
-    simultaneously as we don't ever actually free the sound objects. Some kind of garbage
+    simultaneously as we don't ever actually free the testSound objects. Some kind of garbage
     collection routine might be valuable for this which I'll think about.
     */
     ma_spinlock_lock(&pEngine->inlinedSoundLock);
@@ -72378,7 +72378,7 @@ MA_API ma_result ma_engine_play_sound_ex(ma_engine* pEngine, const char* pFilePa
         for (pNextSound = pEngine->pInlinedSoundHead; pNextSound != NULL; pNextSound = pNextSound->pNext) {
             if (ma_sound_at_end(&pNextSound->sound)) {
                 /*
-                The sound is at the end which means it's available for recycling. All we need to do
+                The testSound is at the end which means it's available for recycling. All we need to do
                 is uninitialize it and reinitialize it. All we're doing is recycling memory.
                 */
                 pSound = pNextSound;
@@ -72389,7 +72389,7 @@ MA_API ma_result ma_engine_play_sound_ex(ma_engine* pEngine, const char* pFilePa
 
         if (pSound != NULL) {
             /*
-            We actually want to detach the sound from the list here. The reason is because we want the sound
+            We actually want to detach the testSound from the list here. The reason is because we want the testSound
             to be in a consistent state at the non-recycled case to simplify the logic below.
             */
             if (pEngine->pInlinedSoundHead == pSound) {
@@ -72403,33 +72403,33 @@ MA_API ma_result ma_engine_play_sound_ex(ma_engine* pEngine, const char* pFilePa
                 pSound->pNext->pPrev = pSound->pPrev;
             }
 
-            /* Now the previous sound needs to be uninitialized. */
+            /* Now the previous testSound needs to be uninitialized. */
             ma_sound_uninit(&pNextSound->sound);
         } else {
-            /* No sound available for recycling. Allocate one now. */
+            /* No testSound available for recycling. Allocate one now. */
             pSound = (ma_sound_inlined*)ma_malloc(sizeof(*pSound), &pEngine->allocationCallbacks);
         }
 
         if (pSound != NULL) {   /* Safety check for the allocation above. */
             /*
-            At this point we should have memory allocated for the inlined sound. We just need
-            to initialize it like a normal sound now.
+            At this point we should have memory allocated for the inlined testSound. We just need
+            to initialize it like a normal testSound now.
             */
             soundFlags |= MA_SOUND_FLAG_ASYNC;                 /* For inlined sounds we don't want to be sitting around waiting for stuff to load so force an async load. */
-            soundFlags |= MA_SOUND_FLAG_NO_DEFAULT_ATTACHMENT; /* We want specific control over where the sound is attached in the graph. We'll attach it manually just before playing the sound. */
+            soundFlags |= MA_SOUND_FLAG_NO_DEFAULT_ATTACHMENT; /* We want specific control over where the testSound is attached in the graph. We'll attach it manually just before playing the testSound. */
             soundFlags |= MA_SOUND_FLAG_NO_PITCH;              /* Pitching isn't usable with inlined sounds, so disable it to save on speed. */
             soundFlags |= MA_SOUND_FLAG_NO_SPATIALIZATION;     /* Not currently doing spatialization with inlined sounds, but this might actually change later. For now disable spatialization. Will be removed if we ever add support for spatialization here. */
 
             result = ma_sound_init_from_file(pEngine, pFilePath, soundFlags, NULL, NULL, &pSound->sound);
             if (result == MA_SUCCESS) {
-                /* Now attach the sound to the graph. */
+                /* Now attach the testSound to the graph. */
                 result = ma_node_attach_output_bus(pSound, 0, pNode, nodeInputBusIndex);
                 if (result == MA_SUCCESS) {
-                    /* At this point the sound should be loaded and we can go ahead and add it to the list. The new item becomes the new head. */
+                    /* At this point the testSound should be loaded and we can go ahead and add it to the list. The new item becomes the new head. */
                     pSound->pNext = pEngine->pInlinedSoundHead;
                     pSound->pPrev = NULL;
 
-                    pEngine->pInlinedSoundHead = pSound;    /* <-- This is what attaches the sound to the list. */
+                    pEngine->pInlinedSoundHead = pSound;    /* <-- This is what attaches the testSound to the list. */
                     if (pSound->pNext != NULL) {
                         pSound->pNext->pPrev = pSound;
                     }
@@ -72449,10 +72449,10 @@ MA_API ma_result ma_engine_play_sound_ex(ma_engine* pEngine, const char* pFilePa
         return result;
     }
 
-    /* Finally we can start playing the sound. */
+    /* Finally we can start playing the testSound. */
     result = ma_sound_start(&pSound->sound);
     if (result != MA_SUCCESS) {
-        /* Failed to start the sound. We need to mark it for recycling and return an error. */
+        /* Failed to start the testSound. We need to mark it for recycling and return an error. */
         c89atomic_exchange_32(&pSound->sound.atEnd, MA_TRUE);
         return result;
     }
@@ -72538,14 +72538,14 @@ static ma_result ma_sound_init_from_data_source_internal(ma_engine* pEngine, con
         return result;
     }
 
-    /* If no attachment is specified, attach the sound straight to the endpoint. */
+    /* If no attachment is specified, attach the testSound straight to the endpoint. */
     if (pConfig->pInitialAttachment == NULL) {
         /* No group. Attach straight to the endpoint by default, unless the caller has requested that do not. */
         if ((pConfig->flags & MA_SOUND_FLAG_NO_DEFAULT_ATTACHMENT) == 0) {
             result = ma_node_attach_output_bus(pSound, 0, ma_node_graph_get_endpoint(&pEngine->nodeGraph), 0);
         }
     } else {
-        /* An attachment is specified. Attach to it by default. The sound has only a single output bus, and the config will specify which input bus to attach to. */
+        /* An attachment is specified. Attach to it by default. The testSound has only a single output bus, and the config will specify which input bus to attach to. */
         result = ma_node_attach_output_bus(pSound, 0, pConfig->pInitialAttachment, pConfig->initialAttachmentInputBusIndex);
     }
 
@@ -72579,13 +72579,13 @@ MA_API ma_result ma_sound_init_from_file_internal(ma_engine* pEngine, const ma_s
 
     /*
     The engine requires knowledge of the channel count of the underlying data source before it can
-    initialize the sound. Therefore, we need to make the resource manager wait until initialization
+    initialize the testSound. Therefore, we need to make the resource manager wait until initialization
     of the underlying data source to be initialized so we can get access to the channel count. To
     do this, the MA_RESOURCE_MANAGER_DATA_SOURCE_FLAG_WAIT_INIT is forced.
 
-    Because we're initializing the data source before the sound, there's a chance the notification
+    Because we're initializing the data source before the testSound, there's a chance the notification
     will get triggered before this function returns. This is OK, so long as the caller is aware of
-    it and can avoid accessing the sound from within the notification.
+    it and can avoid accessing the testSound from within the notification.
     */
     flags = pConfig->flags | MA_RESOURCE_MANAGER_DATA_SOURCE_FLAG_WAIT_INIT;
 
@@ -72599,7 +72599,7 @@ MA_API ma_result ma_sound_init_from_file_internal(ma_engine* pEngine, const ma_s
 
     /*
     We must wrap everything around the fence if one was specified. This ensures ma_fence_wait() does
-    not return prematurely before the sound has finished initializing.
+    not return prematurely before the testSound has finished initializing.
     */
     if (notifications.done.pFence) { ma_fence_acquire(notifications.done.pFence); }
     {
@@ -72734,7 +72734,7 @@ MA_API ma_result ma_sound_init_ex(ma_engine* pEngine, const ma_sound_config* pCo
         return MA_INVALID_ARGS;
     }
 
-    /* We need to load the sound differently depending on whether or not we're loading from a file. */
+    /* We need to load the testSound differently depending on whether or not we're loading from a file. */
 #ifndef MA_NO_RESOURCE_MANAGER
     if (pConfig->pFilePath != NULL || pConfig->pFilePathW != NULL) {
         return ma_sound_init_from_file_internal(pEngine, pConfig, pSound);
@@ -72763,7 +72763,7 @@ MA_API void ma_sound_uninit(ma_sound* pSound)
     */
     ma_engine_node_uninit(&pSound->engineNode, &pSound->engineNode.pEngine->allocationCallbacks);
 
-    /* Once the sound is detached from the group we can guarantee that it won't be referenced by the mixer thread which means it's safe for us to destroy the data source. */
+    /* Once the testSound is detached from the group we can guarantee that it won't be referenced by the mixer thread which means it's safe for us to destroy the data source. */
 #ifndef MA_NO_RESOURCE_MANAGER
     if (pSound->ownsDataSource) {
         ma_resource_manager_data_source_uninit(pSound->pResourceManagerDataSource);
@@ -72799,12 +72799,12 @@ MA_API ma_result ma_sound_start(ma_sound* pSound)
         return MA_INVALID_ARGS;
     }
 
-    /* If the sound is already playing, do nothing. */
+    /* If the testSound is already playing, do nothing. */
     if (ma_sound_is_playing(pSound)) {
         return MA_SUCCESS;
     }
 
-    /* If the sound is at the end it means we want to start from the start again. */
+    /* If the testSound is at the end it means we want to start from the start again. */
     if (ma_sound_at_end(pSound)) {
         ma_result result = ma_data_source_seek_to_pcm_frame(pSound->pDataSource, 0);
         if (result != MA_SUCCESS && result != MA_NOT_IMPLEMENTED) {
@@ -72815,7 +72815,7 @@ MA_API ma_result ma_sound_start(ma_sound* pSound)
         c89atomic_exchange_32(&pSound->atEnd, MA_FALSE);
     }
 
-    /* Make sure the sound is started. If there's a start delay, the sound won't actually start until the start time is reached. */
+    /* Make sure the testSound is started. If there's a start delay, the testSound won't actually start until the start time is reached. */
     ma_node_set_state(pSound, ma_node_state_started);
 
     return MA_SUCCESS;
@@ -72827,7 +72827,7 @@ MA_API ma_result ma_sound_stop(ma_sound* pSound)
         return MA_INVALID_ARGS;
     }
 
-    /* This will stop the sound immediately. Use ma_sound_set_stop_time() to stop the sound at a specific time. */
+    /* This will stop the testSound immediately. Use ma_sound_set_stop_time() to stop the testSound at a specific time. */
     ma_node_set_state(pSound, ma_node_state_stopped);
 
     return MA_SUCCESS;
@@ -73312,7 +73312,7 @@ MA_API void ma_sound_set_looping(ma_sound* pSound, ma_bool32 isLooping)
         return;
     }
 
-    /* Looping is only a valid concept if the sound is backed by a data source. */
+    /* Looping is only a valid concept if the testSound is backed by a data source. */
     if (pSound->pDataSource == NULL) {
         return;
     }
@@ -73341,7 +73341,7 @@ MA_API ma_bool32 ma_sound_at_end(const ma_sound* pSound)
         return MA_FALSE;
     }
 
-    /* There is no notion of an end of a sound if it's not backed by a data source. */
+    /* There is no notion of an end of a testSound if it's not backed by a data source. */
     if (pSound->pDataSource == NULL) {
         return MA_FALSE;
     }
@@ -73372,7 +73372,7 @@ MA_API ma_result ma_sound_get_data_format(ma_sound* pSound, ma_format* pFormat, 
         return MA_INVALID_ARGS;
     }
 
-    /* The data format is retrieved directly from the data source if the sound is backed by one. Otherwise we pull it from the node. */
+    /* The data format is retrieved directly from the data source if the testSound is backed by one. Otherwise we pull it from the node. */
     if (pSound->pDataSource == NULL) {
         ma_uint32 channels;
 
@@ -73419,7 +73419,7 @@ MA_API ma_result ma_sound_get_length_in_pcm_frames(ma_sound* pSound, ma_uint64* 
         return MA_INVALID_ARGS;
     }
 
-    /* The notion of a sound length is only valid for sounds that are backed by a data source. */
+    /* The notion of a testSound length is only valid for sounds that are backed by a data source. */
     if (pSound->pDataSource == NULL) {
         return MA_INVALID_OPERATION;
     }
@@ -73447,7 +73447,7 @@ MA_API ma_result ma_sound_get_length_in_seconds(ma_sound* pSound, float* pLength
         return MA_INVALID_ARGS;
     }
 
-    /* The notion of a sound length is only valid for sounds that are backed by a data source. */
+    /* The notion of a testSound length is only valid for sounds that are backed by a data source. */
     if (pSound->pDataSource == NULL) {
         return MA_INVALID_OPERATION;
     }
@@ -73478,7 +73478,7 @@ MA_API ma_result ma_sound_group_init_ex(ma_engine* pEngine, const ma_sound_group
         return MA_INVALID_ARGS;
     }
 
-    /* A sound group is just a sound without a data source. */
+    /* A testSound group is just a testSound without a data source. */
     soundConfig = *pConfig;
     soundConfig.pFilePath   = NULL;
     soundConfig.pFilePathW  = NULL;

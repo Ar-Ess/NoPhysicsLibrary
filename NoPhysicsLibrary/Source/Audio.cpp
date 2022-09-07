@@ -1,5 +1,4 @@
 #include "Audio.h"
-#include "Log.h"
 #include <assert.h>
 
 // Internal usage of miniaudio
@@ -15,48 +14,48 @@ void DataCallback(ma_device* pDevice, void* pOutput, const void* pInput, ma_uint
 
 Audio::Audio()
 {
+    ma_engine_init(NULL, &engine);
 }
 
 Audio::~Audio()
 {}
 
-void Audio::LoadAudio(const char* filePath)
+void Audio::Update()
 {
-    ma_result result;
-    ma_device_config config;
+    if (soundList.empty()) return;
 
-    result = ma_decoder_init_file(filePath, NULL, &decoder);
-    
-    assert(result == MA_SUCCESS, "Could not load file: %s\n", filePath);
-
-    config = ma_device_config_init(ma_device_type_playback);
-    config.playback.format = decoder.outputFormat;
-    config.playback.channels = decoder.outputChannels;
-    config.sampleRate = decoder.outputSampleRate;
-    config.dataCallback = DataCallback;
-    config.pUserData = &decoder;
-
-
-    if (ma_device_init(NULL, &config, &device) != MA_SUCCESS)
+    for (SoundData* sD : soundList)
     {
-        ma_decoder_uninit(&decoder);
-        assert("Failed to open playback device.\n");
+        ma_sound_start(sounds[sD->sound]->source);
     }
+
+    soundList.clear();
+    soundList.shrink_to_fit();
 }
 
-void Audio::LoadAudioSound(const char* filePath)
+void Audio::PushSound(int index)
 {
-    ma_engine_init(NULL, &engine);
+    // There is not a loaded testSound in "index" position
+    assert(index < sounds.size() && index >= 0);
 
-    ma_sound_init_from_file(&engine, filePath, 0, NULL, NULL, &sound);
+    soundList.push_back(new SoundData(index));
 }
 
-void Audio::PlayAudio()
+void Audio::LoadSound(const char* path)
 {
-    ma_device_start(&device);
+    ma_sound* sound = new ma_sound();
+
+    ma_sound_init_from_file(&engine, path, 0, NULL, NULL, sound);
+
+    sounds.push_back(new Sound(sound));
 }
 
-void Audio::PlayAudioSound(float distance, bool shiftVolume, bool shiftBoth)
+void Audio::TestLoadAudio(const char* filePath)
+{
+    ma_sound_init_from_file(&engine, filePath, 0, NULL, NULL, &testSound);
+}
+
+void Audio::TestPlayAudio(float distance, bool shiftVolume, bool shiftBoth)
 {
     if (distance > 1000) distance = 1000;
     if (distance < -1000) distance = -1000;
@@ -70,32 +69,25 @@ void Audio::PlayAudioSound(float distance, bool shiftVolume, bool shiftBoth)
     {
         if (!shiftVolume)
         {
-            ma_sound_set_volume(&sound, 1);
-            ma_sound_set_pan(&sound, pan);
+            ma_sound_set_volume(&testSound, 1);
+            ma_sound_set_pan(&testSound, pan);
         }
         else
         {
-            ma_sound_set_volume(&sound, volume);
-            ma_sound_set_pan(&sound, 0);
+            ma_sound_set_volume(&testSound, volume);
+            ma_sound_set_pan(&testSound, 0);
         }
     }
     else
     {
-        ma_sound_set_pan(&sound, pan);
-        ma_sound_set_volume(&sound, volume);
+        ma_sound_set_pan(&testSound, pan);
+        ma_sound_set_volume(&testSound, volume);
     }
 
-    ma_sound_start(&sound);
+    ma_sound_start(&testSound);
 }
 
-void Audio::UnloadAudio()
+void Audio::TestUnloadAudio()
 {
-    ma_device_uninit(&device);
-    ma_decoder_uninit(&decoder);
-}
-
-void Audio::UnloadAudioSound()
-{
-    ma_sound_uninit(&sound);
-    ma_engine_uninit(&engine);
+    ma_sound_uninit(&testSound);
 }

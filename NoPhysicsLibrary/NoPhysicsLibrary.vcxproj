@@ -152,16 +152,17 @@
     <ClCompile Include="Source\DynamicBody.cpp" />
     <ClCompile Include="Source\GasBody.cpp" />
     <ClCompile Include="Source\LiquidBody.cpp" />
-    <ClCompile Include="Source\Log.cpp" />
+    <ClCompile Include="Source\Define.cpp" />
     <ClCompile Include="Source\miniaudio_impl.c" />
     <ClCompile Include="Source\NoPhysicsLibrary.cpp" />
     <ClCompile Include="Source\Physics.cpp" />
+    <ClCompile Include="Source\Sound.cpp" />
     <ClCompile Include="Source\StaticBody.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\Audio.h" />
     <ClInclude Include="Source\Body.h" />
-    <ClInclude Include="Source\BodyBackUp.h" />
+    <ClInclude Include="Source\BodyBackup.h" />
     <ClInclude Include="Source\BodyClassEnum.h" />
     <ClInclude Include="Source\BodyCreationAux.h" />
     <ClInclude Include="Source\CollideBool.h" />
@@ -177,7 +178,7 @@
     <ClInclude Include="Source\GasBody.h" />
     <ClInclude Include="Source\GhostSlot.h" />
     <ClInclude Include="Source\LiquidBody.h" />
-    <ClInclude Include="Source\Log.h" />
+    <ClInclude Include="Source\Define.h" />
     <ClInclude Include="Source\MathUtils.h" />
     <ClInclude Include="Source\Momentum.h" />
     <ClInclude Include="Source\NoPhysicsLibrary.h" />
@@ -186,6 +187,8 @@
     <ClInclude Include="Source\Point.h" />
     <ClInclude Include="Source\Rect.h" />
     <ClInclude Include="Source\ScenarioPresetEnum.h" />
+    <ClInclude Include="Source\Sound.h" />
+    <ClInclude Include="Source\SoundData.h" />
     <ClInclude Include="Source\StaticBody.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

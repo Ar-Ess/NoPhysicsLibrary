@@ -1,5 +1,7 @@
 #pragma once
-#include <vector>
+
+#include "Physics.h"
+#include "Audio.h"
 #include "StaticBody.h"
 #include "DynamicBody.h"
 #include "LiquidBody.h"
@@ -7,11 +9,12 @@
 
 struct BodyCreation
 {
-	BodyCreation(Rect rect, float mass, Physics* physics)
+	BodyCreation(Rect rect, float mass, Physics* physics, Audio* audio)
 	{
 		this->mass = mass;
 		this->rect = rect;
 		this->physics = physics;
+		this->audio = audio;
 	}
 
 	StaticBody* Static()
@@ -23,7 +26,8 @@ struct BodyCreation
 
 	DynamicBody* Dynamic(Point velocity = { 0, 0 }, Point gravity = {0, 0})
 	{
-		DynamicBody* body = new DynamicBody(rect, velocity, gravity, mass, &physics->globals);
+		
+		DynamicBody* body = new DynamicBody(rect, velocity, gravity, mass, &physics->globals, audio);
 		physics->bodies.push_back(body);
 		return body;
 	}
@@ -47,4 +51,5 @@ private:
 	float mass = 1.0f;
 	Rect rect = {};
 	Physics* physics = nullptr;
+	Audio* audio = nullptr;
 };

@@ -4,9 +4,9 @@
 #include "Force.h"
 #include "Momentum.h"
 
-struct BodyBackUp
+struct BodyBackup
 {
-	BodyBackUp(Rect rect, Point velocity, Point acceleration, Momentum momentum, Force force)
+	BodyBackup(Rect rect, Point velocity, Point acceleration, Momentum momentum, Force force)
 	{
 		this->rect = rect;
 		this->velocity = velocity;

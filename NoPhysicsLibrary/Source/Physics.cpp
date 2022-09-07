@@ -244,7 +244,7 @@ void Physics::UpdateDynamic(float dt, DynamicBody* body)
 	// First law Buxeda
 	body->FirstBuxeda(); // Suma de momentum a velocity
 
-	BodyBackUp backup = body->BackUp();
+	BodyBackup backup = body->Backup();
 
 	// Integrate
 	Integrate(body, dt);
@@ -451,7 +451,7 @@ bool Physics::CheckCollision(Rect rect1, Rect rect2)
 //	return true;
 //}
 
-void Physics::CheckCollisions(Body* b, BodyBackUp backup)
+void Physics::CheckCollisions(Body* b, BodyBackup backup)
 {
 	std::vector<Body*> ghostColliders;
 	DynArray<GhostSlot> slotList;

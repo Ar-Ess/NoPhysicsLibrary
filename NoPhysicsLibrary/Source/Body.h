@@ -3,18 +3,17 @@
 #include "BodyClassEnum.h"
 #include "BodyBackup.h"
 #include "Flag.h"
+#include "Audio.h"
 
 class Body
 {
 public: // Methods
 
-	Body(BodyClass clas = BodyClass::EMPTY_BODY, Rect rect = { 0.0f, 0.0f, 1.0f, 1.0f }, float mass = 1.0f);
+	Body(BodyClass clas = BodyClass::EMPTY_BODY, Rect rect = { 0.0f, 0.0f, 1.0f, 1.0f }, float mass = 1.0f, Audio* audio = nullptr);
 
 	virtual ~Body() {}
 
-	void SolveCollision(Body& body, int dir);
-
-	void DeClipper(Body& body, int dir);
+	void Play(int index) { audio->PushSound(index); }
 
 public: //Getters
 
@@ -41,7 +40,14 @@ public: // Setters
 	// Sets the collidable property of the body
 	inline void SetCollidable(bool set) { properties.Set(set, 1); }
 
-protected:
+protected: // Functions
+
+	void SolveCollision(Body& body, int dir);
+
+	void DeClipper(Body& body, int dir);
+
+protected: // Variables
+
 	friend class Physics;
 	Rect rect = {};
 	BodyClass clas = BodyClass::EMPTY_BODY;
@@ -50,4 +56,8 @@ protected:
 
 	// Collidable | 
 	Flag properties = {};
+
+	// Audio
+	Audio* audio = nullptr;
+
 };

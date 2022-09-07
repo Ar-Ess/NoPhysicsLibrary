@@ -1,7 +1,5 @@
 #include "Scene.h"
 
-#define SHOWCASE_MINIAUDIO_ENGINE true
-
 Scene::Scene(Render* render, Input* input, Window* window)
 {
 	this->assets = new AssetsManager();
@@ -60,7 +58,7 @@ bool Scene::CleanUp()
 
 	case Scenes::DEBUG_SCENE:
 		npl->CleanUp();
-		npl->ShowcaseUnloadAudio(SHOWCASE_MINIAUDIO_ENGINE);
+		npl->ShowcaseUnloadAudio();
 		bodies.clear();
 		bodies.shrink_to_fit();
 		break;
@@ -109,7 +107,8 @@ bool Scene::SetDebugScene()
 	bodies.push_back(npl->CreateBody(npl->ReturnScenarioRect(), 1).Gas());
 	//npl->SetGlobalGravity({0, 8000});
 
-	npl->ShowcaseLoadAudio("Assets/Audio/bounce.wav", SHOWCASE_MINIAUDIO_ENGINE);
+	npl->ShowcaseLoadAudio("Assets/Audio/bounce.wav");
+	npl->LoadSound("Assets/Audio/bounce.wav");
 
 	return true;
 }
@@ -131,12 +130,14 @@ bool Scene::UpdateDebugScene(float dt)
 	if (input->GetKey(SDL_SCANCODE_LEFT) == KeyState::KEY_REPEAT) test->ApplyForce(-60000, 0);
 	if (input->GetKey(SDL_SCANCODE_RIGHT) == KeyState::KEY_REPEAT) test->ApplyForce(60000, 0);
 
-	if (input->GetKey(SDL_SCANCODE_1) == KeyState::KEY_DOWN) npl->ShowcasePlayAudio(SHOWCASE_MINIAUDIO_ENGINE, 0);
+	if (input->GetKey(SDL_SCANCODE_1) == KeyState::KEY_DOWN) npl->ShowcasePlayAudio();
 	// -TOCHECK: When DeathLimit() is active, and you bring "test" to a limit, test should point to an empty place, but it doesn't because I can hear the sound still
-	if (input->GetKey(SDL_SCANCODE_2) == KeyState::KEY_DOWN) npl->ShowcasePlayAudio(true, test->GetPosition().Apply({-100, 0}).x, false);
-	if (input->GetKey(SDL_SCANCODE_3) == KeyState::KEY_DOWN) npl->ShowcasePlayAudio(true, test->GetPosition().Apply({ -100, 0 }).x, true);
-	if (input->GetKey(SDL_SCANCODE_4) == KeyState::KEY_DOWN) npl->ShowcasePlayAudio(true, test->GetPosition().Apply({ -100, 0 }).x, false, true);
+	if (input->GetKey(SDL_SCANCODE_2) == KeyState::KEY_DOWN) npl->ShowcasePlayAudio(test->GetPosition().Apply({-100, 0}).x, false);
+	if (input->GetKey(SDL_SCANCODE_3) == KeyState::KEY_DOWN) npl->ShowcasePlayAudio(test->GetPosition().Apply({ -100, 0 }).x, true);
+	if (input->GetKey(SDL_SCANCODE_4) == KeyState::KEY_DOWN) npl->ShowcasePlayAudio(test->GetPosition().Apply({ -100, 0 }).x, false, true);
 	
+	if (input->GetKey(SDL_SCANCODE_5) == KeyState::KEY_DOWN) test->Play(0);
+
 	// Steps the physics
 	npl->Step(dt);
 

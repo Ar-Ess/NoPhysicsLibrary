@@ -1,9 +1,10 @@
 #pragma once
 
 #include "External\dr_libs\dr_mp3.h"
-#include "External\miniaudio\miniaudio.h"
-
-#include "Log.h"
+#include "Sound.h"
+#include "SoundData.h"
+#include "Define.h"
+#include <vector>
 
 class Audio
 {
@@ -13,22 +14,23 @@ public:
 
 	~Audio();
 
-	void LoadAudio(const char* filePath);
+	void Update();
 
-	void LoadAudioSound(const char* filePath);
+	void PushSound(int index);
 
-	void PlayAudio();
+	void LoadSound(const char* path);
 
-	void PlayAudioSound(float distance, bool shiftVolume, bool shiftBoth);
+	void TestLoadAudio(const char* filePath);
 
-	void UnloadAudio();
+	void TestPlayAudio(float distance, bool shiftVolume, bool shiftBoth);
 
-	void UnloadAudioSound();
+	void TestUnloadAudio();
 
-	ma_decoder decoder;
-	ma_device device;
+private:
+	ma_sound testSound = {}; // Test
 
 	ma_engine engine;
-	ma_sound sound;
+	std::vector<Sound*> sounds;
+	std::vector<SoundData*> soundList;
 
 };

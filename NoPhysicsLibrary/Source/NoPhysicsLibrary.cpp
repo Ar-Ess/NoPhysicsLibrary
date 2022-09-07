@@ -26,7 +26,7 @@ BodyCreation NPL::CreateBody(Rect rectangle, float mass)
 	//Library not initialized. Call NPL::Init() first
 	assert(physics != nullptr);
 
-	return BodyCreation(rectangle, mass, &physics->bodies);
+	return BodyCreation(rectangle, mass, physics, audio);
 }
 
 void NPL::Step(float dt)
@@ -34,6 +34,8 @@ void NPL::Step(float dt)
 	if (GetGlobalPause()) return;
 
 	physics->Update(dt);
+
+	audio->Update();
 
 }
 
@@ -66,7 +68,6 @@ Rect NPL::ReturnScenarioRect()
 inline bool NPL::GetGlobalPause() const
 {
 	return physics->globals.Get(0);
-
 }
 
 inline Point NPL::GetGlobalGravity() const
@@ -116,6 +117,11 @@ bool NPL::DeathLimit(Rect limits)
 bool NPL::DestroyBody(Body* body)
 {
 	return physics->DestroyBody(body);
+}
+
+void NPL::LoadSound(const char* path)
+{
+	audio->LoadSound(path);
 }
 
 void NPL::PausePhysics(bool pause)

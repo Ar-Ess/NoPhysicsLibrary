@@ -62,31 +62,24 @@ public:
 	// Destroy a body, returns true if the body has been successfully deleted
 	bool DestroyBody(Body* body);
 
-	void ShowcaseLoadAudio(const char* path, bool engine)
+	// -TODO: Function to set an specific body as listener to calculate pan and stuff
+
+	void LoadSound(const char* path);
+
+	void ShowcaseLoadAudio(const char* path)
 	{
-		if (engine) 
-			audio->LoadAudioSound(path);
-		else
-			audio->LoadAudio(path);
+		audio->TestLoadAudio(path);
 	}
 
-	void ShowcasePlayAudio(bool engine, float distance = 0, bool shiftVolume = false, bool shiftBoth = false)
+	void ShowcasePlayAudio(float distance = 0, bool shiftVolume = false, bool shiftBoth = false)
 	{
-		if (engine)
-			audio->PlayAudioSound(distance, shiftVolume, shiftBoth);
-		else
-			audio->PlayAudio();
+		audio->TestPlayAudio(distance, shiftVolume, shiftBoth);
 	}
 
-	void ShowcaseUnloadAudio(bool engine)
+	void ShowcaseUnloadAudio()
 	{
-		if (engine)
-			audio->UnloadAudioSound();
-		else
-			audio->UnloadAudio();
+		audio->TestUnloadAudio();
 	}
-
-
 
 private:
 

@@ -68,7 +68,7 @@ private:
 public:
 
 	void Integrate(DynamicBody* item, float dt);
-	void CheckCollisions(Body* body, BodyBackUp backup);
+	void CheckCollisions(Body* body, BodyBackup backup);
 	int DirectionDetection(Point currPos, Point prevPos);
 	int InvertDirection(int dir);
 	//void ChangeGravityAcceleration(Point acceleration);

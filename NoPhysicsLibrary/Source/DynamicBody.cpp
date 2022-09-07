@@ -1,6 +1,6 @@
 #include "DynamicBody.h"
 
-DynamicBody::DynamicBody(Rect rect, Point velocity, Point gravity, float mass, Flag* globals) : Body(BodyClass::DYNAMIC_BODY, rect, mass)
+DynamicBody::DynamicBody(Rect rect, Point velocity, Point gravity, float mass, Flag* globals, Audio* audio) : Body(BodyClass::DYNAMIC_BODY, rect, mass, audio)
 {
 	this->velocity = velocity;
 	this->gravity = gravity;
@@ -15,9 +15,9 @@ DynamicBody::~DynamicBody()
 	momentums.shrink_to_fit();
 }
 
-BodyBackUp DynamicBody::BackUp()
+BodyBackup DynamicBody::Backup()
 {
-	return BodyBackUp(rect, velocity, acceleration, totalMomentum, totalForces);
+	return BodyBackup(rect, velocity, acceleration, totalMomentum, totalForces);
 }
 
 bool DynamicBody::IsColliding(CollideBool collision)

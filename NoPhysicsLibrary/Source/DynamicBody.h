@@ -8,11 +8,11 @@ class DynamicBody : public Body
 {
 public: // Methods
 
-	DynamicBody(Rect rect, Point velocity, Point gravity, float mass, Flag* globals);
+	DynamicBody(Rect rect, Point velocity, Point gravity, float mass, Flag* globals, Audio* audio);
 
 	~DynamicBody() override;
 
-	BodyBackUp BackUp();
+	BodyBackup Backup();
 
 	// Returns if this body is colliding with any other body in the specified situation
 	inline bool IsColliding(CollideBool collision);

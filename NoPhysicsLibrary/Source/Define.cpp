@@ -1,4 +1,4 @@
-#include "Log.h"
+#include "Define.h"
 
 #include <windows.h>
 #include <stdio.h>

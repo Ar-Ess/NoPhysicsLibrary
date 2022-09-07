@@ -504,7 +504,7 @@ typedef enum
 /*
 Sampler Metadata
 
-The sampler chunk contains information about how a sound should be played in the context of a whole
+The sampler chunk contains information about how a testSound should be played in the context of a whole
 audio production, and when used in a sampler. See https://en.wikipedia.org/wiki/Sample-based_synthesis.
 */
 typedef enum
@@ -567,7 +567,7 @@ typedef struct
 /*
 Instrument Metadata
 
-The inst metadata contains data about how a sound should be played as part of an instrument. This
+The inst metadata contains data about how a testSound should be played as part of an instrument. This
 commonly read by samplers. See https://en.wikipedia.org/wiki/Sample-based_synthesis.
 */
 typedef struct
