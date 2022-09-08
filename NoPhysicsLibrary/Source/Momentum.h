@@ -7,11 +7,13 @@ struct Momentum
 		magnitude = { 0.0f, 0.0f };
 		module = 0.0f;
 	}
+
 	Momentum(Point magnitude)
 	{
 		this->magnitude = magnitude;
 		this->module = magnitude.Module();
 	}
+
 	~Momentum()
 	{
 

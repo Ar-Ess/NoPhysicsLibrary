@@ -105,7 +105,7 @@ bool Scene::SetDebugScene()
 	test = (DynamicBody*)bodies.back();
 	bodies.push_back(npl->CreateBody(Rect{ 1000, 600, 20, 100 }, 1).Liquid());
 	bodies.push_back(npl->CreateBody(npl->ReturnScenarioRect(), 1).Gas());
-	//npl->SetGlobalGravity({0, 8000});
+	npl->SetGlobalGravity({0, 500});
 
 	npl->ShowcaseLoadAudio("Assets/Audio/bounce.wav");
 	npl->LoadSound("Assets/Audio/bounce.wav");
@@ -131,12 +131,12 @@ bool Scene::UpdateDebugScene(float dt)
 	if (input->GetKey(SDL_SCANCODE_RIGHT) == KeyState::KEY_REPEAT) test->ApplyForce(60000, 0);
 
 	if (input->GetKey(SDL_SCANCODE_1) == KeyState::KEY_DOWN) npl->ShowcasePlayAudio();
-	// -TOCHECK: When DeathLimit() is active, and you bring "test" to a limit, test should point to an empty place, but it doesn't because I can hear the sound still
 	if (input->GetKey(SDL_SCANCODE_2) == KeyState::KEY_DOWN) npl->ShowcasePlayAudio(test->GetPosition().Apply({-100, 0}).x, false);
 	if (input->GetKey(SDL_SCANCODE_3) == KeyState::KEY_DOWN) npl->ShowcasePlayAudio(test->GetPosition().Apply({ -100, 0 }).x, true);
 	if (input->GetKey(SDL_SCANCODE_4) == KeyState::KEY_DOWN) npl->ShowcasePlayAudio(test->GetPosition().Apply({ -100, 0 }).x, false, true);
 	
-	if (input->GetKey(SDL_SCANCODE_5) == KeyState::KEY_DOWN) test->Play(0);
+	if (input->GetKey(SDL_SCANCODE_5) == KeyState::KEY_DOWN)
+		test->Play(0);
 
 	// Steps the physics
 	npl->Step(dt);
@@ -156,6 +156,8 @@ bool Scene::UpdateDebugScene(float dt)
 
 		render->DrawRectangle(b->GetRect(), color);
 	}
+
+	LOG("Velocity %f", test->GetVelocityTest());
 
 	// Pauses the physics
 	if (input->GetKey(SDL_SCANCODE_SPACE) == KeyState::KEY_DOWN)

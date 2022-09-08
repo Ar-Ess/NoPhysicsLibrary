@@ -232,10 +232,10 @@ void Physics::UpdateDynamic(float dt, DynamicBody* body)
 {
 	AutoApplyForces(); // Future
 
-	// Multiplying global gravity * mass to acquire the force
+	// Multiplying global gravity * mass to acquire the force (Global gravity falls :) )
 	body->ApplyForce(globalGravity.x * body->mass, globalGravity.y * body->mass);
 
-	// Multiplying intrinsic gravity * mass to acquire the force
+	// Multiplying intrinsic gravity * mass to acquire the force (Local gravity falls :) )
 	body->ApplyForce(body->gravity.x * body->mass, body->gravity.y * body->mass);
 
 	// Second law newton
@@ -249,12 +249,8 @@ void Physics::UpdateDynamic(float dt, DynamicBody* body)
 	// Integrate
 	Integrate(body, dt);
 
-	// -TOCHECK: Sum previous gravity force to body
-	body->gravity += globalGravity;
-
 	// Check Collisions
 	//CheckCollisions(body, backup);
-
 }
 
 void Physics::UpdateLiquid(float dt)

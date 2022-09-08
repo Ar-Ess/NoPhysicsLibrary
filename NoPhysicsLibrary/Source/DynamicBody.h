@@ -30,6 +30,11 @@ public: // Methods
 	// Applies an specific force to this body
 	void ApplyMomentun(Point momentum);
 
+	float GetVelocityTest()
+	{
+		return velocity.Module();
+	}
+
 	// Set an specific gravity for this body. Not compatible with SetGlobalGravity() being active. Desable SetGlobalgravity() by inputting SetGlobalGravity(0.0f, 0.0f); or deleting the function
 	//void SetGravityAcceleration(Point& gravity);*/
 	// Set an constant velocity for this body.
@@ -83,8 +88,8 @@ private: // Variables
 	friend class Physics;
 	friend class Body;
 
-	// -TODONE: check which ones are necessary
 	Point velocity = {};
+	//-TODO: Change to gravity offset
 	Point gravity = {};
 	Point acceleration = {};
 	Point coeficientRestitution = { 1.0f,1.0f };
@@ -95,7 +100,6 @@ private: // Variables
 	Force totalForces = {};
 	Momentum totalMomentum = {};
 
-	// -TODONE: Transform this into a flag
 	// Air | Ground | Roof | Left | Right | Water
 	Flag collisionFlags = {};
 

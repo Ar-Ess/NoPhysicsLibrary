@@ -84,7 +84,7 @@ public:
 	Point globalRestitution = {};
 	Point globalFriction = {};
 
-	// Pause 0
+	// Pause 0 | Restitution 1 |
 	Flag globals = {};
 
 };

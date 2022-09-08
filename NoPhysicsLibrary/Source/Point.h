@@ -78,28 +78,6 @@ struct Point
 		if (this->y < 0) this->y *= -1;
 	}
 
-	//// Give Rect
-	//// This function outputs a Rect given a with & heigh
-	//// with the Point's x & y
-	//Rect GiveRect(Point dimensions)
-	//{
-	//	return Rect{this->x, this->y, dimensions.x, dimensions.y};
-	//}
-	//// Give Rect
-	//// This function outputs a Quadratic Rect given a single dimension
-	//// with the Point's x & y
-	//Rect GiveRect(float unitDimension)
-	//{
-	//	return Rect{ this->x, this->y, unitDimension, unitDimension };
-	//}
-	//// Give Rect
-	//// This function outputs a Unitary Quad Rect
-	//// with the Point's x & y
-	//Rect GiveRect()
-	//{
-	//	return Rect{ this->x, this->y, 1, 1 };
-	//}
-
 	// Function: It applies the number inputed to the actual Point value and the result is the output.
 	// It does not modify the value stored in the class
 	inline Point Apply(Point sum) const

@@ -32,10 +32,9 @@ bool DynamicBody::IsColliding()
 
 void DynamicBody::ApplyForce(float newtonsX, float newtonsY)
 {
-	//-TODONE: Bodies accumulate force while physics paused
 	if (globals->Get(0)) return; // Physics are paused
 	if (newtonsX == 0 && newtonsY == 0) return; // If force is null
-		
+
 	forces.push_back(new Force({ newtonsX, newtonsY })); 
 }
 
@@ -49,7 +48,6 @@ void DynamicBody::ApplyForce(Point newtons)
 
 void DynamicBody::ApplyMomentum(float momentumX, float momentumY)
 {
-	//-TODONE: Bodies accumulate momentum while physics paused
 	if (globals->Get(0)) return; // Physics are paused
 	if (momentumX == 0 && momentumY == 0) return; // If momentum is null
 
@@ -66,13 +64,10 @@ void DynamicBody::ApplyMomentun(Point momentum)
 
 void DynamicBody::SecondNewton()
 {
-	// -TODONE: Crear struct force, amb info del Point, el mòdul, qui l'ha aplicat, quin tipus (buoyancy, aerodrag...)
-
 	totalForces.Clear();
 
 	for (Force* f : forces) totalForces.magnitude += f->magnitude;
 	forces.clear();
-	forces.shrink_to_fit();
 
 	// You idiot, mass can not be zero :}
 	assert(mass != 0);
@@ -84,18 +79,15 @@ void DynamicBody::SecondNewton()
 
 void DynamicBody::FirstBuxeda()
 {
-	// -TODONE: Crear struct momentum, amb info del Point, el mòdul, qui l'ha aplicat, quin tipus (buoyancy, aerodrag...)
-
 	totalMomentum.Clear();
 
 	for (Momentum* m : momentums) totalMomentum.magnitude += m->magnitude;
 	momentums.clear();
-	momentums.shrink_to_fit();
 
 	// You idiot, mass can not be zero :}
 	assert(mass != 0);
 
 	// SUM Forces = massa * acceleració
-	velocity.x = totalMomentum.magnitude.x / mass;
-	velocity.y = totalMomentum.magnitude.y / mass;
+	velocity.x += totalMomentum.magnitude.x / mass;
+	velocity.y += totalMomentum.magnitude.y / mass;
 }
