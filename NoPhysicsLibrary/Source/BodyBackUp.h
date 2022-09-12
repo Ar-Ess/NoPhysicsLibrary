@@ -1,8 +1,7 @@
 #pragma once
 
 #include "Rect.h"
-#include "Force.h"
-#include "Momentum.h"
+#include "PhysVec.h"
 
 struct BodyBackup
 {

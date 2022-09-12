@@ -1,5 +1,4 @@
 #include "NoPhysicsLibrary.h"
-#include "Physics.h"
 #include <stdint.h>
 
 // Deletes a buffer
@@ -84,7 +83,7 @@ inline Point NPL::GetGlobalGravity() const
 	return physics->globalGravity;
 }
 
-inline void NPL::SetGlobalGravity(Point vector)
+void NPL::SetGlobalGravity(Point vector)
 {
 	physics->globalGravity = vector;
 }
@@ -94,7 +93,7 @@ inline Point NPL::GetGlobalFriction() const
 	return physics->globalFriction;
 }
 
-inline void NPL::SetGlobalFriction(Point vector)
+void NPL::SetGlobalFriction(Point vector)
 {
 	physics->globalFriction = vector;
 }
@@ -104,7 +103,7 @@ inline Point NPL::GetGlobalRestitution() const
 	return physics->globalRestitution;
 }
 
-inline void NPL::SetGlobalRestitution(Point vector)
+void NPL::SetGlobalRestitution(Point vector)
 {
 	physics->globalRestitution = vector;
 }
@@ -133,6 +132,11 @@ bool NPL::DestroyBody(Body* body)
 	}
 
 	return false;
+}
+
+void NPL::SetListener(Body* listener)
+{
+	this->listener = listener;
 }
 
 void NPL::LoadSound(const char* path)
@@ -196,7 +200,7 @@ void NPL::StepPhysics(float dt)
 
 void NPL::StepAudio()
 {
-	audio->Update();
+	audio->Update(listener->GetPosition());
 }
 
 bool NPL::EraseBody(Body* body)

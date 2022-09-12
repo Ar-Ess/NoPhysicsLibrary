@@ -21,29 +21,29 @@ struct BodyCreation
 	StaticBody* Static()
 	{
 		StaticBody* body = new StaticBody(rect, mass);
-		bodies->push_back(body);
+		bodies->emplace_back(body);
 		return body;
 	}
 
-	DynamicBody* Dynamic(Point velocity = { 0, 0 }, Point gravity = {0, 0})
+	DynamicBody* Dynamic(Point velocity = { 0, 0 }, Point gravityOffset = {0, 0})
 	{
 		
-		DynamicBody* body = new DynamicBody(rect, velocity, gravity, mass, &physics->globals, audio);
-		bodies->push_back(body);
+		DynamicBody* body = new DynamicBody(rect, velocity, gravityOffset, mass, &physics->globals, audio);
+		bodies->emplace_back(body);
 		return body;
 	}
 
 	LiquidBody* Liquid()
 	{
 		LiquidBody* body = new LiquidBody(rect, mass);
-		bodies->push_back(body);
+		bodies->emplace_back(body);
 		return body;
 	}
 
 	GasBody* Gas()
 	{
 		GasBody* body = new GasBody(rect, mass);
-		bodies->push_back(body);
+		bodies->emplace_back(body);
 		return body;
 	}
 

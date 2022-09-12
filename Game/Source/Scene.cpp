@@ -104,8 +104,7 @@ bool Scene::SetDebugScene()
 	test = (DynamicBody*)bodies.back();
 	bodies.push_back(npl->CreateBody(Rect{ 1000, 600, 20, 100 }, 1).Liquid());
 	bodies.push_back(npl->CreateBody(npl->ReturnScenarioRect(), 1).Gas());
-	//-TODO: This function gives external error
-	//npl->SetGlobalGravity({0, 500});
+	npl->SetGlobalGravity({0, 500});
 
 	npl->LoadSound("Assets/Audio/bounce.wav");
 
@@ -150,8 +149,6 @@ bool Scene::UpdateDebugScene(float dt)
 
 		render->DrawRectangle(b->GetRect(), color);
 	}
-
-	LOG("Velocity %f", test->GetVelocityTest());
 
 	// Pauses the physics
 	if (input->GetKey(SDL_SCANCODE_SPACE) == KeyState::KEY_DOWN)

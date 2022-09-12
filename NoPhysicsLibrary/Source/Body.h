@@ -13,7 +13,7 @@ public: // Methods
 
 	virtual ~Body() {}
 
-	void Play(int index) { audio->PushSound(index); }
+	void Play(int index) { audio->PushSound(index, rect.GetPosition()); }
 
 public: //Getters
 
@@ -51,7 +51,6 @@ protected: // Functions
 
 protected: // Variables
 
-	friend class Physics;
 	Rect rect = {};
 	BodyClass clas = BodyClass::EMPTY_BODY;
 	float mass = 1.0f;

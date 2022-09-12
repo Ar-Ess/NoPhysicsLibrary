@@ -174,13 +174,12 @@
     <ClInclude Include="Source\External\dr_libs\dr_wav.h" />
     <ClInclude Include="Source\External\miniaudio\miniaudio.h" />
     <ClInclude Include="Source\Flag.h" />
-    <ClInclude Include="Source\Force.h" />
+    <ClInclude Include="Source\PhysVec.h" />
     <ClInclude Include="Source\GasBody.h" />
     <ClInclude Include="Source\GhostSlot.h" />
     <ClInclude Include="Source\LiquidBody.h" />
     <ClInclude Include="Source\Define.h" />
     <ClInclude Include="Source\MathUtils.h" />
-    <ClInclude Include="Source\Momentum.h" />
     <ClInclude Include="Source\NoPhysicsLibrary.h" />
     <ClInclude Include="Source\Physics.h" />
     <ClInclude Include="Source\PhysicsPresetEnum.h" />

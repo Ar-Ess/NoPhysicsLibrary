@@ -20,25 +20,39 @@ Audio::Audio()
 Audio::~Audio()
 {}
 
-void Audio::Update()
+void Audio::Update(Point listener)
 {
     if (soundList.empty()) return;
 
     for (SoundData* sD : soundList)
     {
-        ma_sound_start(sounds[sD->sound]->source);
+        //-TODO: Volume should depend on which GasBody is the listener inside
+
+        float distance = listener.Distance(sD->position);
+        if (distance > panRadius) distance = panRadius;
+        if (distance < -panRadius) distance = -panRadius;
+
+        float pan = (distance * 1) / -panRadius;
+        float volume = (distance * 1) / panRadius;
+        if (volume < 0) volume *= -1;
+        volume = 1 - volume;
+        ma_sound* source = sounds[sD->index]->source;
+
+        ma_sound_set_pan(source, pan);
+        ma_sound_set_volume(source, volume);
+        ma_sound_start(source);
     }
 
     soundList.clear();
     soundList.shrink_to_fit();
 }
 
-void Audio::PushSound(int index)
+void Audio::PushSound(int index, Point position)
 {
     // There is not a loaded testSound in "index" position
     assert(index < sounds.size() && index >= 0);
 
-    soundList.push_back(new SoundData(index));
+    soundList.emplace_back(new SoundData(index, position));
 }
 
 void Audio::LoadSound(const char* path)
@@ -47,24 +61,7 @@ void Audio::LoadSound(const char* path)
 
     ma_sound_init_from_file(&engine, path, 0, NULL, NULL, sound);
 
-    //-TODO: Change all .push_back() for emplace_back()
-    sounds.push_back(new Sound(sound));
-}
-
-void Audio::HowToModulateVolumeAndPan(float distance)
-{
-    /*if (distance > 1000) distance = 1000;
-    if (distance < -1000) distance = -1000;
-
-    float pan = (distance * 1) / -1000;
-    float volume = (distance * 1) / 1000;
-    if (volume < 0) volume *= -1;
-    volume = 1 - volume;
-
-    ma_sound_set_pan(&testSound, pan);
-    ma_sound_set_volume(&testSound, volume);
-
-    ma_sound_start(&testSound);*/
+    sounds.emplace_back(new Sound(sound));
 }
 
 void Audio::CleanUp()

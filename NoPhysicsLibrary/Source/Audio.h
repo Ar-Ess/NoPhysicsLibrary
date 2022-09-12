@@ -5,6 +5,7 @@
 #include "SoundData.h"
 #include "Define.h"
 #include <vector>
+#include "Point.h"
 
 class Audio
 {
@@ -14,13 +15,11 @@ public:
 
 	~Audio();
 
-	void Update();
+	void Update(Point listener);
 
-	void PushSound(int index);
+	void PushSound(int index, Point position);
 
 	void LoadSound(const char* path);
-
-	void HowToModulateVolumeAndPan(float distance);
 
 	void CleanUp();
 
@@ -29,5 +28,6 @@ private:
 	ma_engine engine;
 	std::vector<Sound*> sounds;
 	std::vector<SoundData*> soundList;
+	float panRadius = 1000.0f;
 
 };

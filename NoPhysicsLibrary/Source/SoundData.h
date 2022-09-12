@@ -1,10 +1,13 @@
 #pragma once
 
+#include "Point.h"
+
 struct SoundData
 {
 public:
 
-	SoundData(int sound) : sound(sound) {}
+	SoundData(int index, Point position) : index(index), position(position) {}
 
-	int sound = -1;
+	int index = -1;
+	Point position = {};
 };

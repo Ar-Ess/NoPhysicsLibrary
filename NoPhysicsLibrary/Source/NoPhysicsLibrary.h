@@ -1,9 +1,10 @@
 #pragma once
-#include "BodyCreationAux.h"
-#include "Body.h"
+
+#include "BodyCreationAux.h" 
+// Includes: Body.h, Audio.h 
+
 #include "ScenarioPresetEnum.h"
 #include "PhysicsPresetEnum.h"
-#include "Audio.h"
 
 class NPL
 {
@@ -40,19 +41,19 @@ public:
 	// Allows to pause or unpause the physics
 	void PausePhysics(bool pause);
 
-	// Returns the global gravity magnitude
+	// Returns the global gravity vector
 	Point GetGlobalGravity() const;
-	// Sets if global gravity is active and its magnitude
+	// Sets if global gravity is active and its vector
 	void SetGlobalGravity(Point vector);
 
-	// Returns the global friction magnitude
+	// Returns the global friction vector
 	Point GetGlobalFriction() const;
-	// Sets if global friction is active and its magnitude
+	// Sets if global friction is active and its vector
 	void SetGlobalFriction(Point vector);
 
-	// Returns the global restitution magnitude
+	// Returns the global restitution vector
 	Point GetGlobalRestitution() const;
-	// Sets if global restitution is active and its magnitude
+	// Sets if global restitution is active and its vector
 	void SetGlobalRestitution(Point vector);
 
 	// Destroys a body whenever it's outside the rectangle setted. 
@@ -61,8 +62,10 @@ public:
 
 	// Destroy a body, returns true if the body has been successfully deleted
 	bool DestroyBody(Body* body); //-TODONE: Put DestroyBody Function in npl
-
-	//-TODO: Function to set an specific body as listener to calculate pan and stuff
+	
+	// Sets one body to become the listening point of the audio
+	void SetListener(Body* listener);
+	//-TODONE: Function to set an specific body as listener to calculate pan and stuff
 
 	void LoadSound(const char* path);
 
@@ -78,8 +81,9 @@ private:
 
 	Physics* physics = nullptr;
 	Audio* audio = nullptr;
+	Body* listener = nullptr;
 
-	// -TODO: Investigate about vector. Maybe not the best option if users has to save a pointer to data
+	// -TODONE: Investigate about vector. Maybe not the best option if users has to save a pointer to data
 	// inside here. Vectors reorder themselves if they don't find enough space. And Idk if that could
 	// lead to a "nullptr" error. Look video: https://www.youtube.com/watch?v=6OoSgY6NVVk&t=1550s&ab_channel=javidx9
 	std::vector<Body*> bodies;

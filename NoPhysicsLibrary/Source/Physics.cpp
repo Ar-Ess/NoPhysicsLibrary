@@ -220,10 +220,10 @@ void Physics::UpdateDynamic(float dt, Body* b)
 	AutoApplyForces(); // Future
 
 	// Multiplying global gravity * mass to acquire the force (Global gravity falls :) )
-	body->ApplyForce(globalGravity.x * body->mass, globalGravity.y * body->mass);
+	body->ApplyForce(globalGravity.x * body->GetMass(), globalGravity.y * body->GetMass());
 
 	// Multiplying intrinsic gravity * mass to acquire the force (Local gravity falls :) )
-	body->ApplyForce(body->gravity.x * body->mass, body->gravity.y * body->mass);
+	body->ApplyForce(body->gravityOffset.x * body->GetMass(), body->gravityOffset.y * body->GetMass());
 
 	// Second law newton
 	body->SecondNewton(); // Suma de forces a acceleració
@@ -431,7 +431,7 @@ bool Physics::CheckCollision(Rect rect1, Rect rect2)
 	//	Body* body = (*it);
 	//	if (body == b) continue;
 	//	
-	//	if (MathUtils::CheckCollision(body->rect, b->rect)) ghostColliders.push_back(body);
+	//	if (MathUtils::CheckCollision(body->rect, b->rect)) ghostColliders.emplace_back(body);
 	//}
 
 	//if (ghostColliders.size() != 0)

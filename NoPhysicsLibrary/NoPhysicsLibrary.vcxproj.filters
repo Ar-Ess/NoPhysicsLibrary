@@ -28,14 +28,17 @@
     <Filter Include="Core\Physics">
       <UniqueIdentifier>{e635d485-32e6-4ee0-87ad-a58144e173b3}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Core\Physics\Bodies">
-      <UniqueIdentifier>{52485742-4c24-4130-b2a5-d981ba201e50}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Core\Physics\Bodies\Units">
-      <UniqueIdentifier>{dc2b567a-edbd-4aee-b0b4-619283719220}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Core\Audio\Units">
       <UniqueIdentifier>{ded7b72e-a185-4ba0-b4c9-8f0e9489c1e1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Core\Bodies">
+      <UniqueIdentifier>{52485742-4c24-4130-b2a5-d981ba201e50}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Core\Physics\Units">
+      <UniqueIdentifier>{dc2b567a-edbd-4aee-b0b4-619283719220}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Core\Bodies\Units">
+      <UniqueIdentifier>{7e5b62f1-a575-470f-bd65-bbaadb17c891}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -43,19 +46,19 @@
       <Filter>Core</Filter>
     </ClCompile>
     <ClCompile Include="Source\Body.cpp">
-      <Filter>Core\Physics\Bodies</Filter>
+      <Filter>Core\Bodies</Filter>
     </ClCompile>
     <ClCompile Include="Source\DynamicBody.cpp">
-      <Filter>Core\Physics\Bodies</Filter>
+      <Filter>Core\Bodies</Filter>
     </ClCompile>
     <ClCompile Include="Source\StaticBody.cpp">
-      <Filter>Core\Physics\Bodies</Filter>
+      <Filter>Core\Bodies</Filter>
     </ClCompile>
     <ClCompile Include="Source\LiquidBody.cpp">
-      <Filter>Core\Physics\Bodies</Filter>
+      <Filter>Core\Bodies</Filter>
     </ClCompile>
     <ClCompile Include="Source\GasBody.cpp">
-      <Filter>Core\Physics\Bodies</Filter>
+      <Filter>Core\Bodies</Filter>
     </ClCompile>
     <ClCompile Include="Source\miniaudio_impl.c">
       <Filter>External\Miniaudio</Filter>
@@ -84,13 +87,13 @@
       <Filter>Enums</Filter>
     </ClInclude>
     <ClInclude Include="Source\Body.h">
-      <Filter>Core\Physics\Bodies</Filter>
+      <Filter>Core\Bodies</Filter>
     </ClInclude>
     <ClInclude Include="Source\DynamicBody.h">
-      <Filter>Core\Physics\Bodies</Filter>
+      <Filter>Core\Bodies</Filter>
     </ClInclude>
     <ClInclude Include="Source\StaticBody.h">
-      <Filter>Core\Physics\Bodies</Filter>
+      <Filter>Core\Bodies</Filter>
     </ClInclude>
     <ClInclude Include="Source\DynArray.h">
       <Filter>Utils</Filter>
@@ -120,10 +123,10 @@
       <Filter>Enums</Filter>
     </ClInclude>
     <ClInclude Include="Source\LiquidBody.h">
-      <Filter>Core\Physics\Bodies</Filter>
+      <Filter>Core\Bodies</Filter>
     </ClInclude>
     <ClInclude Include="Source\GasBody.h">
-      <Filter>Core\Physics\Bodies</Filter>
+      <Filter>Core\Bodies</Filter>
     </ClInclude>
     <ClInclude Include="Source\CollideBool.h">
       <Filter>Enums</Filter>
@@ -146,15 +149,6 @@
     <ClInclude Include="Source\Physics.h">
       <Filter>Core\Physics</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Force.h">
-      <Filter>Core\Physics\Bodies\Units</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Momentum.h">
-      <Filter>Core\Physics\Bodies\Units</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\BodyBackup.h">
-      <Filter>Core\Physics\Bodies</Filter>
-    </ClInclude>
     <ClInclude Include="Source\Define.h">
       <Filter>Utils</Filter>
     </ClInclude>
@@ -163,6 +157,12 @@
     </ClInclude>
     <ClInclude Include="Source\SoundData.h">
       <Filter>Core\Audio\Units</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\PhysVec.h">
+      <Filter>Core\Physics\Units</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\BodyBackup.h">
+      <Filter>Core\Bodies\Units</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
