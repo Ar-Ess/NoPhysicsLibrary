@@ -47,17 +47,13 @@ void Audio::LoadSound(const char* path)
 
     ma_sound_init_from_file(&engine, path, 0, NULL, NULL, sound);
 
+    //-TODO: Change all .push_back() for emplace_back()
     sounds.push_back(new Sound(sound));
 }
 
-void Audio::TestLoadAudio(const char* filePath)
+void Audio::HowToModulateVolumeAndPan(float distance)
 {
-    ma_sound_init_from_file(&engine, filePath, 0, NULL, NULL, &testSound);
-}
-
-void Audio::TestPlayAudio(float distance, bool shiftVolume, bool shiftBoth)
-{
-    if (distance > 1000) distance = 1000;
+    /*if (distance > 1000) distance = 1000;
     if (distance < -1000) distance = -1000;
 
     float pan = (distance * 1) / -1000;
@@ -65,29 +61,12 @@ void Audio::TestPlayAudio(float distance, bool shiftVolume, bool shiftBoth)
     if (volume < 0) volume *= -1;
     volume = 1 - volume;
 
-    if (!shiftBoth)
-    {
-        if (!shiftVolume)
-        {
-            ma_sound_set_volume(&testSound, 1);
-            ma_sound_set_pan(&testSound, pan);
-        }
-        else
-        {
-            ma_sound_set_volume(&testSound, volume);
-            ma_sound_set_pan(&testSound, 0);
-        }
-    }
-    else
-    {
-        ma_sound_set_pan(&testSound, pan);
-        ma_sound_set_volume(&testSound, volume);
-    }
+    ma_sound_set_pan(&testSound, pan);
+    ma_sound_set_volume(&testSound, volume);
 
-    ma_sound_start(&testSound);
+    ma_sound_start(&testSound);*/
 }
 
-void Audio::TestUnloadAudio()
+void Audio::CleanUp()
 {
-    ma_sound_uninit(&testSound);
 }

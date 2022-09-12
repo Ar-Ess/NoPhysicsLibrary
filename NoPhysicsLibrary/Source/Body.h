@@ -32,6 +32,9 @@ public: //Getters
 	// Returns the mass of the body
 	inline float GetMass() const { return mass; }
 
+	// Returns the body id
+	inline intptr_t GetId() const { return id; }
+
 	// Returns wether the body is collidable
 	inline bool IsCollidable() { return properties.Get(0); }
 

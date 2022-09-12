@@ -1,10 +1,9 @@
 #pragma once
 
 //#include "DynArray.h"
-#include "BodyBackUp.h"
+#include "BodyBackup.h"
 #include <vector>
-#include "DynamicBody.h"
-#include "StaticBody.h"
+#include "Body.h"
 #include "Flag.h"
 
 #define PIXELS_PER_METER 1.0f // if touched change METER_PER_PIXEL too
@@ -19,16 +18,6 @@
 #define REALITY_MULTIPLIER 60
 #define NEWTONS_MULTIPLIER 100
 
-// Deletes a buffer
-#define RELEASE( x ) \
-	{						\
-	if( x != NULL )		\
-		{					  \
-	  delete x;			\
-	  x = NULL;			  \
-		}					  \
-	}
-
 class Physics
 {
 public: // Methods
@@ -37,19 +26,17 @@ public: // Methods
 
 	virtual ~Physics();
 
-	void Update(float dt);
+	void Update(Body* body, float dt);
 
 	void CleanUp();
 
-	bool DestroyBody(Body* body);
-
 	bool CheckCollision(Rect rect1, Rect rect2);
 
-private:
+private: // Methods
 
-	void UpdateDynamic(float dt, DynamicBody* body);
+	void UpdateDynamic(float dt, Body* body);
 
-	void UpdateLiquid(float dt);
+	void UpdateLiquid(float dt, Body* body);
 
 	void AutoApplyForces();
 
@@ -63,22 +50,15 @@ private:
 
 	void AutoApplyBuoyancy();
 
-	bool EraseBody(Body* body);
-
-public:
-
-	void Integrate(DynamicBody* item, float dt);
-	void CheckCollisions(Body* body, BodyBackup backup);
+	void Integrate(float dt, Body* body);
+	/*void CheckCollisions(Body* body, BodyBackup backup);*/
 	int DirectionDetection(Point currPos, Point prevPos);
 	int InvertDirection(int dir);
 	//void ChangeGravityAcceleration(Point acceleration);
 	//void ChangeRestitutionCoeficient(Point restCoeficient);
 	//void ChangeFrictionCoeficient(Point frictCoeficient);
 
-	// -TODO: Investigate about vector. Maybe not the best option if users has to save a pointer to data
-	// inside here. Vectors reorder themselves if they don't find enough space. And Idk if that could
-	// lead to a "nullptr" error. Look video: https://www.youtube.com/watch?v=6OoSgY6NVVk&t=1550s&ab_channel=javidx9
-	std::vector<Body*> bodies;
+public: // Variables
 
 	Point globalGravity = {};
 	Point globalRestitution = {};

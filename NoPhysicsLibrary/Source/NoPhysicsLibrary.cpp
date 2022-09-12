@@ -2,6 +2,16 @@
 #include "Physics.h"
 #include <stdint.h>
 
+// Deletes a buffer
+#define RELEASE( x ) \
+	{						\
+	if( x != NULL )		\
+		{					  \
+	  delete x;			\
+	  x = NULL;			  \
+		}					  \
+	}
+
 NPL::NPL()
 {
 }
@@ -15,10 +25,19 @@ void NPL::Init()
 	audio = new Audio();
 }
 
+void NPL::Update(float dt)
+{
+	if (GetGlobalPause()) return;
+
+	StepPhysics(dt);
+	StepAudio();
+
+}
+
 void NPL::CleanUp()
 {
 	physics->CleanUp();
-	// MiniAudio CleanUp
+	audio->CleanUp();
 }
 
 BodyCreation NPL::CreateBody(Rect rectangle, float mass)
@@ -26,34 +45,24 @@ BodyCreation NPL::CreateBody(Rect rectangle, float mass)
 	//Library not initialized. Call NPL::Init() first
 	assert(physics != nullptr);
 
-	return BodyCreation(rectangle, mass, physics, audio);
-}
-
-void NPL::Step(float dt)
-{
-	if (GetGlobalPause()) return;
-
-	physics->Update(dt);
-
-	audio->Update();
-
+	return BodyCreation(rectangle, mass, &bodies, physics, audio);
 }
 
 void NPL::DestroyScenario()
 {
-	for (Body* b : physics->bodies)
+	for (Body* b : bodies)
 	{
-		if (b->GetClass() == BodyClass::STATIC_BODY) physics->DestroyBody(b);
+		if (b->GetClass() == BodyClass::STATIC_BODY) DestroyBody(b);
 	}
 }
 
 Rect NPL::ReturnScenarioRect()
 {
-	Rect first = physics->bodies.front()->GetRect();
+	Rect first = bodies.front()->GetRect();
 	Point minP = { first.x, first.y };
 	Point maxP = { first.x + first.w, first.y + first.h};
 
-	for (Body* body : physics->bodies)
+	for (Body* body : bodies)
 	{
 		Rect bodyRect = body->GetRect();
 		if (bodyRect.x + bodyRect.w > maxP.x) maxP.x = bodyRect.x + bodyRect.w;
@@ -75,9 +84,9 @@ inline Point NPL::GetGlobalGravity() const
 	return physics->globalGravity;
 }
 
-void NPL::SetGlobalGravity(Point magnitude)
+inline void NPL::SetGlobalGravity(Point vector)
 {
-	physics->globalGravity = magnitude;
+	physics->globalGravity = vector;
 }
 
 inline Point NPL::GetGlobalFriction() const
@@ -85,9 +94,9 @@ inline Point NPL::GetGlobalFriction() const
 	return physics->globalFriction;
 }
 
-inline void NPL::SetGlobalFriction(Point magnitude)
+inline void NPL::SetGlobalFriction(Point vector)
 {
-	physics->globalFriction = magnitude;
+	physics->globalFriction = vector;
 }
 
 inline Point NPL::GetGlobalRestitution() const
@@ -95,19 +104,20 @@ inline Point NPL::GetGlobalRestitution() const
 	return physics->globalRestitution;
 }
 
-inline void NPL::SetGlobalRestitution(Point magnitude)
+inline void NPL::SetGlobalRestitution(Point vector)
 {
-	physics->globalRestitution = magnitude;
+	physics->globalRestitution = vector;
 }
 
 bool NPL::DeathLimit(Rect limits)
 {
-	for (Body* b : physics->bodies)
+	//-TOCHECK: It is better to update all bodies in case we have to delete 2, or just delete 1 per frame?
+	for (Body* b : bodies)
 	{
 		if (b->GetClass() == BodyClass::DYNAMIC_BODY && !physics->CheckCollision(b->GetRect(), limits))
 		{
 			DestroyBody(b);
-			return true;
+			return true; //First body out deleted, if other one is out, deleted next frame
 		}
 	}
 
@@ -116,7 +126,13 @@ bool NPL::DeathLimit(Rect limits)
 
 bool NPL::DestroyBody(Body* body)
 {
-	return physics->DestroyBody(body);
+	if (EraseBody(body))
+	{
+		RELEASE(body);
+		return true;
+	}
+
+	return false;
 }
 
 void NPL::LoadSound(const char* path)
@@ -169,4 +185,32 @@ void NPL::SetScenarioPreset(ScenarioPreset sPreset, Point wSize)
 	//	CreateBody(BodyType::STATIC_BODY, Point{ 1080, 200 }, { 1080, 200, 25, 400 }, { 0, 0 }, { 0, 0 }, 1);
 	//	break;
 	}
+}
+
+//- Private --------------------------------------------------------------------------------
+
+void NPL::StepPhysics(float dt)
+{
+	for (Body* b : bodies) physics->Update(b, dt);
+}
+
+void NPL::StepAudio()
+{
+	audio->Update();
+}
+
+bool NPL::EraseBody(Body* body)
+{
+	std::vector<Body*>::const_iterator it;
+	for (it = bodies.begin(); it != bodies.end(); ++it)
+	{
+		if (body->GetId() == (*it)->GetId())
+		{
+			bodies.erase(it);
+			bodies.shrink_to_fit();
+			return true;
+		}
+	}
+
+	return false;
 }

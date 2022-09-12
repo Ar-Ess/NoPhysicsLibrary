@@ -21,9 +21,9 @@ public:
 	//  - Follow this function with a "." to choose the body type
 	BodyCreation CreateBody(Rect rectangle, float mass);
 
-	// Iterates the physics
+	// Iterates the library
 	//  - Call it in your main update function
-	void Step(float dt);
+	void Update(float dt);
 
 	// Set a predesigned scenario
 	//  - This function destroys automatically the previous scenario
@@ -43,47 +43,45 @@ public:
 	// Returns the global gravity magnitude
 	Point GetGlobalGravity() const;
 	// Sets if global gravity is active and its magnitude
-	void SetGlobalGravity(Point magnitude);
+	void SetGlobalGravity(Point vector);
 
 	// Returns the global friction magnitude
 	Point GetGlobalFriction() const;
 	// Sets if global friction is active and its magnitude
-	void SetGlobalFriction(Point magnitude);
+	void SetGlobalFriction(Point vector);
 
 	// Returns the global restitution magnitude
 	Point GetGlobalRestitution() const;
 	// Sets if global restitution is active and its magnitude
-	void SetGlobalRestitution(Point magnitude);
+	void SetGlobalRestitution(Point vector);
 
 	// Destroys a body whenever it's outside the rectangle setted. 
 	//    Returns true when a body is destroyed
 	bool DeathLimit(Rect limits);
 
 	// Destroy a body, returns true if the body has been successfully deleted
-	bool DestroyBody(Body* body);
+	bool DestroyBody(Body* body); //-TODONE: Put DestroyBody Function in npl
 
-	// -TODO: Function to set an specific body as listener to calculate pan and stuff
+	//-TODO: Function to set an specific body as listener to calculate pan and stuff
 
 	void LoadSound(const char* path);
 
-	void ShowcaseLoadAudio(const char* path)
-	{
-		audio->TestLoadAudio(path);
-	}
+private: // Methods
 
-	void ShowcasePlayAudio(float distance = 0, bool shiftVolume = false, bool shiftBoth = false)
-	{
-		audio->TestPlayAudio(distance, shiftVolume, shiftBoth);
-	}
+	void StepPhysics(float dt);
 
-	void ShowcaseUnloadAudio()
-	{
-		audio->TestUnloadAudio();
-	}
+	void StepAudio();
+
+	bool EraseBody(Body* body);
 
 private:
 
 	Physics* physics = nullptr;
 	Audio* audio = nullptr;
+
+	// -TODO: Investigate about vector. Maybe not the best option if users has to save a pointer to data
+	// inside here. Vectors reorder themselves if they don't find enough space. And Idk if that could
+	// lead to a "nullptr" error. Look video: https://www.youtube.com/watch?v=6OoSgY6NVVk&t=1550s&ab_channel=javidx9
+	std::vector<Body*> bodies;
 
 };

@@ -58,7 +58,6 @@ bool Scene::CleanUp()
 
 	case Scenes::DEBUG_SCENE:
 		npl->CleanUp();
-		npl->ShowcaseUnloadAudio();
 		bodies.clear();
 		bodies.shrink_to_fit();
 		break;
@@ -105,9 +104,9 @@ bool Scene::SetDebugScene()
 	test = (DynamicBody*)bodies.back();
 	bodies.push_back(npl->CreateBody(Rect{ 1000, 600, 20, 100 }, 1).Liquid());
 	bodies.push_back(npl->CreateBody(npl->ReturnScenarioRect(), 1).Gas());
-	npl->SetGlobalGravity({0, 500});
+	//-TODO: This function gives external error
+	//npl->SetGlobalGravity({0, 500});
 
-	npl->ShowcaseLoadAudio("Assets/Audio/bounce.wav");
 	npl->LoadSound("Assets/Audio/bounce.wav");
 
 	return true;
@@ -130,16 +129,11 @@ bool Scene::UpdateDebugScene(float dt)
 	if (input->GetKey(SDL_SCANCODE_LEFT) == KeyState::KEY_REPEAT) test->ApplyForce(-60000, 0);
 	if (input->GetKey(SDL_SCANCODE_RIGHT) == KeyState::KEY_REPEAT) test->ApplyForce(60000, 0);
 
-	if (input->GetKey(SDL_SCANCODE_1) == KeyState::KEY_DOWN) npl->ShowcasePlayAudio();
-	if (input->GetKey(SDL_SCANCODE_2) == KeyState::KEY_DOWN) npl->ShowcasePlayAudio(test->GetPosition().Apply({-100, 0}).x, false);
-	if (input->GetKey(SDL_SCANCODE_3) == KeyState::KEY_DOWN) npl->ShowcasePlayAudio(test->GetPosition().Apply({ -100, 0 }).x, true);
-	if (input->GetKey(SDL_SCANCODE_4) == KeyState::KEY_DOWN) npl->ShowcasePlayAudio(test->GetPosition().Apply({ -100, 0 }).x, false, true);
-	
 	if (input->GetKey(SDL_SCANCODE_5) == KeyState::KEY_DOWN)
 		test->Play(0);
 
 	// Steps the physics
-	npl->Step(dt);
+	npl->Update(dt);
 
 	// Draws the bodies
 	for (Body* b : bodies)

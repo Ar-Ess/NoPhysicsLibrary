@@ -9,10 +9,11 @@
 
 struct BodyCreation
 {
-	BodyCreation(Rect rect, float mass, Physics* physics, Audio* audio)
+	BodyCreation(Rect rect, float mass, std::vector<Body*>* bodies, Physics* physics, Audio* audio)
 	{
 		this->mass = mass;
 		this->rect = rect;
+		this->bodies = bodies;
 		this->physics = physics;
 		this->audio = audio;
 	}
@@ -20,7 +21,7 @@ struct BodyCreation
 	StaticBody* Static()
 	{
 		StaticBody* body = new StaticBody(rect, mass);
-		physics->bodies.push_back(body);
+		bodies->push_back(body);
 		return body;
 	}
 
@@ -28,21 +29,21 @@ struct BodyCreation
 	{
 		
 		DynamicBody* body = new DynamicBody(rect, velocity, gravity, mass, &physics->globals, audio);
-		physics->bodies.push_back(body);
+		bodies->push_back(body);
 		return body;
 	}
 
 	LiquidBody* Liquid()
 	{
 		LiquidBody* body = new LiquidBody(rect, mass);
-		physics->bodies.push_back(body);
+		bodies->push_back(body);
 		return body;
 	}
 
 	GasBody* Gas()
 	{
 		GasBody* body = new GasBody(rect, mass);
-		physics->bodies.push_back(body);
+		bodies->push_back(body);
 		return body;
 	}
 
@@ -50,6 +51,7 @@ private:
 
 	float mass = 1.0f;
 	Rect rect = {};
+	std::vector<Body*>* bodies = nullptr;
 	Physics* physics = nullptr;
 	Audio* audio = nullptr;
 };

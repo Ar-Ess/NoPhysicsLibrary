@@ -1,4 +1,7 @@
 #include "Physics.h"
+#include "LiquidBody.h"
+#include "DynamicBody.h"
+
 #include "GhostSlot.h"
 #include "DynArray.h"
 #include "MathUtils.h"
@@ -198,38 +201,22 @@ Physics::~Physics()
 //}
 //
 
-void Physics::Integrate(DynamicBody* body, float dt)
+void Physics::Update(Body* body, float dt)
 {
-	// Second Order Red Velvet Integrator
-
-	body->rect.x += body->velocity.x * dt + 0.5f * body->acceleration.x * dt * dt;
-	body->velocity.x += body->acceleration.x * dt;
-
-	body->rect.y += body->velocity.y * dt + 0.5f * body->acceleration.y * dt * dt;
-	body->velocity.y += body->acceleration.y * dt;
-}
-
-void Physics::Update(float dt)
-{
-	for (Body* body : bodies)
+	switch (body->GetClass())
 	{
-		switch (body->GetClass())
-		{
-		case BodyClass::DYNAMIC_BODY: UpdateDynamic(dt, (DynamicBody*)body); break;
-		case BodyClass::LIQUID_BODY: UpdateLiquid(dt); break;
-		}
+	case BodyClass::DYNAMIC_BODY: UpdateDynamic(dt, body); break;
+	case BodyClass::LIQUID_BODY : UpdateLiquid (dt, body); break;
 	}
 }
 
 void Physics::CleanUp()
 {
-	for (Body* b : bodies) RELEASE(b);
-	bodies.clear();
-	bodies.shrink_to_fit();
 }
 
-void Physics::UpdateDynamic(float dt, DynamicBody* body)
+void Physics::UpdateDynamic(float dt, Body* b)
 {
+	DynamicBody* body = (DynamicBody*)b;
 	AutoApplyForces(); // Future
 
 	// Multiplying global gravity * mass to acquire the force (Global gravity falls :) )
@@ -247,14 +234,27 @@ void Physics::UpdateDynamic(float dt, DynamicBody* body)
 	BodyBackup backup = body->Backup();
 
 	// Integrate
-	Integrate(body, dt);
+	Integrate(dt, b);
 
 	// Check Collisions
 	//CheckCollisions(body, backup);
 }
 
-void Physics::UpdateLiquid(float dt)
+void Physics::UpdateLiquid(float dt, Body* b)
 {
+	LiquidBody* body = (LiquidBody*)b;
+}
+
+void Physics::Integrate(float dt, Body* b)
+{
+	DynamicBody* body = (DynamicBody*)b;
+	// Second Order Red Velvet Integrator
+
+	body->rect.x += body->velocity.x * dt + 0.5f * body->acceleration.x * dt * dt;
+	body->velocity.x += body->acceleration.x * dt;
+
+	body->rect.y += body->velocity.y * dt + 0.5f * body->acceleration.y * dt * dt;
+	body->velocity.y += body->acceleration.y * dt;
 }
 
 void Physics::AutoApplyForces()
@@ -286,33 +286,6 @@ void Physics::AutoApplyHydroLift()
 
 void Physics::AutoApplyBuoyancy()
 {
-}
-
-bool Physics::DestroyBody(Body* body)
-{
-	if (EraseBody(body))
-	{
-		RELEASE(body);
-		return true;
-	}
-
-	return false;
-}
-
-bool Physics::EraseBody(Body* body)
-{
-	std::vector<Body*>::const_iterator it;
-	for (it = bodies.begin(); it != bodies.end(); ++it)
-	{
-		if (body->id == (*it)->id)
-		{
-			bodies.erase(it);
-			bodies.shrink_to_fit();
-			return true;
-		}
-	}
-
-	return false;
 }
 
 bool Physics::CheckCollision(Rect rect1, Rect rect2)
@@ -447,54 +420,54 @@ bool Physics::CheckCollision(Rect rect1, Rect rect2)
 //	return true;
 //}
 
-void Physics::CheckCollisions(Body* b, BodyBackup backup)
+/*void Physics::CheckCollisions(Body* b, BodyBackup backup)
 {
-	std::vector<Body*> ghostColliders;
-	DynArray<GhostSlot> slotList;
+	//std::vector<Body*> ghostColliders;
+	//DynArray<GhostSlot> slotList;
 
-	std::vector<Body*>::const_iterator it;
-	for (it = bodies.begin(); it != bodies.end(); ++it)
-	{
-		Body* body = (*it);
-		if (body == b) continue;
-		
-		if (MathUtils::CheckCollision(body->rect, b->rect)) ghostColliders.push_back(body);
-	}
+	//std::vector<Body*>::const_iterator it;
+	//for (it = bodies.begin(); it != bodies.end(); ++it)
+	//{
+	//	Body* body = (*it);
+	//	if (body == b) continue;
+	//	
+	//	if (MathUtils::CheckCollision(body->rect, b->rect)) ghostColliders.push_back(body);
+	//}
 
-	if (ghostColliders.size() != 0)
-	{
-		short int i = 0;
-		for (it = ghostColliders.begin(); it != ghostColliders.end(); ++it)
-		{
-			Body* body = (*it);
-			Rect inter = MathUtils::IntersectRectangle(b->rect, body->rect);
-			Direction dir = (Direction)DirectionDetection(b->GetPosition(), backup.rect.GetPosition());
-			if (inter.h < 1) inter.h = 1;
-			if (inter.w < 1) inter.w = 1;
-			slotList.PushBack({ dir, (int)(inter.w * inter.h), i });
-			i++;
-		}
+	//if (ghostColliders.size() != 0)
+	//{
+	//	short int i = 0;
+	//	for (it = ghostColliders.begin(); it != ghostColliders.end(); ++it)
+	//	{
+	//		Body* body = (*it);
+	//		Rect inter = MathUtils::IntersectRectangle(b->rect, body->rect);
+	//		Direction dir = (Direction)DirectionDetection(b->GetPosition(), backup.rect.GetPosition());
+	//		if (inter.h < 1) inter.h = 1;
+	//		if (inter.w < 1) inter.w = 1;
+	//		slotList.PushBack({ dir, (int)(inter.w * inter.h), i });
+	//		i++;
+	//	}
 
-		if (slotList.Count() > 2)
-		{
-			slotList.CombSort();
-			slotList.Flip();
-		}
-		if (slotList.Count() == 2)
-		{
-			if (slotList[0] < slotList[1]) slotList.Flip();
-		}
+	//	if (slotList.Count() > 2)
+	//	{
+	//		slotList.CombSort();
+	//		slotList.Flip();
+	//	}
+	//	if (slotList.Count() == 2)
+	//	{
+	//		if (slotList[0] < slotList[1]) slotList.Flip();
+	//	}
 
-		Direction invDir = (Direction)InvertDirection((int)slotList[0].dir);
+	//	Direction invDir = (Direction)InvertDirection((int)slotList[0].dir);
 
-		//bodyList1->data->SolveCollision(*b, invDir);
-		b->SolveCollision(*ghostColliders.at(slotList[0].slot), (int)slotList[0].dir);
+	//	//bodyList1->data->SolveCollision(*b, invDir);
+	//	b->SolveCollision(*ghostColliders.at(slotList[0].slot), (int)slotList[0].dir);
 
-		//if (b->player) return ghostColliders.at(slotList[0].slot);
-		
-		return;
-	}
-}
+	//	//if (b->player) return ghostColliders.at(slotList[0].slot);
+	//	
+	//	return;
+	//}
+}*/
 
 int Physics::DirectionDetection(Point currPos, Point prevPos)
 {
@@ -696,7 +669,7 @@ int Physics::InvertDirection(int dir)
 //	this->sumForces.Zero();
 //	this->forces.Clear();
 //}
-
+//
 //void DynamicBody::ApplyFriction(float dt)
 //{
 //	//Soc molt bo. Estic calculant la força que necessito per parar el cos. La redueixo i la converteixo en friction
@@ -709,7 +682,7 @@ int Physics::InvertDirection(int dir)
 //
 //	forces.PushBack(dragForce);
 //}
-
+//
 //void DynamicBody::ApplyBuoyancy()
 //{
 //	if (buoyancyActive)

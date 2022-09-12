@@ -20,14 +20,11 @@ public:
 
 	void LoadSound(const char* path);
 
-	void TestLoadAudio(const char* filePath);
+	void HowToModulateVolumeAndPan(float distance);
 
-	void TestPlayAudio(float distance, bool shiftVolume, bool shiftBoth);
-
-	void TestUnloadAudio();
+	void CleanUp();
 
 private:
-	ma_sound testSound = {}; // Test
 
 	ma_engine engine;
 	std::vector<Sound*> sounds;
