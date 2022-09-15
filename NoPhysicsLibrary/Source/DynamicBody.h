@@ -46,7 +46,6 @@ private: // Variables
 	friend class Physics; // Necessary for accessing SecondNewton/FirstBuxeda
 
 	Point velocity = {};
-	//-TODONE: Change to gravity offset
 	Point gravityOffset = {};
 	Point acceleration = {};
 	Point coeficientRestitution = { 1.0f,1.0f };

@@ -5,6 +5,7 @@
 
 #include "ScenarioPresetEnum.h"
 #include "PhysicsPresetEnum.h"
+#include "SoundData.h"
 
 class NPL
 {
@@ -61,17 +62,18 @@ public:
 	bool DeathLimit(Rect limits);
 
 	// Destroy a body, returns true if the body has been successfully deleted
-	bool DestroyBody(Body* body); //-TODONE: Put DestroyBody Function in npl
+	bool DestroyBody(Body* body);
 	
 	// Sets one body to become the listening point of the audio
 	void SetListener(Body* listener);
-	//-TODONE: Function to set an specific body as listener to calculate pan and stuff
 
 	void LoadSound(const char* path);
 
 private: // Methods
 
 	void StepPhysics(float dt);
+
+	void StepAcoustics();
 
 	void StepAudio();
 
@@ -87,5 +89,9 @@ private:
 	// inside here. Vectors reorder themselves if they don't find enough space. And Idk if that could
 	// lead to a "nullptr" error. Look video: https://www.youtube.com/watch?v=6OoSgY6NVVk&t=1550s&ab_channel=javidx9
 	std::vector<Body*> bodies;
+	std::vector<SoundData*> soundList;
+
+	// CONFIG VARIABLES
+	float panRadius = 1000.0f;
 
 };

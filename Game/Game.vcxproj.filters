@@ -24,14 +24,14 @@
     <ClCompile Include="Source\Easing.cpp">
       <Filter>Utils</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Scene.cpp">
-      <Filter>Modules</Filter>
-    </ClCompile>
     <ClCompile Include="Source\Textures.cpp">
       <Filter>Assets Manager</Filter>
     </ClCompile>
     <ClCompile Include="Source\AssetsManager.cpp">
       <Filter>Assets Manager</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Scene.cpp">
+      <Filter>Modules</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -63,9 +63,6 @@
     <ClInclude Include="Source\Easing.h">
       <Filter>Utils</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Scene.h">
-      <Filter>Modules</Filter>
-    </ClInclude>
     <ClInclude Include="Source\Circle.h">
       <Filter>Utils</Filter>
     </ClInclude>
@@ -74,6 +71,9 @@
     </ClInclude>
     <ClInclude Include="Source\AssetsManager.h">
       <Filter>Assets Manager</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Scene.h">
+      <Filter>Modules</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -88,6 +88,9 @@
     </Filter>
     <Filter Include="Assets Manager">
       <UniqueIdentifier>{1a899daa-a751-4a1e-a203-925337f47feb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Scene">
+      <UniqueIdentifier>{ef7aa7b2-c433-4129-8049-bdba8e49182e}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

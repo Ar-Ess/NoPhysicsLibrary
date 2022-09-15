@@ -15,8 +15,9 @@ public:
 
 	~Audio();
 
-	void Update(Point listener);
+	void Update(SoundData* data);
 
+	//-TODO: Aquesta funció és la de play audio dels bodies, treurela d'aquí
 	void PushSound(int index, Point position);
 
 	void LoadSound(const char* path);
@@ -27,7 +28,5 @@ private:
 
 	ma_engine engine;
 	std::vector<Sound*> sounds;
-	std::vector<SoundData*> soundList;
-	float panRadius = 1000.0f;
 
 };

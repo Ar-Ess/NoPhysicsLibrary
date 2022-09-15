@@ -201,13 +201,18 @@ Physics::~Physics()
 //}
 //
 
-void Physics::Update(Body* body, float dt)
+void Physics::Step(Body* body, float dt)
 {
 	switch (body->GetClass())
 	{
 	case BodyClass::DYNAMIC_BODY: UpdateDynamic(dt, body); break;
 	case BodyClass::LIQUID_BODY : UpdateLiquid (dt, body); break;
 	}
+}
+
+void Physics::Declip(std::vector<Body*>* bodies)
+{
+
 }
 
 void Physics::CleanUp()

@@ -24,7 +24,9 @@ public: // Methods
 
 	virtual ~Physics();
 
-	void Update(Body* body, float dt);
+	void Step(Body* body, float dt);
+
+	void Declip(std::vector<Body*>* bodies);
 
 	void CleanUp();
 

@@ -29,6 +29,7 @@ void NPL::Update(float dt)
 	if (GetGlobalPause()) return;
 
 	StepPhysics(dt);
+	StepAcoustics();
 	StepAudio();
 
 }
@@ -195,12 +196,41 @@ void NPL::SetScenarioPreset(ScenarioPreset sPreset, Point wSize)
 
 void NPL::StepPhysics(float dt)
 {
-	for (Body* b : bodies) physics->Update(b, dt);
+	//-TOCHECK: Think about a pointer (std::vector<Body*>*) inside physics class & making for inside Step function
+	for (Body* b : bodies) physics->Step(b, dt);
+
+	physics->Declip(&bodies);
+
+}
+
+void NPL::StepAcoustics()
+{
+	if (!listener) return;
+
+	//-TODO: Cada body tenir una llista SoundData, updatejar tots els bodies i emplenar soundList.
+
+	//-TODO: Updatejar llogica de acustica aquí. SoundData list a NPL
+	for (SoundData* data : soundList)
+	{
+		float distance = listener->GetPosition().Distance(data->position);
+		if (distance > panRadius) distance = panRadius;
+		if (distance < -panRadius) distance = -panRadius;
+
+		float pan = (distance * 1) / -panRadius;
+		float volume = (distance * 1) / panRadius;
+		if (volume < 0) volume *= -1;
+		volume = 1 - volume;
+
+		data->Set(pan, volume);
+	}
 }
 
 void NPL::StepAudio()
 {
-	audio->Update(listener->GetPosition());
+	if (soundList.empty()) return;
+
+	for (SoundData* data : soundList) audio->Update(data);
+
 }
 
 bool NPL::EraseBody(Body* body)
