@@ -1,6 +1,6 @@
 #include "DynamicBody.h"
 
-DynamicBody::DynamicBody(Rect rect, Point velocity, Point gravityOffset, float mass, Flag* globals, Audio* audio) : Body(BodyClass::DYNAMIC_BODY, rect, mass, audio)
+DynamicBody::DynamicBody(Rect rect, Point velocity, Point gravityOffset, float mass, Flag* globals) : Body(BodyClass::DYNAMIC_BODY, rect, mass)
 {
 	this->velocity = velocity;
 	this->gravityOffset = gravityOffset;

@@ -144,8 +144,8 @@ bool Render::DrawRectangle(Rect rect, SDL_Color color, Point size, bool anchored
 
 	if (anchored)
 	{
-		rect.x += (int)camera.x;
-		rect.y += (int)camera.y;
+		rec.x += (int)camera.x;
+		rec.y += (int)camera.y;
 	}
 
 	rec.w *= size.x;

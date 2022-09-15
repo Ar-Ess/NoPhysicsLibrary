@@ -17,9 +17,6 @@ public:
 
 	void Update(SoundData* data);
 
-	//-TODO: Aquesta funció és la de play audio dels bodies, treurela d'aquí
-	void PushSound(int index, Point position);
-
 	void LoadSound(const char* path);
 
 	void CleanUp();

@@ -10,7 +10,7 @@
 class Window;
 class Input;
 class Render;
-class Scene;
+class SceneManager;
 
 class App
 {
@@ -60,7 +60,7 @@ public:
 	Window* win = nullptr;
 	Input* input = nullptr;
 	Render* render = nullptr;
-	Scene* scene = nullptr;
+	SceneManager* scene = nullptr;
 
 private:
 

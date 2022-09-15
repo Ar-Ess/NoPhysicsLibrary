@@ -9,13 +9,12 @@ class Body
 {
 public: // Methods
 
-	Body(BodyClass clas = BodyClass::EMPTY_BODY, Rect rect = { 0.0f, 0.0f, 1.0f, 1.0f }, float mass = 1.0f, Audio* audio = nullptr);
+	Body(BodyClass clas = BodyClass::EMPTY_BODY, Rect rect = { 0.0f, 0.0f, 1.0f, 1.0f }, float mass = 1.0f);
 
 	virtual ~Body() {}
 
-	void Play(int index) { audio->PushSound(index, rect.GetPosition()); }
-
-public: //Getters
+	// Plays a sound
+	void Play(int index, float decibels = 0) { soundList.emplace_back(new SoundData(index, rect.GetPosition(), decibels)); }
 
 	// Returns the x & y coordinates of the body
 	inline Point GetPosition() const { return rect.GetPosition(); }
@@ -38,8 +37,6 @@ public: //Getters
 	// Returns wether the body is collidable
 	inline bool IsCollidable() { return properties.Get(0); }
 
-public: // Setters
-
 	// Sets the collidable property of the body
 	inline void SetCollidable(bool set) { properties.Set(set, 1); }
 
@@ -51,15 +48,16 @@ protected: // Functions
 
 protected: // Variables
 
+	friend class NPL;
+
 	Rect rect = {};
 	BodyClass clas = BodyClass::EMPTY_BODY;
 	float mass = 1.0f;
 	intptr_t id = 0;
 
+	std::vector<SoundData*> soundList;
+
 	// Collidable | 
 	Flag properties = {};
-
-	// Audio
-	Audio* audio = nullptr;
 
 };

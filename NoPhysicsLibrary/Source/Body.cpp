@@ -3,7 +3,7 @@
 #include "DynamicBody.h"
 #include "Define.h"
 
-Body::Body(BodyClass clas, Rect rect, float mass, Audio* audio)
+Body::Body(BodyClass clas, Rect rect, float mass)
 {
 	this->clas = clas;
 	this->rect = rect;
@@ -16,8 +16,6 @@ Body::Body(BodyClass clas, Rect rect, float mass, Audio* audio)
 	this->properties.Set(true, 0);
 
 	id = reinterpret_cast<int>(this);
-
-	this->audio = audio;
 }
 
 void Body::SolveCollision(Body& body, int dir)

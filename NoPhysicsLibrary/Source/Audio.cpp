@@ -1,6 +1,16 @@
 #include "Audio.h"
 #include <assert.h>
 
+// Deletes a buffer
+#define RELEASE( x ) \
+	{						\
+	if( x != NULL )		\
+		{					  \
+	  delete x;			\
+	  x = NULL;			  \
+		}					  \
+	}
+
 // Internal usage of miniaudio
 void DataCallback(ma_device* pDevice, void* pOutput, const void* pInput, ma_uint32 frameCount)
 {
@@ -31,14 +41,6 @@ void Audio::Update(SoundData* data)
 
 }
 
-void Audio::PushSound(int index, Point position)
-{
-    // There is not a loaded testSound in "index" position
-    assert(index < sounds.size() && index >= 0);
-
-    //soundList.emplace_back(new SoundData(index, position));
-}
-
 void Audio::LoadSound(const char* path)
 {
     ma_sound* sound = new ma_sound();
@@ -50,4 +52,13 @@ void Audio::LoadSound(const char* path)
 
 void Audio::CleanUp()
 {
+    ma_engine_uninit(&engine);
+
+    if (!sounds.empty())
+    {
+        for (Sound* s : sounds) RELEASE(s);
+    }
+
+    sounds.clear();
+    sounds.shrink_to_fit();
 }

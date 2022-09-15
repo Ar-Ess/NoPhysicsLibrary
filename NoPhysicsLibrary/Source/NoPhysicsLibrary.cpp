@@ -15,6 +15,11 @@ NPL::NPL()
 {
 }
 
+NPL::~NPL()
+{
+	CleanUp();
+}
+
 void NPL::Init()
 {
 	// You've alreay initialized the library once
@@ -36,8 +41,29 @@ void NPL::Update(float dt)
 
 void NPL::CleanUp()
 {
-	physics->CleanUp();
 	audio->CleanUp();
+
+	if (!bodies.empty())
+	{
+		for (Body* b : bodies)
+		{
+			RELEASE(b);
+		}
+	}
+	bodies.clear();
+	bodies.shrink_to_fit();
+
+	listener = nullptr;
+
+	physics->CleanUp();
+
+	if (!soundList.empty())
+	{
+		for (Body* b : bodies) RELEASE(b);
+	}
+	soundList.clear();
+	soundList.shrink_to_fit();
+
 }
 
 BodyCreation NPL::CreateBody(Rect rectangle, float mass)
@@ -45,7 +71,7 @@ BodyCreation NPL::CreateBody(Rect rectangle, float mass)
 	//Library not initialized. Call NPL::Init() first
 	assert(physics != nullptr);
 
-	return BodyCreation(rectangle, mass, &bodies, physics, audio);
+	return BodyCreation(rectangle, mass, &bodies, physics);
 }
 
 void NPL::DestroyScenario()
@@ -157,14 +183,27 @@ void NPL::SetScenarioPreset(ScenarioPreset sPreset, Point wSize)
 	switch (sPreset)
 	{
 	case ScenarioPreset::LIMITS_SCENARIO_PRESET:
+	{
 		float downLimitY = wSize.y * 0.93f;
 		float rightLimitX = wSize.x * 0.96f;
 		//Limits
-		CreateBody({           0,          0,               wSize.x, wSize.y - downLimitY }, 1);
-		CreateBody({           0,          0, wSize.x - rightLimitX,              wSize.y }, 1);
-		CreateBody({           0, downLimitY,               wSize.x, wSize.y - downLimitY }, 1);
-		CreateBody({ rightLimitX,          0, wSize.x - rightLimitX,              wSize.x }, 1);
+		CreateBody({ 0,          0,               wSize.x, wSize.y - downLimitY }, 1).Static();
+		CreateBody({ 0,          0, wSize.x - rightLimitX,              wSize.y }, 1).Static();
+		CreateBody({ 0, downLimitY,               wSize.x, wSize.y - downLimitY }, 1).Static();
+		CreateBody({ rightLimitX,          0, wSize.x - rightLimitX,              wSize.x }, 1).Static();
 		break;
+	}
+	case ScenarioPreset::CORRIDOR_SCENARIO_PRESET:
+	{
+		float downLimitY = wSize.y * 0.93f;
+		float rightLimitX = wSize.x * 0.96f;
+		//Limits
+		CreateBody({                  0,          0,                  4280, wSize.y - downLimitY }, 1).Static();
+		CreateBody({                  0,          0, wSize.x - rightLimitX,              wSize.y }, 1).Static();
+		CreateBody({                  0, downLimitY,                  4280, wSize.y - downLimitY }, 1).Static();
+		CreateBody({ 3000 + rightLimitX,          0, wSize.x - rightLimitX,              wSize.x }, 1).Static();
+		break;
+	}
 
 	//case ScenarioPreset::PLATFORMER_SCENARIO_PRESET:
 	//	//Limits
@@ -207,21 +246,33 @@ void NPL::StepAcoustics()
 {
 	if (!listener) return;
 
-	//-TODO: Cada body tenir una llista SoundData, updatejar tots els bodies i emplenar soundList.
+	//-TODONE: Cada body tenir una llista SoundData, updatejar tots els bodies i emplenar soundList.
 
-	//-TODO: Updatejar llogica de acustica aquí. SoundData list a NPL
-	for (SoundData* data : soundList)
+	for (Body* b : bodies)
 	{
-		float distance = listener->GetPosition().Distance(data->position);
-		if (distance > panRadius) distance = panRadius;
-		if (distance < -panRadius) distance = -panRadius;
+		if (b->soundList.empty()) continue;
 
-		float pan = (distance * 1) / -panRadius;
-		float volume = (distance * 1) / panRadius;
-		if (volume < 0) volume *= -1;
-		volume = 1 - volume;
+		Point listenerPos = listener->GetPosition();
 
-		data->Set(pan, volume);
+		for (SoundData* data : b->soundList)
+		{
+			float distance = listenerPos.Distance(data->position);
+			if (listenerPos.x < data->position.x) distance *= -1;
+
+			if (distance > panRadius) distance = panRadius;
+			if (distance < -panRadius) distance = -panRadius;
+
+			float pan = (distance * 1) / -panRadius;
+			float volume = (distance * 1) / panRadius;
+			if (volume < 0) volume *= -1;
+			volume = 1 - volume;
+
+			data->Set(pan, volume);
+
+			soundList.push_back(data);
+		}
+
+		b->soundList.clear();
 	}
 }
 
@@ -229,8 +280,13 @@ void NPL::StepAudio()
 {
 	if (soundList.empty()) return;
 
-	for (SoundData* data : soundList) audio->Update(data);
+	for (SoundData* data : soundList)
+	{
+		audio->Update(data);
+		RELEASE(data);
+	}
 
+	soundList.clear();
 }
 
 bool NPL::EraseBody(Body* body)

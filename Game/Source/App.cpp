@@ -3,7 +3,7 @@
 #include "Window.h"
 #include "Input.h"
 #include "Render.h"
-#include "Scene.h"
+#include "SceneManager.h"
 
 #include <time.h>
 
@@ -17,7 +17,7 @@ App::App(int argc, char* args[]) : argc(argc), args(args)
 	win = new Window();
 	input = new Input(win);
 	render = new Render(win);
-	scene = new Scene(render, input, win);
+	scene = new SceneManager(render, input, win);
 
 	AddModule(win);
 	AddModule(input);

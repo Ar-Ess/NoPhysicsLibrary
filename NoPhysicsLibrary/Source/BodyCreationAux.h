@@ -9,13 +9,12 @@
 
 struct BodyCreation
 {
-	BodyCreation(Rect rect, float mass, std::vector<Body*>* bodies, Physics* physics, Audio* audio)
+	BodyCreation(Rect rect, float mass, std::vector<Body*>* bodies, Physics* physics)
 	{
 		this->mass = mass;
 		this->rect = rect;
 		this->bodies = bodies;
 		this->physics = physics;
-		this->audio = audio;
 	}
 
 	StaticBody* Static()
@@ -28,7 +27,7 @@ struct BodyCreation
 	DynamicBody* Dynamic(Point velocity = { 0, 0 }, Point gravityOffset = {0, 0})
 	{
 		
-		DynamicBody* body = new DynamicBody(rect, velocity, gravityOffset, mass, &physics->globals, audio);
+		DynamicBody* body = new DynamicBody(rect, velocity, gravityOffset, mass, &physics->globals);
 		bodies->emplace_back(body);
 		return body;
 	}
@@ -53,5 +52,4 @@ private:
 	Rect rect = {};
 	std::vector<Body*>* bodies = nullptr;
 	Physics* physics = nullptr;
-	Audio* audio = nullptr;
 };

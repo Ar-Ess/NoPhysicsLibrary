@@ -11,7 +11,14 @@ class NPL
 {
 public:
 
+	std::vector<Body*>* TempGetBodiesDebug()
+	{
+		return &bodies;
+	}
+
 	NPL();
+
+	~NPL();
 
 	// Initialize the library
 	void Init();

@@ -1,57 +1,42 @@
 #pragma once
 
-#include "Module.h"
-
 #include "Input.h"
 #include "Window.h"
 #include "Textures.h"
 #include "AssetsManager.h"
-#include "NoPhysicsLibrary.h"
+
+class SceneManager;
 
 enum class Scenes
 {
 	NO_SCENE = -1,
 	LOGO_SCENE,
-	DEBUG_SCENE,
+	TEST_ONE_SCENE,
 };
 
-class Scene : public Module
+class Scene
 {
-public:
+public: // Methods
 
-	Scene(Render* render, Input* input, Window* window);
+	virtual ~Scene() {}
 
-	virtual ~Scene();
+	virtual bool Start() { return true; }
 
-	bool Start();
+	virtual bool Update(float dt) { return true; }
 
-	bool Update(float dt);
+	virtual bool CleanUp() { return true; }
 
-	bool CleanUp();
+	void SetModules(Render* render, Input* input, Textures* texture, AssetsManager* assets, Window* window, SceneManager* scene);
 
-// SCENE MANAGER
+protected: // Methods
 
-	inline Scenes GetCurrScene() const { return currScene; }
+	Scene() {}
 
-	bool SetScene(Scenes scene);
+	bool SetScene(Scenes index);
 
-private:
-	Scenes currScene = Scenes::NO_SCENE;
-	Scenes prevScene = Scenes::NO_SCENE;
+	bool PushScene(Scene* push);
 
-	//Setters
-	bool SetLogoScene();
-	bool SetDebugScene();
-
-	//Updaters
-	bool UpdateLogoScene(float dt);
-	bool UpdateDebugScene(float dt);
-
-private: // Methods
-
-	void DebugCommands();
-
-private: // Variables
+protected: // Variables
 
 	Render* render = nullptr;
 	Input* input = nullptr;
@@ -59,12 +44,8 @@ private: // Variables
 	AssetsManager* assets = nullptr;
 	Window* window = nullptr;
 
-	NPL* npl = nullptr;
-	std::vector<Body*> bodies;
-	DynamicBody* test = nullptr;
+private: // Variables
 
-	bool exit = false;
-	bool activeContinue = false;
+	SceneManager* scene = nullptr;
 
-	suint lvl = 0;
 };
