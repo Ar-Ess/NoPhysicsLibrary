@@ -278,11 +278,13 @@ void NPL::StepAcoustics()
 
 void NPL::StepAudio()
 {
+	audio->Update();
+
 	if (soundList.empty()) return;
 
 	for (SoundData* data : soundList)
 	{
-		audio->Update(data);
+		audio->Playback(data);
 		RELEASE(data);
 	}
 
