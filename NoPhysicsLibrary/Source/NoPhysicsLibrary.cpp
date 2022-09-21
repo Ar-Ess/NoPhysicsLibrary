@@ -260,6 +260,9 @@ void NPL::StepAcoustics()
 			float distance = listenerPos.Distance(data->position);
 			if (listenerPos.x < data->position.x) distance *= -1;
 
+			// Final SPL = Initial SPL - 20*Log(distance / 1)
+			//float fSPL = data->spl - 20 * Logarithm(distance);
+
 			// Narrow down distance for panning operations
 			if (distance > panRange) distance = panRange;
 			if (distance < -panRange) distance = -panRange;
