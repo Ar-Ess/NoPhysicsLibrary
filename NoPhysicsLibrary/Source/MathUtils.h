@@ -4,7 +4,7 @@
 
 namespace MathUtils
 {
-	float Distance(float x1, float y1, float x2, float y2)
+	inline float Distance(float x1, float y1, float x2, float y2)
 	{
 		double dx = double(x2) - double(x1);
 		double dy = double(y2) - double(y1);
@@ -16,126 +16,84 @@ namespace MathUtils
 		return !((r1.x > r2.x + r2.w) || (r1.x + r1.w < r2.x) || (r1.y > r2.y + r2.h) || (r1.y + r1.h < r2.y));
 	}
 
-	//bool CheckCollision(Circle& a, Rect& b)
-	//{
-	//	//Closest point on collision box
-	//	float cX = 0, cY = 0;
-	//
-	//	//Find closest x offset
-	//	if (a.x < b.x)
-	//	{
-	//		cX = b.x;
-	//	}
-	//	else if (a.x > b.x + b.w)
-	//	{
-	//		cX = b.x + b.w;
-	//	}
-	//	else
-	//	{
-	//		cX = a.x;
-	//	}
-	//	//Find closest y offset
-	//	if (a.y < b.y)
-	//	{
-	//		cY = b.y;
-	//	}
-	//	else if (a.y > b.y + b.h)
-	//	{
-	//		cY = b.y + b.h;
-	//	}
-	//	else
-	//	{
-	//		cY = a.y;
-	//	}
-	//
-	//	//If the closest point is inside the circle
-	//	if (int dist = Distance(a.x, a.y, cX, cY) < a.radius)
-	//	{
-	//		//This box and the circle have collided
-	//		if (dist == 0.0f)
-	//			return false;
-	//		return true;
-	//	}
-	//	//If the shapes have not collided
-	//	return false;
-	//}
-	//
-	//bool CheckCollision(Rect& b, Circle& a)
-	//{
-	//	//Closest point on collision box
-	//	float cX = 0, cY = 0;
-	//
-	//	//Find closest x offset
-	//	if (a.x < b.x)
-	//	{
-	//		cX = b.x;
-	//	}
-	//	else if (a.x > b.x + b.w)
-	//	{
-	//		cX = b.x + b.w;
-	//	}
-	//	else
-	//	{
-	//		cX = a.x;
-	//	}
-	//	//Find closest y offset
-	//	if (a.y < b.y)
-	//	{
-	//		cY = b.y;
-	//	}
-	//	else if (a.y > b.y + b.h)
-	//	{
-	//		cY = b.y + b.h;
-	//	}
-	//	else
-	//	{
-	//		cY = a.y;
-	//	}
-	//
-	//	//If the closest point is inside the circle
-	//	if (int dist = Distance(a.x, a.y, cX, cY) < a.radius)
-	//	{
-	//		//This box and the circle have collided
-	//		if (dist == 0.0f)
-	//			return false;
-	//		return true;
-	//	}
-	//	//If the shapes have not collided
-	//	return false;
-	//}
-	//
-	//bool CheckCollision(Circle& A, Circle& B)
-	//{
-	//	if (Distance(A.x, A.y, B.x, B.y) < A.radius + B.radius) return true;
-	//
-	//	return false;
-	//}
+	inline float Ln(float num)
+	{
+		const double x = (num - 1) / (num + 1);
+		long double r = 0;
+		for (long long n = 0; n <= 100; ++n)
+		{
+			r += 2 * pow(x, 2 * n + 1) / (2 * n + 1);
+		}
+		return r;
+	}
 
-	int Min(int a, int b)
+	inline float Sqrt(float num) 
+	{
+		float x2 = num * 0.5f, y = num;
+
+		long int i = *(long*)&y;
+
+		i = 0x5f3759df - (i >> 1);
+
+		y = *(float*)&i;
+
+		y = y * (1.5f - (x2 * y * y));
+		y = y * (1.5f - (x2 * y * y));
+
+		return y;
+	}
+
+	//// Calculate 2 Neperian Logarithms at the same time
+	inline Point DoubleLn(float num1, float num2)
+	{
+		const double x1 = (num1 - 1) / (num1 + 1);
+		const double x2 = (num2 - 1) / (num2 + 1);
+		long double r1 = 0, r2 = 0;
+		for (long long n = 0; n <= 100; ++n)
+		{
+			r1 += 2 * pow(x1, 2 * n + 1) / (2 * n + 1);
+			r2 += 2 * pow(x2, 2 * n + 1) / (2 * n + 1);
+		}
+		return Point{(float)r1, (float)r2};
+	}
+
+	inline float Log(float num, float base)
+	{
+		Point ln = DoubleLn(num, base);
+		return ln.x / ln.y;
+	}
+
+	inline int Min(int a, int b)
 	{
 		if (a <= b) return a;
 		return b;
 	}
 
-	float Min(float a, float b)
+	inline float Min(float a, float b)
 	{
 		if (a <= b) return a;
 		return b;
 	}
 
-	int Max(int a, int b)
+	inline int Max(int a, int b)
 	{
 		if (a >= b) return a;
 		return b;
 	}
 
-	float Max(float a, float b)
+	inline float Max(float a, float b)
 	{
 		if (a >= b) return a;
 		return b;
 	}
 
-	Rect IntersectRectangle(Rect r1, Rect r2)
+	inline float Abs(float num)
+	{
+		if (num < 0) num *= -1;
+		return num;
+	}
+
+	inline Rect IntersectRectangle(Rect r1, Rect r2)
 	{
 		float x = Max(r1.x, r2.x);
 		float y = Max(r1.y, r2.y);

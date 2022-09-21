@@ -1,6 +1,7 @@
 #include "NoPhysicsLibrary.h"
 #include <stdint.h>
 #include "Define.h"
+#include "MathUtils.h"
 
 NPL::NPL()
 {
@@ -244,7 +245,7 @@ void NPL::StepAcoustics()
 			for (AcousticData* data : b->acousticDataList)
 			{
 				float volume = data->spl / maxSPL;
-				soundDataList.push_back(new SoundData(data->index, 0, volume));
+				soundDataList.push_back(new SoundData(data->index, 0, volume, 0));
 				RELEASE(data);
 			}
 			b->acousticDataList.clear();
@@ -261,18 +262,25 @@ void NPL::StepAcoustics()
 			if (listenerPos.x < data->position.x) distance *= -1;
 
 			// Final SPL = Initial SPL - 20*Log(distance / 1)
-			//float fSPL = data->spl - 20 * Logarithm(distance);
+			float fSPL = data->spl - 20 * MathUtils::Log(MathUtils::Abs(distance), 10);
 
 			// Narrow down distance for panning operations
 			if (distance > panRange) distance = panRange;
 			if (distance < -panRange) distance = -panRange;
 
-			float pan = (distance * 1) / -panRange;
-			float volume = (distance * 1) / panRange;
-			if (volume < 0) volume *= -1;
-			volume = 1 - volume;
+			float timeDelay = 0;
+			// Calculate delay time
+			if (bodies.back()->GetClass() == BodyClass::GAS_BODY)
+			{
+				GasBody* b = (GasBody*)bodies.back();
+				float vel = MathUtils::Sqrt(b->GetInnerVelFunction());
+				timeDelay = MathUtils::Abs(distance) / vel;
+			}
 
-			soundDataList.push_back(new SoundData(data->index, pan, volume));
+			float pan = distance / -panRange;
+			float volume = fSPL / maxSPL;
+
+			soundDataList.push_back(new SoundData(data->index, pan, volume, timeDelay));
 			RELEASE(data);
 		}
 		b->acousticDataList.clear();
