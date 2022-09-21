@@ -14,7 +14,7 @@ public: // Methods
 	virtual ~Body() {}
 
 	// Plays a sound
-	void Play(int index, float decibels = 0) { soundList.emplace_back(new SoundData(index, rect.GetPosition(), decibels)); }
+	void Play(int index, float decibels = 0) { soundList.emplace_back(new SoundData(index, rect.GetCentricPosition(), decibels)); }
 
 	// Returns the x & y coordinates of the body
 	inline Point GetPosition() const { return rect.GetPosition(); }
