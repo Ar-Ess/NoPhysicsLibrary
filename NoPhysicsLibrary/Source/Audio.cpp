@@ -1,15 +1,6 @@
 #include "Audio.h"
 #include <assert.h>
-
-// Deletes a buffer
-#define RELEASE( x ) \
-	{						\
-	if( x != NULL )		\
-		{					  \
-	  delete x;			\
-	  x = NULL;			  \
-		}					  \
-	}
+#include "Define.h"
 
 // Internal usage of miniaudio
 void DataCallback(ma_device* pDevice, void* pOutput, const void* pInput, ma_uint32 frameCount)

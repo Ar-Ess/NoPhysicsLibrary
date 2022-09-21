@@ -1,15 +1,6 @@
 #include "NoPhysicsLibrary.h"
 #include <stdint.h>
-
-// Deletes a buffer
-#define RELEASE( x ) \
-	{						\
-	if( x != NULL )		\
-		{					  \
-	  delete x;			\
-	  x = NULL;			  \
-		}					  \
-	}
+#include "Define.h"
 
 NPL::NPL()
 {
@@ -57,12 +48,12 @@ void NPL::CleanUp()
 
 	physics->CleanUp();
 
-	if (!soundList.empty())
+	if (!soundDataList.empty())
 	{
 		for (Body* b : bodies) RELEASE(b);
 	}
-	soundList.clear();
-	soundList.shrink_to_fit();
+	soundDataList.clear();
+	soundDataList.shrink_to_fit();
 
 }
 
@@ -244,35 +235,44 @@ void NPL::StepPhysics(float dt)
 
 void NPL::StepAcoustics()
 {
-	if (!listener) return;
-
-	//-TODONE: Cada body tenir una llista SoundData, updatejar tots els bodies i emplenar soundList.
-
 	for (Body* b : bodies)
 	{
-		if (b->soundList.empty()) continue;
+		if (b->acousticDataList.empty()) continue;
+
+		if (!listener)
+		{
+			for (AcousticData* data : b->acousticDataList)
+			{
+				float volume = data->spl / maxSPL;
+				soundDataList.push_back(new SoundData(data->index, 0, volume));
+				RELEASE(data);
+			}
+			b->acousticDataList.clear();
+			continue;
+		}
+
+		//-Todo: Check if the body is the listener and push directly the sound data
 
 		Point listenerPos = listener->GetPosition();
-
-		for (SoundData* data : b->soundList)
+		for (AcousticData* data : b->acousticDataList)
 		{
+			// Get the distance between Body & Listener
 			float distance = listenerPos.Distance(data->position);
 			if (listenerPos.x < data->position.x) distance *= -1;
 
-			if (distance > panRadius) distance = panRadius;
-			if (distance < -panRadius) distance = -panRadius;
+			// Narrow down distance for panning operations
+			if (distance > panRange) distance = panRange;
+			if (distance < -panRange) distance = -panRange;
 
-			float pan = (distance * 1) / -panRadius;
-			float volume = (distance * 1) / panRadius;
+			float pan = (distance * 1) / -panRange;
+			float volume = (distance * 1) / panRange;
 			if (volume < 0) volume *= -1;
 			volume = 1 - volume;
 
-			data->Set(pan, volume);
-
-			soundList.push_back(data);
+			soundDataList.push_back(new SoundData(data->index, pan, volume));
+			RELEASE(data);
 		}
-
-		b->soundList.clear();
+		b->acousticDataList.clear();
 	}
 }
 
@@ -280,15 +280,15 @@ void NPL::StepAudio()
 {
 	audio->Update();
 
-	if (soundList.empty()) return;
+	if (soundDataList.empty()) return;
 
-	for (SoundData* data : soundList)
+	for (SoundData* data : soundDataList)
 	{
 		audio->Playback(data);
 		RELEASE(data);
 	}
 
-	soundList.clear();
+	soundDataList.clear();
 }
 
 bool NPL::EraseBody(Body* body)

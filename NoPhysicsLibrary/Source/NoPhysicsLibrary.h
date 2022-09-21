@@ -96,9 +96,10 @@ private:
 	// inside here. Vectors reorder themselves if they don't find enough space. And Idk if that could
 	// lead to a "nullptr" error. Look video: https://www.youtube.com/watch?v=6OoSgY6NVVk&t=1550s&ab_channel=javidx9
 	std::vector<Body*> bodies;
-	std::vector<SoundData*> soundList;
+	std::vector<SoundData*> soundDataList;
 
 	// CONFIG VARIABLES
-	float panRadius = 1000.0f;
+	float panRange = 1000.0f;
+	float maxSPL = 120;
 
 };

@@ -160,6 +160,7 @@
     <ClCompile Include="Source\StaticBody.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Source\AcusticData.h" />
     <ClInclude Include="Source\Audio.h" />
     <ClInclude Include="Source\Body.h" />
     <ClInclude Include="Source\BodyBackup.h" />

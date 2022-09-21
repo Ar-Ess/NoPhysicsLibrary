@@ -59,8 +59,8 @@ SDL_Texture* const Textures::Load(const char* path, Point* size)
 		texture = LoadSurface(surface);
 		if (size)
 		{
-			size->x = surface->w;
-			size->y = surface->h;
+			size->x = (float)surface->w;
+			size->y = (float)surface->h;
 		}
 		SDL_FreeSurface(surface);
 	}
