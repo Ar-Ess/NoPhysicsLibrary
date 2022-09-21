@@ -54,6 +54,11 @@ public:
 		return Point{x, y};
 	}
 
+	Point GetCentricPosition() const
+	{
+		return Point{ x + w/2, y + h/2 };
+	}
+
 	Point GetSize() const
 	{
 		return Point{ w, h };

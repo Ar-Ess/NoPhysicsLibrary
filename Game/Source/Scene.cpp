@@ -15,7 +15,7 @@ bool Scene::SetScene(Scenes index)
 {
 	bool ret = true;
 
-	int sceneIndex = (int)index;
+	unsigned int sceneIndex = (unsigned int)index;
 
 	if (sceneIndex < 0 || sceneIndex >= scene->GetSize()) return false;
 

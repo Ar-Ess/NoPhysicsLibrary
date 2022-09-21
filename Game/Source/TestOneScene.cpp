@@ -21,7 +21,8 @@ bool TestOneScene::Start()
 	emiter1 = (StaticBody*)bodies->at(1);
 	emiter2 = (StaticBody*)bodies->back();
 	test = (DynamicBody*)npl->CreateBody(Rect{ 130, 550, 50, 80 }, 1).Dynamic();
-	npl->CreateBody(npl->ReturnScenarioRect(), 1).Gas();
+	npl->CreateBody(npl->ReturnScenarioRect(), 1).Gas(100, 1.414f, 1);
+
 	npl->SetListener(test);
 	//npl->SetGlobalGravity({ 0, 500 });
 
@@ -43,10 +44,7 @@ bool TestOneScene::Update(float dt)
 	if (input->GetKey(SDL_SCANCODE_A) == KeyState::KEY_REPEAT) test->ApplyForce(-100, 0);
 	if (input->GetKey(SDL_SCANCODE_D) == KeyState::KEY_REPEAT) test->ApplyForce(100, 0);
 	if (input->GetKey(SDL_SCANCODE_RETURN) == KeyState::KEY_DOWN) test->Play(0);
-	if (input->GetKey(SDL_SCANCODE_LSHIFT) == KeyState::KEY_DOWN)
-	{
-		emiter1->Play(0);
-	}
+	if (input->GetKey(SDL_SCANCODE_LSHIFT) == KeyState::KEY_DOWN) emiter1->Play(0);
 	if (input->GetKey(SDL_SCANCODE_LSHIFT) == KeyState::KEY_DOWN) emiter2->Play(0);
 	
 	// Pauses the physics

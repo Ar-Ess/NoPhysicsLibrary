@@ -5,3 +5,13 @@
 void Log(const char file[], int line, const char* format, ...);
 
 #define INT_TO_BOOL(integer) (((integer) != 0) ? 1 : 0)
+
+// Deletes a buffer
+#define RELEASE( x ) \
+	{						\
+	if( x != NULL )		\
+		{					  \
+	  delete x;			\
+	  x = NULL;			  \
+		}					  \
+	}

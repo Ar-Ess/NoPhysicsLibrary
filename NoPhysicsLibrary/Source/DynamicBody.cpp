@@ -9,6 +9,11 @@ DynamicBody::DynamicBody(Rect rect, Point velocity, Point gravityOffset, float m
 
 DynamicBody::~DynamicBody()
 {
+	if (!acousticDataList.empty())
+	{
+		for (AcousticData* data : acousticDataList) RELEASE(data);
+	}
+	acousticDataList.clear();
 	forces.clear();
 	momentums.clear();
 }

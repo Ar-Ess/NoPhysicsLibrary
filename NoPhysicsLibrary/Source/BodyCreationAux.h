@@ -39,9 +39,9 @@ struct BodyCreation
 		return body;
 	}
 
-	GasBody* Gas()
+	GasBody* Gas(float density, float heatRatio, float pressure)
 	{
-		GasBody* body = new GasBody(rect, mass);
+		GasBody* body = new GasBody(rect, mass, density, heatRatio, pressure);
 		bodies->emplace_back(body);
 		return body;
 	}

@@ -4,6 +4,8 @@
 #include "BodyBackup.h"
 #include "Flag.h"
 #include "Audio.h"
+#include "AcusticData.h"
+#include "Define.h"
 
 class Body
 {
@@ -14,7 +16,7 @@ public: // Methods
 	virtual ~Body() {}
 
 	// Plays a sound
-	void Play(int index, float decibels = 0) { soundList.emplace_back(new SoundData(index, rect.GetPosition(), decibels)); }
+	void Play(int index, float decibels = 120) { acousticDataList.emplace_back(new AcousticData(index, rect.GetCentricPosition(), decibels)); }
 
 	// Returns the x & y coordinates of the body
 	inline Point GetPosition() const { return rect.GetPosition(); }
@@ -55,7 +57,7 @@ protected: // Variables
 	float mass = 1.0f;
 	intptr_t id = 0;
 
-	std::vector<SoundData*> soundList;
+	std::vector<AcousticData*> acousticDataList;
 
 	// Collidable | 
 	Flag properties = {};

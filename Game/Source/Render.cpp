@@ -28,8 +28,8 @@ bool Render::Awake()
 	if (!renderer)
 		return false;
 
-	camera.w = win->screenSurface->w;
-	camera.h = win->screenSurface->h;
+	camera.w = (float)win->screenSurface->w;
+	camera.h = (float)win->screenSurface->h;
 	camera.x = 0;
 	camera.y = 0;
 
@@ -175,7 +175,7 @@ bool Render::DrawLine(Point start, Point end, SDL_Color color, bool anchored) co
 	int result = -1;
 
 	if (anchored)
-		result = SDL_RenderDrawLine(renderer, camera.x + (int)start.x * (int)scale, camera.y + (int)start.y * (int)scale, camera.x + (int)end.x * (int)scale, camera.y + (int)end.y * (int)scale);
+		result = SDL_RenderDrawLine(renderer, (int)camera.x + (int)start.x * (int)scale, (int)camera.y + (int)start.y * (int)scale, (int)camera.x + (int)end.x * (int)scale, (int)camera.y + (int)end.y * (int)scale);
 	else
 		result = SDL_RenderDrawLine(renderer, (int)start.x * (int)scale, (int)start.y * (int)scale, (int)end.x * (int)scale, (int)end.y * (int)scale);
 
@@ -207,8 +207,8 @@ bool Render::DrawCircle(Circle circle, SDL_Color color, bool fill, bool anchored
 
 		if (anchored)
 		{
-			points[i].x += camera.x;
-			points[i].y += camera.y;
+			points[i].x += (int)camera.x;
+			points[i].y += (int)camera.y;
 		}
 	}
 
@@ -221,8 +221,8 @@ bool Render::DrawCircle(Circle circle, SDL_Color color, bool fill, bool anchored
 			double dx = floor(sqrt((2.0 * circle.radius * dy) - (dy * dy)));
 			if (anchored)
 			{
-				SDL_RenderDrawLine(renderer, camera.x + (int)circle.x - (int)dx, camera.y + (int)circle.y + (int)dy - (int)circle.radius, camera.x + (int)circle.x + (int)dx, camera.y + (int)circle.y + (int)dy - (int)circle.radius);
-				SDL_RenderDrawLine(renderer, camera.x + (int)circle.x - (int)dx, camera.y + (int)circle.y - (int)dy + (int)circle.radius, camera.x + (int)circle.x + (int)dx, camera.y + (int)circle.y - (int)dy + (int)circle.radius);
+				SDL_RenderDrawLine(renderer, (int)camera.x + (int)circle.x - (int)dx, (int)camera.y + (int)circle.y + (int)dy - (int)circle.radius, (int)camera.x + (int)circle.x + (int)dx, (int)camera.y + (int)circle.y + (int)dy - (int)circle.radius);
+				SDL_RenderDrawLine(renderer, (int)camera.x + (int)circle.x - (int)dx, (int)camera.y + (int)circle.y - (int)dy + (int)circle.radius, (int)camera.x + (int)circle.x + (int)dx, (int)camera.y + (int)circle.y - (int)dy + (int)circle.radius);
 			}
 			else
 			{
@@ -250,8 +250,8 @@ bool Render::DrawParticle(SDL_Texture* texture, Point position, Rect* section, R
 	SDL_Rect* sectPtr = nullptr;
 	SDL_Rect sect = {};
 
-	rect.x = camera.x + (int)position.x * (int)scale;
-	rect.y = camera.y + (int)position.y * (int)scale;
+	rect.x = (int)camera.x + (int)position.x * (int)scale;
+	rect.y = (int)camera.y + (int)position.y * (int)scale;
 
 	if (rectSize != NULL)
 	{
