@@ -31,8 +31,6 @@ public: // Methods
 
 	void CleanUp();
 
-	bool CheckCollision(Rect rect1, Rect rect2);
-
 private: // Methods
 
 	void UpdateDynamic(float dt, Body* body);

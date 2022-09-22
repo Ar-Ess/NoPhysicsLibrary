@@ -133,7 +133,7 @@ bool NPL::DeathLimit(Rect limits)
 	//-TOCHECK: It is better to update all bodies in case we have to delete 2, or just delete 1 per frame?
 	for (Body* b : bodies)
 	{
-		if (b->GetClass() == BodyClass::DYNAMIC_BODY && !physics->CheckCollision(b->GetRect(), limits))
+		if (b->GetClass() == BodyClass::DYNAMIC_BODY && !MathUtils::CheckCollision(b->GetRect(), limits))
 		{
 			DestroyBody(b);
 			return true; //First body out deleted, if other one is out, deleted next frame
