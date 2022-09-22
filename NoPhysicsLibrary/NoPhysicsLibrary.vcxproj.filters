@@ -167,5 +167,8 @@
     <ClInclude Include="Source\AcusticData.h">
       <Filter>Core\Audio\Units</Filter>
     </ClInclude>
+    <ClInclude Include="Source\Collision.h">
+      <Filter>Core\Physics\Units</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

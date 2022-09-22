@@ -212,11 +212,36 @@ void Physics::Step(Body* body, float dt)
 
 void Physics::Declip(std::vector<Body*>* bodies)
 {
-	//-Todo: Comparar bodies amb Intersecció de rectangles
+	std::vector<Body*>::const_iterator it1;
+	std::vector<Body*>::const_iterator it2;
+	size_t size = bodies->size();
+	int offset = 0;
+	int iter1 = -1;
+	for (it1 = bodies->begin() + offset; it1 != bodies->end(); ++it1)
+	{
+		++iter1;
+		Body* b1 = *it1;
+		if (b1->GetClass() == BodyClass::GAS_BODY || b1->GetClass() == BodyClass::LIQUID_BODY) continue;
+		int iter2 = -1;
 
-	// 1 -> tots
-	// 2 -> tots - 1
-	// 3 -> tots - 1 - 2
+		for (it2 = bodies->begin() + 1 + offset; it2 != bodies->end(); ++it2)
+		{
+			++iter2;
+			Body* b2 = *it2;
+
+			if (b2->GetClass() == BodyClass::GAS_BODY || b2->GetClass() == BodyClass::LIQUID_BODY) continue;
+			if (b1->GetClass() == BodyClass::STATIC_BODY && b2->GetClass() == BodyClass::STATIC_BODY) continue;
+
+			Rect intersectRect = MathUtils::IntersectRectangle(b1->GetRect(), b2->GetRect());
+			if (intersectRect.IsNull()) continue;
+
+			collisions.emplace_back(new Collision(iter1, iter2, intersectRect));
+		}
+
+		++offset;
+	}
+
+	collisions.clear();
 
 	//-Todo: Crerar classe collision i guardar info
 

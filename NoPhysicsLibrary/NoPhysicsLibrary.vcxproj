@@ -167,6 +167,7 @@
     <ClInclude Include="Source\BodyClassEnum.h" />
     <ClInclude Include="Source\BodyCreationAux.h" />
     <ClInclude Include="Source\CollideBool.h" />
+    <ClInclude Include="Source\Collision.h" />
     <ClInclude Include="Source\DirectionEnum.h" />
     <ClInclude Include="Source\DynamicBody.h" />
     <ClInclude Include="Source\DynArray.h" />

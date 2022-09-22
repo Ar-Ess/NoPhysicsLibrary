@@ -3,6 +3,7 @@
 #include <vector>
 #include "Body.h"
 #include "Flag.h"
+#include "Collision.h"
 
 #define PIXELS_PER_METER 1.0f // if touched change METER_PER_PIXEL too
 #define METER_PER_PIXEL 1.0f // this is 1 / PIXELS_PER_METER !
@@ -66,5 +67,7 @@ public: // Variables
 
 	// Pause 0 | Restitution 1 |
 	Flag globals = {};
+
+	std::vector<Collision*> collisions;
 
 };

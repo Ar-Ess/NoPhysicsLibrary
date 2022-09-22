@@ -78,6 +78,8 @@ namespace MathUtils
 		float w = Min(r1.x + r1.w, r2.x + r2.w) - x;
 		float h = Min(r1.y + r1.h, r2.y + r2.h) - y;
 
+		if (w <= 0 || h <= 0) return {0, 0, 0, 0};
+
 		return { x, y, w, h };
 	}
 

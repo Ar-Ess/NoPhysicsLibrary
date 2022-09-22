@@ -22,6 +22,7 @@ bool TestOneScene::Start()
 	emiter2 = (StaticBody*)bodies->back();
 	test = (DynamicBody*)npl->CreateBody(Rect{ 130, 550, 50, 80 }, 1).Dynamic();
 	npl->CreateBody(npl->ReturnScenarioRect(), 1).Gas(10, 1.414f, 1000);
+	npl->CreateBody(Rect{ 430, 250, 50, 80 }, 1).Dynamic();
 
 	npl->SetListener(test);
 	//npl->SetGlobalGravity({ 0, 500 });
