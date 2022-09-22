@@ -13,5 +13,4 @@ public:
 	float pan = 0;
 	float volume = 1;
 	float delayTime = 0;
-
 };

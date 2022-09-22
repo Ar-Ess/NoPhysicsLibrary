@@ -97,9 +97,11 @@ private:
 	// lead to a "nullptr" error. Look video: https://www.youtube.com/watch?v=6OoSgY6NVVk&t=1550s&ab_channel=javidx9
 	std::vector<Body*> bodies;
 	std::vector<SoundData*> soundDataList;
+	//-Todo: Llista de index a localitzacio de gasbody
 
 	// CONFIG VARIABLES
 	float panRange = 1000.0f;
-	float maxSPL = 120;
+	const float maxSPL = 120.0f;
+	const float maxVolume = 10.0f;
 
 };

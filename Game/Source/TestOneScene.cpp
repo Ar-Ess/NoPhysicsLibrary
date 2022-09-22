@@ -21,7 +21,7 @@ bool TestOneScene::Start()
 	emiter1 = (StaticBody*)bodies->at(1);
 	emiter2 = (StaticBody*)bodies->back();
 	test = (DynamicBody*)npl->CreateBody(Rect{ 130, 550, 50, 80 }, 1).Dynamic();
-	npl->CreateBody(npl->ReturnScenarioRect(), 1).Gas(100, 1.414f, 1);
+	npl->CreateBody(npl->ReturnScenarioRect(), 1).Gas(10, 1.414f, 1000);
 
 	npl->SetListener(test);
 	//npl->SetGlobalGravity({ 0, 500 });
@@ -36,6 +36,7 @@ bool TestOneScene::Update(float dt)
 	bool ret = true;
 	static bool pause = false;
 
+	// The user will listen from the point of view of the listener body.
 	if (test->GetPosition().x >= 625) render->camera.SetPosition(test->GetPosition().Apply({ -625, -550 }).Multiply({-1, -1}));
 	if (render->camera.x > 0) render->camera.x = 0;
 	if (-render->camera.x > 3000) render->camera.x = -3000;

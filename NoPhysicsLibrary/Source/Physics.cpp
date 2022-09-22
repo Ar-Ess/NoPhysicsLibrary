@@ -212,6 +212,13 @@ void Physics::Step(Body* body, float dt)
 
 void Physics::Declip(std::vector<Body*>* bodies)
 {
+	//-Todo: Comparar bodies amb Intersecció de rectangles
+
+	// 1 -> tots
+	// 2 -> tots - 1
+	// 3 -> tots - 1 - 2
+
+	//-Todo: Crerar classe collision i guardar info
 
 }
 

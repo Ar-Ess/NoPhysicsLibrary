@@ -27,15 +27,6 @@ public:
 
 private:
 
-	friend class NPL;
-
-	float GetInnerVelFunction() const
-	{
-		return (heatRatio * pressure) / density;
-	}
-
-private:
-
 	float density = 0;
 	float heatRatio = 0;
 	float pressure = 0;

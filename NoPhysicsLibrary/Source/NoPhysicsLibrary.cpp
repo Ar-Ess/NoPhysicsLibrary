@@ -2,6 +2,7 @@
 #include <stdint.h>
 #include "Define.h"
 #include "MathUtils.h"
+#include "External/miniaudio/miniaudio.h"
 
 NPL::NPL()
 {
@@ -252,35 +253,44 @@ void NPL::StepAcoustics()
 			continue;
 		}
 
-		//-Todo: Check if the body is the listener and push directly the sound data
-
+		//-Todo: group operations of similar thematics (pan with pan, time with time...)
 		Point listenerPos = listener->GetPosition();
 		for (AcousticData* data : b->acousticDataList)
 		{
 			// Get the distance between Body & Listener
 			float distance = listenerPos.Distance(data->position);
-			if (listenerPos.x < data->position.x) distance *= -1;
+			
+			// Check direction for audio panning (50L(neg) or 50R(pos))
+			float direction = 1;
+			if (listenerPos.x < data->position.x) direction *= -1;
 
+			// Compute the sound attenuation over distance
 			// Final SPL = Initial SPL - 20*Log(distance / 1)
-			float fSPL = data->spl - 20 * MathUtils::Log(MathUtils::Abs(distance), 10);
+			float fSPL = data->spl - 20 * MathUtils::Log(distance);
 
-			// Narrow down distance for panning operations
-			if (distance > panRange) distance = panRange;
-			if (distance < -panRange) distance = -panRange;
+			// Narrow down distance over Range for panning operations
+			float panDistance = distance;
+			if (panDistance > panRange) panDistance = panRange;
+			if (panDistance < -panRange) panDistance = -panRange;
 
-			float timeDelay = 0;
+			//-Todo: Fer de moment un checkcollision d'un gasbody i fer llògica
 			// Calculate delay time
+			// 1. Vel = sqrt( lambda * Pa / ro )
+			// 2. Time = distance / vel
+			float timeDelay = 0;
 			if (bodies.back()->GetClass() == BodyClass::GAS_BODY)
 			{
 				GasBody* b = (GasBody*)bodies.back();
-				float vel = MathUtils::Sqrt(b->GetInnerVelFunction());
-				timeDelay = MathUtils::Abs(distance) / vel;
+				float vel = MathUtils::Sqrt(b->GetHeatRatio() * b->GetPressure() / b->GetDensity());
+				timeDelay = distance / vel;
 			}
 
-			float pan = distance / -panRange;
-			float volume = fSPL / maxSPL;
+			// Compute pan (normalized between [ 1, -1])
+			float pan = panDistance / -panRange;
+			// Transform volume from db to linear [ 0, 1])
+			float volume = MathUtils::LogToLinear(fSPL, maxSPL) / maxVolume;
 
-			soundDataList.push_back(new SoundData(data->index, pan, volume, timeDelay));
+			soundDataList.emplace_back(new SoundData(data->index, pan, volume, timeDelay));
 			RELEASE(data);
 		}
 		b->acousticDataList.clear();

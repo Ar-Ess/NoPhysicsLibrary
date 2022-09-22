@@ -4,80 +4,58 @@
 
 namespace MathUtils
 {
-	inline float Distance(float x1, float y1, float x2, float y2)
-	{
-		double dx = double(x2) - double(x1);
-		double dy = double(y2) - double(y1);
-		return float(sqrt(pow(dx, 2) + pow(dy, 2)));
-	}
 
 	inline bool CheckCollision(Rect r1, Rect r2)
 	{
 		return !((r1.x > r2.x + r2.w) || (r1.x + r1.w < r2.x) || (r1.y > r2.y + r2.h) || (r1.y + r1.h < r2.y));
 	}
 
+	inline float Sqrt(float num)
+	{
+		if (num <= 0) return -1;
+
+		return sqrt(num);
+	}
+
+	inline float Pow(float num, float power)
+	{
+		if (power == 2) return num * num;
+
+		return pow(num, power);
+	}
+
+	inline float Distance(float x1, float y1, float x2, float y2)
+	{
+		double dx = double(x2) - double(x1);
+		double dy = double(y2) - double(y1);
+		return float(sqrt(Pow(dx, 2) + Pow(dy, 2)));
+	}
+
 	inline float Ln(float num)
 	{
-		const double x = (num - 1) / (num + 1);
-		long double r = 0;
-		for (long long n = 0; n <= 100; ++n)
-		{
-			r += 2 * pow(x, 2 * n + 1) / (2 * n + 1);
-		}
-		return r;
+		return log(num);
 	}
 
-	inline float Sqrt(float num) 
+	inline float Log(float num, float base = 10)
 	{
-		float x2 = num * 0.5f, y = num;
+		if (base == 10) return log10(num);
 
-		long int i = *(long*)&y;
-
-		i = 0x5f3759df - (i >> 1);
-
-		y = *(float*)&i;
-
-		y = y * (1.5f - (x2 * y * y));
-		y = y * (1.5f - (x2 * y * y));
-
-		return y;
+		return Ln(num) / Ln(base);
 	}
 
-	//// Calculate 2 Neperian Logarithms at the same time
-	inline Point DoubleLn(float num1, float num2)
+	inline float LogToLinear(float num, float target)
 	{
-		const double x1 = (num1 - 1) / (num1 + 1);
-		const double x2 = (num2 - 1) / (num2 + 1);
-		long double r1 = 0, r2 = 0;
-		for (long long n = 0; n <= 100; ++n)
-		{
-			r1 += 2 * pow(x1, 2 * n + 1) / (2 * n + 1);
-			r2 += 2 * pow(x2, 2 * n + 1) / (2 * n + 1);
-		}
-		return Point{(float)r1, (float)r2};
+		return Pow(10, num / target);
 	}
 
-	inline float Log(float num, float base)
+	inline float LinearToLog(float num)
 	{
-		Point ln = DoubleLn(num, base);
-		return ln.x / ln.y;
-	}
-
-	inline int Min(int a, int b)
-	{
-		if (a <= b) return a;
-		return b;
+		return 20 * Log(num, 10);
 	}
 
 	inline float Min(float a, float b)
 	{
 		if (a <= b) return a;
-		return b;
-	}
-
-	inline int Max(int a, int b)
-	{
-		if (a >= b) return a;
 		return b;
 	}
 
