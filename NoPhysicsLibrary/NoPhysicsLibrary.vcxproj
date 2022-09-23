@@ -170,7 +170,6 @@
     <ClInclude Include="Source\Collision.h" />
     <ClInclude Include="Source\DirectionEnum.h" />
     <ClInclude Include="Source\DynamicBody.h" />
-    <ClInclude Include="Source\DynArray.h" />
     <ClInclude Include="Source\External\dr_libs\dr_flac.h" />
     <ClInclude Include="Source\External\dr_libs\dr_mp3.h" />
     <ClInclude Include="Source\External\dr_libs\dr_wav.h" />
@@ -178,7 +177,6 @@
     <ClInclude Include="Source\Flag.h" />
     <ClInclude Include="Source\PhysVec.h" />
     <ClInclude Include="Source\GasBody.h" />
-    <ClInclude Include="Source\GhostSlot.h" />
     <ClInclude Include="Source\LiquidBody.h" />
     <ClInclude Include="Source\Define.h" />
     <ClInclude Include="Source\MathUtils.h" />

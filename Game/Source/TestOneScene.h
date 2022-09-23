@@ -23,7 +23,7 @@ public:
 private:
 
 	NPL* npl = nullptr;
-	std::vector<Body*>* bodies = nullptr;
+	const std::vector<Body*>* bodies = nullptr;
 	DynamicBody* test = nullptr;
 	StaticBody* emiter1 = nullptr;
 	StaticBody* emiter2 = nullptr;

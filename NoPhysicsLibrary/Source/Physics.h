@@ -33,29 +33,22 @@ public: // Methods
 
 private: // Methods
 
+	// Step
 	void UpdateDynamic(float dt, Body* body);
-
 	void UpdateLiquid(float dt, Body* body);
 
 	void AutoApplyForces();
-
 	void AutoApplyAeroDrag();
-
 	void AutoApplyAeroLift();
-
 	void AutoApplyHydroDrag();
-
 	void AutoApplyHydroLift(); // Future idea, maybe implementable
-
 	void AutoApplyBuoyancy();
 
 	void Integrate(float dt, Body* body);
-	/*void CheckCollisions(Body* body, BodyBackup backup);*/
-	int DirectionDetection(Point currPos, Point prevPos);
-	int InvertDirection(int dir);
-	//void ChangeGravityAcceleration(Point acceleration);
-	//void ChangeRestitutionCoeficient(Point restCoeficient);
-	//void ChangeFrictionCoeficient(Point frictCoeficient);
+
+	// Declip
+	void DetectCollisions(std::vector<Body*>* bodies);
+	void SolveCollisions();
 
 public: // Variables
 

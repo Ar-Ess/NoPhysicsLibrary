@@ -95,9 +95,6 @@
     <ClInclude Include="Source\StaticBody.h">
       <Filter>Core\Bodies</Filter>
     </ClInclude>
-    <ClInclude Include="Source\DynArray.h">
-      <Filter>Utils</Filter>
-    </ClInclude>
     <ClInclude Include="Source\Flag.h">
       <Filter>Utils</Filter>
     </ClInclude>
@@ -106,9 +103,6 @@
     </ClInclude>
     <ClInclude Include="Source\BodyCreationAux.h">
       <Filter>Aux</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\GhostSlot.h">
-      <Filter>Utils</Filter>
     </ClInclude>
     <ClInclude Include="Source\DirectionEnum.h">
       <Filter>Enums</Filter>

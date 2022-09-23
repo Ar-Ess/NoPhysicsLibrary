@@ -64,7 +64,7 @@ BodyCreation NPL::CreateBody(Rect rectangle, float mass)
 	//Library not initialized. Call NPL::Init() first
 	assert(physics != nullptr);
 
-	return BodyCreation(rectangle, mass, &bodies, physics);
+	return BodyCreation(rectangle, mass, &bodies, &gasLocations, physics);
 }
 
 void NPL::DestroyScenario()
@@ -130,17 +130,34 @@ void NPL::SetGlobalRestitution(Point vector)
 
 bool NPL::DeathLimit(Rect limits)
 {
-	//-TOCHECK: It is better to update all bodies in case we have to delete 2, or just delete 1 per frame?
+	bool ret = false;
 	for (Body* b : bodies)
 	{
-		if (b->GetClass() == BodyClass::DYNAMIC_BODY && !MathUtils::CheckCollision(b->GetRect(), limits))
+		if (b->GetClass() != BodyClass::DYNAMIC_BODY) continue;
+
+		if (!MathUtils::CheckCollision(b->GetRect(), limits))
 		{
+			ret = true;
 			DestroyBody(b);
-			return true; //First body out deleted, if other one is out, deleted next frame
 		}
 	}
 
-	return false;
+	return ret;
+}
+
+bool NPL::DeathLimit(Rect limits, DynamicBody* body)
+{
+	if (!body || body->GetClass() != BodyClass::DYNAMIC_BODY) return false;
+
+	bool ret = false;
+	
+	if (!MathUtils::CheckCollision(body->GetRect(), limits))
+	{
+		ret = true;
+		DestroyBody(body);
+	}
+
+	return ret;
 }
 
 bool NPL::DestroyBody(Body* body)
@@ -232,69 +249,123 @@ void NPL::StepPhysics(float dt)
 	for (Body* b : bodies) physics->Step(b, dt);
 
 	physics->Declip(&bodies);
-
 }
 
 void NPL::StepAcoustics()
 {
+	// If no listener & void
+	if (!listener && IsVoid())
+	{
+		for (Body* b : bodies)
+		{
+			for (AcousticData* data : b->acousticDataList)
+			{
+				RELEASE(data);
+			}
+			b->acousticDataList.clear();
+		}
+
+		return;
+	}
+
 	for (Body* b : bodies)
 	{
 		if (b->acousticDataList.empty()) continue;
 
 		if (!listener)
 		{
-			for (AcousticData* data : b->acousticDataList)
-			{
-				float volume = data->spl / maxSPL;
-				soundDataList.push_back(new SoundData(data->index, 0, volume, 0));
-				RELEASE(data);
-			}
-			b->acousticDataList.clear();
+			NoListenerLogic(b);
 			continue;
 		}
 
-		//-Todo: group operations of similar thematics (pan with pan, time with time...)
-		Point listenerPos = listener->GetPosition();
-		for (AcousticData* data : b->acousticDataList)
+		GasBody* environment = GetEnvironmentBody(b->GetRect());
+
+		if (!environment)
 		{
-			// Get the distance between Body & Listener
-			float distance = listenerPos.Distance(data->position);
-			
-			// Check direction for audio panning (50L(neg) or 50R(pos))
-			float direction = 1;
-			if (listenerPos.x < data->position.x) direction *= -1;
-
-			// Compute the sound attenuation over distance
-			// Final SPL = Initial SPL - 20*Log(distance / 1)
-			float fSPL = data->spl - 20 * MathUtils::Log(distance);
-
-			// Narrow down distance over Range for panning operations
-			float panDistance = distance;
-			if (panDistance > panRange) panDistance = panRange;
-			if (panDistance < -panRange) panDistance = -panRange;
-
-			//-Todo: Fer de moment un checkcollision d'un gasbody i fer llògica
-			// Calculate delay time
-			// 1. Vel = sqrt( lambda * Pa / ro )
-			// 2. Time = distance / vel
-			float timeDelay = 0;
-			if (bodies.back()->GetClass() == BodyClass::GAS_BODY)
-			{
-				GasBody* b = (GasBody*)bodies.back();
-				float vel = MathUtils::Sqrt(b->GetHeatRatio() * b->GetPressure() / b->GetDensity());
-				timeDelay = distance / vel;
-			}
-
-			// Compute pan (normalized between [ 1, -1])
-			float pan = panDistance / -panRange;
-			// Transform volume from db to linear [ 0, 1])
-			float volume = MathUtils::LogToLinear(fSPL, maxSPL) / maxVolume;
-
-			soundDataList.emplace_back(new SoundData(data->index, pan, volume, timeDelay));
-			RELEASE(data);
+			for (AcousticData* data : b->acousticDataList) RELEASE(data);
+			b->acousticDataList.clear();
+			continue;
 		}
-		b->acousticDataList.clear();
+		
+		ListenerLogic(b, environment);
 	}
+}
+
+void NPL::NoListenerLogic(Body* b)
+{
+	for (AcousticData* data : b->acousticDataList)
+	{
+		float volume = data->spl / maxSPL;
+		soundDataList.push_back(new SoundData(data->index, 0, volume, 0));
+		RELEASE(data);
+	}
+	b->acousticDataList.clear();
+}
+
+void NPL::ListenerLogic(Body* b, GasBody* environment)
+{
+	//-Todone: group operations of similar thematics (pan with pan, time with time...)
+	for (AcousticData* data : b->acousticDataList)
+	{
+		// Get the distance between Body & Listener
+		float distance = listener->GetPosition().Distance(data->position);
+
+		float pan = ComputePanning(distance, data->position.x);
+
+		float volume = ComputeVolume(distance, data->spl);
+
+		float timeDelay = ComputeTimeDelay(distance, environment);
+
+		soundDataList.emplace_back(new SoundData(data->index, pan, volume, timeDelay));
+		RELEASE(data);
+	}
+	b->acousticDataList.clear();
+}
+
+GasBody* NPL::GetEnvironmentBody(Rect body)
+{
+	for (unsigned int* index : gasLocations)
+	{
+		if (MathUtils::CheckCollision(body, bodies[*index]->GetRect()))
+			return (GasBody*)bodies[*index];
+	}
+
+	return nullptr;
+}
+
+float NPL::ComputePanning(float distance, float bodyX)
+{
+	// Check direction for audio panning (50L(neg) or 50R(pos))
+	float direction = 1;
+	if (listener->GetPosition().x < bodyX) direction *= -1;
+
+	// Narrow down distance over Range for panning operations
+	if (distance > panRange) distance = panRange;
+	if (distance < -panRange) distance = -panRange;
+
+	// Compute pan (normalized between [ 1, -1])
+	return distance / -panRange;
+}
+
+float NPL::ComputeVolume(float distance, float spl)
+{
+	// Compute the sound attenuation over distance
+	// Final SPL = Initial SPL - 20*Log(distance / 1)
+	float fSPL = spl - 20 * MathUtils::Log(distance);
+
+	// Transform volume from db to linear [ 0, 1])
+	return MathUtils::LogToLinear(fSPL, maxSPL) / maxVolume;
+}
+
+float NPL::ComputeTimeDelay(float distance, GasBody* environment)
+{
+	//-Todone: Fer de moment un checkcollision d'un gasbody i fer llògica
+	// Calculate delay time
+	// 1. Vel = sqrt( lambda * Pa / ro )
+	// 2. Time = distance / vel
+	float timeDelay = 0;
+	float vel = MathUtils::Sqrt(environment->GetHeatRatio() * environment->GetPressure() / environment->GetDensity());
+	return distance / vel;
 }
 
 void NPL::StepAudio()

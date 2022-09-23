@@ -11,7 +11,7 @@ class NPL
 {
 public:
 
-	std::vector<Body*>* TempGetBodiesDebug()
+	const std::vector<Body*>* TempGetBodiesDebug()
 	{
 		return &bodies;
 	}
@@ -67,6 +67,7 @@ public:
 	// Destroys a body whenever it's outside the rectangle setted. 
 	//    Returns true when a body is destroyed
 	bool DeathLimit(Rect limits);
+	bool DeathLimit(Rect limits, DynamicBody* body);
 
 	// Destroy a body, returns true if the body has been successfully deleted
 	bool DestroyBody(Body* body);
@@ -81,10 +82,18 @@ private: // Methods
 	void StepPhysics(float dt);
 
 	void StepAcoustics();
+	void NoListenerLogic(Body* b);
+	void ListenerLogic(Body* b, GasBody* environment);
+	GasBody* GetEnvironmentBody(Rect body);
+	float ComputePanning(float distance, float bodyX);
+	float ComputeVolume(float distance, float spl);
+	float ComputeTimeDelay(float distance, GasBody* environment);
 
 	void StepAudio();
 
 	bool EraseBody(Body* body);
+
+	inline bool IsVoid() const { return gasLocations.empty(); }
 
 private:
 
@@ -92,15 +101,15 @@ private:
 	Audio* audio = nullptr;
 	Body* listener = nullptr;
 
-	// -TODONE: Investigate about vector. Maybe not the best option if users has to save a pointer to data
-	// inside here. Vectors reorder themselves if they don't find enough space. And Idk if that could
-	// lead to a "nullptr" error. Look video: https://www.youtube.com/watch?v=6OoSgY6NVVk&t=1550s&ab_channel=javidx9
 	std::vector<Body*> bodies;
 	std::vector<SoundData*> soundDataList;
-	//-Todo: Llista de index a localitzacio de gasbody
+	//-Todone: Llista de index a localitzacio de gasbody
+	std::vector<unsigned int*> gasLocations;
 
 	// CONFIG VARIABLES
 	float panRange = 1000.0f;
+
+	// CONSTANTS
 	const float maxSPL = 120.0f;
 	const float maxVolume = 10.0f;
 

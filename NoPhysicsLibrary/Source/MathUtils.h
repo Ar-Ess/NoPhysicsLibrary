@@ -14,31 +14,31 @@ namespace MathUtils
 	{
 		if (num <= 0) return -1;
 
-		return sqrt(num);
+		return (float)sqrt((double)num);
 	}
 
 	inline float Pow(float num, float power)
 	{
 		if (power == 2) return num * num;
 
-		return pow(num, power);
+		return (float)pow((double)num, (double)power);
 	}
 
 	inline float Distance(float x1, float y1, float x2, float y2)
 	{
 		double dx = double(x2) - double(x1);
 		double dy = double(y2) - double(y1);
-		return float(sqrt(Pow(dx, 2) + Pow(dy, 2)));
+		return float(sqrt((double)Pow((float)dx, 2) + (double)Pow((float)dy, 2)));
 	}
 
 	inline float Ln(float num)
 	{
-		return log(num);
+		return (float)log((double)num);
 	}
 
 	inline float Log(float num, float base = 10)
 	{
-		if (base == 10) return log10(num);
+		if (base == 10) return (float)log10((double)num);
 
 		return Ln(num) / Ln(base);
 	}
