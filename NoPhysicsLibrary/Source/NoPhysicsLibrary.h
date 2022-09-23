@@ -1,6 +1,6 @@
 #pragma once
 
-#include "BodyCreationAux.h" 
+#include "Auxiliars.h"
 // Includes: Body.h, Audio.h 
 
 #include "ScenarioPresetEnum.h"
@@ -29,6 +29,8 @@ public:
 	// Create a new body
 	//  - Follow this function with a "." to choose the body type
 	BodyCreation CreateBody(Rect rectangle, float mass);
+
+	LibraryConfig Configure();
 
 	// Iterates the library
 	//  - Call it in your main update function

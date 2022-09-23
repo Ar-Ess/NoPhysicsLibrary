@@ -34,8 +34,10 @@ void NPL::Update(float dt)
 
 void NPL::CleanUp()
 {
+	// AUDIO
 	audio->CleanUp();
 
+	// BODIES
 	if (!bodies.empty())
 	{
 		for (Body* b : bodies)
@@ -46,16 +48,27 @@ void NPL::CleanUp()
 	bodies.clear();
 	bodies.shrink_to_fit();
 
+	// LISTENER
 	listener = nullptr;
 
+	// PHYSICS
 	physics->CleanUp();
 
+	// SOUND DATA
 	if (!soundDataList.empty())
 	{
 		for (Body* b : bodies) RELEASE(b);
 	}
 	soundDataList.clear();
 	soundDataList.shrink_to_fit();
+
+	// Gas Locations
+	if (!gasLocations.empty())
+	{
+		for (unsigned int* index : gasLocations) RELEASE(index);
+	}
+	gasLocations.clear();
+	gasLocations.shrink_to_fit();
 
 }
 
@@ -65,6 +78,11 @@ BodyCreation NPL::CreateBody(Rect rectangle, float mass)
 	assert(physics != nullptr);
 
 	return BodyCreation(rectangle, mass, &bodies, &gasLocations, physics);
+}
+
+LibraryConfig NPL::Configure()
+{
+	return LibraryConfig(&panRange);
 }
 
 void NPL::DestroyScenario()

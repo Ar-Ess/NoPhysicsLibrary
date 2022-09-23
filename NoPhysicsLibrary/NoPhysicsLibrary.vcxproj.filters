@@ -164,5 +164,11 @@
     <ClInclude Include="Source\Collision.h">
       <Filter>Core\Physics\Units</Filter>
     </ClInclude>
+    <ClInclude Include="Source\Auxiliars.h">
+      <Filter>Aux</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\LibraryConfig.h">
+      <Filter>Aux</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

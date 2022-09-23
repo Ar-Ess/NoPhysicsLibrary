@@ -162,6 +162,7 @@
   <ItemGroup>
     <ClInclude Include="Source\AcusticData.h" />
     <ClInclude Include="Source\Audio.h" />
+    <ClInclude Include="Source\Auxiliars.h" />
     <ClInclude Include="Source\Body.h" />
     <ClInclude Include="Source\BodyBackup.h" />
     <ClInclude Include="Source\BodyClassEnum.h" />
@@ -175,6 +176,7 @@
     <ClInclude Include="Source\External\dr_libs\dr_wav.h" />
     <ClInclude Include="Source\External\miniaudio\miniaudio.h" />
     <ClInclude Include="Source\Flag.h" />
+    <ClInclude Include="Source\LibraryConfig.h" />
     <ClInclude Include="Source\PhysVec.h" />
     <ClInclude Include="Source\GasBody.h" />
     <ClInclude Include="Source\LiquidBody.h" />
