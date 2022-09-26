@@ -271,7 +271,7 @@ void NPL::StepPhysics(float dt)
 
 void NPL::StepAcoustics()
 {
-	// If no listener & void
+	// If no listener & environment is void
 	if (!listener && IsVoid())
 	{
 		for (Body* b : bodies)
@@ -282,7 +282,6 @@ void NPL::StepAcoustics()
 			}
 			b->acousticDataList.clear();
 		}
-
 		return;
 	}
 
@@ -322,6 +321,18 @@ void NPL::NoListenerLogic(Body* b)
 
 void NPL::ListenerLogic(Body* b, GasBody* environment)
 {
+	// If listener emit sound
+	if (b->GetId() == listener->id)
+	{
+		for (AcousticData* data : b->acousticDataList)
+		{
+			soundDataList.emplace_back(new SoundData(data->index));
+			RELEASE(data);
+		}
+		b->acousticDataList.clear();
+		return;
+	}
+
 	//-Todone: group operations of similar thematics (pan with pan, time with time...)
 	for (AcousticData* data : b->acousticDataList)
 	{
@@ -332,7 +343,7 @@ void NPL::ListenerLogic(Body* b, GasBody* environment)
 
 		float volume = ComputeVolume(distance, data->spl);
 
-		float timeDelay = ComputeTimeDelay(distance, environment);
+		float timeDelay = ComputeTimeDelay(distance, environment) / 14;
 
 		soundDataList.emplace_back(new SoundData(data->index, pan, volume, timeDelay));
 		RELEASE(data);

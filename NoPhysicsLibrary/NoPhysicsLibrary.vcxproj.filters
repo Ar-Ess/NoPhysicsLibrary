@@ -170,5 +170,8 @@
     <ClInclude Include="Source\LibraryConfig.h">
       <Filter>Aux</Filter>
     </ClInclude>
+    <ClInclude Include="Source\Alignment.h">
+      <Filter>Utils</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

@@ -26,7 +26,7 @@ public:
 private:
 
 	ma_engine engine;
-	std::vector<Sound*> sounds;
-	std::vector<ma_sound*> playback;
+	std::vector<ma_sound*> sounds;
+	std::vector<Sound*> playback;
 
 };

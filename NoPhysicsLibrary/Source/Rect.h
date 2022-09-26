@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Point.h"
+#include "Alignment.h"
 
 class Rect
 {
@@ -54,9 +55,34 @@ public:
 		return Point{x, y};
 	}
 
-	Point GetCentricPosition() const
+	Point GetPosition(Alignment alignment) const
 	{
-		return Point{ x + w/2, y + h/2 };
+		Point ret = { 0, 0 };
+
+		switch (alignment)
+		{
+		case Alignment::CENTER: ret = { x + w / 2, y + h / 2 }; break;
+
+		case Alignment::CENTER_LEFT: ret = { x, y + h / 2 }; break;
+
+		case Alignment::CENTER_RIGHT: ret = { x + w, y + h / 2 }; break;
+
+		case Alignment::TOP_CENTER: ret = { x + w / 2, y }; break;
+
+		case Alignment::TOP_LEFT: ret = {x, y}; break;
+
+		case Alignment::TOP_RIGHT: ret = { x + w, y }; break;
+
+		case Alignment::BOTTOM_CENTER: ret = { x + w / 2, y + h }; break;
+
+		case Alignment::BOTTOM_LEFT: ret = { x, y + h }; break;
+
+		case Alignment::BOTTOM_RIGHT: ret = { x + w, y + h }; break;
+
+		default: break;
+		}
+
+		return ret;
 	}
 
 	Point GetSize() const

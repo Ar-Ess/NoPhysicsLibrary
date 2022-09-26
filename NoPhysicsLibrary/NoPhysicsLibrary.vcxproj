@@ -161,6 +161,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\AcusticData.h" />
+    <ClInclude Include="Source\Alignment.h" />
     <ClInclude Include="Source\Audio.h" />
     <ClInclude Include="Source\Auxiliars.h" />
     <ClInclude Include="Source\Body.h" />

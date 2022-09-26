@@ -2,11 +2,13 @@
 #include "DirectionEnum.h"
 #include "DynamicBody.h"
 #include "Define.h"
+#include "MathUtils.h"
 
 Body::Body(BodyClass clas, Rect rect, float mass)
 {
 	this->clas = clas;
 	this->rect = rect;
+	this->emissionPoint = rect.GetPosition(Alignment::CENTER);
 
 	// You idiot, mass can not be zero :}
 	assert(mass != 0);
@@ -16,6 +18,28 @@ Body::Body(BodyClass clas, Rect rect, float mass)
 	this->properties.Set(true, 0);
 
 	id = reinterpret_cast<int>(this);
+}
+
+//-TODONE: Set emission point
+void Body::SetEmissionPoint(Point point)
+{
+	Rect emissionRect = {point.Apply(-1, -1), 2, 2};
+	emissionPoint = point;
+	if (MathUtils::CheckCollision(rect, emissionRect)) return;
+
+	emissionPoint = MathUtils::ClosestRectIntersectionFromOutsidePoint(emissionPoint, rect);
+}
+
+void Body::SetEmissionPoint(Alignment alignment, Point offset)
+{
+	emissionPoint = rect.GetPosition(alignment);
+	if (offset.IsZero()) return;
+
+	emissionPoint += offset;
+	Rect emissionRect = { emissionPoint, 2, 2 };
+	if (MathUtils::CheckCollision(rect, emissionRect)) return;
+
+	emissionPoint = MathUtils::ClosestRectIntersectionFromOutsidePoint(emissionPoint, rect);
 }
 
 void Body::SolveCollision(Body& body, int dir)

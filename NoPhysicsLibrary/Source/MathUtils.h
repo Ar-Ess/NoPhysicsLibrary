@@ -82,5 +82,44 @@ namespace MathUtils
 
 		return { x, y, w, h };
 	}
+	
+	inline Point ClosestRectIntersectionFromOutsidePoint(Point point, Rect rect)
+	{
+		Point ret = {0, 0};
+
+		ret.x = Max(rect.x, Min(point.x, rect.x + rect.w));
+		ret.y = Min(rect.y + rect.h, Max(point.y, rect.y));
+
+		return ret;
+	}
+
+	inline Point ClosestRectIntersectionFromInsidePoint(Point point, Rect rect)
+	{
+		Point ret = { 0, 0 };
+
+		Point distanceToPositiveBounds = rect.GetPosition(Alignment::TOP_RIGHT) - point;
+		Point distanceToNegativeBounds = rect.GetPosition(Alignment::BOTTOM_LEFT) - point;
+
+		float smallestX = Min(distanceToPositiveBounds.x, distanceToNegativeBounds.x);
+		float smallestY = Min(distanceToPositiveBounds.y, distanceToNegativeBounds.y);
+		float smallestDistance = Min(smallestX, smallestY);
+
+		if (smallestDistance == distanceToPositiveBounds.x) ret = { rect.x + rect.w, point.y };
+		else if (smallestDistance == distanceToNegativeBounds.x) ret = { rect.x, point.y };
+		else if (smallestDistance == distanceToPositiveBounds.y) ret = { point.x, rect.y };
+		else if (smallestDistance == distanceToNegativeBounds.y) ret = { point.x, rect.y + rect.h };
+
+		return ret;
+	}
+
+	inline Point ClosestRectIntersectionFromPoint(Point point, Rect rect)
+	{
+		bool inside = MathUtils::CheckCollision({ point.Apply(-1, -1), 2, 2 }, rect);
+		Point ret = { 0, 0 };
+
+		inside ? ret = MathUtils::ClosestRectIntersectionFromInsidePoint(point, rect) : ret = MathUtils::ClosestRectIntersectionFromOutsidePoint(point, rect);
+
+		return ret;
+	}
 
 };

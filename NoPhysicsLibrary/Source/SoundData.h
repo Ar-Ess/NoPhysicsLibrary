@@ -6,6 +6,7 @@
 struct SoundData
 {
 public:
+	SoundData(int index) : index(index) {}
 
 	SoundData(int index, float pan, float volume, float delayTime) : index(index), volume(volume), pan(pan), delayTime(delayTime) {}
 

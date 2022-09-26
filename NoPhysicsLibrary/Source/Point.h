@@ -160,11 +160,17 @@ struct Point
 	inline Point operator-(int i) { return Point{ x - i, y - i }; }
 	inline Point operator*(int i) { return Point{ x * i, y * i }; }
 
+	inline Point operator+(Point i) { return Point{ x + i.x, y + i.y }; }
 	inline Point operator+(float i) { return Point{ x + i, y + i }; }
+
+	inline Point operator-(Point i) { return Point{ x - i.x, y - i.y }; }
 	inline Point operator-(float i) { return Point{ x - i, y - i }; }
+
+	inline Point operator*(Point i) { return Point{ x * i.x, y * i.y }; }
 	inline Point operator*(float i) { return Point{ x * i, y * i }; }
 
 	inline Point operator/(int div) { return Point{ x / div, y / div }; }
+	inline Point operator/(Point i) { return Point{ x / i.x, y / i.y }; }
 
 	inline bool operator<(int i) { return (x < i&& y < i); }
 	inline bool operator<=(int i) { return (x <= i && y <= i); }
