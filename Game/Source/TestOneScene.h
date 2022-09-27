@@ -3,6 +3,7 @@
 #include "Scene.h"
 #include "NoPhysicsLibrary.h"
 #include "Body.h"
+#include "Collision.h"
 #include "DynamicBody.h"
 #include <vector>
 
@@ -24,6 +25,7 @@ private:
 
 	NPL* npl = nullptr;
 	const std::vector<Body*>* bodies = nullptr;
+	const std::vector<Collision*>* collisions = nullptr;
 	DynamicBody* test = nullptr;
 	StaticBody* emiter1 = nullptr;
 	StaticBody* emiter2 = nullptr;

@@ -18,7 +18,7 @@ void NPL::Init()
 	// You've alreay initialized the library once
 	assert(physics == nullptr && audio == nullptr);
 
-	physics = new Physics();
+	physics = new Physics(&physicsConfig);
 	audio = new Audio();
 }
 
@@ -82,7 +82,7 @@ BodyCreation NPL::CreateBody(Rect rectangle, float mass)
 
 LibraryConfig NPL::Configure()
 {
-	return LibraryConfig(&panRange);
+	return LibraryConfig(&panRange, &physicsConfig);
 }
 
 void NPL::DestroyScenario()
@@ -257,6 +257,13 @@ void NPL::SetScenarioPreset(ScenarioPreset sPreset, Point wSize)
 	//	CreateBody(BodyType::STATIC_BODY, Point{ 1080, 200 }, { 1080, 200, 25, 400 }, { 0, 0 }, { 0, 0 }, 1);
 	//	break;
 	}
+}
+
+const std::vector<Collision*>* NPL::GetCollisionsIterable()
+{
+	if (!physicsConfig.Get(0)) return nullptr;
+
+	return &physics->collisions;
 }
 
 //- Private --------------------------------------------------------------------------------

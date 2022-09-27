@@ -90,6 +90,11 @@ public:
 		return Point{ w, h };
 	}
 
+	float GetArea() const
+	{
+		return w * h;
+	}
+
 	// Returns if the rectancle does not exist (width = 0 ot height = 0)
 	bool IsNull() const
 	{

@@ -16,18 +16,21 @@ bool TestOneScene::Start()
 	npl = new NPL();
 	npl->Init();
 
+	npl->Configure().CollisionsDebugging(false);
+
 	// Get Body
 	bodies = npl->TempGetBodiesDebug();
+	collisions = npl->GetCollisionsIterable();
 
 	npl->SetScenarioPreset(ScenarioPreset::CORRIDOR_SCENARIO_PRESET, window->GetSize());
 	emiter1 = (StaticBody*)bodies->at(1);
 	emiter2 = (StaticBody*)bodies->back();
-	test = (DynamicBody*)npl->CreateBody(Rect{ 130, 550, 50, 80 }, 1).Dynamic();
-	npl->CreateBody(Rect{ 150, 520, 50, 80 }, 1).Dynamic();
+	npl->CreateBody(Rect{ 150, 350, 200, 35 }, 1).Static();
+	test = (DynamicBody*)npl->CreateBody(Rect{ 230, 100, 50, 80 }, 1).Dynamic();
 	npl->CreateBody(npl->ReturnScenarioRect(), 1).Gas(10, 1.414f, 1000);
 
 	npl->SetListener(test);
-	//npl->SetGlobalGravity({ 0, 500 });
+	npl->SetGlobalGravity({ 0, 400 });
 
 	npl->LoadSound("Assets/Audio/bounce.wav");
 
@@ -75,6 +78,15 @@ bool TestOneScene::Update(float dt)
 		}
 
 		render->DrawRectangle(b->GetRect(), color);
+	}
+
+	// Draws the bodies
+	if (collisions != nullptr)
+	{
+		for (Collision* c : *collisions)
+		{
+			render->DrawRectangle(c->intersecRect, { 100, 100, 255, 255 });
+		}
 	}
 
 	//Change scene

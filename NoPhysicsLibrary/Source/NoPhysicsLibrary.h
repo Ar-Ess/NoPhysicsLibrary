@@ -7,6 +7,9 @@
 #include "PhysicsPresetEnum.h"
 #include "SoundData.h"
 
+// Temp
+#include "Collision.h"
+
 class NPL
 {
 public:
@@ -80,6 +83,8 @@ public:
 
 	void LoadSound(const char* path);
 
+	const std::vector<Collision*>* GetCollisionsIterable();
+
 private: // Methods
 
 	void StepPhysics(float dt);
@@ -110,11 +115,23 @@ private:
 	//-Todone: Llista de index a localitzacio de gasbody
 	std::vector<unsigned int*> gasLocations;
 
-	// CONFIG VARIABLES
-	float panRange = 1000.0f;
-
 	// CONSTANTS
 	const float maxSPL = 120.0f;
 	const float maxVolume = 10.0f;
+
+	//_____________________
+	// CONFIG VARIABLES
+	// - Physics
+
+	// Debug Collisions (0) |
+	Flag physicsConfig = {};
+
+	//_____________________
+	// - Acoustics
+
+	float panRange = 1000.0f;
+
+	//_____________________
+	// - Audio
 
 };

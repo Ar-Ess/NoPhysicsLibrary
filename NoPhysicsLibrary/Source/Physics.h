@@ -21,7 +21,7 @@ class Physics
 {
 public: // Methods
 
-	Physics();
+	Physics(const Flag* physicsConfig);
 
 	virtual ~Physics();
 
@@ -62,5 +62,8 @@ public: // Variables
 	Flag globals = {};
 
 	std::vector<Collision*> collisions;
+
+	// Config
+	const Flag* physicsConfig = {};
 
 };
