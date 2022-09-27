@@ -18,9 +18,9 @@ DynamicBody::~DynamicBody()
 	momentums.clear();
 }
 
-BodyBackup DynamicBody::Backup()
+void DynamicBody::Backup()
 {
-	return BodyBackup(rect, velocity, acceleration, totalMomentum, totalForces);
+	backup = BodyBackup(rect.GetPosition(), velocity, acceleration, totalMomentum, totalForces);
 }
 
 bool DynamicBody::IsColliding(CollideBool collision)

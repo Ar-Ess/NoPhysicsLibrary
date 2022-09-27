@@ -15,8 +15,8 @@ void Physics::Step(Body* body, float dt)
 {
 	switch (body->GetClass())
 	{
-	case BodyClass::DYNAMIC_BODY: UpdateDynamic(dt, body); break;
-	case BodyClass::LIQUID_BODY : UpdateLiquid (dt, body); break;
+		case BodyClass::DYNAMIC_BODY: UpdateDynamic(dt, body); break;
+		case BodyClass::LIQUID_BODY : UpdateLiquid (dt, body); break;
 	}
 }
 
@@ -36,7 +36,7 @@ void Physics::CleanUp()
 void Physics::UpdateDynamic(float dt, Body* b)
 {
 	DynamicBody* body = (DynamicBody*)b;
-	AutoApplyForces(); // Future
+	//AutoApplyForces(); // Future
 
 	// Multiplying global gravity * mass to acquire the force (Global gravity falls :) )
 	body->ApplyForce(globalGravity.x * body->GetMass(), globalGravity.y * body->GetMass());
@@ -50,13 +50,11 @@ void Physics::UpdateDynamic(float dt, Body* b)
 	// First law Buxeda
 	body->FirstBuxeda(); // Suma de momentum a velocity
 
-	BodyBackup backup = body->Backup();
+	body->Backup();
 
 	// Integrate
 	Integrate(dt, b);
 
-	// Check Collisions
-	//CheckCollisions(body, backup);
 }
 
 void Physics::UpdateLiquid(float dt, Body* b)
@@ -125,13 +123,37 @@ void Physics::DetectCollisions(std::vector<Body*>* bodies)
 			Rect intersect = MathUtils::IntersectRectangle(b1->GetRect(), b2->GetRect());
 			if (intersect.IsNull()) continue;
 
-			collisions.emplace_back(new Collision(i, a, intersect));
+			Body* dyn = b2;
+			Body* other = b2;
+			b1->GetClass() == BodyClass::DYNAMIC_BODY ? dyn = b1 : other = b1;
+
+			collisions.emplace_back(new Collision(dyn, other, intersect));
 		}
 	}
 }
 
 void Physics::SolveCollisions()
 {
-	for (Collision* c : collisions) RELEASE(c);
+	for (Collision* c : collisions)
+	{
+		DynamicBody* dynamicBody = (DynamicBody*)c->dynamicBody;
+
+		Point dDeltaPosVec = dynamicBody->GetPosition() - dynamicBody->backup.position;
+		switch (c->body->GetClass())
+		{
+		case BodyClass::DYNAMIC_BODY:
+			Point bDeltaPosVec = c->body->GetPosition();
+			break;
+
+		case BodyClass::STATIC_BODY:
+
+			break;
+
+		default:
+			break;
+		}
+
+		RELEASE(c);
+	}
 	collisions.clear();
 }

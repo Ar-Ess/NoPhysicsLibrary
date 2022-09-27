@@ -3,9 +3,10 @@
 
 struct Collision
 {
-	Collision(unsigned int body1, unsigned int body2, Rect intersecRect) : body1(body1), body2(body2), intersecRect(intersecRect) {}
+	Collision(Body* dynamicBody, Body* body, Rect intersecRect) : dynamicBody(dynamicBody), body(body), intersecRect(intersecRect) {}
 
-	unsigned int body1 = 0, body2 = 0;
+	Body* dynamicBody = nullptr;
+	Body* body = nullptr;
 	Rect intersecRect = {};
 
 };

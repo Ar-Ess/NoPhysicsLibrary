@@ -30,6 +30,7 @@ public:
 	//  - Follow this function with a "." to choose the body type
 	BodyCreation CreateBody(Rect rectangle, float mass);
 
+	// Configure certain aspects of this library operation
 	LibraryConfig Configure();
 
 	// Iterates the library
@@ -84,18 +85,19 @@ private: // Methods
 	void StepPhysics(float dt);
 
 	void StepAcoustics();
-	void NoListenerLogic(Body* b);
-	void ListenerLogic(Body* b, GasBody* environment);
-	GasBody* GetEnvironmentBody(Rect body);
-	float ComputePanning(float distance, float bodyX);
-	float ComputeVolume(float distance, float spl);
-	float ComputeTimeDelay(float distance, GasBody* environment);
+		void ListenerLogic(Body* b, GasBody* environment);
+			float ComputePanning(float distance, float bodyX);
+			float ComputeVolume(float distance, float spl);
+			float ComputeTimeDelay(float distance, GasBody* environment);
+		void NoListenerLogic(Body* b);
 
 	void StepAudio();
 
 	bool EraseBody(Body* body);
 
 	inline bool IsVoid() const { return gasLocations.empty(); }
+
+	GasBody* GetEnvironmentBody(Rect body);
 
 private:
 

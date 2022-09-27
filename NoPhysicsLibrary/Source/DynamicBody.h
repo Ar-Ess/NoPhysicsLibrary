@@ -3,7 +3,6 @@
 #include "Body.h"
 #include "CollideBool.h"
 #include "BodyBackup.h"
-#include <vector>
 
 class DynamicBody : public Body
 {
@@ -38,7 +37,7 @@ private: // Methods
 	void SecondNewton();
 	void FirstBuxeda();
 
-	BodyBackup Backup();
+	void Backup();
 
 public: // Variables
 
@@ -61,4 +60,6 @@ private: // Variables
 	Flag collisionFlags = {};
 
 	Flag* globals = nullptr;
+
+	BodyBackup backup = {};
 };

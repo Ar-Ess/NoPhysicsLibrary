@@ -50,6 +50,8 @@ private: // Methods
 	void DetectCollisions(std::vector<Body*>* bodies);
 	void SolveCollisions();
 
+
+
 public: // Variables
 
 	Point globalGravity = {};
