@@ -123,6 +123,8 @@ void Physics::DetectCollisions(std::vector<Body*>* bodies)
 			Rect intersect = MathUtils::IntersectRectangle(b1->GetRect(), b2->GetRect());
 			if (intersect.IsNull()) continue;
 
+			//-TODO: Use rectangle intersection to decide which body collision (iterated with a) is more significant, and just push that one
+
 			Body* dyn = b2;
 			Body* other = b2;
 			b1->GetClass() == BodyClass::DYNAMIC_BODY ? dyn = b1 : other = b1;
@@ -142,12 +144,16 @@ void Physics::SolveCollisions()
 		switch (c->body->GetClass())
 		{
 		case BodyClass::DYNAMIC_BODY:
-			Point bDeltaPosVec = c->body->GetPosition();
-			break;
+		{
+			DynamicBody* body = (DynamicBody*)c->body;
+			Point bDeltaPosVec = body->GetPosition() - body->backup.position;
 
+			break;
+		}
 		case BodyClass::STATIC_BODY:
-
+		{
 			break;
+		}
 
 		default:
 			break;
