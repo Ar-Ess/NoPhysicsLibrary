@@ -119,7 +119,6 @@ void Physics::DetectCollisions(std::vector<Body*>* bodies)
 		}
 	}
 
-
 	//-Todone: This is optimized, adapt it for declip function
 	size_t size = bodies->size();
 	for (unsigned int i = 0; i < size - 1; ++i)
@@ -149,19 +148,21 @@ void Physics::SolveCollisions()
 {
 	for (Collision* c : collisions)
 	{
-		DynamicBody* dynBody = (DynamicBody*)c->dynamicBody;
-		Rect intersect = c->intersecRect;
+		DynamicBody* dynBody = (DynamicBody*)c->GetDynBody();
+		Rect intersect = c->GetCollisionRectangle();
 
 		Point dDeltaPosVec = dynBody->GetPosition() - dynBody->backup.position;
-		switch (c->body->GetClass())
+		switch (c->GetBody()->GetClass())
 		{
+
 		case BodyClass::DYNAMIC_BODY:
 		{
-			DynamicBody* body = (DynamicBody*)c->body;
+			DynamicBody* body = (DynamicBody*)c->GetBody();
 			Point bDeltaPosVec = body->GetPosition() - body->backup.position;
 
 			break;
 		}
+
 		case BodyClass::STATIC_BODY:
 		{
 			// The dynamic rectangle is not half colliding with the static rectangle. This assures that is fully inside or overleaking from both sides (case 1)
@@ -177,12 +178,12 @@ void Physics::SolveCollisions()
 					// Collision from the top
 					if (intersect.GetPosition(Alignment::BOTTOM_LEFT).y == dynBody->rect.GetPosition(Alignment::BOTTOM_LEFT).y)
 					{
-						dynBody->rect.y -= c->intersecRect.h;
+						dynBody->rect.y -= intersect.h;
 					}
 					// Collision from the bottom
 					else if (intersect.y == dynBody->rect.y)
 					{
-						dynBody->rect.y += c->intersecRect.h;
+						dynBody->rect.y += intersect.h;
 					}
 					// Dynamic body overpass vertically form the other side the static body
 					else
@@ -196,12 +197,12 @@ void Physics::SolveCollisions()
 					// Collision from the left
 					if (intersect.GetPosition(Alignment::TOP_RIGHT).x == dynBody->rect.GetPosition(Alignment::TOP_RIGHT).y)
 					{
-						dynBody->rect.x -= c->intersecRect.w;
+						dynBody->rect.x -= intersect.w;
 					}
 					// Collision from the right
 					else if (intersect.x == dynBody->rect.x)
 					{
-						dynBody->rect.x += c->intersecRect.w;
+						dynBody->rect.x += intersect.w;
 					}
 					// Dynamic body overpass horizontally form the other side the static body
 					else
@@ -220,19 +221,6 @@ void Physics::SolveCollisions()
 			{
 
 			}
-
-			//// Case dynamic body is hitting the top surface of the static body
-			//dynBody->rect.y -= c->intersecRect.h;
-
-			//// Case dynamic body is hitting the bottom surface of the static body
-			//dynBody->rect.y += c->intersecRect.h;
-
-			//// Case dynamic body is hitting the right surface of the static body
-			//dynBody->rect.x -= c->intersecRect.w;
-			//
-			//// Case dynamic body is hitting the left surface of the static body
-			//dynBody->rect.x += c->intersecRect.w;
-
 
 			break;
 		}

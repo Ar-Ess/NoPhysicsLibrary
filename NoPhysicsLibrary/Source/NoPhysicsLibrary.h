@@ -14,11 +14,6 @@ class NPL
 {
 public:
 
-	const std::vector<Body*>* TempGetBodiesDebug()
-	{
-		return &bodies;
-	}
-
 	NPL();
 
 	~NPL();
@@ -81,9 +76,12 @@ public:
 	// Sets one body to become the listening point of the audio
 	void SetListener(Body* listener);
 
+	// Load internally an audio file
 	void LoadSound(const char* path);
 
-	const std::vector<Collision*>* GetCollisionsIterable();
+	const Collision* GetCollisionsIterable(int &size, int index);
+
+	const Body* GetBodiesIterable(int& size, int index);
 
 private: // Methods
 

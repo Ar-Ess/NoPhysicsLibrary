@@ -259,11 +259,24 @@ void NPL::SetScenarioPreset(ScenarioPreset sPreset, Point wSize)
 	}
 }
 
-const std::vector<Collision*>* NPL::GetCollisionsIterable()
+const Collision* NPL::GetCollisionsIterable(int& size, int index)
 {
 	if (!physicsConfig.Get(0)) return nullptr;
 
-	return &physics->collisions;
+	size = physics->collisions.size();
+
+	if (size == 0) return nullptr;
+
+	return physics->collisions[index];
+}
+
+const Body* NPL::GetBodiesIterable(int& size, int index)
+{
+	size = bodies.size();
+
+	if (size == 0) return nullptr;
+
+	return bodies[index];
 }
 
 //- Private --------------------------------------------------------------------------------

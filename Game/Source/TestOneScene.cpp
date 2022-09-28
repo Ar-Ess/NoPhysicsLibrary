@@ -16,15 +16,10 @@ bool TestOneScene::Start()
 	npl = new NPL();
 	npl->Init();
 
-	npl->Configure().CollisionsDebugging(false);
-
-	// Get Body
-	bodies = npl->TempGetBodiesDebug();
-	collisions = npl->GetCollisionsIterable();
+	npl->Configure().CollisionsDebugging(true);
+	npl->Configure().PanRange(1100);
 
 	npl->SetScenarioPreset(ScenarioPreset::CORRIDOR_SCENARIO_PRESET, window->GetSize());
-	emiter1 = (StaticBody*)bodies->at(1);
-	emiter2 = (StaticBody*)bodies->back();
 	npl->CreateBody(Rect{ 150, 350, 200, 35 }, 1).Static();
 	test = (DynamicBody*)npl->CreateBody(Rect{ 230, 100, 50, 80 }, 1).Dynamic();
 	npl->CreateBody(npl->ReturnScenarioRect(), 1).Gas(10, 1.414f, 1000);
@@ -51,8 +46,6 @@ bool TestOneScene::Update(float dt)
 	if (input->GetKey(SDL_SCANCODE_A) == KeyState::KEY_REPEAT) test->ApplyForce(-100, 0);
 	if (input->GetKey(SDL_SCANCODE_D) == KeyState::KEY_REPEAT) test->ApplyForce(100, 0);
 	if (input->GetKey(SDL_SCANCODE_RETURN) == KeyState::KEY_DOWN) test->Play(0);
-	if (input->GetKey(SDL_SCANCODE_LSHIFT) == KeyState::KEY_DOWN) emiter1->Play(0);
-	//if (input->GetKey(SDL_SCANCODE_LSHIFT) == KeyState::KEY_DOWN) emiter2->Play(0);
 	
 	// Pauses the physics
 	if (input->GetKey(SDL_SCANCODE_SPACE) == KeyState::KEY_DOWN)
@@ -65,8 +58,10 @@ bool TestOneScene::Update(float dt)
 	npl->Update(dt);
 
 	// Draws the bodies
-	for (Body* b : *bodies)
+	int size = 1;
+	for (int i = 0; i < size; ++i)
 	{
+		const Body* b = npl->GetBodiesIterable(size, i);
 		SDL_Color color = { 0, 0, 0, 50 };
 
 		switch (b->GetClass())
@@ -80,13 +75,12 @@ bool TestOneScene::Update(float dt)
 		render->DrawRectangle(b->GetRect(), color);
 	}
 
-	// Draws the bodies
-	if (collisions != nullptr)
+	// Draws the collisions
+	size = 1;
+	for (int i = 0; i < size; ++i)
 	{
-		for (Collision* c : *collisions)
-		{
-			render->DrawRectangle(c->intersecRect, { 100, 100, 255, 255 });
-		}
+		const Collision* c = npl->GetCollisionsIterable(size, i);
+		if (c) render->DrawRectangle(c->GetCollisionRectangle(), { 100, 100, 255, 255 });
 	}
 
 	//Change scene
@@ -98,8 +92,6 @@ bool TestOneScene::Update(float dt)
 bool TestOneScene::CleanUp()
 {
 	RELEASE(npl);
-
-	bodies = nullptr;
 
 	test = nullptr;
 
