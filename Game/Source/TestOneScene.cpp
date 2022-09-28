@@ -29,6 +29,8 @@ bool TestOneScene::Start()
 
 	npl->LoadSound("Assets/Audio/bounce.wav");
 
+	render->ResetCamera();
+
 	return true;
 }
 
@@ -38,17 +40,20 @@ bool TestOneScene::Update(float dt)
 	static bool pause = false;
 
 	// Information: The user will listen from the point of view of the listener body.
-	if (test->GetPosition().x >= 625) render->camera.SetPosition(test->GetPosition().Apply({ -625, -550 }).Multiply({-1, -1}));
-	if (render->camera.x > 0) render->camera.x = 0;
-	if (-render->camera.x > 3000) render->camera.x = -3000;
+	if (test->GetPosition().x >= 625) render->camera.x = test->GetPosition().x  - 625;
+	if (render->camera.x < 0) render->camera.x = 0;
+	if (render->camera.x > 3000) render->camera.x = 3000;
+	if (render->camera.y < 0) render->camera.y = 0;
 
 	// Update Dynamic Body
 	if (input->GetKey(SDL_SCANCODE_A) == KeyState::KEY_REPEAT) test->ApplyForce(-100, 0);
 	if (input->GetKey(SDL_SCANCODE_D) == KeyState::KEY_REPEAT) test->ApplyForce(100, 0);
+	if (input->GetKey(SDL_SCANCODE_SPACE) == KeyState::KEY_REPEAT) test->ApplyForce(0, -1000);
+
 	if (input->GetKey(SDL_SCANCODE_RETURN) == KeyState::KEY_DOWN) test->Play(0);
 	
 	// Pauses the physics
-	if (input->GetKey(SDL_SCANCODE_SPACE) == KeyState::KEY_DOWN)
+	if (input->GetKey(SDL_SCANCODE_ESCAPE) == KeyState::KEY_DOWN)
 	{
 		pause = !pause;
 		npl->PausePhysics(pause);

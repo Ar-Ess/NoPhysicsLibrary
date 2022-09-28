@@ -96,6 +96,14 @@ void Render::ResetViewPort()
 	SDL_RenderSetViewport(renderer, &viewport);
 }
 
+void Render::ResetCamera()
+{
+	camera.w = (float)win->screenSurface->w;
+	camera.h = (float)win->screenSurface->h;
+	camera.x = 0;
+	camera.y = 0;
+}
+
 bool Render::DrawTexture(SDL_Texture* texture, Point position, Point size, bool anchored, Rect* section, double angle, SDL_RendererFlip flip) const
 {
 	if (!texture) return false;
@@ -107,8 +115,8 @@ bool Render::DrawTexture(SDL_Texture* texture, Point position, Point size, bool 
 
 	if (anchored)
 	{
-		rect.x += (int)camera.x;
-		rect.y += (int)camera.y;
+		rect.x -= (int)camera.x;
+		rect.y -= (int)camera.y;
 	}
 
 	if (section != nullptr)
@@ -144,8 +152,8 @@ bool Render::DrawRectangle(Rect rect, SDL_Color color, Point size, bool anchored
 
 	if (anchored)
 	{
-		rec.x += (int)camera.x;
-		rec.y += (int)camera.y;
+		rec.x -= (int)camera.x;
+		rec.y -= (int)camera.y;
 	}
 
 	rec.w *= size.x;
@@ -175,7 +183,7 @@ bool Render::DrawLine(Point start, Point end, SDL_Color color, bool anchored) co
 	int result = -1;
 
 	if (anchored)
-		result = SDL_RenderDrawLine(renderer, (int)camera.x + (int)start.x * (int)scale, (int)camera.y + (int)start.y * (int)scale, (int)camera.x + (int)end.x * (int)scale, (int)camera.y + (int)end.y * (int)scale);
+		result = SDL_RenderDrawLine(renderer,  (int)start.x * (int)scale - (int)camera.x, (int)start.y * (int)scale - (int)camera.y, (int)end.x * (int)scale - (int)camera.x, (int)end.y * (int)scale - (int)camera.y);
 	else
 		result = SDL_RenderDrawLine(renderer, (int)start.x * (int)scale, (int)start.y * (int)scale, (int)end.x * (int)scale, (int)end.y * (int)scale);
 
@@ -207,8 +215,8 @@ bool Render::DrawCircle(Circle circle, SDL_Color color, bool fill, bool anchored
 
 		if (anchored)
 		{
-			points[i].x += (int)camera.x;
-			points[i].y += (int)camera.y;
+			points[i].x -= (int)camera.x;
+			points[i].y -= (int)camera.y;
 		}
 	}
 
@@ -221,8 +229,8 @@ bool Render::DrawCircle(Circle circle, SDL_Color color, bool fill, bool anchored
 			double dx = floor(sqrt((2.0 * circle.radius * dy) - (dy * dy)));
 			if (anchored)
 			{
-				SDL_RenderDrawLine(renderer, (int)camera.x + (int)circle.x - (int)dx, (int)camera.y + (int)circle.y + (int)dy - (int)circle.radius, (int)camera.x + (int)circle.x + (int)dx, (int)camera.y + (int)circle.y + (int)dy - (int)circle.radius);
-				SDL_RenderDrawLine(renderer, (int)camera.x + (int)circle.x - (int)dx, (int)camera.y + (int)circle.y - (int)dy + (int)circle.radius, (int)camera.x + (int)circle.x + (int)dx, (int)camera.y + (int)circle.y - (int)dy + (int)circle.radius);
+				SDL_RenderDrawLine(renderer, (int)circle.x - (int)dx - (int)camera.x, (int)circle.y + (int)dy - (int)circle.radius - (int)camera.y, (int)circle.x + (int)dx - (int)camera.x, (int)circle.y + (int)dy - (int)circle.radius - (int)camera.y);
+				SDL_RenderDrawLine(renderer, (int)circle.x - (int)dx - (int)camera.x, (int)circle.y - (int)dy + (int)circle.radius - (int)camera.y, (int)circle.x + (int)dx - (int)camera.x, (int)circle.y - (int)dy + (int)circle.radius - (int)camera.y);
 			}
 			else
 			{
@@ -250,8 +258,8 @@ bool Render::DrawParticle(SDL_Texture* texture, Point position, Rect* section, R
 	SDL_Rect* sectPtr = nullptr;
 	SDL_Rect sect = {};
 
-	rect.x = (int)camera.x + (int)position.x * (int)scale;
-	rect.y = (int)camera.y + (int)position.y * (int)scale;
+	rect.x = (int)position.x * (int)scale - (int)camera.x;
+	rect.y = (int)position.y * (int)scale - (int)camera.y;
 
 	if (rectSize != NULL)
 	{
