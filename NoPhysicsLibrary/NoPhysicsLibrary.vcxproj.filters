@@ -75,6 +75,9 @@
     <ClCompile Include="Source\Sound.cpp">
       <Filter>Core\Audio\Units</Filter>
     </ClCompile>
+    <ClCompile Include="Source\Timer.cpp">
+      <Filter>Utils</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\NoPhysicsLibrary.h">
@@ -171,6 +174,9 @@
       <Filter>Aux</Filter>
     </ClInclude>
     <ClInclude Include="Source\Alignment.h">
+      <Filter>Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Timer.h">
       <Filter>Utils</Filter>
     </ClInclude>
   </ItemGroup>
