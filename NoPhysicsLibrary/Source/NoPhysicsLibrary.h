@@ -98,7 +98,7 @@ private: // Methods
 
 	bool EraseBody(Body* body);
 
-	inline bool IsVoid() const { return gasLocations.empty(); }
+	inline bool IsVoid() const { return gasIndex.empty(); }
 
 	GasBody* GetEnvironmentBody(Rect body);
 
@@ -110,8 +110,8 @@ private:
 
 	std::vector<Body*> bodies;
 	std::vector<SoundData*> soundDataList;
-	//-Todone: Llista de index a localitzacio de gasbody
-	std::vector<unsigned int*> gasLocations;
+	// Fet aixi perquè amb unic ids s'hauria de fer moltes iteracions + protegir el vector de bodies
+	std::vector<unsigned int*> gasIndex;
 
 	// CONSTANTS
 	const float maxSPL = 120.0f;

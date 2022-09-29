@@ -27,10 +27,10 @@ void Audio::Playback(SoundData* data)
     ma_node* lastNode = nullptr;
 
     // Create new sound
-    Sound* sound = new Sound(new ma_sound(), nullptr);
+    Sound* sound = new Sound(new ma_sound());
     ma_sound_init_copy(&engine, sounds[data->index], 0, NULL, sound->source);
 
-    // Set sound panninig
+    // Set sound panning
     ma_sound_set_pan(sound->source, data->pan);
 
     // Set sound volume

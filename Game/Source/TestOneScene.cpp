@@ -16,6 +16,7 @@ bool TestOneScene::Start()
 	npl = new NPL();
 	npl->Init();
 
+	//-TODONE: Configure function
 	npl->Configure().CollisionsDebugging(true);
 	npl->Configure().PanRange(1100);
 
@@ -66,6 +67,7 @@ bool TestOneScene::Update(float dt)
 	int size = 1;
 	for (int i = 0; i < size; ++i)
 	{
+		//-TODO: Get bodies count function
 		const Body* b = npl->GetBodiesIterable(size, i);
 		SDL_Color color = { 0, 0, 0, 50 };
 

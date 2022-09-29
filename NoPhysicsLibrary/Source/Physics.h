@@ -27,7 +27,7 @@ public: // Methods
 
 	void Step(Body* body, float dt);
 
-	void Declip(std::vector<Body*>* bodies);
+	void SolveCollisions(std::vector<Body*>* bodies);
 
 	void CleanUp();
 
@@ -48,7 +48,7 @@ private: // Methods
 
 	// Declip
 	void DetectCollisions(std::vector<Body*>* bodies);
-	void SolveCollisions();
+	void Declip();
 
 
 

@@ -21,11 +21,11 @@ void Physics::Step(Body* body, float dt)
 	}
 }
 
-void Physics::Declip(std::vector<Body*>* bodies)
+void Physics::SolveCollisions(std::vector<Body*>* bodies)
 {
 	DetectCollisions(bodies);
 
-	SolveCollisions();
+	Declip();
 }
 
 void Physics::CleanUp()
@@ -119,7 +119,6 @@ void Physics::DetectCollisions(std::vector<Body*>* bodies)
 		}
 	}
 
-	//-Todone: This is optimized, adapt it for declip function
 	size_t size = bodies->size();
 	for (unsigned int i = 0; i < size - 1; ++i)
 	{
@@ -144,7 +143,7 @@ void Physics::DetectCollisions(std::vector<Body*>* bodies)
 	}
 }
 
-void Physics::SolveCollisions()
+void Physics::Declip()
 {
 	for (Collision* c : collisions)
 	{
@@ -165,10 +164,12 @@ void Physics::SolveCollisions()
 
 		case BodyClass::STATIC_BODY:
 		{
+			//-Todo: raycast from center and detect intersection from infinite (just w/2 or h/2 of dynamic) plans of the static body
+			// prioritize go back in time rather than linear declipping :_)
+
 			// The dynamic rectangle is not half colliding with the static rectangle. This assures that is fully inside or overleaking from both sides (case 1)
-			if (dynBody->rect.w >= intersect.w || dynBody->rect.h >= intersect.h)
+			/*if (dynBody->rect.w >= intersect.w || dynBody->rect.h >= intersect.h)
 			{
-				//-TOCHECK: This method can break when the dynamic body is going really fast and overcomes completely the static body. (Case 3 & 4)
 				// The solution could be tracing a line between the prev rect & the actual rect and see in which wall of the static rect intersects
 				// As well, if the static body is really thin and the dynamic body fast, this method does not work. It would confuse it with the oposite decliping
 				
@@ -216,11 +217,7 @@ void Physics::SolveCollisions()
 
 				}
 			}
-			// The dynamic rectangle is half colliding with the static rectangle. Not all the body with or height is inside the static body, it is partially inside
-			else
-			{
-
-			}
+			*/
 
 			break;
 		}

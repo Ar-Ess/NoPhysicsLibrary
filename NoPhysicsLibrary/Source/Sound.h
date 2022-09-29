@@ -5,7 +5,7 @@ class Sound
 {
 public:
 
-	Sound(ma_sound* source, ma_delay_node* delay);
+	Sound(ma_sound* source);
 
 	~Sound();
 

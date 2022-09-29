@@ -1,9 +1,8 @@
 #include "Sound.h"
 
-Sound::Sound(ma_sound* source, ma_delay_node* delay)
+Sound::Sound(ma_sound* source)
 {
 	this->source = source;
-	this->delay = delay;
 }
 
 Sound::~Sound()

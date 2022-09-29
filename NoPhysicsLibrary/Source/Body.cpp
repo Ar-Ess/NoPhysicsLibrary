@@ -20,7 +20,6 @@ Body::Body(BodyClass clas, Rect rect, float mass)
 	id = reinterpret_cast<int>(this);
 }
 
-//-TODONE: Set emission point
 void Body::SetEmissionPoint(Point point)
 {
 	Rect emissionRect = {point.Apply(-1, -1), 2, 2};

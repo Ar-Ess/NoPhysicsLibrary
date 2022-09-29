@@ -63,12 +63,12 @@ void NPL::CleanUp()
 	soundDataList.shrink_to_fit();
 
 	// Gas Locations
-	if (!gasLocations.empty())
+	if (!gasIndex.empty())
 	{
-		for (unsigned int* index : gasLocations) RELEASE(index);
+		for (unsigned int* index : gasIndex) RELEASE(index);
 	}
-	gasLocations.clear();
-	gasLocations.shrink_to_fit();
+	gasIndex.clear();
+	gasIndex.shrink_to_fit();
 
 }
 
@@ -77,7 +77,7 @@ BodyCreation NPL::CreateBody(Rect rectangle, float mass)
 	//Library not initialized. Call NPL::Init() first
 	assert(physics != nullptr);
 
-	return BodyCreation(rectangle, mass, &bodies, &gasLocations, physics);
+	return BodyCreation(rectangle, mass, &bodies, &gasIndex, physics);
 }
 
 LibraryConfig NPL::Configure()
@@ -286,7 +286,9 @@ void NPL::StepPhysics(float dt)
 	//-TOCHECK: Think about a pointer (std::vector<Body*>*) inside physics class & making for inside Step function
 	for (Body* b : bodies) physics->Step(b, dt);
 
-	physics->Declip(&bodies);
+	physics->SolveCollisions(&bodies);
+
+	//-TODO: Funció per reflexar velocitat segons vaires merdes
 }
 
 void NPL::StepAcoustics()
@@ -353,7 +355,6 @@ void NPL::ListenerLogic(Body* b, GasBody* environment)
 		return;
 	}
 
-	//-Todone: group operations of similar thematics (pan with pan, time with time...)
 	for (AcousticData* data : b->acousticDataList)
 	{
 		// Get the distance between Body & Listener
@@ -373,7 +374,7 @@ void NPL::ListenerLogic(Body* b, GasBody* environment)
 
 GasBody* NPL::GetEnvironmentBody(Rect body)
 {
-	for (unsigned int* index : gasLocations)
+	for (unsigned int* index : gasIndex)
 	{
 		if (MathUtils::CheckCollision(body, bodies[*index]->GetRect()))
 			return (GasBody*)bodies[*index];
@@ -408,7 +409,6 @@ float NPL::ComputeVolume(float distance, float spl)
 
 float NPL::ComputeTimeDelay(float distance, GasBody* environment)
 {
-	//-Todone: Fer de moment un checkcollision d'un gasbody i fer llògica
 	// Calculate delay time
 	// 1. Vel = sqrt( lambda * Pa / ro )
 	// 2. Time = distance / vel
