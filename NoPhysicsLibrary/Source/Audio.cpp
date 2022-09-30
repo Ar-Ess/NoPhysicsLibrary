@@ -28,7 +28,7 @@ void Audio::Playback(SoundData* data, float* dt)
     ma_node* lastNode = nullptr;
 
     // Create new sound
-    Sound* sound = new Sound(new ma_sound(), sounds[data->index]->length);
+    Sound* sound = new Sound(new ma_sound(), sounds[data->index]->length + data->delayTime + 1);
     ma_sound_init_copy(&engine, sounds[data->index]->sound, 0, NULL, sound->source);
 
     // Set sound panning
@@ -57,13 +57,12 @@ void Audio::Playback(SoundData* data, float* dt)
 void Audio::Update()
 {
     if (playback.empty()) return;
-
+    static int test = 0;
     size_t size = playback.size();
     for (unsigned int i = 0; i < size; ++i)
     {
         Sound* s = playback[i];
-
-        if (ma_sound_at_end(s->source))
+        if (s->IsOver())
         {
             playback.erase(playback.begin() + i);
             RELEASE(s);
@@ -75,11 +74,13 @@ void Audio::Update()
 
 void Audio::LoadSound(const char* path)
 {
+    //-TODONE: Calculate sound length
     ma_sound* sound = new ma_sound();
     ma_sound_init_from_file(&engine, path, 0, NULL, NULL, sound);
+    float length = 0.0f;
+    ma_sound_get_length_in_seconds(sound, &length);
 
-    //-TODO: Calculate sound length
-    sounds.emplace_back(new SoundLoad(sound, 0.0f));
+    sounds.emplace_back(new SoundLoad(sound, length));
 
     sound = nullptr;
 }

@@ -6,7 +6,7 @@ class Sound
 {
 public:
 
-	Sound(ma_sound* source, float length);
+	Sound(ma_sound* source, float timeToDelete);
 
 	~Sound();
 
@@ -18,15 +18,18 @@ public:
 
 	ma_delay_node* ConnectDelay(ma_engine* engine, float delayTime, float falloff);
 
+	bool IsOver()
+	{
+		return timer->ReadSecs() >= timeToDelete;
+	}
+
 public:
-	
 	ma_sound* source = nullptr;
 	ma_delay_node* delay = nullptr;
-	float timeToDelete = 0.0f;
 
 private:
 
+	float timeToDelete = 0.0f;
 	Timer* timer = nullptr;
-	float length = 0.0f;
 
 };

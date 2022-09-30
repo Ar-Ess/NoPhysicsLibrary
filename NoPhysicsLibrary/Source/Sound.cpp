@@ -1,9 +1,9 @@
 #include "Sound.h"
 
-Sound::Sound(ma_sound* source, float length)
+Sound::Sound(ma_sound* source, float timeToDelete)
 {
 	this->source = source;
-	this->length = length;
+	this->timeToDelete = timeToDelete;
 	timer = new Timer();
 }
 
