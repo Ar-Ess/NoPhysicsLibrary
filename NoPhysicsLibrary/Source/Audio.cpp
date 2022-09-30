@@ -28,8 +28,8 @@ void Audio::Playback(SoundData* data, float* dt)
     ma_node* lastNode = nullptr;
 
     // Create new sound
-    Sound* sound = new Sound(new ma_sound());
-    ma_sound_init_copy(&engine, sounds[data->index], 0, NULL, sound->source);
+    Sound* sound = new Sound(new ma_sound(), sounds[data->index]->length);
+    ma_sound_init_copy(&engine, sounds[data->index]->sound, 0, NULL, sound->source);
 
     // Set sound panning
     sound->SetPan(data->pan);
@@ -38,7 +38,7 @@ void Audio::Playback(SoundData* data, float* dt)
     sound->SetVolume(data->volume);
 
     // Set sound delay (the first one, attached to engine input bus)
-    if (data->delayTime > 0) lastNode = sound->ConnectDelay(&engine, data->delayTime);
+    if (data->delayTime > 0) lastNode = sound->ConnectDelay(&engine, data->delayTime, 0.0f);
 
     // Attach first node to sound output
     if (lastNode) // If any effect applied
@@ -75,12 +75,13 @@ void Audio::Update()
 
 void Audio::LoadSound(const char* path)
 {
-    ma_sound* source = new ma_sound();
-    ma_sound_init_from_file(&engine, path, 0, NULL, NULL, source);
+    ma_sound* sound = new ma_sound();
+    ma_sound_init_from_file(&engine, path, 0, NULL, NULL, sound);
 
-    sounds.emplace_back(source);
+    //-TODO: Calculate sound length
+    sounds.emplace_back(new SoundLoad(sound, 0.0f));
 
-    source = nullptr;
+    sound = nullptr;
 }
 
 void Audio::CleanUp()
@@ -94,11 +95,11 @@ void Audio::CleanUp()
 
     if (!sounds.empty())
     {
-        for (ma_sound* s : sounds)
+        for (SoundLoad* sL : sounds)
         {
-            ma_sound_stop(s);
-            ma_sound_uninit(s);
-            RELEASE(s);
+            ma_sound_stop(sL->sound);
+            ma_sound_uninit(sL->sound);
+            RELEASE(sL);
         }
     }
     sounds.clear();

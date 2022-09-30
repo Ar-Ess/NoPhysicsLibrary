@@ -192,6 +192,7 @@
     <ClInclude Include="Source\ScenarioPresetEnum.h" />
     <ClInclude Include="Source\Sound.h" />
     <ClInclude Include="Source\SoundData.h" />
+    <ClInclude Include="Source\SoundLoad.h" />
     <ClInclude Include="Source\StaticBody.h" />
     <ClInclude Include="Source\Timer.h" />
   </ItemGroup>

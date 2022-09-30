@@ -1,8 +1,9 @@
 #include "Sound.h"
 
-Sound::Sound(ma_sound* source)
+Sound::Sound(ma_sound* source, float length)
 {
 	this->source = source;
+	this->length = length;
 	timer = new Timer();
 }
 
@@ -22,7 +23,7 @@ void Sound::SetVolume(float volume)
 	ma_sound_set_volume(source, volume);
 }
 
-ma_delay_node* Sound::ConnectDelay(ma_engine* engine, float delayTime)
+ma_delay_node* Sound::ConnectDelay(ma_engine* engine, float delayTime, float falloff)
 {
 	delay = new ma_delay_node();
 
@@ -34,7 +35,7 @@ ma_delay_node* Sound::ConnectDelay(ma_engine* engine, float delayTime)
 	sampleRate = ma_engine_get_sample_rate(engine);
 
 	//                                                                                     Delay Time         Falloff
-	delayNodeConfig = ma_delay_node_config_init(channels, sampleRate, (ma_uint32)(sampleRate * delayTime), 0.0f);
+	delayNodeConfig = ma_delay_node_config_init(channels, sampleRate, (ma_uint32)(sampleRate * delayTime), falloff);
 
 	ma_delay_node_init(ma_engine_get_node_graph(engine), &delayNodeConfig, NULL, delay);
 

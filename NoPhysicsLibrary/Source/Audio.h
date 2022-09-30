@@ -4,6 +4,7 @@
 #include "Timer.h"
 #include "Sound.h"
 #include "SoundData.h"
+#include "SoundLoad.h"
 #include "Define.h"
 #include <vector>
 #include "Point.h"
@@ -27,7 +28,7 @@ public:
 private:
 
 	ma_engine engine;
-	std::vector<ma_sound*> sounds;
+	std::vector<SoundLoad*> sounds;
 	std::vector<Sound*> playback;
 
 };

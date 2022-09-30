@@ -179,5 +179,8 @@
     <ClInclude Include="Source\Timer.h">
       <Filter>Utils</Filter>
     </ClInclude>
+    <ClInclude Include="Source\SoundLoad.h">
+      <Filter>Core\Audio\Units</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
