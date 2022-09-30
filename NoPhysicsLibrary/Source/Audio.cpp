@@ -1,6 +1,7 @@
 #include "Audio.h"
 #include <assert.h>
 #include "Define.h"
+#include "Timer.h"
 
 // Internal usage of miniaudio
 void DataCallback(ma_device* pDevice, void* pOutput, const void* pInput, ma_uint32 frameCount)
@@ -22,12 +23,12 @@ Audio::~Audio()
 {
 }
 
-void Audio::Playback(SoundData* data)
+void Audio::Playback(SoundData* data, float* dt)
 {
     ma_node* lastNode = nullptr;
 
     // Create new sound
-    Sound* sound = new Sound(new ma_sound());
+    Sound* sound = new Sound(new ma_sound(), new Timer(&engine, dt));
     ma_sound_init_copy(&engine, sounds[data->index], 0, NULL, sound->source);
 
     // Set sound panning

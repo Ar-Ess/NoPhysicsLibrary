@@ -16,7 +16,7 @@ public:
 
 	~Audio();
 
-	void Playback(SoundData* data);
+	void Playback(SoundData* data, float* dt);
 
 	void Update();
 

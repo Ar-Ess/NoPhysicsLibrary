@@ -22,13 +22,13 @@ void NPL::Init()
 	audio = new Audio();
 }
 
-void NPL::Update(float dt)
+void NPL::Update(float* dt)
 {
 	if (GetGlobalPause()) return;
 
-	StepPhysics(dt);
+	StepPhysics(*dt);
 	StepAcoustics();
-	StepAudio();
+	StepAudio(dt);
 
 }
 
@@ -417,7 +417,7 @@ float NPL::ComputeTimeDelay(float distance, GasBody* environment)
 	return distance / vel;
 }
 
-void NPL::StepAudio()
+void NPL::StepAudio(float* dt)
 {
 	audio->Update();
 
@@ -425,7 +425,7 @@ void NPL::StepAudio()
 
 	for (SoundData* data : soundDataList)
 	{
-		audio->Playback(data);
+		audio->Playback(data, dt);
 		RELEASE(data);
 	}
 

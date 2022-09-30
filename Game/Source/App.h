@@ -2,7 +2,7 @@
 
 #include "Module.h"
 #include "PerfTimer.h"
-#include "Timer.h"
+#include "LightTimer.h"
 
 #include <vector>
 
@@ -77,9 +77,9 @@ private:
 	PerfTimer ptimer;
 	uint64 frameCount = 0;
 
-	Timer startupTime;
-	Timer frameTime;
-	Timer lastSecFrameTime;
+	LightTimer startupTime;
+	LightTimer frameTime;
+	LightTimer lastSecFrameTime;
 	uint32 lastSecFrameCount = 0;
 	uint32 prevLastSecFrameCount = 0;
 	float dt = 0.0f;

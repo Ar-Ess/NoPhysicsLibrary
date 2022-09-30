@@ -4,14 +4,15 @@
 
 struct Timer
 {
-	Timer(ma_engine* engine);
+	Timer(ma_engine* engine, float* dt);
 
-	void Start() const;
+	void Start();
 
 	ma_uint64 ReadSecs() const;
 
 private:
 
-	ma_uint64 startTime = 0;
+	double startTime = 0.0f;
 	ma_engine* engine = nullptr;
+	float* dt = nullptr;
 };

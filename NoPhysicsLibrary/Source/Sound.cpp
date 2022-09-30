@@ -1,8 +1,10 @@
 #include "Sound.h"
 
-Sound::Sound(ma_sound* source)
+Sound::Sound(ma_sound* source, Timer* timer)
 {
 	this->source = source;
+	this->timer = timer;
+	timer->Start();
 }
 
 Sound::~Sound()

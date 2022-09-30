@@ -33,7 +33,7 @@ public:
 
 	// Iterates the library
 	//  - Call it in your main update function
-	void Update(float dt);
+	void Update(float* dt);
 
 	// Set a predesigned scenario
 	//  - This function destroys automatically the previous scenario
@@ -94,7 +94,7 @@ private: // Methods
 			float ComputeTimeDelay(float distance, GasBody* environment);
 		void NoListenerLogic(Body* b);
 
-	void StepAudio();
+	void StepAudio(float* dt);
 
 	bool EraseBody(Body* body);
 

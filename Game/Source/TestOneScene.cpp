@@ -61,7 +61,7 @@ bool TestOneScene::Update(float dt)
 	}
 
 	// Steps the physics
-	npl->Update(dt);
+	npl->Update(&dt);
 
 	// Draws the bodies
 	int size = 1;
