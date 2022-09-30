@@ -1,19 +1,16 @@
 #include "Timer.h"
+#include <ctime>
 
-Timer::Timer(ma_engine* engine, float* dt)
+Timer::Timer()
 {
-	this->engine = engine;
-	this->dt = dt;
 }
 
 void Timer::Start()
 {
-	startTime = ma_engine_get_time(engine) * (double)(*dt);
+	startTime = int(clock());
 }
 
-ma_uint64 Timer::ReadSecs() const
+int Timer::ReadSecs() const
 {
-	return (ma_engine_get_time(engine) * (double)(*dt)) - startTime;
+	return int(clock()) - startTime;
 }
-// Question:
-// el "dt" d'un videojoc es seconds/frame right?

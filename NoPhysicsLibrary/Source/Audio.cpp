@@ -28,49 +28,27 @@ void Audio::Playback(SoundData* data, float* dt)
     ma_node* lastNode = nullptr;
 
     // Create new sound
-    Sound* sound = new Sound(new ma_sound(), new Timer(&engine, dt));
+    Sound* sound = new Sound(new ma_sound());
     ma_sound_init_copy(&engine, sounds[data->index], 0, NULL, sound->source);
 
     // Set sound panning
-    ma_sound_set_pan(sound->source, data->pan);
+    sound->SetPan(data->pan);
 
     // Set sound volume
-    ma_sound_set_volume(sound->source, data->volume);
+    sound->SetVolume(data->volume);
 
     // Set sound delay (the first one, attached to engine input bus)
-    if (data->delayTime > 0)
-    {
-        sound->delay = new ma_delay_node();
-
-        ma_delay_node_config delayNodeConfig;
-        ma_uint32 channels;
-        ma_uint32 sampleRate;
-
-        channels = ma_engine_get_channels(&engine);
-        sampleRate = ma_engine_get_sample_rate(&engine);
-
-        //                                                                                     Delay Time         Falloff
-        delayNodeConfig = ma_delay_node_config_init(channels, sampleRate, (ma_uint32)(sampleRate * data->delayTime), 0.0f);
-
-        ma_delay_node_init(ma_engine_get_node_graph(&engine), &delayNodeConfig, NULL, sound->delay);
-
-        ma_delay_node_set_dry(sound->delay, 0);
-
-        /* Connect the output of the delay node to the input of the endpoint. */
-        ma_node_attach_output_bus(sound->delay, 0, ma_engine_get_endpoint(&engine), 0);
-
-        lastNode = sound->delay;
-    }
+    if (data->delayTime > 0) lastNode = sound->ConnectDelay(&engine, data->delayTime);
 
     // Attach first node to sound output
     if (lastNode) // If any effect applied
     {
         /* Connect the output of the sound to the input of the effect. */
-        ma_node_attach_output_bus(sound->source, 0, sound->delay, 0);
+        ma_node_attach_output_bus(sound->source, 0, lastNode, 0);
     }
 
     // Play sound
-    ma_sound_start(sound->source);
+    sound->Play();
 
     // Save sound reference
     playback.emplace_back(sound);
