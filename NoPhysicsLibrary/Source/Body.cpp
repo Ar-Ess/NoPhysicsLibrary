@@ -8,7 +8,7 @@ Body::Body(BodyClass clas, Rect rect, float mass)
 {
 	this->clas = clas;
 	this->rect = rect;
-	this->emissionPoint = rect.GetPosition(Alignment::CENTER);
+	this->emissionPoint = rect.GetPosition(Align::CENTER);
 
 	// You idiot, mass can not be zero :}
 	assert(mass != 0);
@@ -29,7 +29,7 @@ void Body::SetEmissionPoint(Point point)
 	emissionPoint = MathUtils::ClosestRectIntersectionFromOutsidePoint(emissionPoint, rect);
 }
 
-void Body::SetEmissionPoint(Alignment alignment, Point offset)
+void Body::SetEmissionPoint(Align alignment, Point offset)
 {
 	emissionPoint = rect.GetPosition(alignment);
 	if (offset.IsZero()) return;

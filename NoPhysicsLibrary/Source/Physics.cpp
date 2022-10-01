@@ -1,8 +1,10 @@
 #include "Physics.h"
 #include "LiquidBody.h"
 #include "DynamicBody.h"
+#include "StaticBody.h"
 
 #include "MathUtils.h"
+#include "Ray.h"
 
 Physics::Physics(const Flag* physicsConfig)
 {
@@ -132,7 +134,7 @@ void Physics::DetectCollisions(std::vector<Body*>* bodies)
 			if (b1->GetClass() == BodyClass::STATIC_BODY && b2->GetClass() == BodyClass::STATIC_BODY) continue;
 
 			Rect intersect = MathUtils::IntersectRectangle(b1->GetRect(), b2->GetRect());
-			if (intersect.IsNull()) continue;
+			if (!MathUtils::CheckCollision(b1->GetRect(), b2->GetRect())) continue;
 
 			Body* dyn = b2;
 			Body* other = b2;
@@ -150,7 +152,7 @@ void Physics::Declip()
 		DynamicBody* dynBody = (DynamicBody*)c->GetDynBody();
 		Rect intersect = c->GetCollisionRectangle();
 
-		Point dDeltaPosVec = dynBody->GetPosition() - dynBody->backup.position;
+		Point directionVec = dynBody->GetPosition() - dynBody->backup.position;
 		switch (c->GetBody()->GetClass())
 		{
 
@@ -166,7 +168,51 @@ void Physics::Declip()
 		{
 			//-Todo: raycast from center and detect intersection from infinite (just w/2 or h/2 of dynamic) plans of the static body
 			// prioritize go back in time rather than linear declipping :_)
+			StaticBody* body = (StaticBody*)c->GetBody();
+			Point normal = {};
 
+			if (false) // Talked solution
+			{
+				Ray ray(dynBody->backup.position, directionVec);
+				MathUtils::RayCast(ray, body->GetRect(), normal);
+			}
+			else // My solution thinking about it (no need of extensions)
+			{
+				Point centerOfIntersecion = c->GetCollisionRectangle().GetPosition(Align::CENTER);
+				Ray ray(centerOfIntersecion.Apply(directionVec.Multiply(-1)), centerOfIntersecion);
+				if (!MathUtils::RayCast(ray, body->GetRect(), normal)) break;
+			}
+
+ 			if (normal.x == 0) // Vertical
+			{
+				if (directionVec.y > 0) // Top -> Bottom
+				{
+					dynBody->rect.y = body->GetPosition().y - dynBody->rect.h;
+				}
+				if (directionVec.y < 0) // Bottom -> Top
+				{
+					dynBody->rect.y = body->GetRect().GetPosition(Align::BOTTOM_CENTER).y;
+				}
+			}
+			else if (normal.y == 0) // Horizontal
+			{
+				if (directionVec.x > 0) // Left -> Right
+				{
+					dynBody->rect.x = body->GetPosition().x - dynBody->rect.w;
+				}
+				if (directionVec.x < 0) // Right -> Left
+				{
+					dynBody->rect.x = body->GetRect().GetPosition(Align::CENTER_RIGHT).x;
+				}
+			}
+			else
+			{
+				Rect wtfRect = c->GetBody()->GetRect();
+				Point wtfOrgn = dynBody->backup.position;
+				Point wtfDir = directionVec;
+				LOG("Weird Rectangle: X = %.f, Y = %.f, Width = %.f, Heigth = %.f\nWeird Ray: X = %.f, Y = %.f, Dir X = %.f, Dir Y = %.f", wtfRect.x, wtfRect.y, wtfRect.w, wtfRect.h, wtfOrgn.x, wtfOrgn.y, wtfDir.x, wtfDir.y);
+				assert("This is impossible, how could this happen???? :O Quick, check the log!!!!");
+			}
 
 
 			break;
@@ -175,6 +221,8 @@ void Physics::Declip()
 		default:
 			break;
 		}
+
+		dynBody->velocity = 0;
 
 		// If collision debugging is disabled
 		if (!physicsConfig->Get(0)) RELEASE(c);

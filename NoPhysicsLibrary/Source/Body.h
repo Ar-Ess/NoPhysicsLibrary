@@ -27,7 +27,7 @@ public: // Methods
 
 	// Sets the body emission point, where the body sound will emit from.
 	// Values out of body bounds will be set to the closest point inside it
-	void SetEmissionPoint(Alignment alignment, Point offset = { 0, 0 });
+	void SetEmissionPoint(Align align, Point offset = { 0, 0 });
 
 	// Returns the x & y coordinates of the body
 	inline Point GetPosition() const { return rect.GetPosition(); }

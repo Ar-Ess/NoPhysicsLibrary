@@ -1,13 +1,14 @@
 #pragma once
 
 #include "Rect.h"
+#include "Ray.h"
 
 namespace MathUtils
 {
-
+	// This function does not consider a collision if rects touches their bounds
 	inline bool CheckCollision(Rect r1, Rect r2)
 	{
-		return !((r1.x > r2.x + r2.w) || (r1.x + r1.w < r2.x) || (r1.y > r2.y + r2.h) || (r1.y + r1.h < r2.y));
+		return !((r1.x >= r2.x + r2.w) || (r1.x + r1.w < r2.x) || (r1.y >= r2.y + r2.h) || (r1.y + r1.h < r2.y));
 	}
 
 	inline float Sqrt(float num)
@@ -97,8 +98,8 @@ namespace MathUtils
 	{
 		Point ret = { 0, 0 };
 
-		Point distanceToPositiveBounds = rect.GetPosition(Alignment::TOP_RIGHT) - point;
-		Point distanceToNegativeBounds = rect.GetPosition(Alignment::BOTTOM_LEFT) - point;
+		Point distanceToPositiveBounds = rect.GetPosition(Align::TOP_RIGHT) - point;
+		Point distanceToNegativeBounds = rect.GetPosition(Align::BOTTOM_LEFT) - point;
 
 		float smallestX = Min(distanceToPositiveBounds.x, distanceToNegativeBounds.x);
 		float smallestY = Min(distanceToPositiveBounds.y, distanceToNegativeBounds.y);
@@ -122,4 +123,55 @@ namespace MathUtils
 		return ret;
 	}
 
+	inline bool RayCast(Ray r1, Ray r2, Point& ret)
+	{
+		Point a = r1.origin;
+		Point b = r1.end;
+
+		Point c = r2.origin;
+		Point d = r2.end;
+
+		Point r = (b - a);
+		Point s = (d - c);
+
+		float div = (r.x * s.y) - (r.y * s.x);
+		float u = ((c.x - a.x) * r.y - (c.y - a.y) * r.x) / div;
+		float t = ((c.x - a.x) * s.y - (c.y - a.y) * s.x) / div;
+
+		ret = (a + (r * t));
+		return (u >= 0 && u <= 1 && t >= 0 && t <= 1);
+	}
+
+	// Returns normal vec of the first intersecting plane (returned value is final pos of the vector, init is 0,0)
+	// The variable "planeExtension" extends the rectangle planes in both directions by its respective coordinates
+	// Works only for non-rotative rectangles
+	inline bool RayCast(Ray ray, Rect rect, Point& ret)
+	{
+		Ray rectPlanes[4] = { 
+			{rect.GetPosition(Align::TOP_LEFT    ), rect.GetPosition(Align::TOP_RIGHT   ) },
+			{rect.GetPosition(Align::TOP_RIGHT   ), rect.GetPosition(Align::BOTTOM_RIGHT) },
+			{rect.GetPosition(Align::BOTTOM_RIGHT), rect.GetPosition(Align::BOTTOM_LEFT ) },
+			{rect.GetPosition(Align::BOTTOM_LEFT ), rect.GetPosition(Align::TOP_LEFT    ) }
+		};
+
+		Point intr;
+		bool exist = false;
+
+		for (unsigned short int i = 0; i < 4; ++i)
+		{
+			if (RayCast(ray, rectPlanes[i], intr))
+			{
+				exist = true;
+				break;
+			}
+		}
+
+		if (!exist) return false;
+
+		if (intr.x == rect.GetPosition().x || intr.x == rect.GetPosition(Align::BOTTOM_RIGHT).x) ret = {1, 0};
+		else if (intr.y == rect.GetPosition().y || intr.y == rect.GetPosition(Align::BOTTOM_RIGHT).y) ret = { 0, 1 };
+
+		return true;
+
+	}
 };

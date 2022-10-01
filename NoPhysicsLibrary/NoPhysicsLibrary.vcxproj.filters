@@ -182,5 +182,8 @@
     <ClInclude Include="Source\SoundLoad.h">
       <Filter>Core\Audio\Units</Filter>
     </ClInclude>
+    <ClInclude Include="Source\Ray.h">
+      <Filter>Utils</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

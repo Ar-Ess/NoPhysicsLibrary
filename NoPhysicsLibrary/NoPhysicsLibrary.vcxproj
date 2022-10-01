@@ -188,6 +188,7 @@
     <ClInclude Include="Source\Physics.h" />
     <ClInclude Include="Source\PhysicsPresetEnum.h" />
     <ClInclude Include="Source\Point.h" />
+    <ClInclude Include="Source\Ray.h" />
     <ClInclude Include="Source\Rect.h" />
     <ClInclude Include="Source\ScenarioPresetEnum.h" />
     <ClInclude Include="Source\Sound.h" />

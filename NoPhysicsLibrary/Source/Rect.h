@@ -55,29 +55,29 @@ public:
 		return Point{x, y};
 	}
 
-	Point GetPosition(Alignment alignment) const
+	Point GetPosition(Align alignment) const
 	{
 		Point ret = { 0, 0 };
 
 		switch (alignment)
 		{
-		case Alignment::CENTER: ret = { x + w / 2, y + h / 2 }; break;
+		case Align::CENTER: ret = { x + w / 2, y + h / 2 }; break;
 
-		case Alignment::CENTER_LEFT: ret = { x, y + h / 2 }; break;
+		case Align::CENTER_LEFT: ret = { x, y + h / 2 }; break;
 
-		case Alignment::CENTER_RIGHT: ret = { x + w, y + h / 2 }; break;
+		case Align::CENTER_RIGHT: ret = { x + w, y + h / 2 }; break;
 
-		case Alignment::TOP_CENTER: ret = { x + w / 2, y }; break;
+		case Align::TOP_CENTER: ret = { x + w / 2, y }; break;
 
-		case Alignment::TOP_LEFT: ret = {x, y}; break;
+		case Align::TOP_LEFT: ret = {x, y}; break;
 
-		case Alignment::TOP_RIGHT: ret = { x + w, y }; break;
+		case Align::TOP_RIGHT: ret = { x + w, y }; break;
 
-		case Alignment::BOTTOM_CENTER: ret = { x + w / 2, y + h }; break;
+		case Align::BOTTOM_CENTER: ret = { x + w / 2, y + h }; break;
 
-		case Alignment::BOTTOM_LEFT: ret = { x, y + h }; break;
+		case Align::BOTTOM_LEFT: ret = { x, y + h }; break;
 
-		case Alignment::BOTTOM_RIGHT: ret = { x + w, y + h }; break;
+		case Align::BOTTOM_RIGHT: ret = { x + w, y + h }; break;
 
 		default: break;
 		}

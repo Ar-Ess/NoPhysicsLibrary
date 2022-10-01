@@ -26,7 +26,7 @@ bool TestOneScene::Start()
 	npl->CreateBody(npl->ReturnScenarioRect(), 1).Gas(10, 1.414f, 1000);
 
 	npl->SetListener(test);
-	//npl->SetGlobalGravity({ 0, 400 });
+	npl->SetGlobalGravity({ 0, 400 });
 
 	npl->LoadSound("Assets/Audio/bounce.wav");
 

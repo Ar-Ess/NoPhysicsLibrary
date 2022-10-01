@@ -1,6 +1,6 @@
 #pragma once
 
-enum class Alignment
+enum class Align
 {
 	CENTER,
 	CENTER_LEFT,

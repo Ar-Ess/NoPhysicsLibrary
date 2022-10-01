@@ -13,7 +13,7 @@ struct BodyBackup
 		this->force = {};
 	}
 
-	BodyBackup(Point deltaPosition, Point velocity, Point acceleration, Momentum momentum, Force force)
+	BodyBackup(Point position, Point velocity, Point acceleration, Momentum momentum, Force force)
 	{
 		this->position = position;
 		this->velocity = velocity;
