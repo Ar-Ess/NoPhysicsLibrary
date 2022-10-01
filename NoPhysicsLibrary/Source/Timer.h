@@ -12,5 +12,9 @@ struct Timer
 
 private:
 
+	int GetSecs() const;
+
+private:
+
 	double startTime = 0.0f;
 };

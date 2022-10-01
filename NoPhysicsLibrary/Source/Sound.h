@@ -16,7 +16,7 @@ public:
 
 	void SetVolume(float volume);
 
-	ma_delay_node* ConnectDelay(ma_engine* engine, float delayTime, float falloff);
+	ma_delay_node* ConnectDelay(ma_engine* engine, float delayTime);
 
 	bool IsOver()
 	{

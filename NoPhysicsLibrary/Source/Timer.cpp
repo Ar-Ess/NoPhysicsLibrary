@@ -7,10 +7,15 @@ Timer::Timer()
 
 void Timer::Start()
 {
-	startTime = int(clock()) / CLOCKS_PER_SEC;
+	startTime = GetSecs();
 }
 
 int Timer::ReadSecs() const
 {
-	return (clock() / CLOCKS_PER_SEC) - startTime;
+	return GetSecs() - startTime;
+}
+
+int Timer::GetSecs() const
+{
+	return int(clock() / CLOCKS_PER_SEC);
 }

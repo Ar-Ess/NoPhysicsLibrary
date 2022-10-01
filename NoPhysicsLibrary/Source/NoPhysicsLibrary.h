@@ -37,7 +37,7 @@ public:
 
 	// Set a predesigned scenario
 	//  - This function destroys automatically the previous scenario
-	void SetScenarioPreset(ScenarioPreset preset, Point windowSize = { 1080, 720 });
+	StaticBody* SetScenarioPreset(ScenarioPreset preset, Point windowSize = { 1080, 720 }, int returnStatic = -1);
 
 	// Destroys all Static Bodies created
 	void DestroyScenario();

@@ -25,4 +25,5 @@ private:
 
 	NPL* npl = nullptr;
 	DynamicBody* test = nullptr;
+	StaticBody* emitter = nullptr;
 };

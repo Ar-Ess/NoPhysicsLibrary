@@ -167,57 +167,7 @@ void Physics::Declip()
 			//-Todo: raycast from center and detect intersection from infinite (just w/2 or h/2 of dynamic) plans of the static body
 			// prioritize go back in time rather than linear declipping :_)
 
-			// The dynamic rectangle is not half colliding with the static rectangle. This assures that is fully inside or overleaking from both sides (case 1)
-			/*if (dynBody->rect.w >= intersect.w || dynBody->rect.h >= intersect.h)
-			{
-				// The solution could be tracing a line between the prev rect & the actual rect and see in which wall of the static rect intersects
-				// As well, if the static body is really thin and the dynamic body fast, this method does not work. It would confuse it with the oposite decliping
-				
-				// Vertical collision (deprecated)
-				if (intersect.w > intersect.h)
-				{
-					// Collision from the top
-					if (intersect.GetPosition(Alignment::BOTTOM_LEFT).y == dynBody->rect.GetPosition(Alignment::BOTTOM_LEFT).y)
-					{
-						dynBody->rect.y -= intersect.h;
-					}
-					// Collision from the bottom
-					else if (intersect.y == dynBody->rect.y)
-					{
-						dynBody->rect.y += intersect.h;
-					}
-					// Dynamic body overpass vertically form the other side the static body
-					else
-					{
-						// Here is where the problem begins with this method
-					}
-				}
-				// Horizontal collision (deprecated)
-				else if (intersect.h > intersect.w)
-				{
-					// Collision from the left
-					if (intersect.GetPosition(Alignment::TOP_RIGHT).x == dynBody->rect.GetPosition(Alignment::TOP_RIGHT).y)
-					{
-						dynBody->rect.x -= intersect.w;
-					}
-					// Collision from the right
-					else if (intersect.x == dynBody->rect.x)
-					{
-						dynBody->rect.x += intersect.w;
-					}
-					// Dynamic body overpass horizontally form the other side the static body
-					else
-					{
-						// Here is where the problem begins with this method
-					}
-				}
-				// Square intersection, need to work with the deltaVector
-				else
-				{
 
-				}
-			}
-			*/
 
 			break;
 		}

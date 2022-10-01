@@ -28,7 +28,7 @@ void Audio::Playback(SoundData* data, float* dt)
     ma_node* lastNode = nullptr;
 
     // Create new sound
-    Sound* sound = new Sound(new ma_sound(), sounds[data->index]->length + data->delayTime + 1);
+    Sound* sound = new Sound(new ma_sound(), sounds[data->index]->length + (data->delayTime * 1.1f));
     ma_sound_init_copy(&engine, sounds[data->index]->sound, 0, NULL, sound->source);
 
     // Set sound panning
@@ -38,7 +38,7 @@ void Audio::Playback(SoundData* data, float* dt)
     sound->SetVolume(data->volume);
 
     // Set sound delay (the first one, attached to engine input bus)
-    if (data->delayTime > 0) lastNode = sound->ConnectDelay(&engine, data->delayTime, 0.0f);
+    if (data->delayTime > 0) lastNode = sound->ConnectDelay(&engine, data->delayTime);
 
     // Attach first node to sound output
     if (lastNode) // If any effect applied
@@ -70,6 +70,7 @@ void Audio::Update()
             --i;
         }
     }
+    test++;
 }
 
 void Audio::LoadSound(const char* path)

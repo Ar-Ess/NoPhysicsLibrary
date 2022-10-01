@@ -204,9 +204,13 @@ void NPL::PausePhysics(bool pause)
 	physics->globals.Set(0, pause);
 }
 
-void NPL::SetScenarioPreset(ScenarioPreset sPreset, Point wSize)
+StaticBody* NPL::SetScenarioPreset(ScenarioPreset sPreset, Point wSize, int returnStatic)
 {
+	if (returnStatic < -1) returnStatic = -1;
 	DestroyScenario();
+	StaticBody* ret = nullptr;
+	size_t size = 0;
+	if (returnStatic > -1) size = bodies.size();
 
 	switch (sPreset)
 	{
@@ -219,6 +223,13 @@ void NPL::SetScenarioPreset(ScenarioPreset sPreset, Point wSize)
 		CreateBody({ 0,          0, wSize.x - rightLimitX,              wSize.y }, 1).Static();
 		CreateBody({ 0, downLimitY,               wSize.x, wSize.y - downLimitY }, 1).Static();
 		CreateBody({ rightLimitX,          0, wSize.x - rightLimitX,              wSize.x }, 1).Static();
+		
+		if (returnStatic > -1)
+		{
+			if (returnStatic > 3) returnStatic = 3;
+			ret = (StaticBody*)bodies[size + returnStatic];
+		}
+
 		break;
 	}
 	case ScenarioPreset::CORRIDOR_SCENARIO_PRESET:
@@ -230,6 +241,13 @@ void NPL::SetScenarioPreset(ScenarioPreset sPreset, Point wSize)
 		CreateBody({                  0,          0, wSize.x - rightLimitX,              wSize.y }, 1).Static();
 		CreateBody({                  0, downLimitY,                  4280, wSize.y - downLimitY }, 1).Static();
 		CreateBody({ 3000 + rightLimitX,          0, wSize.x - rightLimitX,              wSize.x }, 1).Static();
+		
+		if (returnStatic > -1)
+		{
+			if (returnStatic > 3) returnStatic = 3;
+			ret = (StaticBody*)bodies[size + returnStatic];
+		}
+
 		break;
 	}
 
@@ -257,6 +275,8 @@ void NPL::SetScenarioPreset(ScenarioPreset sPreset, Point wSize)
 	//	CreateBody(BodyType::STATIC_BODY, Point{ 1080, 200 }, { 1080, 200, 25, 400 }, { 0, 0 }, { 0, 0 }, 1);
 	//	break;
 	}
+
+	return ret;
 }
 
 const Collision* NPL::GetCollisionsIterable(int& size, int index)
