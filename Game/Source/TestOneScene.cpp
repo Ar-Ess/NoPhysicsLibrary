@@ -23,6 +23,7 @@ bool TestOneScene::Start()
 	emitter = npl->SetScenarioPreset(ScenarioPreset::CORRIDOR_SCENARIO_PRESET, window->GetSize(), 1);
 	npl->CreateBody(Rect{ 150, 350, 200, 35 }, 1).Static();
 	test = (DynamicBody*)npl->CreateBody(Rect{ 230, 100, 50, 80 }, 1).Dynamic();
+	globalDebugId = npl->CreateBody(Rect{ 430, 100, 50, 80 }, 1).Dynamic()->GetId();
 	npl->CreateBody(npl->ReturnScenarioRect(), 1).Gas(10, 1.414f, 1000);
 
 	npl->SetListener(test);

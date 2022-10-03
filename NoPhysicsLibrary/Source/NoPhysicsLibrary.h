@@ -1,5 +1,7 @@
 #pragma once
 
+int globalDebugId = 0;
+
 #include "Auxiliars.h"
 // Includes: Body.h, Audio.h 
 
