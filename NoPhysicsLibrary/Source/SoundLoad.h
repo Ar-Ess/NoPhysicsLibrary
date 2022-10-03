@@ -1,6 +1,6 @@
 #pragma once
 
-#include "External/miniaudio/miniaudio.h"
+#include "External/miniaudio/miniaudiodev.h"
 
 struct SoundLoad
 {

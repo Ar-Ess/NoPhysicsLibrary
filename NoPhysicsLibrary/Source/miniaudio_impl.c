@@ -6,4 +6,4 @@
 #include "External\dr_libs\dr_wav.h"
 
 #define MINIAUDIO_IMPLEMENTATION
-#include "External/miniaudio/miniaudio.h"
+#include "External/miniaudio/miniaudiodev.h"

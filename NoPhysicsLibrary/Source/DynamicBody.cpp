@@ -57,7 +57,7 @@ void DynamicBody::ApplyMomentum(float momentumX, float momentumY)
 	momentums.emplace_back(new Momentum({ momentumX, momentumY }));
 }
 
-void DynamicBody::ApplyMomentun(Point momentum)
+void DynamicBody::ApplyMomentum(Point momentum)
 {
 	if (globals->Get(0)) return; // Physics are paused
 	if (!momentum.IsZero()) return; // If momentum is null

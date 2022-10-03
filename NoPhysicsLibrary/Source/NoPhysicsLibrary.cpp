@@ -2,7 +2,7 @@
 #include <stdint.h>
 #include "Define.h"
 #include "MathUtils.h"
-#include "External/miniaudio/miniaudio.h"
+#include "External/miniaudio/miniaudiodev.h"
 
 NPL::NPL()
 {

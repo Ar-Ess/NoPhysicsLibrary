@@ -185,5 +185,8 @@
     <ClInclude Include="Source\Ray.h">
       <Filter>Utils</Filter>
     </ClInclude>
+    <ClInclude Include="Source\External\miniaudio\miniaudiodev.h">
+      <Filter>External\Miniaudio</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

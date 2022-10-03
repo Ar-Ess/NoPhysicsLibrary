@@ -25,7 +25,7 @@ public: // Methods
 	// Applies an specific force to this body
 	void ApplyMomentum(float momentumX, float momentumY);
 	// Applies an specific force to this body
-	void ApplyMomentun(Point momentum);
+	void ApplyMomentum(Point momentum);
 
 	// Sets a local gravity to the body
 	void SetGravityOffset(Point gravityOffset);

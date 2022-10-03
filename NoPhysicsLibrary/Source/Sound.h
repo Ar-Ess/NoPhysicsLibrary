@@ -1,5 +1,5 @@
 #pragma once
-#include "External/miniaudio/miniaudio.h"
+#include "External/miniaudio/miniaudiodev.h"
 #include "Timer.h"
 
 class Sound

@@ -37,9 +37,10 @@ ma_delay_node* Sound::ConnectDelay(ma_engine* engine, float delayTime)
 	//                                                                                     Delay Time         Falloff
 	delayNodeConfig = ma_delay_node_config_init(channels, sampleRate, (ma_uint32)(sampleRate * delayTime), 1.0f);
 
-	ma_delay_node_init(ma_engine_get_node_graph(engine), &delayNodeConfig, NULL, delay);
+	ma_delay_node_set_dry(delay, 0.5f);
+	ma_delay_node_set_wet(delay, 1.0f);
 
-	ma_delay_node_set_dry(delay, 1);
+	ma_delay_node_init(ma_engine_get_node_graph(engine), &delayNodeConfig, NULL, delay);
 
 	/* Connect the output of the delay node to the input of the endpoint. */
 	ma_node_attach_output_bus(delay, 0, ma_engine_get_endpoint(engine), 0);

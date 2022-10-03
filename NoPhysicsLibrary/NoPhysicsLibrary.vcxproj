@@ -177,6 +177,7 @@
     <ClInclude Include="Source\External\dr_libs\dr_mp3.h" />
     <ClInclude Include="Source\External\dr_libs\dr_wav.h" />
     <ClInclude Include="Source\External\miniaudio\miniaudio.h" />
+    <ClInclude Include="Source\External\miniaudio\miniaudiodev.h" />
     <ClInclude Include="Source\Flag.h" />
     <ClInclude Include="Source\LibraryConfig.h" />
     <ClInclude Include="Source\PhysVec.h" />

@@ -153,7 +153,6 @@ void Physics::Declip()
 		Rect intersect = c->GetCollisionRectangle();
 
 		Point directionVec = dynBody->GetPosition() - dynBody->backup.position;
-#define PIXEL_FREEDOM 1
 
 		switch (c->GetBody()->GetClass())
 		{
@@ -230,18 +229,18 @@ void Physics::Declip()
 			if (normal.x == 0) // Vertical
 			{
 				// Top -> Bottom
-				if (directionVec.y > 0) dynBody->rect.y = body->GetPosition().y - dynBody->rect.h - PIXEL_FREEDOM;
+				if (directionVec.y > 0) dynBody->rect.y = body->GetPosition().y - dynBody->rect.h;
 				// Bottom -> Top
-				if (directionVec.y < 0) dynBody->rect.y = body->GetRect().GetPosition(Align::BOTTOM_CENTER).y + PIXEL_FREEDOM;
+				if (directionVec.y < 0) dynBody->rect.y = body->GetRect().GetPosition(Align::BOTTOM_CENTER).y;
 
 				dynBody->velocity.y = 0;
 			}
 			else if (normal.y == 0) // Horizontal
 			{
 				// Left -> Right
-				if (directionVec.x > 0) dynBody->rect.x = body->GetPosition().x - dynBody->rect.w - PIXEL_FREEDOM;
+				if (directionVec.x > 0) dynBody->rect.x = body->GetPosition().x - dynBody->rect.w;
 				// Right -> Left
-				if (directionVec.x < 0) dynBody->rect.x = body->GetRect().GetPosition(Align::CENTER_RIGHT).x + PIXEL_FREEDOM;
+				if (directionVec.x < 0) dynBody->rect.x = body->GetRect().GetPosition(Align::CENTER_RIGHT).x;
 
 				dynBody->velocity.x = 0;
 			}

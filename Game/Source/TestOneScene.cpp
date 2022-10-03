@@ -23,7 +23,7 @@ bool TestOneScene::Start()
 	emitter = npl->SetScenarioPreset(ScenarioPreset::CORRIDOR_SCENARIO_PRESET, window->GetSize(), 1);
 	npl->CreateBody(Rect{ 150, 350, 200, 35 }, 1).Static();
 	test = (DynamicBody*)npl->CreateBody(Rect{ 230, 100, 50, 80 }, 1).Dynamic();
-	globalDebugId = npl->CreateBody(Rect{ 430, 100, 50, 80 }, 1).Dynamic()->GetId();
+	npl->CreateBody(Rect{ 430, 100, 50, 80 }, 1).Dynamic();
 	npl->CreateBody(npl->ReturnScenarioRect(), 1).Gas(10, 1.414f, 1000);
 
 	npl->SetListener(test);
@@ -50,7 +50,7 @@ bool TestOneScene::Update(float dt)
 	// Update Dynamic Body
 	if (input->GetKey(SDL_SCANCODE_A) == KeyState::KEY_REPEAT) test->ApplyForce(-100, 0);
 	if (input->GetKey(SDL_SCANCODE_D) == KeyState::KEY_REPEAT) test->ApplyForce(100, 0);
-	if (input->GetKey(SDL_SCANCODE_SPACE) == KeyState::KEY_REPEAT) test->ApplyForce(0, -1000);
+	if (input->GetKey(SDL_SCANCODE_SPACE) == KeyState::KEY_DOWN) test->ApplyMomentum(0, -500);
 
 	if (input->GetKey(SDL_SCANCODE_RETURN) == KeyState::KEY_DOWN) emitter->Play(0);
 	if (input->GetKey(SDL_SCANCODE_RSHIFT) == KeyState::KEY_DOWN) test->Play(0);
