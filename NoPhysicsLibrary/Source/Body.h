@@ -12,7 +12,7 @@ class Body
 {
 public: // Methods
 
-	Body(BodyClass clas = BodyClass::EMPTY_BODY, Rect rect = { 0.0f, 0.0f, 1.0f, 1.0f }, float mass = 1.0f);
+	Body(BodyClass clas = BodyClass::EMPTY_BODY, Rect rect = { 0.0f, 0.0f, 1.0f, 1.0f }, float mass = 1.0f, const float* pixelsToMeters = nullptr);
 
 	virtual ~Body() {}
 
@@ -68,7 +68,7 @@ protected: // Variables
 	BodyClass clas = BodyClass::EMPTY_BODY;
 	float mass = 1.0f;
 	intptr_t id = 0;
-
+	const float* pixelsToMeters = nullptr;
 	std::vector<AcousticData*> acousticDataList;
 
 	// Collidable | 

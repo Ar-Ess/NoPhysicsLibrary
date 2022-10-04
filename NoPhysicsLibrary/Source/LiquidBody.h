@@ -6,7 +6,7 @@ class LiquidBody : public Body
 {
 public:
 
-	LiquidBody(Rect rect, float mass);
+	LiquidBody(Rect rect, float mass, const float* pixelsToMeters);
 
 	~LiquidBody() override;
 

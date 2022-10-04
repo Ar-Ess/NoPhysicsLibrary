@@ -4,11 +4,12 @@
 #include "Define.h"
 #include "MathUtils.h"
 
-Body::Body(BodyClass clas, Rect rect, float mass)
+Body::Body(BodyClass clas, Rect rect, float mass, const float* pixelsToMeters)
 {
 	this->clas = clas;
 	this->rect = rect;
 	this->emissionPoint = rect.GetPosition(Align::CENTER);
+	this->pixelsToMeters = pixelsToMeters;
 
 	// You idiot, mass can not be zero :}
 	assert(mass != 0);

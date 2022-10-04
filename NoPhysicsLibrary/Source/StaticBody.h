@@ -6,7 +6,7 @@ class StaticBody : public Body
 {
 public: // Methods
 
-	StaticBody(Rect rect = { 0.0f, 0.0f, 1.0f, 1.0f }, float mass = 1.0f);
+	StaticBody(Rect rect, float mass, const float* pixelsToMeters);
 
 	~StaticBody() override;
 };

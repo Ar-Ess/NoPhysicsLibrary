@@ -8,7 +8,7 @@ class DynamicBody : public Body
 {
 public: // Methods
 
-	DynamicBody(Rect rect, Point velocity, Point gravityOffset, float mass, Flag* globals);
+	DynamicBody(Rect rect, Point velocity, Point gravityOffset, float mass, Flag* globals, const float* pixelsToMeters);
 
 	~DynamicBody() override;
 

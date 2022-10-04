@@ -6,7 +6,7 @@ class GasBody : public Body
 {
 public:
 
-	GasBody(Rect rect, float mass, float density, float heatRatio, float pressure);
+	GasBody(Rect rect, float mass, float density, float heatRatio, float pressure, const float* pixelsToMeters);
 
 	~GasBody() override;
 
