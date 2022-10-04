@@ -70,13 +70,11 @@ void Physics::Integrate(float dt, Body* b)
 {
 	DynamicBody* body = (DynamicBody*)b;
 
-	float metersToPixels = (1 / *pixelsToMeters);
-
 	// Second Order Red Velvet Integrator
-	body->rect.x += (body->velocity.x * dt + 0.5f * body->acceleration.x * dt * dt) * metersToPixels;
+	body->rect.x += body->velocity.x * dt + 0.5f * body->acceleration.x * dt * dt;
 	body->velocity.x += body->acceleration.x * dt;
 
-	body->rect.y += (body->velocity.y * dt + 0.5f * body->acceleration.y * dt * dt) * metersToPixels;
+	body->rect.y += body->velocity.y * dt + 0.5f * body->acceleration.y * dt * dt;
 	body->velocity.y += body->acceleration.y * dt;
 }
 
@@ -136,8 +134,8 @@ void Physics::DetectCollisions(std::vector<Body*>* bodies)
 			if (b2->GetClass() == BodyClass::GAS_BODY || b2->GetClass() == BodyClass::LIQUID_BODY) continue;
 			if (b1->GetClass() == BodyClass::STATIC_BODY && b2->GetClass() == BodyClass::STATIC_BODY) continue;
 
-			Rect intersect = MathUtils::IntersectRectangle(b1->GetRect(), b2->GetRect());
-			if (!MathUtils::CheckCollision(b1->GetRect(), b2->GetRect())) continue;
+			Rect intersect = MathUtils::IntersectRectangle(b1->GetRect(InUnit::IN_METERS), b2->GetRect(InUnit::IN_METERS));
+			if (!MathUtils::CheckCollision(b1->GetRect(InUnit::IN_METERS), b2->GetRect(InUnit::IN_METERS))) continue;
 
 			Body* dyn = b2;
 			Body* other = b2;
@@ -155,7 +153,7 @@ void Physics::Declip()
 		DynamicBody* dynBody = (DynamicBody*)c->GetDynBody();
 		Rect intersect = c->GetCollisionRectangle();
 
-		Point directionVec = dynBody->GetPosition() - dynBody->backup.position;
+		Point directionVec = dynBody->GetPosition(InUnit::IN_METERS) - dynBody->backup.position;
 
 		switch (c->GetBody()->GetClass())
 		{
@@ -165,12 +163,12 @@ void Physics::Declip()
 			//-Todone: raycast from center and detect intersection from infinite (just w/2 or h/2 of dynamic) plans of the static body
 			// prioritize go back in time rather than linear declipping :_)
 			DynamicBody* body = (DynamicBody*)c->GetBody();
-			Point directionVecAlter = body->GetPosition() - body->backup.position;
+			Point directionVecAlter = body->GetPosition(InUnit::IN_METERS) - body->backup.position;
 			Point normal = {};
 
 			Point centerOfIntersecion = c->GetCollisionRectangle().GetPosition(Align::CENTER);
 			Ray ray(centerOfIntersecion.Apply(directionVec.Multiply(-1)), centerOfIntersecion);
-			if (!MathUtils::RayCast(ray, body->GetRect(), normal)) break;
+			if (!MathUtils::RayCast(ray, body->GetRect(InUnit::IN_METERS), normal)) break;
 
 			if (normal.x == 0) // Vertical
 			{
@@ -208,7 +206,7 @@ void Physics::Declip()
 			}
 			else
 			{
-				Rect wtfRect = c->GetBody()->GetRect();
+				Rect wtfRect = c->GetBody()->GetRect(InUnit::IN_METERS);
 				Point wtfOrgn = dynBody->backup.position;
 				Point wtfDir = directionVec;
 				LOG("Weird Rectangle: X = %.f, Y = %.f, Width = %.f, Heigth = %.f\nWeird Ray: X = %.f, Y = %.f, Dir X = %.f, Dir Y = %.f", wtfRect.x, wtfRect.y, wtfRect.w, wtfRect.h, wtfOrgn.x, wtfOrgn.y, wtfDir.x, wtfDir.y);
@@ -227,29 +225,29 @@ void Physics::Declip()
 
 			Point centerOfIntersecion = c->GetCollisionRectangle().GetPosition(Align::CENTER);
 			Ray ray(centerOfIntersecion.Apply(directionVec.Multiply(-1)), centerOfIntersecion);
-			if (!MathUtils::RayCast(ray, body->GetRect(), normal)) break;
+			if (!MathUtils::RayCast(ray, body->GetRect(InUnit::IN_METERS), normal)) break;
 
 			if (normal.x == 0) // Vertical
 			{
 				// Top -> Bottom
-				if (directionVec.y > 0) dynBody->rect.y = body->GetPosition().y - dynBody->rect.h;
+				if (directionVec.y > 0) dynBody->rect.y = body->GetPosition(InUnit::IN_METERS).y - dynBody->rect.h;
 				// Bottom -> Top
-				if (directionVec.y < 0) dynBody->rect.y = body->GetRect().GetPosition(Align::BOTTOM_CENTER).y;
+				if (directionVec.y < 0) dynBody->rect.y = body->GetRect(InUnit::IN_METERS).GetPosition(Align::BOTTOM_CENTER).y;
 
 				dynBody->velocity.y = 0;
 			}
 			else if (normal.y == 0) // Horizontal
 			{
 				// Left -> Right
-				if (directionVec.x > 0) dynBody->rect.x = body->GetPosition().x - dynBody->rect.w;
+				if (directionVec.x > 0) dynBody->rect.x = body->GetPosition(InUnit::IN_METERS).x - dynBody->rect.w;
 				// Right -> Left
-				if (directionVec.x < 0) dynBody->rect.x = body->GetRect().GetPosition(Align::CENTER_RIGHT).x;
+				if (directionVec.x < 0) dynBody->rect.x = body->GetRect(InUnit::IN_METERS).GetPosition(Align::CENTER_RIGHT).x;
 
 				dynBody->velocity.x = 0;
 			}
 			else
 			{
-				Rect wtfRect = c->GetBody()->GetRect();
+				Rect wtfRect = c->GetBody()->GetRect(InUnit::IN_METERS);
 				Point wtfOrgn = dynBody->backup.position;
 				Point wtfDir = directionVec;
 				LOG("Weird Rectangle: X = %.f, Y = %.f, Width = %.f, Heigth = %.f\nWeird Ray: X = %.f, Y = %.f, Dir X = %.f, Dir Y = %.f", wtfRect.x, wtfRect.y, wtfRect.w, wtfRect.h, wtfOrgn.x, wtfOrgn.y, wtfDir.x, wtfDir.y);

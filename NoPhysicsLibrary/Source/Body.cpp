@@ -21,8 +21,10 @@ Body::Body(BodyClass clas, Rect rect, float mass, const float* pixelsToMeters)
 	id = reinterpret_cast<int>(this);
 }
 
-void Body::SetEmissionPoint(Point point)
+void Body::SetEmissionPoint(Point point, InUnit unit)
 {
+	if (unit == InUnit::IN_PIXELS) point *= *pixelsToMeters;
+
 	Rect emissionRect = {point.Apply(-1, -1), 2, 2};
 	emissionPoint = point;
 	if (MathUtils::CheckCollision(rect, emissionRect)) return;
@@ -30,8 +32,10 @@ void Body::SetEmissionPoint(Point point)
 	emissionPoint = MathUtils::ClosestRectIntersectionFromOutsidePoint(emissionPoint, rect);
 }
 
-void Body::SetEmissionPoint(Align alignment, Point offset)
+void Body::SetEmissionPoint(Align alignment, Point offset, InUnit unit)
 {
+	if (unit == InUnit::IN_PIXELS) offset *= *pixelsToMeters;
+
 	emissionPoint = rect.GetPosition(alignment);
 	if (offset.IsZero()) return;
 
@@ -40,6 +44,20 @@ void Body::SetEmissionPoint(Align alignment, Point offset)
 	if (MathUtils::CheckCollision(rect, emissionRect)) return;
 
 	emissionPoint = MathUtils::ClosestRectIntersectionFromOutsidePoint(emissionPoint, rect);
+}
+
+Point Body::GetPosition(InUnit unit) const
+{
+	float conversion = 1;
+	if (unit == InUnit::IN_PIXELS) conversion = (1 / *pixelsToMeters);
+	return rect.GetPosition() * conversion;
+}
+
+Point Body::GetSize(InUnit unit) const
+{
+	float conversion = 1;
+	if (unit == InUnit::IN_PIXELS) conversion = (1 / *pixelsToMeters);
+	return rect.GetSize() * conversion;
 }
 
 void Body::SolveCollision(Body& body, int dir)

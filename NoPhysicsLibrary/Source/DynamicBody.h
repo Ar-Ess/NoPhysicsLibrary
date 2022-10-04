@@ -8,7 +8,7 @@ class DynamicBody : public Body
 {
 public: // Methods
 
-	DynamicBody(Rect rect, Point velocity, Point gravityOffset, float mass, Flag* globals, const float* pixelsToMeters);
+	DynamicBody(Rect rect, Point gravityOffset, float mass, Flag* globals, const float* pixelsToMeters);
 
 	~DynamicBody() override;
 
@@ -18,19 +18,19 @@ public: // Methods
 	bool IsColliding();
 	
 	// Applies an specific force to this body
-	void ApplyForce(float newtonsX, float newtonsY);
+	void ApplyForce(float newtonsX, float newtonsY, InUnit unit = InUnit::IN_METERS);
 	// Applies an specific force to this body
-	void ApplyForce(Point newtons);
+	void ApplyForce(Point newtons, InUnit unit = InUnit::IN_METERS);
 
 	// Applies an specific force to this body
-	void ApplyMomentum(float momentumX, float momentumY);
+	void ApplyMomentum(float momentumX, float momentumY, InUnit unit = InUnit::IN_METERS);
 	// Applies an specific force to this body
-	void ApplyMomentum(Point momentum);
+	void ApplyMomentum(Point momentum, InUnit unit = InUnit::IN_METERS);
 
 	// Sets a local gravity to the body
-	void SetGravityOffset(Point gravityOffset);
+	void SetGravityOffset(Point gravityOffset, InUnit unit = InUnit::IN_METERS);
 	// Returns the local gravity vector of the body
-	Point GetGravityOffset() const;
+	Point GetGravityOffset(InUnit unit = InUnit::IN_METERS) const;
 
 private: // Methods
 

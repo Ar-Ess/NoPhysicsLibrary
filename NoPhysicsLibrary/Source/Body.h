@@ -1,6 +1,7 @@
 #pragma once
 
 #include "BodyClassEnum.h"
+#include "InputUnitsEnum.h"
 
 #include "Flag.h"
 #include "AcusticData.h"
@@ -12,7 +13,7 @@ class Body
 {
 public: // Methods
 
-	Body(BodyClass clas = BodyClass::EMPTY_BODY, Rect rect = { 0.0f, 0.0f, 1.0f, 1.0f }, float mass = 1.0f, const float* pixelsToMeters = nullptr);
+	Body(BodyClass clas, Rect rect, float mass, const float* pixelsToMeters);
 
 	virtual ~Body() {}
 
@@ -23,20 +24,20 @@ public: // Methods
 	// Sets the body emission point, where the body sound will emit from.
 	// Values out of body bounds will be set to the closest point inside it
 	// X increments from left to right. Y increments from top to bottom
-	void SetEmissionPoint(Point point);
+	void SetEmissionPoint(Point point, InUnit unit = InUnit::IN_PIXELS);
 
 	// Sets the body emission point, where the body sound will emit from.
 	// Values out of body bounds will be set to the closest point inside it
-	void SetEmissionPoint(Align align, Point offset = { 0, 0 });
+	void SetEmissionPoint(Align align, Point offset = { 0, 0 }, InUnit unit = InUnit::IN_PIXELS);
 
 	// Returns the x & y coordinates of the body
-	inline Point GetPosition() const { return rect.GetPosition(); }
+	Point GetPosition(InUnit unit = InUnit::IN_PIXELS) const;
 
 	// Returns the width & height of the body
-	inline Point GetSize() const { return rect.GetSize(); }
+	Point GetSize(InUnit unit = InUnit::IN_PIXELS) const;
 
 	// Returns the pointer to the rectangle of the body
-	inline Rect GetRect() const { return rect; }
+	Rect GetRect(InUnit unit = InUnit::IN_PIXELS) const { return { GetPosition(unit), GetSize(unit) }; }
 
 	// Returns the body class enum
 	inline BodyClass GetClass() const { return clas; }
@@ -48,7 +49,7 @@ public: // Methods
 	inline intptr_t GetId() const { return id; }
 
 	// Returns wether the body is collidable
-	inline bool IsCollidable() { return properties.Get(0); }
+	inline bool IsCollidable() const { return properties.Get(0); }
 
 	// Sets the collidable property of the body
 	inline void SetCollidable(bool set) { properties.Set(set, 1); }

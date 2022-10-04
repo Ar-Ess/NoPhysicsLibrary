@@ -21,14 +21,14 @@ bool TestOneScene::Start()
 	npl->Configure().PanRange(10);
 	npl->Configure().PixelsToMeters(6);
 
-	emitter = npl->SetScenarioPreset(ScenarioPreset::CORRIDOR_SCENARIO_PRESET, window->GetSize(), 1);
-	npl->CreateBody(Rect{ 150, 350, 200, 35 }, 1).Static();
-	test = (DynamicBody*)npl->CreateBody(Rect{ 230, 100, 50, 80 }, 1).Dynamic();
-	npl->CreateBody(Rect{ 430, 100, 50, 80 }, 1).Dynamic();
-	npl->CreateBody(npl->ReturnScenarioRect(), 1).Gas(10, 1.414f, 1000);
+	emitter = npl->SetScenarioPreset(ScenarioPreset::CORRIDOR_SCENARIO_PRESET, window->GetSize(), InUnit::IN_PIXELS, 1);
+	npl->CreateBody(Rect{ 150, 350, 200, 35 }, 1, InUnit::IN_PIXELS).Static();
+	test = (DynamicBody*)npl->CreateBody(Rect{ 230, 100, 50, 80 }, 1, InUnit::IN_PIXELS).Dynamic();
+	npl->CreateBody(Rect{ 430, 100, 50, 80 }, 1, InUnit::IN_PIXELS).Dynamic();
+	npl->CreateBody(npl->ReturnScenarioRect(), 1, InUnit::IN_PIXELS).Gas(10, 1.414f, 1000);
 
 	npl->SetListener(test);
-	npl->SetGlobalGravity({ 0.0f, 20.0f });
+	npl->SetGlobalGravity({ 0.0f, 200.0f }, InUnit::IN_METERS);
 
 	npl->LoadSound("Assets/Audio/bounce.wav");
 
@@ -43,15 +43,15 @@ bool TestOneScene::Update(float dt)
 	static bool pause = false;
 
 	// Information: The user will listen from the point of view of the listener body.
-	if (test->GetPosition().x >= 625) render->camera.x = test->GetPosition().x  - 625;
+	if (test->GetPosition(InUnit::IN_PIXELS).x >= 625) render->camera.x = test->GetPosition(InUnit::IN_PIXELS).x  - 625;
 	if (render->camera.x < 0) render->camera.x = 0;
 	if (render->camera.x > 3000) render->camera.x = 3000;
 	if (render->camera.y < 0) render->camera.y = 0;
 
 	// Update Dynamic Body
-	if (input->GetKey(SDL_SCANCODE_A) == KeyState::KEY_REPEAT) test->ApplyMomentum(-5, 0);
-	if (input->GetKey(SDL_SCANCODE_D) == KeyState::KEY_REPEAT) test->ApplyMomentum(5, 0);
-	if (input->GetKey(SDL_SCANCODE_SPACE) == KeyState::KEY_DOWN) test->ApplyMomentum(0, -35);
+	if (input->GetKey(SDL_SCANCODE_A) == KeyState::KEY_REPEAT) test->ApplyMomentum(-5, 0, InUnit::IN_METERS);
+	if (input->GetKey(SDL_SCANCODE_D) == KeyState::KEY_REPEAT) test->ApplyMomentum(5, 0, InUnit::IN_METERS);
+	if (input->GetKey(SDL_SCANCODE_SPACE) == KeyState::KEY_DOWN) test->ApplyMomentum(0, -35, InUnit::IN_METERS);
 
 	if (input->GetKey(SDL_SCANCODE_RETURN) == KeyState::KEY_DOWN) emitter->Play(0);
 	if (input->GetKey(SDL_SCANCODE_RSHIFT) == KeyState::KEY_DOWN) test->Play(0);
@@ -82,7 +82,7 @@ bool TestOneScene::Update(float dt)
 		case BodyClass::GAS_BODY:     color = { 255, 255, 255, (Uint8)(color.a - 40) }; break;
 		}
 
-		render->DrawRectangle(b->GetRect(), color);
+		render->DrawRectangle(b->GetRect(InUnit::IN_PIXELS), color);
 	}
 
 	// Draws the collisions

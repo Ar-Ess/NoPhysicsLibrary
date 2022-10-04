@@ -72,12 +72,14 @@ void NPL::CleanUp()
 
 }
 
-BodyCreation NPL::CreateBody(Rect rectangle, float mass)
+BodyCreation NPL::CreateBody(Rect rectangle, float mass, InUnit unit)
 {
 	//Library not initialized. Call NPL::Init() first
 	assert(physics != nullptr);
 
-	return BodyCreation(rectangle, mass, &bodies, &gasIndex, physics);
+	if (unit == InUnit::IN_PIXELS) rectangle = { rectangle.GetPosition() * pixelsToMeters, rectangle.GetSize() * pixelsToMeters };
+
+	return BodyCreation(rectangle, mass, &bodies, &gasIndex, physics, &pixelsToMeters, unit);
 }
 
 LibraryConfig NPL::Configure()
@@ -95,13 +97,13 @@ void NPL::DestroyScenario()
 
 Rect NPL::ReturnScenarioRect()
 {
-	Rect first = bodies.front()->GetRect();
+	Rect first = bodies.front()->GetRect(InUnit::IN_PIXELS);
 	Point minP = { first.x, first.y };
 	Point maxP = { first.x + first.w, first.y + first.h};
 
 	for (Body* body : bodies)
 	{
-		Rect bodyRect = body->GetRect();
+		Rect bodyRect = body->GetRect(InUnit::IN_PIXELS);
 		if (bodyRect.x + bodyRect.w > maxP.x) maxP.x = bodyRect.x + bodyRect.w;
 		if (bodyRect.y + bodyRect.h > maxP.y) maxP.y = bodyRect.y + bodyRect.h;
 		if (bodyRect.x < minP.x) minP.x = bodyRect.x;
@@ -121,8 +123,9 @@ inline Point NPL::GetGlobalGravity() const
 	return physics->globalGravity;
 }
 
-void NPL::SetGlobalGravity(Point vector)
+void NPL::SetGlobalGravity(Point vector, InUnit unit)
 {
+	if (unit == InUnit::IN_PIXELS) vector *= pixelsToMeters;
 	physics->globalGravity = vector;
 }
 
@@ -131,8 +134,9 @@ inline Point NPL::GetGlobalFriction() const
 	return physics->globalFriction;
 }
 
-void NPL::SetGlobalFriction(Point vector)
+void NPL::SetGlobalFriction(Point vector, InUnit unit)
 {
+	if (unit == InUnit::IN_PIXELS) vector *= pixelsToMeters;
 	physics->globalFriction = vector;
 }
 
@@ -141,19 +145,20 @@ inline Point NPL::GetGlobalRestitution() const
 	return physics->globalRestitution;
 }
 
-void NPL::SetGlobalRestitution(Point vector)
+void NPL::SetGlobalRestitution(Point vector, InUnit unit)
 {
+	if (unit == InUnit::IN_PIXELS) vector *= pixelsToMeters;
 	physics->globalRestitution = vector;
 }
 
-bool NPL::DeathLimit(Rect limits)
+bool NPL::DeathLimit(Rect limits, InUnit unit)
 {
 	bool ret = false;
 	for (Body* b : bodies)
 	{
 		if (b->GetClass() != BodyClass::DYNAMIC_BODY) continue;
 
-		if (!MathUtils::CheckCollision(b->GetRect(), limits))
+		if (!MathUtils::CheckCollision(b->GetRect(unit), limits))
 		{
 			ret = true;
 			DestroyBody(b);
@@ -163,13 +168,13 @@ bool NPL::DeathLimit(Rect limits)
 	return ret;
 }
 
-bool NPL::DeathLimit(Rect limits, DynamicBody* body)
+bool NPL::DeathLimit(Rect limits, DynamicBody* body, InUnit unit)
 {
 	if (!body || body->GetClass() != BodyClass::DYNAMIC_BODY) return false;
 
 	bool ret = false;
 	
-	if (!MathUtils::CheckCollision(body->GetRect(), limits))
+	if (!MathUtils::CheckCollision(body->GetRect(unit), limits))
 	{
 		ret = true;
 		DestroyBody(body);
@@ -204,8 +209,10 @@ void NPL::PausePhysics(bool pause)
 	physics->globals.Set(0, pause);
 }
 
-StaticBody* NPL::SetScenarioPreset(ScenarioPreset sPreset, Point wSize, int returnStatic)
+StaticBody* NPL::SetScenarioPreset(ScenarioPreset sPreset, Point wSize, InUnit unit, int returnStatic)
 {
+	if (unit == InUnit::IN_METERS) wSize *= (1 / pixelsToMeters);
+
 	if (returnStatic < -1) returnStatic = -1;
 	DestroyScenario();
 	StaticBody* ret = nullptr;
@@ -337,7 +344,7 @@ void NPL::StepAcoustics()
 			continue;
 		}
 
-		GasBody* environment = GetEnvironmentBody(b->GetRect());
+		GasBody* environment = GetEnvironmentBody(b->GetRect(InUnit::IN_METERS));
 
 		if (!environment)
 		{
@@ -378,7 +385,7 @@ void NPL::ListenerLogic(Body* b, GasBody* environment)
 	for (AcousticData* data : b->acousticDataList)
 	{
 		// Get the distance between Body & Listener
-		float distance = listener->GetPosition().Distance(data->position) * pixelsToMeters;
+		float distance = listener->GetPosition(InUnit::IN_METERS).Distance(data->position) * pixelsToMeters;
 
 		float pan = ComputePanning(distance, data->position.x * pixelsToMeters);
 
@@ -396,7 +403,7 @@ GasBody* NPL::GetEnvironmentBody(Rect body)
 {
 	for (unsigned int* index : gasIndex)
 	{
-		if (MathUtils::CheckCollision(body, bodies[*index]->GetRect()))
+		if (MathUtils::CheckCollision(body, bodies[*index]->GetRect(InUnit::IN_METERS)))
 			return (GasBody*)bodies[*index];
 	}
 
@@ -407,7 +414,7 @@ float NPL::ComputePanning(float distance, float bodyX)
 {
 	// Check direction for audio panning (50L(neg) or 50R(pos))
 	float direction = 1;
-	if (listener->GetPosition().x < bodyX) direction *= -1;
+	if (listener->GetPosition(InUnit::IN_METERS).x < bodyX) direction *= -1;
 
 	// Narrow down distance over Range for panning operations
 	if (distance > panRange) distance = panRange;

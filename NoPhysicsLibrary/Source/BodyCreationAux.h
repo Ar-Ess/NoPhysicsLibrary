@@ -9,7 +9,7 @@
 
 struct BodyCreation
 {
-	BodyCreation(Rect rect, float mass, std::vector<Body*>* bodies, std::vector<unsigned int*>* gasLocation,Physics* physics, const float* pixelsToMeters)
+	BodyCreation(Rect rect, float mass, std::vector<Body*>* bodies, std::vector<unsigned int*>* gasLocation,Physics* physics, const float* pixelsToMeters, InUnit unit)
 	{
 		this->mass = mass;
 		this->rect = rect;
@@ -17,6 +17,7 @@ struct BodyCreation
 		this->gasLocation = gasLocation;
 		this->physics = physics;
 		this->pixelsToMeters = pixelsToMeters;
+		this->unit = unit;
 	}
 
 	StaticBody* Static()
@@ -25,9 +26,11 @@ struct BodyCreation
 		return (StaticBody*)bodies->back();
 	}
 
-	DynamicBody* Dynamic(Point velocity = { 0, 0 }, Point gravityOffset = {0, 0})
+	DynamicBody* Dynamic(Point gravityOffset = {0, 0})
 	{
-		bodies->emplace_back(new DynamicBody(rect, velocity, gravityOffset, mass, &physics->globals, pixelsToMeters));
+		if (!gravityOffset.IsZero() && unit == InUnit::IN_PIXELS) gravityOffset *= *pixelsToMeters;
+
+		bodies->emplace_back(new DynamicBody(rect, gravityOffset, mass, &physics->globals, pixelsToMeters));
 		return (DynamicBody*)bodies->back();
 	}
 
@@ -52,4 +55,5 @@ private:
 	std::vector<unsigned int*>* gasLocation = nullptr;
 	Physics* physics = nullptr;
 	const float* pixelsToMeters = nullptr;
+	InUnit unit = InUnit::IN_PIXELS;
 };

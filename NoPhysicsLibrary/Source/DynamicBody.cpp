@@ -1,8 +1,7 @@
 #include "DynamicBody.h"
 
-DynamicBody::DynamicBody(Rect rect, Point velocity, Point gravityOffset, float mass, Flag* globals, const float* pixelsToMeters) : Body(BodyClass::DYNAMIC_BODY, rect, mass, pixelsToMeters)
+DynamicBody::DynamicBody(Rect rect, Point gravityOffset, float mass, Flag* globals, const float* pixelsToMeters) : Body(BodyClass::DYNAMIC_BODY, rect, mass, pixelsToMeters)
 {
-	this->velocity = velocity;
 	this->gravityOffset = gravityOffset;
 	this->globals = globals;
 }
@@ -33,46 +32,58 @@ bool DynamicBody::IsColliding()
 	return collisionFlags.IsAnyTrue();
 }
 
-void DynamicBody::ApplyForce(float newtonsX, float newtonsY)
+void DynamicBody::ApplyForce(float newtonsX, float newtonsY, InUnit unit)
 {
 	if (globals->Get(0)) return; // Physics are paused
-	if (newtonsX == 0 && newtonsY == 0) return; // If force is null
+	Point newtons = { newtonsX, newtonsY };
 
-	forces.emplace_back(new Force({ newtonsX, newtonsY }));
+	if (newtons.IsZero()) return; // If newtons is null
+	if (unit == InUnit::IN_PIXELS) newtons *= *pixelsToMeters;
+
+	forces.emplace_back(new Force(newtons));
 }
 
-void DynamicBody::ApplyForce(Point newtons)
+void DynamicBody::ApplyForce(Point newtons, InUnit unit)
+{
+	if (newtons.IsZero()) return; // If newtons is null
+	if (unit == InUnit::IN_PIXELS) newtons *= *pixelsToMeters;
+
+	forces.emplace_back(new Force(newtons));
+}
+
+void DynamicBody::ApplyMomentum(float momentumX, float momentumY, InUnit unit)
 {
 	if (globals->Get(0)) return; // Physics are paused
-	if (!newtons.IsZero()) return; // If force is null
+	Point momentum = { momentumX, momentumY };
 
-	forces.emplace_back(new Force({ newtons.x, newtons.y }));
+	if (momentum.IsZero()) return; // If momentum is null
+	if (unit == InUnit::IN_PIXELS) momentum *= *pixelsToMeters;
+
+	momentums.emplace_back(new Momentum(momentum));
 }
 
-void DynamicBody::ApplyMomentum(float momentumX, float momentumY)
+void DynamicBody::ApplyMomentum(Point momentum, InUnit unit)
 {
 	if (globals->Get(0)) return; // Physics are paused
-	if (momentumX == 0 && momentumY == 0) return; // If momentum is null
 
-	momentums.emplace_back(new Momentum({ momentumX, momentumY }));
+	if (momentum.IsZero()) return; // If momentum is null
+	if (unit == InUnit::IN_PIXELS) momentum *= *pixelsToMeters;
+
+	momentums.emplace_back(new Momentum(momentum));
 }
 
-void DynamicBody::ApplyMomentum(Point momentum)
+void DynamicBody::SetGravityOffset(Point gravityOffset, InUnit unit)
 {
-	if (globals->Get(0)) return; // Physics are paused
-	if (!momentum.IsZero()) return; // If momentum is null
-
-	forces.emplace_back(new Force({ momentum.x, momentum.y }));
-}
-
-void DynamicBody::SetGravityOffset(Point gravityOffset)
-{
+	if (unit == InUnit::IN_PIXELS) gravityOffset *= *pixelsToMeters;
 	this->gravityOffset = gravityOffset;
 }
 
-inline Point DynamicBody::GetGravityOffset() const
+inline Point DynamicBody::GetGravityOffset(InUnit unit) const
 {
-	return gravityOffset;
+	float conversion = 1;
+	if (unit == InUnit::IN_PIXELS) conversion = (1 / *pixelsToMeters);
+
+	return gravityOffset.Multiply(conversion);
 }
 
 void DynamicBody::SecondNewton()
@@ -84,8 +95,6 @@ void DynamicBody::SecondNewton()
 
 	// You idiot, mass can not be zero :}
 	assert(mass != 0);
-
-	// total forces = kg * pxl / s^2
 
 	// SUM Forces = massa * acceleració
 	acceleration.x = totalForces.vector.x / mass;

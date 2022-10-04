@@ -5,9 +5,9 @@
 
 #include "ScenarioPresetEnum.h"
 #include "PhysicsPresetEnum.h"
-#include "SoundData.h"
+#include "InputUnitsEnum.h"
 
-// Temp
+#include "SoundData.h"
 #include "Collision.h"
 
 class NPL
@@ -26,7 +26,7 @@ public:
 
 	// Create a new body
 	//  - Follow this function with a "." to choose the body type
-	BodyCreation CreateBody(Rect rectangle, float mass);
+	BodyCreation CreateBody(Rect rectangle, float mass, InUnit unit = InUnit::IN_PIXELS);
 
 	// Configure certain aspects of this library operation
 	LibraryConfig Configure();
@@ -37,7 +37,7 @@ public:
 
 	// Set a predesigned scenario
 	//  - This function destroys automatically the previous scenario
-	StaticBody* SetScenarioPreset(ScenarioPreset preset, Point windowSize = { 1080, 720 }, int returnStatic = -1);
+	StaticBody* SetScenarioPreset(ScenarioPreset preset, Point windowSize = { 1080, 720 }, InUnit unit = InUnit::IN_PIXELS, int returnStatic = -1);
 
 	// Destroys all Static Bodies created
 	void DestroyScenario();
@@ -53,22 +53,22 @@ public:
 	// Returns the global gravity vector
 	Point GetGlobalGravity() const;
 	// Sets if global gravity is active and its vector
-	void SetGlobalGravity(Point vector);
+	void SetGlobalGravity(Point vector, InUnit unit = InUnit::IN_METERS);
 
 	// Returns the global friction vector
 	Point GetGlobalFriction() const;
 	// Sets if global friction is active and its vector
-	void SetGlobalFriction(Point vector);
+	void SetGlobalFriction(Point vector, InUnit unit = InUnit::IN_METERS);
 
 	// Returns the global restitution vector
 	Point GetGlobalRestitution() const;
 	// Sets if global restitution is active and its vector
-	void SetGlobalRestitution(Point vector);
+	void SetGlobalRestitution(Point vector, InUnit unit = InUnit::IN_METERS);
 
 	// Destroys a body whenever it's outside the rectangle setted. 
 	//    Returns true when a body is destroyed
-	bool DeathLimit(Rect limits);
-	bool DeathLimit(Rect limits, DynamicBody* body);
+	bool DeathLimit(Rect limits, InUnit unit = InUnit::IN_PIXELS);
+	bool DeathLimit(Rect limits, DynamicBody* body, InUnit unit = InUnit::IN_PIXELS);
 
 	// Destroy a body, returns true if the body has been successfully deleted
 	bool DestroyBody(Body* body);
