@@ -72,14 +72,14 @@ void NPL::CleanUp()
 
 }
 
-BodyCreation NPL::CreateBody(Rect rectangle, float mass, InUnit unit)
+BodyCreation NPL::CreateBody(Rect rectangle, float mass)
 {
 	//Library not initialized. Call NPL::Init() first
 	assert(physics != nullptr);
 
-	if (unit == InUnit::IN_PIXELS) rectangle = { rectangle.GetPosition() * pixelsToMeters, rectangle.GetSize() * pixelsToMeters };
+	rectangle = { rectangle.GetPosition() * pixelsToMeters, rectangle.GetSize() * pixelsToMeters };
 
-	return BodyCreation(rectangle, mass, &bodies, &gasIndex, physics, &pixelsToMeters, unit);
+	return BodyCreation(rectangle, mass, &bodies, &gasIndex, physics, &pixelsToMeters);
 }
 
 LibraryConfig NPL::Configure()
@@ -151,14 +151,14 @@ void NPL::SetGlobalRestitution(Point vector, InUnit unit)
 	physics->globalRestitution = vector;
 }
 
-bool NPL::DeathLimit(Rect limits, InUnit unit)
+bool NPL::DeathLimit(Rect limits)
 {
 	bool ret = false;
 	for (Body* b : bodies)
 	{
 		if (b->GetClass() != BodyClass::DYNAMIC_BODY) continue;
 
-		if (!MathUtils::CheckCollision(b->GetRect(unit), limits))
+		if (!MathUtils::CheckCollision(b->GetRect(InUnit::IN_PIXELS), limits))
 		{
 			ret = true;
 			DestroyBody(b);
@@ -168,13 +168,13 @@ bool NPL::DeathLimit(Rect limits, InUnit unit)
 	return ret;
 }
 
-bool NPL::DeathLimit(Rect limits, DynamicBody* body, InUnit unit)
+bool NPL::DeathLimit(Rect limits, DynamicBody* body)
 {
 	if (!body || body->GetClass() != BodyClass::DYNAMIC_BODY) return false;
 
 	bool ret = false;
 	
-	if (!MathUtils::CheckCollision(body->GetRect(unit), limits))
+	if (!MathUtils::CheckCollision(body->GetRect(InUnit::IN_PIXELS), limits))
 	{
 		ret = true;
 		DestroyBody(body);
@@ -209,10 +209,8 @@ void NPL::PausePhysics(bool pause)
 	physics->globals.Set(0, pause);
 }
 
-StaticBody* NPL::SetScenarioPreset(ScenarioPreset sPreset, Point wSize, InUnit unit, int returnStatic)
+StaticBody* NPL::SetScenarioPreset(ScenarioPreset sPreset, Point wSize, int returnStatic)
 {
-	if (unit == InUnit::IN_METERS) wSize *= (1 / pixelsToMeters);
-
 	if (returnStatic < -1) returnStatic = -1;
 	DestroyScenario();
 	StaticBody* ret = nullptr;
@@ -229,7 +227,7 @@ StaticBody* NPL::SetScenarioPreset(ScenarioPreset sPreset, Point wSize, InUnit u
 		CreateBody({ 0,          0,               wSize.x, wSize.y - downLimitY }, 1).Static();
 		CreateBody({ 0,          0, wSize.x - rightLimitX,              wSize.y }, 1).Static();
 		CreateBody({ 0, downLimitY,               wSize.x, wSize.y - downLimitY }, 1).Static();
-		CreateBody({ rightLimitX,          0, wSize.x - rightLimitX,              wSize.x }, 1).Static();
+		CreateBody({ rightLimitX,0, wSize.x - rightLimitX,              wSize.x }, 1).Static();
 		
 		if (returnStatic > -1)
 		{

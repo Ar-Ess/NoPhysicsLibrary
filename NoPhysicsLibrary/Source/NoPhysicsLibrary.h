@@ -26,7 +26,7 @@ public:
 
 	// Create a new body
 	//  - Follow this function with a "." to choose the body type
-	BodyCreation CreateBody(Rect rectangle, float mass, InUnit unit = InUnit::IN_PIXELS);
+	BodyCreation CreateBody(Rect rectangle, float mass);
 
 	// Configure certain aspects of this library operation
 	LibraryConfig Configure();
@@ -37,7 +37,7 @@ public:
 
 	// Set a predesigned scenario
 	//  - This function destroys automatically the previous scenario
-	StaticBody* SetScenarioPreset(ScenarioPreset preset, Point windowSize = { 1080, 720 }, InUnit unit = InUnit::IN_PIXELS, int returnStatic = -1);
+	StaticBody* SetScenarioPreset(ScenarioPreset preset, Point windowSize = { 1080, 720 }, int returnStatic = -1);
 
 	// Destroys all Static Bodies created
 	void DestroyScenario();
@@ -67,8 +67,8 @@ public:
 
 	// Destroys a body whenever it's outside the rectangle setted. 
 	//    Returns true when a body is destroyed
-	bool DeathLimit(Rect limits, InUnit unit = InUnit::IN_PIXELS);
-	bool DeathLimit(Rect limits, DynamicBody* body, InUnit unit = InUnit::IN_PIXELS);
+	bool DeathLimit(Rect limits);
+	bool DeathLimit(Rect limits, DynamicBody* body);
 
 	// Destroy a body, returns true if the body has been successfully deleted
 	bool DestroyBody(Body* body);

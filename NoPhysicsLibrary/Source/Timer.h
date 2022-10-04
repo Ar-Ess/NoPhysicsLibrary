@@ -14,5 +14,5 @@ private:
 
 private:
 
-	double startTime = 0.0f;
+	int startTime = 0;
 };

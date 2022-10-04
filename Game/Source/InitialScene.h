@@ -2,13 +2,13 @@
 
 #include "Scene.h"
 
-class LogoScene : public Scene
+class InitialScene : public Scene
 {
 public:
 	
-	LogoScene();
+	InitialScene();
 
-	~LogoScene() override;
+	~InitialScene() override;
 
 	bool Start() override;
 

@@ -40,6 +40,8 @@ void DynamicBody::ApplyForce(float newtonsX, float newtonsY, InUnit unit)
 	if (newtons.IsZero()) return; // If newtons is null
 	if (unit == InUnit::IN_PIXELS) newtons *= *pixelsToMeters;
 
+	newtons *= mass;
+
 	forces.emplace_back(new Force(newtons));
 }
 
@@ -47,6 +49,8 @@ void DynamicBody::ApplyForce(Point newtons, InUnit unit)
 {
 	if (newtons.IsZero()) return; // If newtons is null
 	if (unit == InUnit::IN_PIXELS) newtons *= *pixelsToMeters;
+
+	newtons *= mass;
 
 	forces.emplace_back(new Force(newtons));
 }

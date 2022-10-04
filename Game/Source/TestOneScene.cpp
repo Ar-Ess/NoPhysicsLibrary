@@ -7,7 +7,7 @@ TestOneScene::TestOneScene()
 
 TestOneScene::~TestOneScene()
 {
-	CleanUp();
+	if (npl) CleanUp();
 }
 
 bool TestOneScene::Start()
@@ -18,14 +18,14 @@ bool TestOneScene::Start()
 
 	//-TODONE: Configure function
 	npl->Configure().CollisionsDebugging(true);
-	npl->Configure().PanRange(10);
+	npl->Configure().PanRange(10, InUnit::IN_METERS);
 	npl->Configure().PixelsToMeters(6);
 
-	emitter = npl->SetScenarioPreset(ScenarioPreset::CORRIDOR_SCENARIO_PRESET, window->GetSize(), InUnit::IN_PIXELS, 1);
-	npl->CreateBody(Rect{ 150, 350, 200, 35 }, 1, InUnit::IN_PIXELS).Static();
-	test = (DynamicBody*)npl->CreateBody(Rect{ 230, 100, 50, 80 }, 1, InUnit::IN_PIXELS).Dynamic();
-	npl->CreateBody(Rect{ 430, 100, 50, 80 }, 1, InUnit::IN_PIXELS).Dynamic();
-	npl->CreateBody(npl->ReturnScenarioRect(), 1, InUnit::IN_PIXELS).Gas(10, 1.414f, 1000);
+	emitter = npl->SetScenarioPreset(ScenarioPreset::CORRIDOR_SCENARIO_PRESET, window->GetSize(), 1);
+	npl->CreateBody(Rect{ 150, 350, 200, 35 }, 1).Static();
+	test = (DynamicBody*)npl->CreateBody(Rect{ 230, 100, 50, 80 }, 1).Dynamic();
+	npl->CreateBody(Rect{ 430, 100, 50, 80 }, 1).Dynamic();
+	npl->CreateBody(npl->ReturnScenarioRect(), 1).Gas(10, 1.414f, 1000);
 
 	npl->SetListener(test);
 	npl->SetGlobalGravity({ 0.0f, 200.0f }, InUnit::IN_METERS);
@@ -101,6 +101,7 @@ bool TestOneScene::Update(float dt)
 
 bool TestOneScene::CleanUp()
 {
+	npl->CleanUp();
 	RELEASE(npl);
 
 	test = nullptr;

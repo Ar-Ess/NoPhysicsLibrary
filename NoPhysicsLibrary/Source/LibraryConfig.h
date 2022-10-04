@@ -12,7 +12,12 @@ struct LibraryConfig
 	{}
 
 	// Set which distance (in meters) the audio will sound mono in one of the two channels (Left / Right)
-	void PanRange(float panRange) { *this->panRange = panRange > 0 ? panRange : 0; }
+	// Remember to configure PixelsToMeters before configuring the panning range
+	void PanRange(float panRange, InUnit unit) 
+	{ 
+		if (unit == InUnit::IN_PIXELS) panRange *= *pixelsToMeters;
+		*this->panRange = panRange > 0 ? panRange : 0; 
+	}
 
 	// Allows to debug body collisions. If enabled, "GetCollisionsIterable()" will no longer return null. 
 	// Then draw the rectangle inside it. Enabling this might slightly slow the code iteration

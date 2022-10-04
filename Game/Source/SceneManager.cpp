@@ -1,6 +1,7 @@
 #include "SceneManager.h"
-#include "LogoScene.h"
+#include "InitialScene.h"
 #include "TestOneScene.h"
+#include "TestTwoScene.h"
 
 SceneManager::SceneManager(Render* render, Input* input, Window* window)
 {
@@ -18,10 +19,10 @@ bool SceneManager::Start()
 {
 	assets->Start();
 	texture->Start();
-	render->SetScale(1); //Qui toqui aquesta linia de codi, la 20, i m'entero, no viu un dia més :) <3
 
-	PushScene(new LogoScene());
+	PushScene(new InitialScene());
 	PushScene(new TestOneScene());
+	PushScene(new TestTwoScene());
 
 	ChangeScene(0);
 
