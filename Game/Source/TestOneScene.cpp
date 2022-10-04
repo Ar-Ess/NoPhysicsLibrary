@@ -18,7 +18,8 @@ bool TestOneScene::Start()
 
 	//-TODONE: Configure function
 	npl->Configure().CollisionsDebugging(true);
-	npl->Configure().PanRange(1000);
+	npl->Configure().PanRange(10);
+	npl->Configure().PixelsToMeters(6);
 
 	emitter = npl->SetScenarioPreset(ScenarioPreset::CORRIDOR_SCENARIO_PRESET, window->GetSize(), 1);
 	npl->CreateBody(Rect{ 150, 350, 200, 35 }, 1).Static();
@@ -27,7 +28,7 @@ bool TestOneScene::Start()
 	npl->CreateBody(npl->ReturnScenarioRect(), 1).Gas(10, 1.414f, 1000);
 
 	npl->SetListener(test);
-	npl->SetGlobalGravity({ 0, 400 });
+	npl->SetGlobalGravity({ 0.0f, 20.0f });
 
 	npl->LoadSound("Assets/Audio/bounce.wav");
 
@@ -48,9 +49,9 @@ bool TestOneScene::Update(float dt)
 	if (render->camera.y < 0) render->camera.y = 0;
 
 	// Update Dynamic Body
-	if (input->GetKey(SDL_SCANCODE_A) == KeyState::KEY_REPEAT) test->ApplyForce(-100, 0);
-	if (input->GetKey(SDL_SCANCODE_D) == KeyState::KEY_REPEAT) test->ApplyForce(100, 0);
-	if (input->GetKey(SDL_SCANCODE_SPACE) == KeyState::KEY_DOWN) test->ApplyMomentum(0, -500);
+	if (input->GetKey(SDL_SCANCODE_A) == KeyState::KEY_REPEAT) test->ApplyMomentum(-5, 0);
+	if (input->GetKey(SDL_SCANCODE_D) == KeyState::KEY_REPEAT) test->ApplyMomentum(5, 0);
+	if (input->GetKey(SDL_SCANCODE_SPACE) == KeyState::KEY_DOWN) test->ApplyMomentum(0, -35);
 
 	if (input->GetKey(SDL_SCANCODE_RETURN) == KeyState::KEY_DOWN) emitter->Play(0);
 	if (input->GetKey(SDL_SCANCODE_RSHIFT) == KeyState::KEY_DOWN) test->Play(0);

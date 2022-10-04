@@ -18,7 +18,7 @@ void NPL::Init()
 	// You've alreay initialized the library once
 	assert(physics == nullptr && audio == nullptr);
 
-	physics = new Physics(&physicsConfig);
+	physics = new Physics(&physicsConfig, &pixelsToMeters);
 	audio = new Audio();
 }
 
@@ -82,7 +82,7 @@ BodyCreation NPL::CreateBody(Rect rectangle, float mass)
 
 LibraryConfig NPL::Configure()
 {
-	return LibraryConfig(&panRange, &physicsConfig);
+	return LibraryConfig(&panRange, &physicsConfig, &pixelsToMeters);
 }
 
 void NPL::DestroyScenario()
@@ -378,13 +378,13 @@ void NPL::ListenerLogic(Body* b, GasBody* environment)
 	for (AcousticData* data : b->acousticDataList)
 	{
 		// Get the distance between Body & Listener
-		float distance = listener->GetPosition().Distance(data->position);
+		float distance = listener->GetPosition().Distance(data->position) * pixelsToMeters;
 
-		float pan = ComputePanning(distance, data->position.x);
+		float pan = ComputePanning(distance, data->position.x * pixelsToMeters);
 
 		float volume = ComputeVolume(distance, data->spl);
 
-		float timeDelay = ComputeTimeDelay(distance, environment) / 14;
+		float timeDelay = ComputeTimeDelay(distance, environment);
 
 		soundDataList.emplace_back(new SoundData(data->index, pan, volume, timeDelay));
 		RELEASE(data);

@@ -5,23 +5,14 @@
 #include "Flag.h"
 #include "Collision.h"
 
-#define PIXELS_PER_METER 1.0f // if touched change METER_PER_PIXEL too
-#define METER_PER_PIXEL 1.0f // this is 1 / PIXELS_PER_METER !
-
-#define METERS_TO_PIXELS(m) ((float) floor(PIXELS_PER_METER * m))
-#define PIXEL_TO_METERS(p)  ((float) METER_PER_PIXEL * p)
-
 #define DEGREES_TO_RADIANS(angleDegrees) ((angleDegrees) * M_PI / 180.0)
 #define RADIANS_TO_DEGREES(angleRadians) ((angleRadians) * 180.0 / M_PI)
-
-#define REALITY_MULTIPLIER 60
-#define NEWTONS_MULTIPLIER 100
 
 class Physics
 {
 public: // Methods
 
-	Physics(const Flag* physicsConfig);
+	Physics(const Flag* physicsConfig, const float* pixelsToMeters);
 
 	virtual ~Physics();
 
@@ -65,5 +56,6 @@ public: // Variables
 
 	// Config
 	const Flag* physicsConfig = {};
+	const float* pixelsToMeters = nullptr;
 
 };

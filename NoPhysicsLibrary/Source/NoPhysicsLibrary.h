@@ -126,8 +126,8 @@ private:
 
 	//_____________________
 	// - Acoustics
-
-	float panRange = 1000.0f;
+	float panRange = 10.0f;
+	float pixelsToMeters = 20.0f;
 
 	//_____________________
 	// - Audio

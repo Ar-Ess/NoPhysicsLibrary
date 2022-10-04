@@ -85,6 +85,8 @@ void DynamicBody::SecondNewton()
 	// You idiot, mass can not be zero :}
 	assert(mass != 0);
 
+	// total forces = kg * pxl / s^2
+
 	// SUM Forces = massa * acceleració
 	acceleration.x = totalForces.vector.x / mass;
 	acceleration.y = totalForces.vector.y / mass;

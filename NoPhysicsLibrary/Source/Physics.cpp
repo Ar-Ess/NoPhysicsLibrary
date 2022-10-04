@@ -6,9 +6,10 @@
 #include "MathUtils.h"
 #include "Ray.h"
 
-Physics::Physics(const Flag* physicsConfig)
+Physics::Physics(const Flag* physicsConfig, const float* pixelsToMeters)
 {
 	this->physicsConfig = physicsConfig;
+	this->pixelsToMeters = pixelsToMeters;
 }
 
 Physics::~Physics()
@@ -68,12 +69,14 @@ void Physics::UpdateLiquid(float dt, Body* b)
 void Physics::Integrate(float dt, Body* b)
 {
 	DynamicBody* body = (DynamicBody*)b;
-	// Second Order Red Velvet Integrator
 
-	body->rect.x += body->velocity.x * dt + 0.5f * body->acceleration.x * dt * dt;
+	float metersToPixels = (1 / *pixelsToMeters);
+
+	// Second Order Red Velvet Integrator
+	body->rect.x += (body->velocity.x * dt + 0.5f * body->acceleration.x * dt * dt) * metersToPixels;
 	body->velocity.x += body->acceleration.x * dt;
 
-	body->rect.y += body->velocity.y * dt + 0.5f * body->acceleration.y * dt * dt;
+	body->rect.y += (body->velocity.y * dt + 0.5f * body->acceleration.y * dt * dt) * metersToPixels;
 	body->velocity.y += body->acceleration.y * dt;
 }
 
