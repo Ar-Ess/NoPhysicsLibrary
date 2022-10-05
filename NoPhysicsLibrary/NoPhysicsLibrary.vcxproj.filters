@@ -188,7 +188,7 @@
     <ClInclude Include="Source\External\miniaudio\miniaudiodev.h">
       <Filter>External\Miniaudio</Filter>
     </ClInclude>
-    <ClInclude Include="Source\InputUnitsEnum.h">
+    <ClInclude Include="Source\InUnitsEnum.h">
       <Filter>Enums</Filter>
     </ClInclude>
   </ItemGroup>
