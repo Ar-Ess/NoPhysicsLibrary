@@ -7,6 +7,8 @@
 #include "LiquidBody.h"
 #include "GasBody.h"
 
+typedef double Float;
+
 struct BodyCreation
 {
 	BodyCreation(Rect rect, float mass, std::vector<Body*>* bodies, std::vector<unsigned int*>* gasLocation,Physics* physics, const float* pixelsToMeters)
@@ -25,7 +27,7 @@ struct BodyCreation
 		return (StaticBody*)bodies->back();
 	}
 
-	DynamicBody* Dynamic(Point gravityOffset = {0, 0}, InUnit unit = InUnit::IN_PIXELS)
+	DynamicBody* Dynamic(Point gravityOffset = {0, 0}, InUnit unit = InUnit::IN_METERS)
 	{
 		if (!gravityOffset.IsZero() && unit == InUnit::IN_PIXELS) gravityOffset *= *pixelsToMeters;
 

@@ -45,9 +45,9 @@ private: // Methods
 
 public: // Variables
 
-	Point globalGravity = {};
-	Point globalRestitution = {};
-	Point globalFriction = {};
+	Point globalGravity = {0, 0};
+	Point globalRestitution = {1, 1};
+	Point globalFriction = {1, 1};
 
 	// Pause 0 | Restitution 1 |
 	Flag globals = {};

@@ -170,7 +170,7 @@ void Physics::Declip()
 			Ray ray(centerOfIntersecion.Apply(directionVec.Multiply(-1)), centerOfIntersecion);
 			if (!MathUtils::RayCast(ray, body->GetRect(InUnit::IN_METERS), normal)) break;
 
-			if (normal.x == 0) // Vertical
+			if (normal.x == 0) // Vertical collision with horizontal surface
 			{
 				// Top -> Bottom
 				if (directionVec.y > 0)
@@ -185,9 +185,15 @@ void Physics::Declip()
 					body->rect.y -= intersect.h / 2;
 				}
 
-				dynBody->velocity.y = 0;
+				// Perfectly elastic collision
+				dynBody->velocity.y *= -1;
+
+				// Loss of energy
+				dynBody->velocity.y *= globalRestitution.y;
+				dynBody->velocity.x *= globalFriction.x;
+
 			}
-			else if (normal.y == 0) // Horizontal
+			else if (normal.y == 0) // Horizontal collision with vertical surface
 			{
 				// Left -> Right
 				if (directionVec.x > 0)
@@ -202,7 +208,13 @@ void Physics::Declip()
 					body->rect.x -= intersect.w / 2;
 				}
 
-				dynBody->velocity.x = 0;
+				// Perfectly elastic collision
+				dynBody->velocity.x *= -1;
+
+				// Loss of energy
+				dynBody->velocity.x *= globalRestitution.x;
+				dynBody->velocity.y *= globalFriction.y;
+
 			}
 			else
 			{
@@ -227,23 +239,33 @@ void Physics::Declip()
 			Ray ray(centerOfIntersecion.Apply(directionVec.Multiply(-1)), centerOfIntersecion);
 			if (!MathUtils::RayCast(ray, body->GetRect(InUnit::IN_METERS), normal)) break;
 
-			if (normal.x == 0) // Vertical
+			if (normal.x == 0) // Vertical collision with horizontal surface
 			{
 				// Top -> Bottom
 				if (directionVec.y > 0) dynBody->rect.y = body->GetPosition(InUnit::IN_METERS).y - dynBody->rect.h;
 				// Bottom -> Top
 				if (directionVec.y < 0) dynBody->rect.y = body->GetRect(InUnit::IN_METERS).GetPosition(Align::BOTTOM_CENTER).y;
 
-				dynBody->velocity.y = 0;
+				// Perfectly elastic collision
+				dynBody->velocity.y *= -1;
+
+				// Loss of energy
+				dynBody->velocity.y *= globalRestitution.y;
+				dynBody->velocity.x *= globalFriction.x;
 			}
-			else if (normal.y == 0) // Horizontal
+			else if (normal.y == 0) // Horizontal collision with vertical surface
 			{
 				// Left -> Right
 				if (directionVec.x > 0) dynBody->rect.x = body->GetPosition(InUnit::IN_METERS).x - dynBody->rect.w;
 				// Right -> Left
 				if (directionVec.x < 0) dynBody->rect.x = body->GetRect(InUnit::IN_METERS).GetPosition(Align::CENTER_RIGHT).x;
 
-				dynBody->velocity.x = 0;
+				// Perfectly elastic collision
+				dynBody->velocity.x *= -1;
+
+				// Loss of energy
+				dynBody->velocity.x *= globalRestitution.x;
+				dynBody->velocity.y *= globalFriction.y;
 			}
 			else
 			{

@@ -13,13 +13,15 @@ NPL::~NPL()
 	CleanUp();
 }
 
-void NPL::Init()
+void NPL::Init(float pixelsPerMeter)
 {
 	// You've alreay initialized the library once
 	assert(physics == nullptr && audio == nullptr);
 
 	physics = new Physics(&physicsConfig, &pixelsToMeters);
 	audio = new Audio();
+
+	pixelsToMeters = pixelsPerMeter > 0 ? 1 / pixelsPerMeter : 1;
 }
 
 void NPL::Update(float* dt)

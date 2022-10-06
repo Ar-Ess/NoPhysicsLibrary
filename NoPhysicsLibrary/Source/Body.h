@@ -1,7 +1,7 @@
 #pragma once
 
 #include "BodyClassEnum.h"
-#include "InputUnitsEnum.h"
+#include "InUnitsEnum.h"
 
 #include "Flag.h"
 #include "AcusticData.h"

@@ -5,7 +5,7 @@
 
 #include "ScenarioPresetEnum.h"
 #include "PhysicsPresetEnum.h"
-#include "InputUnitsEnum.h"
+#include "InUnitsEnum.h"
 
 #include "SoundData.h"
 #include "Collision.h"
@@ -19,7 +19,7 @@ public:
 	~NPL();
 
 	// Initialize the library
-	void Init();
+	void Init(float pixelsPerMeter);
 
 	// Clean Up and reset the library
 	void CleanUp();

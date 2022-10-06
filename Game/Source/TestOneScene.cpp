@@ -14,12 +14,11 @@ bool TestOneScene::Start()
 {
 	// Initialize Library
 	npl = new NPL();
-	npl->Init();
+	npl->Init(6);
 
 	//-TODONE: Configure function
 	npl->Configure().CollisionsDebugging(true);
 	npl->Configure().PanRange(10, InUnit::IN_METERS);
-	npl->Configure().PixelsToMeters(6);
 
 	emitter = npl->SetScenarioPreset(ScenarioPreset::CORRIDOR_SCENARIO_PRESET, window->GetSize(), 1);
 	npl->CreateBody(Rect{ 150, 350, 200, 35 }, 1).Static();

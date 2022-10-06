@@ -23,10 +23,6 @@ struct LibraryConfig
 	// Then draw the rectangle inside it. Enabling this might slightly slow the code iteration
 	void CollisionsDebugging(bool enable) { this->physicsConfig->Set(0, enable); }
 
-	// Set how many pixels constitute a meter in your world
-	// Invalid values setted directly to 1
-	void PixelsToMeters(float ratio) { *this->pixelsToMeters = ratio > 0 ? 1 / ratio : 1; }
-
 private:
 
 	float* panRange = nullptr;
