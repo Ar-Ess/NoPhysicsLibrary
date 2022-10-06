@@ -10,9 +10,8 @@ class SceneManager;
 enum class Scenes
 {
 	NO_SCENE = -1,
-	LOGO_SCENE,
-	TEST_ONE_SCENE,
-	TEST_TWO_SCENE
+	INITIAL_SCENE,
+	TEST_SCENE
 };
 
 class Scene

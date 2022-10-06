@@ -1,6 +1,5 @@
 #include "SceneManager.h"
 #include "InitialScene.h"
-#include "TestOneScene.h"
 #include "TestTwoScene.h"
 
 SceneManager::SceneManager(Render* render, Input* input, Window* window)
@@ -21,7 +20,6 @@ bool SceneManager::Start()
 	texture->Start();
 
 	PushScene(new InitialScene());
-	PushScene(new TestOneScene());
 	PushScene(new TestTwoScene());
 
 	ChangeScene(0);
@@ -46,7 +44,11 @@ bool SceneManager::CleanUp()
 {
 	LOG("Freeing scene manager");
 
-	for (Scene* scene : scenes) RELEASE(scene);
+	for (Scene* scene : scenes)
+	{
+		scene->CleanUp();
+		RELEASE(scene);
+	}
 
 	scenes.clear();
 	scenes.shrink_to_fit();

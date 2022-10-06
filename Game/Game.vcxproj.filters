@@ -24,9 +24,6 @@
     <ClCompile Include="Source\AssetsManager.cpp">
       <Filter>Assets Manager</Filter>
     </ClCompile>
-    <ClCompile Include="Source\TestOneScene.cpp">
-      <Filter>Scenes</Filter>
-    </ClCompile>
     <ClCompile Include="Source\Scene.cpp">
       <Filter>Scenes</Filter>
     </ClCompile>
@@ -77,9 +74,6 @@
     </ClInclude>
     <ClInclude Include="Source\AssetsManager.h">
       <Filter>Assets Manager</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\TestOneScene.h">
-      <Filter>Scenes</Filter>
     </ClInclude>
     <ClInclude Include="Source\Scene.h">
       <Filter>Scenes</Filter>

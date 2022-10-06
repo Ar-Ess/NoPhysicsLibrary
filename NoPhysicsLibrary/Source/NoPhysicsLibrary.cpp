@@ -10,7 +10,6 @@ NPL::NPL()
 
 NPL::~NPL()
 {
-	CleanUp();
 }
 
 void NPL::Init(float pixelsPerMeter)
@@ -86,7 +85,7 @@ BodyCreation NPL::CreateBody(Rect rectangle, float mass)
 
 LibraryConfig NPL::Configure()
 {
-	return LibraryConfig(&panRange, &physicsConfig, &pixelsToMeters);
+	return LibraryConfig(&panRange, &physicsConfig, &physics->globalGravity, &physics ->globalRestitution, &physics->globalFriction, &listener, &pixelsToMeters);
 }
 
 void NPL::DestroyScenario()
@@ -115,42 +114,24 @@ Rect NPL::ReturnScenarioRect()
 	return Rect{ minP.x, minP.y, maxP.x - minP.x, maxP.y - minP.y};
 }
 
-inline bool NPL::GetGlobalPause() const
+bool NPL::GetGlobalPause() const
 {
 	return physics->globals.Get(0);
 }
 
-inline Point NPL::GetGlobalGravity() const
+Point NPL::GetGlobalGravity() const
 {
 	return physics->globalGravity;
 }
 
-void NPL::SetGlobalGravity(Point vector, InUnit unit)
-{
-	if (unit == InUnit::IN_PIXELS) vector *= pixelsToMeters;
-	physics->globalGravity = vector;
-}
-
-inline Point NPL::GetGlobalFriction() const
+Point NPL::GetGlobalFriction() const
 {
 	return physics->globalFriction;
 }
 
-void NPL::SetGlobalFriction(Point vector, InUnit unit)
-{
-	if (unit == InUnit::IN_PIXELS) vector *= pixelsToMeters;
-	physics->globalFriction = vector;
-}
-
-inline Point NPL::GetGlobalRestitution() const
+Point NPL::GetGlobalRestitution() const
 {
 	return physics->globalRestitution;
-}
-
-void NPL::SetGlobalRestitution(Point vector, InUnit unit)
-{
-	if (unit == InUnit::IN_PIXELS) vector *= pixelsToMeters;
-	physics->globalRestitution = vector;
 }
 
 bool NPL::DeathLimit(Rect limits)
@@ -194,11 +175,6 @@ bool NPL::DestroyBody(Body* body)
 	}
 
 	return false;
-}
-
-void NPL::SetListener(Body* listener)
-{
-	this->listener = listener;
 }
 
 void NPL::LoadSound(const char* path)

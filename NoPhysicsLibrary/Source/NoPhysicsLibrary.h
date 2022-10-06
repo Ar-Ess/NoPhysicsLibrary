@@ -52,18 +52,12 @@ public:
 
 	// Returns the global gravity vector
 	Point GetGlobalGravity() const;
-	// Sets if global gravity is active and its vector
-	void SetGlobalGravity(Point vector, InUnit unit = InUnit::IN_METERS);
 
 	// Returns the global friction vector
 	Point GetGlobalFriction() const;
-	// Sets if global friction is active and its vector
-	void SetGlobalFriction(Point vector, InUnit unit = InUnit::IN_METERS);
 
 	// Returns the global restitution vector
 	Point GetGlobalRestitution() const;
-	// Sets if global restitution is active and its vector
-	void SetGlobalRestitution(Point vector, InUnit unit = InUnit::IN_METERS);
 
 	// Destroys a body whenever it's outside the rectangle setted. 
 	//    Returns true when a body is destroyed
@@ -72,9 +66,6 @@ public:
 
 	// Destroy a body, returns true if the body has been successfully deleted
 	bool DestroyBody(Body* body);
-	
-	// Sets one body to become the listening point of the audio
-	void SetListener(Body* listener);
 
 	// Load internally an audio file
 	void LoadSound(const char* path);

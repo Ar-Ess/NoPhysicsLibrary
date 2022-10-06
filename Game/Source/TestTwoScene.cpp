@@ -6,7 +6,6 @@ TestTwoScene::TestTwoScene()
 
 TestTwoScene::~TestTwoScene()
 {
-	if (npl) npl->CleanUp();
 }
 
 bool TestTwoScene::Start()
@@ -18,28 +17,28 @@ bool TestTwoScene::Start()
 
 	npl->Configure().CollisionsDebugging(false);
 	npl->Configure().PanRange(10, InUnit::IN_METERS);
+	npl->Configure().GlobalFriction(0.2f);
+	npl->Configure().GlobalRestitution({ 0.6f, 0.0f });
+	npl->Configure().GlobalGravity({ 0, 10 }, InUnit::IN_METERS);
+	npl->Configure().Listener(player);
 
 	player = npl->CreateBody(Rect(100, 200, 20, 45), 10).Dynamic();
 	npl->CreateBody(Rect(400, 200, 20, 45), 10).Dynamic();
 	emitter = npl->SetScenarioPreset(ScenarioPreset::CORRIDOR_SCENARIO_PRESET, window->GetSize(), 1);
 
-	//-TODO: Put it inside config (one value, and two values)
-	npl->SetGlobalRestitution({0.2f, 0.2f});
-	npl->SetGlobalFriction({ 0.6f, 0.0f });
-
 	//-TODO: Insert environment enum presets
 	npl->CreateBody(npl->ReturnScenarioRect(), 1).Gas(10.0f, 1.414f, 1000);
 
 	npl->LoadSound("Assets/Audio/bounce.wav");
-	npl->SetListener(player);
-
-	npl->SetGlobalGravity({0, 10});
 
 	return true;
 }
 
 bool TestTwoScene::Update(float dt)
 {
+	bool ret = true;
+	static bool pause = false;
+
 	// Information: The user will listen from the point of view of the listener body.
 	if (player->GetPosition(InUnit::IN_PIXELS).x >= 625) render->camera.x = player->GetPosition(InUnit::IN_PIXELS).x - 625;
 	if (render->camera.x < 0) render->camera.x = 0;
@@ -54,6 +53,13 @@ bool TestTwoScene::Update(float dt)
 	if (input->GetKey(SDL_SCANCODE_LSHIFT) == KeyState::KEY_DOWN) player->Play(0);
 	if (input->GetKey(SDL_SCANCODE_RETURN) == KeyState::KEY_DOWN) emitter->Play(0);
 
+	// Pauses the physics
+	if (input->GetKey(SDL_SCANCODE_ESCAPE) == KeyState::KEY_DOWN)
+	{
+		pause = !pause;
+		npl->PausePhysics(pause);
+	}
+
 	// Update library
 	npl->Update(&dt);
 
@@ -61,6 +67,7 @@ bool TestTwoScene::Update(float dt)
 	int size = 1;
 	for (int i = 0; i < size; ++i)
 	{
+		// Not like this
 		const Body* b = npl->GetBodiesIterable(size, i);
 		SDL_Color color = { 0, 0, 0, 50 };
 
@@ -75,10 +82,18 @@ bool TestTwoScene::Update(float dt)
 		render->DrawRectangle(b->GetRect(InUnit::IN_PIXELS), color);
 	}
 
-	//Change scene
-	if (input->GetKey(SDL_SCANCODE_BACKSPACE) == KeyState::KEY_DOWN) SetScene(Scenes::LOGO_SCENE);
+	// Draws the collisions
+	size = 1;
+	for (int i = 0; i < size; ++i)
+	{
+		const Collision* c = npl->GetCollisionsIterable(size, i);
+		if (c) render->DrawRectangle(c->GetCollisionRectangle(), { 100, 100, 255, 255 });
+	}
 
-	return true;
+	//Change scene
+	if (input->GetKey(SDL_SCANCODE_BACKSPACE) == KeyState::KEY_DOWN) SetScene(Scenes::INITIAL_SCENE);
+
+	return ret;
 }
 
 bool TestTwoScene::CleanUp()
