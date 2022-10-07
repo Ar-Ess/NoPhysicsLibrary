@@ -17,9 +17,9 @@ public: // Methods
 
 	virtual ~Body() {}
 
-	// Plays a sound
+	// Plays a sound, volume range [0, 120]
 	//-TOCHECK: Debug emission point
-	void Play(int index, float decibels = 120) { acousticDataList.emplace_back(new AcousticData(index, emissionPoint, decibels)); }
+	void Play(int index, float decibels = 80);
 
 	// Sets the body emission point, where the body sound will emit from.
 	// Values out of body bounds will be set to the closest point inside it
@@ -28,7 +28,7 @@ public: // Methods
 
 	// Sets the body emission point, where the body sound will emit from.
 	// Values out of body bounds will be set to the closest point inside it
-	void SetEmissionPoint(Align align, Point offset = { 0, 0 }, InUnit unit = InUnit::IN_PIXELS);
+	void SetEmissionPoint(Align align, Point offset = { 0.0f, 0.0f }, InUnit unit = InUnit::IN_PIXELS);
 
 	// Returns the x & y coordinates of the body
 	Point GetPosition(InUnit unit = InUnit::IN_PIXELS) const;
@@ -64,7 +64,7 @@ protected: // Variables
 
 	friend class NPL;
 
-	Point emissionPoint = {0, 0};
+	Point emissionPoint = { 0.0f, 0.0f };
 	Rect rect = {};
 	BodyClass clas = BodyClass::EMPTY_BODY;
 	float mass = 1.0f;

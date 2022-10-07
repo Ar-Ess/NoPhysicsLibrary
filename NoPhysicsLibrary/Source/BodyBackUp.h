@@ -23,8 +23,8 @@ struct BodyBackup
 	}
 
 	Point position = {};
-	Point velocity = { 0, 0 };
-	Point acceleration = { 0, 0 };
+	Point velocity = { 0.0f, 0.0f };
+	Point acceleration = { 0.0f, 0.0f };
 	Momentum momentum = {};
 	Force force = {};
 };

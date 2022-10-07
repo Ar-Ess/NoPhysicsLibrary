@@ -14,5 +14,5 @@ private:
 
 private:
 
-	int startTime = 0;
+	int startTime = -1;
 };

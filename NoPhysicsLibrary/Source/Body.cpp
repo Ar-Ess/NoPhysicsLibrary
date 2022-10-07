@@ -21,11 +21,19 @@ Body::Body(BodyClass clas, Rect rect, float mass, const float* pixelsToMeters)
 	id = reinterpret_cast<int>(this);
 }
 
+void Body::Play(int index, float decibels)
+{
+	if (decibels > 120) decibels = 120;
+	if (decibels < 0) decibels = 0;
+
+	acousticDataList.emplace_back(new AcousticData(index, emissionPoint, decibels));
+}
+
 void Body::SetEmissionPoint(Point point, InUnit unit)
 {
 	if (unit == InUnit::IN_PIXELS) point *= *pixelsToMeters;
 
-	Rect emissionRect = {point.Apply(-1, -1), 2, 2};
+	Rect emissionRect = {point.Apply(-1.0f, -1.0f), 2, 2};
 	emissionPoint = point;
 	if (MathUtils::CheckCollision(rect, emissionRect)) return;
 

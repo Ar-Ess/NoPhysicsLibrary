@@ -44,11 +44,7 @@ bool SceneManager::CleanUp()
 {
 	LOG("Freeing scene manager");
 
-	for (Scene* scene : scenes)
-	{
-		scene->CleanUp();
-		RELEASE(scene);
-	}
+	scenes[currScene]->CleanUp();
 
 	scenes.clear();
 	scenes.shrink_to_fit();

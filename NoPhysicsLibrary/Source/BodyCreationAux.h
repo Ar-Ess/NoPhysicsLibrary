@@ -27,7 +27,7 @@ struct BodyCreation
 		return (StaticBody*)bodies->back();
 	}
 
-	DynamicBody* Dynamic(Point gravityOffset = {0, 0}, InUnit unit = InUnit::IN_METERS)
+	DynamicBody* Dynamic(Point gravityOffset = {0.0f, 0.0f }, InUnit unit = InUnit::IN_METERS)
 	{
 		if (!gravityOffset.IsZero() && unit == InUnit::IN_PIXELS) gravityOffset *= *pixelsToMeters;
 

@@ -7,10 +7,22 @@ Sound::Sound(ma_sound* source, float timeToDelete)
 	timer = new Timer();
 }
 
+Sound::~Sound()
+{
+	ma_sound_stop(source);
+	ma_sound_uninit(source);
+	delete source;
+	source = nullptr;
+
+	ma_delay_node_uninit(delay, NULL);
+	delete delay;
+	delay = nullptr;
+}
+
 void Sound::Play()
 {
 	ma_sound_start(source);
-	timer->Start();
+	played = true;
 }
 
 void Sound::SetPan(float pan)
@@ -35,9 +47,9 @@ ma_delay_node* Sound::ConnectDelay(ma_engine* engine, float delayTime)
 	sampleRate = ma_engine_get_sample_rate(engine);
 
 	//                                                                                     Delay Time         Falloff
-	delayNodeConfig = ma_delay_node_config_init(channels, sampleRate, (ma_uint32)(sampleRate * delayTime), 1.0f);
+	delayNodeConfig = ma_delay_node_config_init(channels, sampleRate, (ma_uint32)(sampleRate * delayTime), 0.0f);
 
-	ma_delay_node_set_dry(delay, 0.5f);
+	ma_delay_node_set_dry(delay, 0.0f);
 	ma_delay_node_set_wet(delay, 1.0f);
 
 	ma_delay_node_init(ma_engine_get_node_graph(engine), &delayNodeConfig, NULL, delay);
@@ -48,15 +60,8 @@ ma_delay_node* Sound::ConnectDelay(ma_engine* engine, float delayTime)
 	return delay;
 }
 
-Sound::~Sound()
+void Sound::StartTimer()
 {
-	ma_sound_stop(source);
-	ma_sound_uninit(source);
-	delete source;
-	source = nullptr;
-
-	ma_delay_node_uninit(delay, NULL);
-	delete delay;
-	delay = nullptr;
+	timer->Start();
 }
 

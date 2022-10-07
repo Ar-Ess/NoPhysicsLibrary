@@ -26,6 +26,7 @@ public:
 
 	// Create a new body
 	//  - Follow this function with a "." to choose the body type
+	//  - Rect must be on pixels (use MetersToPixels() to do the conversion)
 	BodyCreation CreateBody(Rect rectangle, float mass);
 
 	// Configure certain aspects of this library operation
@@ -37,7 +38,7 @@ public:
 
 	// Set a predesigned scenario
 	//  - This function destroys automatically the previous scenario
-	StaticBody* SetScenarioPreset(ScenarioPreset preset, Point windowSize = { 1080, 720 }, int returnStatic = -1);
+	StaticBody* SetScenarioPreset(ScenarioPreset preset, Point windowSize = { 1080.0f, 720.0f }, int returnStatic = -1);
 
 	// Destroys all Static Bodies created
 	void DestroyScenario();
@@ -73,6 +74,12 @@ public:
 	const Collision* GetCollisionsIterable(int &size, int index);
 
 	const Body* GetBodiesIterable(int& size, int index);
+
+	// Converts meter values into pixels values
+	Rect MetersToPixels(Rect rectangle);
+	Point MetersToPixels(Point rectangle);
+	float MetersToPixels(float rectangle);
+
 
 private: // Methods
 

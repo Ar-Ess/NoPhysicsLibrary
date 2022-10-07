@@ -30,6 +30,14 @@ public:
 		this->h = h;
 	}
 
+	Rect(float x, float y, Point size)
+	{
+		this->x = x;
+		this->y = y;
+		this->w = size.x;
+		this->h = size.y;
+	}
+
 	Rect(Point position, Point size)
 	{
 		this->x = position.x;
@@ -57,7 +65,7 @@ public:
 
 	Point GetPosition(Align alignment) const
 	{
-		Point ret = { 0, 0 };
+		Point ret = { 0.0f, 0.0f };
 
 		switch (alignment)
 		{

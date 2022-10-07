@@ -282,6 +282,24 @@ const Body* NPL::GetBodiesIterable(int& size, int index)
 	return bodies[index];
 }
 
+Rect NPL::MetersToPixels(Rect rect)
+{
+	float metersToPixels = (1 / pixelsToMeters);
+	return Rect{ rect.GetPosition() * metersToPixels, rect.GetSize() * metersToPixels};
+}
+
+Point NPL::MetersToPixels(Point point)
+{
+	float metersToPixels = (1 / pixelsToMeters);
+	return Point{ point * metersToPixels };
+}
+
+float NPL::MetersToPixels(float value)
+{
+	float metersToPixels = (1 / pixelsToMeters);
+	return value * metersToPixels;
+}
+
 //- Private --------------------------------------------------------------------------------
 
 void NPL::StepPhysics(float dt)
@@ -351,7 +369,9 @@ void NPL::ListenerLogic(Body* b, GasBody* environment)
 	{
 		for (AcousticData* data : b->acousticDataList)
 		{
-			soundDataList.emplace_back(new SoundData(data->index));
+			float volume = ComputeVolume(1, data->spl);
+
+			soundDataList.emplace_back(new SoundData(data->index, 0, volume, 0));
 			RELEASE(data);
 		}
 		b->acousticDataList.clear();
@@ -361,7 +381,7 @@ void NPL::ListenerLogic(Body* b, GasBody* environment)
 	for (AcousticData* data : b->acousticDataList)
 	{
 		// Get the distance between Body & Listener
-		float distance = listener->GetPosition(InUnit::IN_METERS).Distance(data->position) * pixelsToMeters;
+		float distance = listener->GetPosition(InUnit::IN_METERS).Distance(data->position);
 
 		float pan = ComputePanning(distance, data->position.x * pixelsToMeters);
 

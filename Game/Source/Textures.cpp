@@ -100,5 +100,5 @@ Point Textures::GetSize(const SDL_Texture* texture) const
 	int width, height;
 	SDL_QueryTexture((SDL_Texture*)texture, NULL, NULL, &width, &height);
 
-	return Point{ width, height };
+	return Point{ float(width), float(height) };
 }

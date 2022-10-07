@@ -5,11 +5,9 @@
 struct Point
 {
 	Point() {}
-	Point(int x, int y) { this->x = float(x); this->y = float(y); }
 	Point(float x, float y) { this->x = x; this->y = y; }
 	Point(double x, double y) { this->x = float(x); this->y = float(y); }
 
-	Point(int a) { x = float(a); y = float(a); }
 	Point(float a) { x = a; y = a; }
 	Point(double a) { x = float(a); y = float(a); }
 
@@ -92,10 +90,6 @@ struct Point
 	{
 		return Point{ this->x + x, this->y + y };
 	}
-	inline Point Apply(int x, int y) const
-	{
-		return Point{ this->x + float(x), this->y + float(y) };
-	}
 
 	inline Point Multiply(Point multi) const
 	{
@@ -108,10 +102,6 @@ struct Point
 	inline Point Multiply(double x, double y) const
 	{
 		return Point{ this->x * x, this->y * y };
-	}
-	inline Point Multiply(int x, int y) const
-	{
-		return Point{ this->x * float(x), this->y * float(y) };
 	}
 
 	inline float GetMax()
@@ -136,16 +126,22 @@ struct Point
 		return ret;
 	}
 
+	// Conditional operators
+	inline bool operator==(float i) { return (x == i || y == i); }
+	inline bool operator!=(float i) { return !(x == i && y == i); }
+	inline bool operator< (float i) { return (x < i&& y < i); }
+	inline bool operator<=(float i) { return (x <= i && y <= i); }
+	inline bool operator> (float i) { return (x > i && y > i); }
+	inline bool operator>=(float i) { return (x >= i && y >= i); }
+
 	inline bool operator==(Point b) { return (x == b.x && y == b.y); }
-	inline bool operator==(int i) { return (x == i || y == i); }
 	inline bool operator!=(Point b) { return !(x == b.x && y == b.y); }
-	inline bool operator!=(int i) { return !(x == i && y == i); }
+	inline bool operator< (Point b) { return (x < b.x&& y < b.y); }
+	inline bool operator<=(Point b) { return (x <= b.x && y <= b.y); }
+	inline bool operator> (Point b) { return (x > b.x && y > b.y); }
+	inline bool operator>=(Point b) { return (x >= b.x && y >= b.y); }
 
-	inline void operator+=(int i) { x += i; y += i; }
-	inline void operator-=(int i) { x -= i; y -= i; }
-	inline void operator*=(int i) { x *= i; y *= i; }
-	inline void operator/=(int i) { if (i == 0) return; x /= i; y /= i; }
-
+	// Modification operators
 	inline void operator+=(Point i) { x += i.x; y += i.y; }
 	inline void operator-=(Point i) { x -= i.x; y -= i.y; }
 	inline void operator*=(Point i) { x *= i.x; y *= i.y; }
@@ -155,10 +151,6 @@ struct Point
 	inline void operator-=(float i) { x -= i; y -= i; }
 	inline void operator*=(float i) { x *= i; y *= i; }
 	inline void operator/=(float i) { if (i == 0) return; x /= i; y /= i; }
-
-	inline Point operator+(int i) { return Point{ x + i, y + i }; }
-	inline Point operator-(int i) { return Point{ x - i, y - i }; }
-	inline Point operator*(int i) { return Point{ x * i, y * i }; }
 
 	inline Point operator+(Point i) { return Point{ x + i.x, y + i.y }; }
 	inline Point operator+(float i) { return Point{ x + i, y + i }; }
@@ -170,19 +162,9 @@ struct Point
 	inline Point operator*(float i) { return Point{ x * i, y * i }; }
 
 	inline Point operator/(float div) { return Point{ x / div, y / div }; }
-	inline Point operator/(int div) { return Point{ x / div, y / div }; }
 	inline Point operator/(Point i) { return Point{ x / i.x, y / i.y }; }
 
-	inline bool operator<(int i) { return (x < i&& y < i); }
-	inline bool operator<=(int i) { return (x <= i && y <= i); }
-	inline bool operator>(int i) { return (x > i && y > i); }
-	inline bool operator>=(int i) { return (x >= i && y >= i); }
-
-	inline bool operator<(Point b) { return (x < b.x&& y < b.y); }
-	inline bool operator<=(Point b) { return (x <= b.x && y <= b.y); }
-	inline bool operator>(Point b) { return (x > b.x && y > b.y); }
-	inline bool operator>=(Point b) { return (x >= b.x && y >= b.y); }
-
+	// Asign operators
 	inline Point& operator = (const Point& u)
 	{
 		x = u.x; y = u.y; return *this;

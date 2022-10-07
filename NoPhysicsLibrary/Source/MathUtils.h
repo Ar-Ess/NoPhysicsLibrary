@@ -86,7 +86,7 @@ namespace MathUtils
 	
 	inline Point ClosestRectIntersectionFromOutsidePoint(Point point, Rect rect)
 	{
-		Point ret = {0, 0};
+		Point ret = { 0.0f, 0.0f };
 
 		ret.x = Max(rect.x, Min(point.x, rect.x + rect.w));
 		ret.y = Min(rect.y + rect.h, Max(point.y, rect.y));
@@ -96,7 +96,7 @@ namespace MathUtils
 
 	inline Point ClosestRectIntersectionFromInsidePoint(Point point, Rect rect)
 	{
-		Point ret = { 0, 0 };
+		Point ret = { 0.0f, 0.0f };
 
 		Point distanceToPositiveBounds = rect.GetPosition(Align::TOP_RIGHT) - point;
 		Point distanceToNegativeBounds = rect.GetPosition(Align::BOTTOM_LEFT) - point;
@@ -115,8 +115,8 @@ namespace MathUtils
 
 	inline Point ClosestRectIntersectionFromPoint(Point point, Rect rect)
 	{
-		bool inside = MathUtils::CheckCollision({ point.Apply(-1, -1), 2, 2 }, rect);
-		Point ret = { 0, 0 };
+		bool inside = MathUtils::CheckCollision({ point.Apply(-1.0f, -1.0f), 2, 2 }, rect);
+		Point ret = { 0.0f, 0.0f };
 
 		inside ? ret = MathUtils::ClosestRectIntersectionFromInsidePoint(point, rect) : ret = MathUtils::ClosestRectIntersectionFromOutsidePoint(point, rect);
 
@@ -168,8 +168,8 @@ namespace MathUtils
 
 		if (!exist) return false;
 
-		if (intr.x == rect.GetPosition().x || intr.x == rect.GetPosition(Align::BOTTOM_RIGHT).x) ret = {1, 0};
-		else if (intr.y == rect.GetPosition().y || intr.y == rect.GetPosition(Align::BOTTOM_RIGHT).y) ret = { 0, 1 };
+		if (intr.x == rect.GetPosition().x || intr.x == rect.GetPosition(Align::BOTTOM_RIGHT).x) ret = {1.0f, 0.0f };
+		else if (intr.y == rect.GetPosition().y || intr.y == rect.GetPosition(Align::BOTTOM_RIGHT).y) ret = { 0.0f, 1.0f };
 
 		return true;
 

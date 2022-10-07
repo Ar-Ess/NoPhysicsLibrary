@@ -16,7 +16,7 @@ bool Window::Awake()
 	LOG("Init SDL window & surface");
 	bool ret = true;
 
-	size = { 1280, 720 };
+	size = { 1280.0f, 720.0f };
 
 	if (SDL_Init(SDL_INIT_VIDEO) < 0) return false;
 

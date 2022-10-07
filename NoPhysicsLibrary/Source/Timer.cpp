@@ -12,6 +12,8 @@ void Timer::Start()
 
 int Timer::ReadSecs() const
 {
+	if (startTime == -1) return 0;
+
 	return GetSecs() - startTime;
 }
 

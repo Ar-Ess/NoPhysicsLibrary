@@ -25,10 +25,18 @@ Audio::~Audio()
 
 void Audio::Playback(SoundData* data, float* dt)
 {
+    //-TODO: put this while processiong acoustic data. Delete acoustic data with this kind of indexes
+    // This index does not exist
+    assert(data->index >= 0 && data->index < sounds.size());
     ma_node* lastNode = nullptr;
+    
+    // Delay Logic Approach (not totally working)
+    //Sound* sound = new Sound(new ma_sound(), (sounds[data->index]->length * 1.1f) + data->delayTime);
+
+    // Timer Logic Approach (if final, do not need to calculate sound length)
+    Sound* sound = new Sound(new ma_sound(), data->delayTime);
 
     // Create new sound
-    Sound* sound = new Sound(new ma_sound(), sounds[data->index]->length + (data->delayTime * 1.1f));
     ma_sound_init_copy(&engine, sounds[data->index]->sound, 0, NULL, sound->source);
 
     // Set sound panning
@@ -37,32 +45,43 @@ void Audio::Playback(SoundData* data, float* dt)
     // Set sound volume
     sound->SetVolume(data->volume);
 
+    // Delay Logic Approach (not totally working)
+    /*
     // Set sound delay (the first one, attached to engine input bus)
-    if (data->delayTime > 0) lastNode = sound->ConnectDelay(&engine, data->delayTime);
+    if (data->delayTime > 0.1f) lastNode = sound->ConnectDelay(&engine, data->delayTime);
 
     // Attach first node to sound output
     if (lastNode) // If any effect applied
     {
-        /* Connect the output of the sound to the input of the effect. */
+        // Connect the output of the sound to the input of the effect.
         ma_node_attach_output_bus(sound->source, 0, lastNode, 0);
     }
 
-    // Play sound
+    // Play sound, this function does not include the timer->Start(), and it should with this approach
     sound->Play();
+    */
 
-    // Save sound reference
-    playback.emplace_back(sound);
+    // Timer Logic Approach
+
+    if (data->delayTime > 0.1f) 
+        sound->StartTimer(); // Start the countdown
+    else
+        sound->Play(); // Play sound directly
+
+    playback.emplace_back(sound); // Save sound reference
 }
 
 void Audio::Update()
 {
     if (playback.empty()) return;
-    static int test = 0;
     size_t size = playback.size();
     for (unsigned int i = 0; i < size; ++i)
     {
         Sound* s = playback[i];
-        if (s->IsOver())
+
+        if (s->IsOver()) s->Play();
+
+        if (s->IsPlayed() && ma_sound_at_end(s->source))
         {
             playback.erase(playback.begin() + i);
             RELEASE(s);
@@ -70,7 +89,6 @@ void Audio::Update()
             --i;
         }
     }
-    test++;
 }
 
 void Audio::LoadSound(const char* path)

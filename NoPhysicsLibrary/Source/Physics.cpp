@@ -167,7 +167,7 @@ void Physics::Declip()
 			Point normal = {};
 
 			Point centerOfIntersecion = c->GetCollisionRectangle().GetPosition(Align::CENTER);
-			Ray ray(centerOfIntersecion.Apply(directionVec.Multiply(-1)), centerOfIntersecion);
+			Ray ray(centerOfIntersecion.Apply(directionVec.Multiply(-1.0f)), centerOfIntersecion);
 			if (!MathUtils::RayCast(ray, body->GetRect(InUnit::IN_METERS), normal)) break;
 
 			if (normal.x == 0) // Vertical collision with horizontal surface
@@ -236,7 +236,7 @@ void Physics::Declip()
 			Point normal = {};
 
 			Point centerOfIntersecion = c->GetCollisionRectangle().GetPosition(Align::CENTER);
-			Ray ray(centerOfIntersecion.Apply(directionVec.Multiply(-1)), centerOfIntersecion);
+			Ray ray(centerOfIntersecion.Apply(directionVec.Multiply(-1.0f)), centerOfIntersecion);
 			if (!MathUtils::RayCast(ray, body->GetRect(InUnit::IN_METERS), normal)) break;
 
 			if (normal.x == 0) // Vertical collision with horizontal surface

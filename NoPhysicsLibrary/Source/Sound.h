@@ -12,15 +12,22 @@ public:
 
 	void Play();
 
+	void StartTimer();
+
 	void SetPan(float pan);
 
 	void SetVolume(float volume);
 
 	ma_delay_node* ConnectDelay(ma_engine* engine, float delayTime);
 
-	bool IsOver()
+	bool IsOver() const
 	{
-		return timer->ReadSecs() >= timeToDelete;
+		return (timer->ReadSecs() >= timeToDelete && !played);
+	}
+
+	bool IsPlayed() const
+	{
+		return played;
 	}
 
 public:
@@ -31,5 +38,6 @@ private:
 
 	float timeToDelete = 0.0f;
 	Timer* timer = nullptr;
+	bool played = false;
 
 };
