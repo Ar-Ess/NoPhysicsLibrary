@@ -5,14 +5,16 @@
 
 struct LibraryConfig
 {
-	LibraryConfig(float* panRange, Flag* physicsConfig, Point* globalGravity, Point* globalRestitution, Point* globalFriction, Body** listener, float* pixelsToMeters) :
+	LibraryConfig(float* panRange, Flag* physicsConfig, Point* globalGravity, Point* globalRestitution, Point* globalFriction, Body** listener, float* pixelsToMeters, float* ptmRatio, Flag* notifier) :
 		panRange(panRange),
 		physicsConfig(physicsConfig),
 		globalGravity(globalGravity),
 		globalRestitution(globalRestitution),
 		globalFriction(globalFriction),
 		listener(listener),
-		pixelsToMeters(pixelsToMeters)
+		pixelsToMeters(pixelsToMeters),
+		ptmRatio(ptmRatio),
+		notifier(notifier)
 	{}
 
 	// Set which distance (in meters) the audio will sound mono in one of the two channels (Left / Right)
@@ -69,13 +71,24 @@ struct LibraryConfig
 
 	void Listener(Body* listener) { *this->listener = listener; }
 
+	void PixelsToMeters(float ratio)
+	{
+		float old = *this->pixelsToMeters;
+		*this->pixelsToMeters = ratio > 0 ? 1 / ratio : 1;
+		*this->ptmRatio = *this->pixelsToMeters / old;
+		notifier->Set(0, true);
+	}
+
 private:
 
 	float* panRange = nullptr;
 	Flag* physicsConfig = nullptr;
 	float* pixelsToMeters = nullptr;
+	float* ptmRatio = nullptr;
 	Point* globalGravity = nullptr;
 	Point* globalRestitution = nullptr;
 	Point* globalFriction = nullptr;
 	Body** listener = nullptr;
+
+	Flag* notifier = nullptr;
 };

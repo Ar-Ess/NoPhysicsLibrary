@@ -100,11 +100,13 @@ private: // Methods
 
 	GasBody* GetEnvironmentBody(Rect body);
 
+	void UpdateNotifier();
+		void UpdatePixelsToMeters();
+
 private:
 
 	Physics* physics = nullptr;
 	Audio* audio = nullptr;
-	Body* listener = nullptr;
 
 	std::vector<Body*> bodies;
 	std::vector<SoundData*> soundDataList;
@@ -126,8 +128,14 @@ private:
 	// - Acoustics
 	float panRange = 10.0f;
 	float pixelsToMeters = 20.0f;
+	float ptmRatio = 1.0f;
 
 	//_____________________
 	// - Audio
+	Body* listener = nullptr;
+
+	//______Config Notifier______
+	// PixelsToMeters (0) |
+	Flag notifier = {};
 
 };

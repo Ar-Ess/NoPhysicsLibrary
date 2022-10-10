@@ -27,6 +27,8 @@ void NPL::Update(float* dt)
 {
 	if (GetGlobalPause()) return;
 
+	UpdateNotifier();
+
 	StepPhysics(*dt);
 	StepAcoustics();
 	StepAudio(dt);
@@ -85,7 +87,7 @@ BodyCreation NPL::CreateBody(Rect rectangle, float mass)
 
 LibraryConfig NPL::Configure()
 {
-	return LibraryConfig(&panRange, &physicsConfig, &physics->globalGravity, &physics ->globalRestitution, &physics->globalFriction, &listener, &pixelsToMeters);
+	return LibraryConfig(&panRange, &physicsConfig, &physics->globalGravity, &physics ->globalRestitution, &physics->globalFriction, &listener, &pixelsToMeters, &ptmRatio, &notifier);
 }
 
 void NPL::DestroyScenario()
@@ -404,6 +406,40 @@ GasBody* NPL::GetEnvironmentBody(Rect body)
 	}
 
 	return nullptr;
+}
+
+void NPL::UpdateNotifier()
+{
+	if (!notifier.IsAnyTrue()) return;
+
+	if (notifier.Get(0)) UpdatePixelsToMeters();
+
+	notifier.Clear();
+}
+
+void NPL::UpdatePixelsToMeters()
+{
+	for (Body* b : bodies)
+	{
+		switch (b->clas)
+		{
+		case BodyClass::DYNAMIC_BODY:
+		{
+			DynamicBody* dB = (DynamicBody*)b;
+			break; 
+		}
+		case BodyClass::LIQUID_BODY:
+			break;
+		default:
+			break;
+		}
+
+		b->emissionPoint *= ptmRatio;
+		b->rect.x *= ptmRatio;
+		b->rect.y *= ptmRatio;
+		b->rect.h *= ptmRatio;
+		b->rect.w *= ptmRatio;
+	}
 }
 
 float NPL::ComputePanning(float distance, float bodyX)

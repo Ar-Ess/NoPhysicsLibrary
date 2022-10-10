@@ -12,23 +12,27 @@ bool TestTwoScene::Start()
 {
 	npl = new NPL();
 
-	//-TODO: Not in init. Calculate ratio between (old metersToPixels / newMatersToPixels ) and multiply for all needed (low priority)
+	//-TODO: Not in init. Calculate ratio between (old metersToPixels / newMatersToPixels) and multiply for all needed (low priority)
 	npl->Init(128.0f);
 
 	npl->Configure().CollisionsDebugging(false);
 	npl->Configure().PanRange(10, InUnit::IN_METERS);
 	npl->Configure().GlobalFriction(0.2f);
 	npl->Configure().GlobalRestitution({ 0.6f, 0.0f });
-	npl->Configure().GlobalGravity({ 0.0f, 10 }, InUnit::IN_METERS);
+	npl->Configure().GlobalGravity({ 0.0f, 3.0f }, InUnit::IN_METERS);
+
+	//-TODO: top, ground, left right, air, water bools
 
 
 	player = npl->CreateBody({ 100.0f, 200.0f, npl->MetersToPixels(Point(0.3f, 0.75f)) }, 20).Dynamic();
 	npl->CreateBody({ 400.0f, 200.0f, npl->MetersToPixels(Point(0.3f, 0.75f)) }, 20).Dynamic();
+
+	//-TODO: Add it in config?
 	emitter = npl->SetScenarioPreset(ScenarioPreset::CORRIDOR_SCENARIO_PRESET, window->GetSize(), 1);
 
 	npl->Configure().Listener(player);
 
-	//-TODO: Insert environment enum presets
+	//-TODO: Insert environment enum presets, in config?
 	npl->CreateBody(npl->ReturnScenarioRect(), 1).Gas(10.0f, 1.414f, 1000);
 
 	npl->LoadSound("Assets/Audio/bounce.wav");
@@ -52,7 +56,7 @@ bool TestTwoScene::Update(float dt)
 	// PLayer Inputs
 	if (input->GetKey(SDL_SCANCODE_D) == KeyState::KEY_REPEAT) player->ApplyMomentum(  20, 0);
 	if (input->GetKey(SDL_SCANCODE_A) == KeyState::KEY_REPEAT) player->ApplyMomentum( -20, 0);
-	if (input->GetKey(SDL_SCANCODE_SPACE) == KeyState::KEY_DOWN) player->ApplyMomentum(0, -600);
+	if (input->GetKey(SDL_SCANCODE_SPACE) == KeyState::KEY_DOWN) player->ApplyMomentum(0, -300);
 
 	if (input->GetKey(SDL_SCANCODE_LSHIFT) == KeyState::KEY_DOWN) player->Play(0, 80.0f);
 	if (input->GetKey(SDL_SCANCODE_RETURN) == KeyState::KEY_DOWN) emitter->Play(0, 80.0f);
