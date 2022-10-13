@@ -151,6 +151,7 @@ void Physics::Declip()
 	for (Collision* c : collisions)
 	{
 		DynamicBody* dynBody = (DynamicBody*)c->GetDynBody();
+		dynBody->collisionFlags.Clear();
 		Rect intersect = c->GetCollisionRectangle();
 
 		Point directionVec = dynBody->GetPosition(InUnit::IN_METERS) - dynBody->backup.position;
@@ -177,12 +178,14 @@ void Physics::Declip()
 				{
 					dynBody->rect.y -= intersect.h / 2;
 					body->rect.y += intersect.h / 2;
+					dynBody->collisionFlags.Set((int)CollideBool::GROUND, true);
 				}
 				// Bottom -> Top
 				if (directionVec.y < 0)
 				{
 					dynBody->rect.y += intersect.h / 2;
 					body->rect.y -= intersect.h / 2;
+					dynBody->collisionFlags.Set((int)CollideBool::ROOF, true);
 				}
 
 				// Perfectly elastic collision
@@ -200,12 +203,14 @@ void Physics::Declip()
 				{
 					dynBody->rect.x -= intersect.w / 2;
 					body->rect.x += intersect.w / 2;
+					dynBody->collisionFlags.Set((int)CollideBool::RIGHT, true);
 				}
 				// Right -> Left
 				if (directionVec.x < 0)
 				{
 					dynBody->rect.x += intersect.w / 2;
 					body->rect.x -= intersect.w / 2;
+					dynBody->collisionFlags.Set((int)CollideBool::LEFT, true);
 				}
 
 				// Perfectly elastic collision
