@@ -1,4 +1,5 @@
 #include "Point.h"
+#include "InUnitsEnum.h"
 
 struct PhysVec
 {
@@ -8,10 +9,11 @@ struct PhysVec
 		module = 0.0f;
 	}
 
-	PhysVec(Point vector)
+	PhysVec(Point vector, InUnit unit)
 	{
 		this->vector = vector;
 		this->module = vector.Module();
+		this->unit = unit;
 	}
 
 	~PhysVec()
@@ -27,6 +29,7 @@ struct PhysVec
 
 	Point vector = { 0.0f, 0.0f };
 	float module = 0.0f;
+	InUnit unit = InUnit::IN_METERS;
 
 };
 

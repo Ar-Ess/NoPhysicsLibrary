@@ -27,12 +27,12 @@ void NPL::Update(float* dt)
 {
 	if (GetGlobalPause()) return;
 
+	//INFO: Uniform forces independent from space use InUnit::IN_PIXELS, otherwise InUnit::IN_METERS
 	UpdateNotifier();
 
 	StepPhysics(*dt);
 	StepAcoustics();
 	StepAudio(dt);
-
 }
 
 void NPL::CleanUp()
@@ -426,6 +426,7 @@ void NPL::UpdatePixelsToMeters()
 		case BodyClass::DYNAMIC_BODY:
 		{
 			DynamicBody* dB = (DynamicBody*)b;
+			dB->SetGravityOffset(dB->GetGravityOffset() * ptmRatio);
 			break; 
 		}
 		case BodyClass::LIQUID_BODY:
@@ -440,6 +441,9 @@ void NPL::UpdatePixelsToMeters()
 		b->rect.h *= ptmRatio;
 		b->rect.w *= ptmRatio;
 	}
+
+	panRange *= ptmRatio;
+	physics->globalGravity *= ptmRatio;
 }
 
 float NPL::ComputePanning(float distance, float bodyX)

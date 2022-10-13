@@ -38,21 +38,19 @@ void DynamicBody::ApplyForce(float newtonsX, float newtonsY, InUnit unit)
 	Point newtons = { newtonsX, newtonsY };
 
 	if (newtons.IsZero()) return; // If newtons is null
-	if (unit == InUnit::IN_PIXELS) newtons *= *pixelsToMeters;
 
 	newtons *= mass;
 
-	forces.emplace_back(new Force(newtons));
+	forces.emplace_back(new Force(newtons, unit));
 }
 
 void DynamicBody::ApplyForce(Point newtons, InUnit unit)
 {
 	if (newtons.IsZero()) return; // If newtons is null
-	if (unit == InUnit::IN_PIXELS) newtons *= *pixelsToMeters;
 
 	newtons *= mass;
 
-	forces.emplace_back(new Force(newtons));
+	forces.emplace_back(new Force(newtons, unit));
 }
 
 void DynamicBody::ApplyMomentum(float momentumX, float momentumY, InUnit unit)
@@ -61,9 +59,8 @@ void DynamicBody::ApplyMomentum(float momentumX, float momentumY, InUnit unit)
 	Point momentum = { momentumX, momentumY };
 
 	if (momentum.IsZero()) return; // If momentum is null
-	if (unit == InUnit::IN_PIXELS) momentum *= *pixelsToMeters;
 
-	momentums.emplace_back(new Momentum(momentum));
+	momentums.emplace_back(new Momentum(momentum, unit));
 }
 
 void DynamicBody::ApplyMomentum(Point momentum, InUnit unit)
@@ -71,9 +68,8 @@ void DynamicBody::ApplyMomentum(Point momentum, InUnit unit)
 	if (globals->Get(0)) return; // Physics are paused
 
 	if (momentum.IsZero()) return; // If momentum is null
-	if (unit == InUnit::IN_PIXELS) momentum *= *pixelsToMeters;
 
-	momentums.emplace_back(new Momentum(momentum));
+	momentums.emplace_back(new Momentum(momentum, unit));
 }
 
 void DynamicBody::SetGravityOffset(Point gravityOffset, InUnit unit)
@@ -82,7 +78,7 @@ void DynamicBody::SetGravityOffset(Point gravityOffset, InUnit unit)
 	this->gravityOffset = gravityOffset;
 }
 
-inline Point DynamicBody::GetGravityOffset(InUnit unit) const
+Point DynamicBody::GetGravityOffset(InUnit unit) const
 {
 	float conversion = 1;
 	if (unit == InUnit::IN_PIXELS) conversion = (1 / *pixelsToMeters);
@@ -94,7 +90,13 @@ void DynamicBody::SecondNewton()
 {
 	totalForces.Clear();
 
-	for (Force* f : forces) totalForces.vector += f->vector;
+	for (Force* f : forces)
+	{
+		Point vector = f->vector;
+		if (f->unit == InUnit::IN_PIXELS) vector *= *pixelsToMeters;
+
+		totalForces.vector += vector;
+	}
 	forces.clear();
 
 	// You idiot, mass can not be zero :}
@@ -109,7 +111,13 @@ void DynamicBody::FirstBuxeda()
 {
 	totalMomentum.Clear();
 
-	for (Momentum* m : momentums) totalMomentum.vector += m->vector;
+	for (Momentum* m : momentums)
+	{
+		Point vector = m->vector;
+		if (m->unit == InUnit::IN_PIXELS) vector *= *pixelsToMeters;
+
+		totalMomentum.vector += vector;
+	}
 	momentums.clear();
 
 	// You idiot, mass can not be zero :}
