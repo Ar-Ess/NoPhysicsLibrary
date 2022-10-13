@@ -164,12 +164,12 @@
     <ClInclude Include="Source\AcusticData.h" />
     <ClInclude Include="Source\Alignment.h" />
     <ClInclude Include="Source\Audio.h" />
-    <ClInclude Include="Source\Auxiliars.h" />
+    <ClInclude Include="Source\AuxiliarsHeader.h" />
     <ClInclude Include="Source\Body.h" />
     <ClInclude Include="Source\BodyBackup.h" />
     <ClInclude Include="Source\BodyClassEnum.h" />
     <ClInclude Include="Source\BodyCreationAux.h" />
-    <ClInclude Include="Source\CollideBool.h" />
+    <ClInclude Include="Source\BodyStateEnum.h" />
     <ClInclude Include="Source\Collision.h" />
     <ClInclude Include="Source\DirectionEnum.h" />
     <ClInclude Include="Source\DynamicBody.h" />
@@ -180,7 +180,7 @@
     <ClInclude Include="Source\External\miniaudio\miniaudiodev.h" />
     <ClInclude Include="Source\Flag.h" />
     <ClInclude Include="Source\InUnitsEnum.h" />
-    <ClInclude Include="Source\LibraryConfig.h" />
+    <ClInclude Include="Source\LibraryConfigAux.h" />
     <ClInclude Include="Source\PhysVec.h" />
     <ClInclude Include="Source\GasBody.h" />
     <ClInclude Include="Source\LiquidBody.h" />

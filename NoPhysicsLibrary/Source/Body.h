@@ -13,8 +13,6 @@ class Body
 {
 public: // Methods
 
-	Body(BodyClass clas, Rect rect, float mass, const float* pixelsToMeters);
-
 	virtual ~Body() {}
 
 	// Plays a sound, volume range [0, 120]
@@ -24,20 +22,20 @@ public: // Methods
 	// Sets the body emission point, where the body sound will emit from.
 	// Values out of body bounds will be set to the closest point inside it
 	// X increments from left to right. Y increments from top to bottom
-	void SetEmissionPoint(Point point, InUnit unit = InUnit::IN_PIXELS);
+	void SetEmissionPoint(Point point, InUnit unit);
 
 	// Sets the body emission point, where the body sound will emit from.
 	// Values out of body bounds will be set to the closest point inside it
-	void SetEmissionPoint(Align align, Point offset = { 0.0f, 0.0f }, InUnit unit = InUnit::IN_PIXELS);
+	void SetEmissionPoint(Align align, Point offset, InUnit unit);
 
 	// Returns the x & y coordinates of the body
-	Point GetPosition(InUnit unit = InUnit::IN_PIXELS) const;
+	Point GetPosition(InUnit unit) const;
 
 	// Returns the width & height of the body
-	Point GetSize(InUnit unit = InUnit::IN_PIXELS) const;
+	Point GetSize(InUnit unit) const;
 
 	// Returns the pointer to the rectangle of the body
-	Rect GetRect(InUnit unit = InUnit::IN_PIXELS) const { return { GetPosition(unit), GetSize(unit) }; }
+	Rect GetRect(InUnit unit) const { return { GetPosition(unit), GetSize(unit) }; }
 
 	// Returns the body class enum
 	inline BodyClass GetClass() const { return clas; }
@@ -55,11 +53,9 @@ public: // Methods
 	//-TODO: implement it in the physics engine
 	inline void SetCollidable(bool set) { properties.Set(set, 1); }
 
-protected: // Functions
+protected: // Methods
 
-	void SolveCollision(Body& body, int dir);
-
-	void DeClipper(Body& body, int dir);
+	Body(BodyClass clas, Rect rect, float mass, Flag* bodiesConfig, const float* pixelsToMeters);
 
 protected: // Variables
 
@@ -75,5 +71,7 @@ protected: // Variables
 
 	// Collidable | 
 	Flag properties = {};
+
+	Flag* bodiesConfig = {};
 
 };

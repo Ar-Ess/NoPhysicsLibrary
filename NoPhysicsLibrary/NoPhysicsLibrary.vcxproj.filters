@@ -125,9 +125,6 @@
     <ClInclude Include="Source\GasBody.h">
       <Filter>Core\Bodies</Filter>
     </ClInclude>
-    <ClInclude Include="Source\CollideBool.h">
-      <Filter>Enums</Filter>
-    </ClInclude>
     <ClInclude Include="Source\External\miniaudio\miniaudio.h">
       <Filter>External\Miniaudio</Filter>
     </ClInclude>
@@ -167,12 +164,6 @@
     <ClInclude Include="Source\Collision.h">
       <Filter>Core\Physics\Units</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Auxiliars.h">
-      <Filter>Aux</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\LibraryConfig.h">
-      <Filter>Aux</Filter>
-    </ClInclude>
     <ClInclude Include="Source\Alignment.h">
       <Filter>Utils</Filter>
     </ClInclude>
@@ -189,6 +180,15 @@
       <Filter>External\Miniaudio</Filter>
     </ClInclude>
     <ClInclude Include="Source\InUnitsEnum.h">
+      <Filter>Enums</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\AuxiliarsHeader.h">
+      <Filter>Aux</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\LibraryConfigAux.h">
+      <Filter>Aux</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\BodyStateEnum.h">
       <Filter>Enums</Filter>
     </ClInclude>
   </ItemGroup>

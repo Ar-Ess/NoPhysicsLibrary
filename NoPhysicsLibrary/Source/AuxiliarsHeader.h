@@ -1,4 +1,4 @@
 #pragma once
 
 #include "BodyCreationAux.h"
-#include "LibraryConfig.h"
+#include "LibraryConfigAux.h"

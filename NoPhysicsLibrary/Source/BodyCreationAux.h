@@ -7,23 +7,22 @@
 #include "LiquidBody.h"
 #include "GasBody.h"
 
-typedef double Float;
-
 struct BodyCreation
 {
-	BodyCreation(Rect rect, float mass, std::vector<Body*>* bodies, std::vector<unsigned int*>* gasLocation,Physics* physics, const float* pixelsToMeters)
-	{
-		this->mass = mass;
-		this->rect = rect;
-		this->bodies = bodies;
-		this->gasLocation = gasLocation;
-		this->physics = physics;
-		this->pixelsToMeters = pixelsToMeters;
-	}
+	BodyCreation(Rect rect, float mass, std::vector<Body*>* bodies, std::vector<unsigned int*>* gasLocation, std::vector<unsigned int*>* liquidIndex, Physics* physics, const float* pixelsToMeters, Flag* bodiesConfig) :
+		mass(mass),
+		rect(rect),
+		bodies(bodies),
+		gasIndex(gasLocation),
+		liquidIndex(liquidIndex),
+		physics(physics),
+		pixelsToMeters(pixelsToMeters),
+		bodiesConfig(bodiesConfig)
+	{}
 
 	StaticBody* Static()
 	{
-		bodies->emplace_back(new StaticBody(rect, mass, pixelsToMeters));
+		bodies->emplace_back(new StaticBody(rect, mass, bodiesConfig, pixelsToMeters));
 		return (StaticBody*)bodies->back();
 	}
 
@@ -31,20 +30,21 @@ struct BodyCreation
 	{
 		if (!gravityOffset.IsZero() && unit == InUnit::IN_PIXELS) gravityOffset *= *pixelsToMeters;
 
-		bodies->emplace_back(new DynamicBody(rect, gravityOffset, mass, &physics->globals, pixelsToMeters));
+		bodies->emplace_back(new DynamicBody(rect, gravityOffset, mass, bodiesConfig, &physics->globals, pixelsToMeters));
 		return (DynamicBody*)bodies->back();
 	}
 
 	LiquidBody* Liquid()
 	{
-		bodies->emplace_back(new LiquidBody(rect, mass, pixelsToMeters));
+		bodies->emplace_back(new LiquidBody(rect, mass, bodiesConfig, pixelsToMeters));
+		liquidIndex->emplace_back(new unsigned int(bodies->size() - 1));
 		return (LiquidBody*)bodies->back();
 	}
 
 	GasBody* Gas(float density, float heatRatio, float pressure)
 	{
-		bodies->emplace_back(new GasBody(rect, mass, density, heatRatio, pressure, pixelsToMeters));
-		gasLocation->emplace_back(new unsigned int(bodies->size() - 1));
+		bodies->emplace_back(new GasBody(rect, mass, bodiesConfig, density, heatRatio, pressure, pixelsToMeters));
+		gasIndex->emplace_back(new unsigned int(bodies->size() - 1));
 		return (GasBody*)bodies->back();
 	}
 
@@ -53,7 +53,9 @@ private:
 	float mass = 1.0f;
 	Rect rect = {};
 	std::vector<Body*>* bodies = nullptr;
-	std::vector<unsigned int*>* gasLocation = nullptr;
+	std::vector<unsigned int*>* gasIndex = nullptr;
+	std::vector<unsigned int*>* liquidIndex = nullptr;
 	Physics* physics = nullptr;
 	const float* pixelsToMeters = nullptr;
+	Flag* bodiesConfig = nullptr;
 };

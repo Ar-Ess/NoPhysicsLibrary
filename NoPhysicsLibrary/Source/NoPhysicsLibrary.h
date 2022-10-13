@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Auxiliars.h"
+#include "AuxiliarsHeader.h"
 // Includes: Body.h, Audio.h 
 
 #include "ScenarioPresetEnum.h"
@@ -92,11 +92,14 @@ private: // Methods
 			float ComputeTimeDelay(float distance, GasBody* environment);
 		void NoListenerLogic(Body* b);
 
+	void UpdateStates();
+
 	void StepAudio(float* dt);
 
 	bool EraseBody(Body* body);
 
 	inline bool IsVoid() const { return gasIndex.empty(); }
+	inline bool IsDry() const { return liquidIndex.empty(); }
 
 	GasBody* GetEnvironmentBody(Rect body);
 
@@ -110,8 +113,9 @@ private:
 
 	std::vector<Body*> bodies;
 	std::vector<SoundData*> soundDataList;
-	// Fet aixi perquè amb unic ids s'hauria de fer moltes iteracions + protegir el vector de bodies
+	//INFO: Fet aixi perquè amb unic ids s'hauria de fer moltes iteracions + protegir el vector de bodies
 	std::vector<unsigned int*> gasIndex;
+	std::vector<unsigned int*> liquidIndex;
 
 	// CONSTANTS
 	const float maxSPL = 120.0f;
@@ -123,6 +127,8 @@ private:
 
 	// Debug Collisions (0) |
 	Flag physicsConfig = {};
+	// Debug states (0) |
+	Flag bodiesConfig = {};
 
 	//_____________________
 	// - Acoustics

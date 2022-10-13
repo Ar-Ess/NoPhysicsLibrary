@@ -39,6 +39,7 @@ private: // Methods
 
 	// Declip
 	void DetectCollisions(std::vector<Body*>* bodies);
+	void ResetFlags(std::vector<Body*>* bodies);
 	void Declip();
 
 

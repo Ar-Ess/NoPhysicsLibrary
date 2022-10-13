@@ -1,11 +1,12 @@
 #pragma once
 
-enum class CollideBool
+enum class BodyState
 {
-	AIR = 0,
+	GAS = 0,
 	GROUND,
 	ROOF,
 	LEFT,
 	RIGHT,
-	WATER
+	LIQUID,
+	FLOAT
 };

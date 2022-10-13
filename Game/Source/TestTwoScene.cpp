@@ -20,11 +20,11 @@ bool TestTwoScene::Start()
 	npl->Configure().GlobalRestitution({ 0.6f, 0.0f });
 	npl->Configure().GlobalGravity({ 0.0f, 3.0f }, InUnit::IN_METERS);
 
-	//-TODO: top, ground, left right, air, water bools
-
-
 	player = npl->CreateBody({ 100.0f, 200.0f, npl->MetersToPixels(Point(0.3f, 0.75f)) }, 20).Dynamic();
 	npl->CreateBody({ 400.0f, 200.0f, npl->MetersToPixels(Point(0.3f, 0.75f)) }, 20).Dynamic();
+	npl->CreateBody({ 800.0f, 400.0f, npl->MetersToPixels(Point(0.8f, 0.8f)) }, 20).Gas(10, 1.414f, 1000);
+	npl->CreateBody({ 600, 600, npl->MetersToPixels(Point(1.0f, 3.0f)) }, 20).Liquid();
+
 
 	//-TODO: Add it in config?
 	emitter = npl->SetScenarioPreset(ScenarioPreset::CORRIDOR_SCENARIO_PRESET, window->GetSize(), 1);
@@ -32,7 +32,7 @@ bool TestTwoScene::Start()
 	npl->Configure().Listener(player);
 
 	//-TODO: Insert environment enum presets, in config?
-	npl->CreateBody(npl->ReturnScenarioRect(), 1).Gas(10.0f, 1.414f, 1000);
+	//npl->CreateBody(npl->ReturnScenarioRect(), 1).Gas(10.0f, 1.414f, 1000);
 
 	npl->LoadSound("Assets/Audio/bounce.wav");
 
@@ -45,7 +45,7 @@ bool TestTwoScene::Update(float dt)
 {
 	bool ret = true;
 	static bool pause = false;
-	static bool bools = false;
+	static bool state = false;
 
 	// Information: The user will listen from the point of view of the listener body.
 	if (player->GetPosition(InUnit::IN_PIXELS).x >= 625) render->camera.x = player->GetPosition(InUnit::IN_PIXELS).x - 625;
@@ -84,7 +84,7 @@ bool TestTwoScene::Update(float dt)
 		case BodyClass::STATIC_BODY:  color = { 255,   0,   0, color.a }; break;
 		case BodyClass::DYNAMIC_BODY: color = { 0, 255,   0, color.a }; break;
 		case BodyClass::LIQUID_BODY:  color = { 100, 100, 255, color.a }; break;
-		case BodyClass::GAS_BODY:     color = { 255, 255, 255, (Uint8)(color.a - 40) }; break;
+		case BodyClass::GAS_BODY:     color = { 255, 255, 255, (Uint8)(color.a - 20) }; break;
 		}
 
 		render->DrawRectangle(b->GetRect(InUnit::IN_PIXELS), color);
@@ -98,17 +98,23 @@ bool TestTwoScene::Update(float dt)
 		if (c) render->DrawRectangle(c->GetCollisionRectangle(), { 100, 100, 255, 255 });
 	}
 
-	// Draw collision bools
-	if (input->GetKey(SDL_SCANCODE_B) == KeyState::KEY_DOWN) bools = !bools;
-	if (bools)
+	// Draw body states
+	if (input->GetKey(SDL_SCANCODE_B) == KeyState::KEY_DOWN)
 	{
-		render->DrawRectangle({ 0, 0, 50 * 3, 74 }, { 255, 255, 255, 150 }, {1.0f, 1.0f}, false);
-		if (player->IsColliding(CollideBool::AIR))    render->DrawRectangle({ 10 * 3, 10, 20 * 3, 12 }, { 150, 150, 255, 150 }, { 1.0f, 1.0f }, false);
-		if (player->IsColliding(CollideBool::GROUND)) render->DrawRectangle({ 10 * 3, 32, 20 * 3, 12 }, { 255,   0,   0, 150 }, { 1.0f, 1.0f }, false);
-		if (player->IsColliding(CollideBool::LEFT))   render->DrawRectangle({ 10 * 3, 64, 20 * 3, 12 }, { 255, 255,   0, 150 }, { 1.0f, 1.0f }, false);
-		if (player->IsColliding(CollideBool::RIGHT))  render->DrawRectangle({ 40 * 3, 10, 20 * 3, 12 }, { 255,   0, 255, 150 }, { 1.0f, 1.0f }, false);
-		if (player->IsColliding(CollideBool::ROOF))   render->DrawRectangle({ 40 * 3, 32, 20 * 3, 12 }, {   0, 255,   0, 150 }, { 1.0f, 1.0f }, false);
-		if (player->IsColliding(CollideBool::WATER))  render->DrawRectangle({ 40 * 3, 64, 20 * 3, 12 }, {   0,   0, 255, 150 }, { 1.0f, 1.0f }, false);
+		state = !state;
+		npl->Configure().StateDebugging(state);
+	}
+	if (state)
+	{
+		render->DrawRectangle({ 0, 0, 170, 82 }, { 255, 255, 255, 150 }, {1.0f, 1.0f}, false);
+		if (player->IsColliding(BodyState::GAS))    render->DrawRectangle({  20, 10, 30, 14 }, { 150, 150, 255, 150 }, { 1.0f, 1.0f }, false);
+		if (player->IsColliding(BodyState::GROUND)) render->DrawRectangle({  20, 34, 30, 14 }, { 255,   0,   0, 150 }, { 1.0f, 1.0f }, false);
+		if (player->IsColliding(BodyState::LEFT))   render->DrawRectangle({  20, 58, 30, 14 }, { 255, 255,   0, 150 }, { 1.0f, 1.0f }, false);
+		if (player->IsColliding(BodyState::RIGHT))  render->DrawRectangle({  70, 10, 30, 14 }, { 255,   0, 255, 150 }, { 1.0f, 1.0f }, false);
+		if (player->IsColliding(BodyState::ROOF))   render->DrawRectangle({  70, 34, 30, 14 }, {   0, 255,   0, 150 }, { 1.0f, 1.0f }, false);
+		if (player->IsColliding(BodyState::LIQUID)) render->DrawRectangle({  70, 58, 30, 14 }, {   0,   0, 255, 150 }, { 1.0f, 1.0f }, false);
+		if (player->IsColliding(BodyState::FLOAT))  render->DrawRectangle({ 120, 10, 30, 14 }, { 100, 100, 100, 150 }, { 1.0f, 1.0f }, false);
+		if (!player->IsColliding(BodyState::GAS))   render->DrawRectangle({ 120, 34, 30, 14 }, {   0,   0,   0, 150 }, { 1.0f, 1.0f }, false);
 	}
 
 	//Change scene

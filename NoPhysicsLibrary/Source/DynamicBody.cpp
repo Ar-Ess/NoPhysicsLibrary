@@ -1,6 +1,6 @@
 #include "DynamicBody.h"
 
-DynamicBody::DynamicBody(Rect rect, Point gravityOffset, float mass, Flag* globals, const float* pixelsToMeters) : Body(BodyClass::DYNAMIC_BODY, rect, mass, pixelsToMeters)
+DynamicBody::DynamicBody(Rect rect, Point gravityOffset, float mass, Flag* bodiesConfig, Flag* globals, const float* pixelsToMeters) : Body(BodyClass::DYNAMIC_BODY, rect, mass, bodiesConfig, pixelsToMeters)
 {
 	this->gravityOffset = gravityOffset;
 	this->globals = globals;
@@ -22,14 +22,11 @@ void DynamicBody::Backup()
 	backup = BodyBackup(rect.GetPosition(), velocity, acceleration, totalMomentum, totalForces);
 }
 
-bool DynamicBody::IsColliding(CollideBool collision)
+bool DynamicBody::IsColliding(BodyState collision)
 {
-	return collisionFlags.Get((int)collision);
-}
+	if (!bodiesConfig->Get(0)) return false;
 
-bool DynamicBody::IsColliding()
-{
-	return collisionFlags.IsAnyTrue();
+	return bodyState.Get((int)collision);
 }
 
 void DynamicBody::ApplyForce(float newtonsX, float newtonsY, InUnit unit)

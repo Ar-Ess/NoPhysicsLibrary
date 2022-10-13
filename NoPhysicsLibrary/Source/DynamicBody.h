@@ -1,21 +1,19 @@
 #pragma once
 
 #include "Body.h"
-#include "CollideBool.h"
+#include "BodyStateEnum.h"
 #include "BodyBackup.h"
 
 class DynamicBody : public Body
 {
 public: // Methods
 
-	DynamicBody(Rect rect, Point gravityOffset, float mass, Flag* globals, const float* pixelsToMeters);
+	DynamicBody(Rect rect, Point gravityOffset, float mass, Flag* bodiesConfig, Flag* globals, const float* pixelsToMeters);
 
 	~DynamicBody() override;
 
 	// Returns if this body is colliding with any other body in the specified situation
-	bool IsColliding(CollideBool collision);
-	// Returns if this body is colliding with any other body in any possible way
-	bool IsColliding();
+	bool IsColliding(BodyState collision);
 	
 	// Applies an specific force to this body
 	void ApplyForce(float newtonsX, float newtonsY, InUnit unit = InUnit::IN_METERS);
@@ -44,6 +42,7 @@ public: // Variables
 private: // Variables
 
 	friend class Physics; // Necessary for accessing SecondNewton/FirstBuxeda
+	friend class NPL; // Necessary to update states
 
 	Point velocity = {};
 	Point gravityOffset = {};
@@ -56,8 +55,8 @@ private: // Variables
 	Force totalForces = {};
 	Momentum totalMomentum = {};
 
-	// Air | Ground | Roof | Left | Right | Water
-	Flag collisionFlags = {};
+	// Voided | Ground | Roof | Left | Right | Liquid | Gas | Float
+	Flag bodyState = {};
 
 	Flag* globals = nullptr;
 

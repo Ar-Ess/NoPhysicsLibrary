@@ -5,9 +5,10 @@
 
 struct LibraryConfig
 {
-	LibraryConfig(float* panRange, Flag* physicsConfig, Point* globalGravity, Point* globalRestitution, Point* globalFriction, Body** listener, float* pixelsToMeters, float* ptmRatio, Flag* notifier) :
+	LibraryConfig(float* panRange, Flag* physicsConfig, Flag* bodiesConfig, Point* globalGravity, Point* globalRestitution, Point* globalFriction, Body** listener, float* pixelsToMeters, float* ptmRatio, Flag* notifier) :
 		panRange(panRange),
 		physicsConfig(physicsConfig),
+		bodiesConfig(bodiesConfig),
 		globalGravity(globalGravity),
 		globalRestitution(globalRestitution),
 		globalFriction(globalFriction),
@@ -25,9 +26,13 @@ struct LibraryConfig
 		*this->panRange = panRange > 0 ? panRange : 0; 
 	}
 
-	// Allows to debug body collisions. If enabled, "GetCollisionsIterable()" will no longer return null. 
+	// Allows to debug body collisions. If enabled, "GetCollisionsIterable()" inside NPL class will no longer return null. 
 	// Then draw the rectangle inside it. Enabling this might slightly slow the code iteration
 	void CollisionsDebugging(bool enable) { this->physicsConfig->Set(0, enable); }
+
+	// Allows to debug body state of collision. If enabled, "IsColliding()" in DynamicBody class will no longer return false.
+	// will no longer return false. Enabling this might slightly slow the code iteration
+	void StateDebugging(bool enable) { this->bodiesConfig->Set(0, enable); }
 
 	void GlobalGravity(Point gravity, InUnit unit)
 	{
@@ -83,6 +88,7 @@ private:
 
 	float* panRange = nullptr;
 	Flag* physicsConfig = nullptr;
+	Flag* bodiesConfig = nullptr;
 	float* pixelsToMeters = nullptr;
 	float* ptmRatio = nullptr;
 	Point* globalGravity = nullptr;

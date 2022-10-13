@@ -33,6 +33,8 @@ void NPL::Update(float* dt)
 	StepPhysics(*dt);
 	StepAcoustics();
 	StepAudio(dt);
+
+	UpdateStates();
 }
 
 void NPL::CleanUp()
@@ -82,12 +84,12 @@ BodyCreation NPL::CreateBody(Rect rectangle, float mass)
 
 	rectangle = { rectangle.GetPosition() * pixelsToMeters, rectangle.GetSize() * pixelsToMeters };
 
-	return BodyCreation(rectangle, mass, &bodies, &gasIndex, physics, &pixelsToMeters);
+	return BodyCreation(rectangle, mass, &bodies, &gasIndex, &liquidIndex, physics, &pixelsToMeters, &bodiesConfig);
 }
 
 LibraryConfig NPL::Configure()
 {
-	return LibraryConfig(&panRange, &physicsConfig, &physics->globalGravity, &physics ->globalRestitution, &physics->globalFriction, &listener, &pixelsToMeters, &ptmRatio, &notifier);
+	return LibraryConfig(&panRange, &physicsConfig, &bodiesConfig, &physics->globalGravity, &physics ->globalRestitution, &physics->globalFriction, &listener, &pixelsToMeters, &ptmRatio, &notifier);
 }
 
 void NPL::DestroyScenario()
@@ -362,6 +364,62 @@ void NPL::NoListenerLogic(Body* b)
 		RELEASE(data);
 	}
 	b->acousticDataList.clear();
+}
+
+void NPL::UpdateStates()
+{
+	// If debug states is false
+	if (!bodiesConfig.Get(0)) return;
+
+	for (Body* b : bodies)
+	{
+		if (b->clas != BodyClass::DYNAMIC_BODY) continue;
+		DynamicBody* dB = (DynamicBody*)b;
+
+		bool floating = true;
+		for (int i = 1; i < 5; ++i)
+		{
+			if (dB->bodyState.Get(i))
+			{
+				floating = false;
+				break;
+			}
+		}
+		dB->bodyState.Set((int)BodyState::FLOAT, floating);
+
+		if (IsVoid()) dB->bodyState.Set((int)BodyState::GAS, false);
+		else
+		{
+			bool gas = false;
+			for (unsigned int* i : gasIndex)
+			{
+				if (MathUtils::CheckCollision(b->GetRect(InUnit::IN_METERS), bodies[*i]->GetRect(InUnit::IN_METERS)))
+				{
+					gas = true;
+					break;
+				}
+			}
+
+			dB->bodyState.Set((int)BodyState::GAS, gas);
+		}
+
+		if (IsDry()) dB->bodyState.Set((int)BodyState::LIQUID, false);
+		else
+		{
+			bool liquid = false;
+			for (unsigned int* i : liquidIndex)
+			{
+				if (MathUtils::CheckCollision(b->GetRect(InUnit::IN_METERS), bodies[*i]->GetRect(InUnit::IN_METERS)))
+				{
+					liquid = true;
+					break;
+				}
+			}
+
+			dB->bodyState.Set((int)BodyState::LIQUID, liquid);
+		}
+
+	}
 }
 
 void NPL::ListenerLogic(Body* b, GasBody* environment)
