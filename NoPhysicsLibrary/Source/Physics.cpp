@@ -148,9 +148,11 @@ void Physics::DetectCollisions(std::vector<Body*>* bodies)
 
 void Physics::Declip()
 {
+
 	for (Collision* c : collisions)
 	{
 		DynamicBody* dynBody = (DynamicBody*)c->GetDynBody();
+		//-TODO: In case two collisions same dynamic body, this will reset
 		dynBody->collisionFlags.Clear();
 		Rect intersect = c->GetCollisionRectangle();
 
