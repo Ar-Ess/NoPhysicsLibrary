@@ -72,6 +72,6 @@ protected: // Variables
 	// Collidable | 
 	Flag properties = {};
 
-	Flag* bodiesConfig = {};
+	const Flag* bodiesConfig = {};
 
 };

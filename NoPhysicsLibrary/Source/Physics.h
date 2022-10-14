@@ -12,7 +12,7 @@ class Physics
 {
 public: // Methods
 
-	Physics(const Flag* physicsConfig, const float* pixelsToMeters);
+	Physics(const Flag* physicsConfig, const Flag* bodiesConfig, const float* pixelsToMeters);
 
 	virtual ~Physics();
 
@@ -56,7 +56,8 @@ public: // Variables
 	std::vector<Collision*> collisions;
 
 	// Config
-	const Flag* physicsConfig = {};
+	const Flag* physicsConfig = nullptr;
+	const Flag* bodiesConfig = nullptr;
 	const float* pixelsToMeters = nullptr;
 
 };
