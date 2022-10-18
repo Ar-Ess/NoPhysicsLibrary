@@ -89,15 +89,21 @@ BodyCreation NPL::CreateBody(Rect rectangle, float mass)
 
 LibraryConfig NPL::Configure()
 {
-	return LibraryConfig(&panRange, &physicsConfig, &bodiesConfig, &physics->globalGravity, &physics ->globalRestitution, &physics->globalFriction, &listener, &pixelsToMeters, &ptmRatio, &notifier);
-}
-
-void NPL::DestroyScenario()
-{
-	for (Body* b : bodies)
-	{
-		if (b->GetClass() == BodyClass::STATIC_BODY) DestroyBody(b);
-	}
+	return LibraryConfig(
+		&panRange, 
+		&physicsConfig, 
+		&bodiesConfig, 
+		&physics->globalGravity, 
+		&physics ->globalRestitution, 
+		&physics->globalFriction, 
+		&listener, 
+		&pixelsToMeters, 
+		&ptmRatio, 
+		&scenarioPreset, 
+		&windowSize, 
+		&physicsPreset,
+		&notifier
+	);
 }
 
 Rect NPL::ReturnScenarioRect()
@@ -138,38 +144,6 @@ Point NPL::GetGlobalRestitution() const
 	return physics->globalRestitution;
 }
 
-bool NPL::DeathLimit(Rect limits)
-{
-	bool ret = false;
-	for (Body* b : bodies)
-	{
-		if (b->GetClass() != BodyClass::DYNAMIC_BODY) continue;
-
-		if (!MathUtils::CheckCollision(b->GetRect(InUnit::IN_PIXELS), limits))
-		{
-			ret = true;
-			DestroyBody(b);
-		}
-	}
-
-	return ret;
-}
-
-bool NPL::DeathLimit(Rect limits, DynamicBody* body)
-{
-	if (!body || body->GetClass() != BodyClass::DYNAMIC_BODY) return false;
-
-	bool ret = false;
-	
-	if (!MathUtils::CheckCollision(body->GetRect(InUnit::IN_PIXELS), limits))
-	{
-		ret = true;
-		DestroyBody(body);
-	}
-
-	return ret;
-}
-
 bool NPL::DestroyBody(Body* body)
 {
 	if (EraseBody(body))
@@ -181,6 +155,21 @@ bool NPL::DestroyBody(Body* body)
 	return false;
 }
 
+bool NPL::DestroyBody(BodyClass clas)
+{
+	bool ret = true;
+	for (Body* b : bodies)
+	{
+		if (b->GetClass() == clas)
+		{
+			bool destroyed = DestroyBody(b);
+			if (!destroyed) ret = false;
+		}
+	}
+
+	return ret;
+}
+
 void NPL::LoadSound(const char* path)
 {
 	audio->LoadSound(path);
@@ -189,81 +178,6 @@ void NPL::LoadSound(const char* path)
 void NPL::PausePhysics(bool pause)
 {
 	physics->globals.Set(0, pause);
-}
-
-StaticBody* NPL::SetScenarioPreset(ScenarioPreset sPreset, Point wSize, int returnStatic)
-{
-	if (returnStatic < -1) returnStatic = -1;
-	DestroyScenario();
-	StaticBody* ret = nullptr;
-	size_t size = 0;
-	if (returnStatic > -1) size = bodies.size();
-
-	switch (sPreset)
-	{
-	case ScenarioPreset::LIMITS_SCENARIO_PRESET:
-	{
-		float downLimitY = wSize.y * 0.93f;
-		float rightLimitX = wSize.x * 0.96f;
-		//Limits
-		CreateBody({ 0,          0,               wSize.x, wSize.y - downLimitY }, 1).Static();
-		CreateBody({ 0,          0, wSize.x - rightLimitX,              wSize.y }, 1).Static();
-		CreateBody({ 0, downLimitY,               wSize.x, wSize.y - downLimitY }, 1).Static();
-		CreateBody({ rightLimitX,0, wSize.x - rightLimitX,              wSize.x }, 1).Static();
-		
-		if (returnStatic > -1)
-		{
-			if (returnStatic > 3) returnStatic = 3;
-			ret = (StaticBody*)bodies[size + returnStatic];
-		}
-
-		break;
-	}
-	case ScenarioPreset::CORRIDOR_SCENARIO_PRESET:
-	{
-		float downLimitY = wSize.y * 0.93f;
-		float rightLimitX = wSize.x * 0.96f;
-		//Limits
-		CreateBody({                  0,          0,                  4280, wSize.y - downLimitY }, 1).Static();
-		CreateBody({                  0,          0, wSize.x - rightLimitX,              wSize.y }, 1).Static();
-		CreateBody({                  0, downLimitY,                  4280, wSize.y - downLimitY }, 1).Static();
-		CreateBody({ 3000 + rightLimitX,          0, wSize.x - rightLimitX,              wSize.x }, 1).Static();
-		
-		if (returnStatic > -1)
-		{
-			if (returnStatic > 3) returnStatic = 3;
-			ret = (StaticBody*)bodies[size + returnStatic];
-		}
-
-		break;
-	}
-
-	//case ScenarioPreset::PLATFORMER_SCENARIO_PRESET:
-	//	//Limits
-	//	CreateBody({ 0,   0, 1280,  50 }, 1);
-	//	CreateBody({ 0,   0,   50, 720 }, 1);
-	//	CreateBody({ 0, 670, 1280,  50 }, 1);
-	//	CreateBody({ 1230, 0,  50, 720 }, 1);
-	//	//Obstacles
-	//	CreateBody(BodyType::STATIC_BODY, Point{ 340, 490 }, { 340, 490, 600, 25 }, { 0, 0 }, { 0, 0 }, 1);
-	//	CreateBody(BodyType::STATIC_BODY, Point{ 540, 220 }, { 540, 220, 200, 25 }, { 0, 0 }, { 0, 0 }, 1);
-	//	break;
-
-	//case ScenarioPreset::WALLJUMP_SCENARIO_PRESET:
-	//	//Limits
-	//	CreateBody(BodyType::STATIC_BODY, Point{ 0, 0 }, { 0, 0, 1280, 50 }, { 0, 0 }, { 0, 0 }, 1);
-	//	CreateBody(BodyType::STATIC_BODY, Point{ 0, 0 }, { 0, 0, 50, 720 }, { 0, 0 }, { 0, 0 }, 1);
-	//	CreateBody(BodyType::STATIC_BODY, Point{ 0, 670 }, { 0, 670, 1280, 50 }, { 0, 0 }, { 0, 0 }, 1);
-	//	CreateBody(BodyType::STATIC_BODY, Point{ 1230, 0 }, { 1230, 0, 50, 720 }, { 0, 0 }, { 0, 0 }, 1);
-	//	//Obstacles
-	//	CreateBody(BodyType::STATIC_BODY, Point{ 200, 200 }, { 200, 200, 25, 400 }, { 0, 0 }, { 0, 0 }, 1);
-	//	CreateBody(BodyType::STATIC_BODY, Point{ 500, 200 }, { 500, 200, 25, 400 }, { 0, 0 }, { 0, 0 }, 1);
-	//	CreateBody(BodyType::STATIC_BODY, Point{ 780, 200 }, { 780, 200, 25, 400 }, { 0, 0 }, { 0, 0 }, 1);
-	//	CreateBody(BodyType::STATIC_BODY, Point{ 1080, 200 }, { 1080, 200, 25, 400 }, { 0, 0 }, { 0, 0 }, 1);
-	//	break;
-	}
-
-	return ret;
 }
 
 const Collision* NPL::GetCollisionsIterable(int& size, int index)
@@ -471,6 +385,8 @@ void NPL::UpdateNotifier()
 	if (!notifier.IsAnyTrue()) return;
 
 	if (notifier.Get(0)) UpdatePixelsToMeters();
+	if (notifier.Get(1)) UpdateScenarioPreset();
+	if (notifier.Get(2)) UpdatePhysicsPreset();
 
 	notifier.Clear();
 }
@@ -502,6 +418,93 @@ void NPL::UpdatePixelsToMeters()
 
 	panRange *= ptmRatio;
 	physics->globalGravity *= ptmRatio;
+}
+
+void NPL::UpdateScenarioPreset()
+{
+
+//-TOCHECK: Maybe should not do this \/
+	DestroyBody(BodyClass::STATIC_BODY);
+
+	switch (scenarioPreset)
+	{
+	case ScenarioPreset::LIMITS_SCENARIO_PRESET:
+	{
+		float downLimitY = windowSize.y * 0.93f;
+		float rightLimitX = windowSize.x * 0.96f;
+		//Limits
+		CreateBody({ 0,          0,               windowSize.x, windowSize.y - downLimitY }, 1).Static();
+		CreateBody({ 0,          0, windowSize.x - rightLimitX,              windowSize.y }, 1).Static();
+		CreateBody({ 0, downLimitY,               windowSize.x, windowSize.y - downLimitY }, 1).Static();
+		CreateBody({ rightLimitX,0, windowSize.x - rightLimitX,              windowSize.x }, 1).Static();
+
+		break;
+	}
+	case ScenarioPreset::CORRIDOR_SCENARIO_PRESET:
+	{
+		float downLimitY = windowSize.y * 0.93f;
+		float rightLimitX = windowSize.x * 0.96f;
+		//Limits
+		CreateBody({ 0,          0,                  4280, windowSize.y - downLimitY }, 1).Static();
+		CreateBody({ 0,          0, windowSize.x - rightLimitX,              windowSize.y }, 1).Static();
+		CreateBody({ 0, downLimitY,                  4280, windowSize.y - downLimitY }, 1).Static();
+		CreateBody({ 3000 + rightLimitX,          0, windowSize.x - rightLimitX,              windowSize.x }, 1).Static();
+
+		break;
+	}
+
+	//case ScenarioPreset::PLATFORMER_SCENARIO_PRESET:
+	//	//Limits
+	//	CreateBody({ 0,   0, 1280,  50 }, 1);
+	//	CreateBody({ 0,   0,   50, 720 }, 1);
+	//	CreateBody({ 0, 670, 1280,  50 }, 1);
+	//	CreateBody({ 1230, 0,  50, 720 }, 1);
+	//	//Obstacles
+	//	CreateBody(BodyType::STATIC_BODY, Point{ 340, 490 }, { 340, 490, 600, 25 }, { 0, 0 }, { 0, 0 }, 1);
+	//	CreateBody(BodyType::STATIC_BODY, Point{ 540, 220 }, { 540, 220, 200, 25 }, { 0, 0 }, { 0, 0 }, 1);
+	//	break;
+
+	//case ScenarioPreset::WALLJUMP_SCENARIO_PRESET:
+	//	//Limits
+	//	CreateBody(BodyType::STATIC_BODY, Point{ 0, 0 }, { 0, 0, 1280, 50 }, { 0, 0 }, { 0, 0 }, 1);
+	//	CreateBody(BodyType::STATIC_BODY, Point{ 0, 0 }, { 0, 0, 50, 720 }, { 0, 0 }, { 0, 0 }, 1);
+	//	CreateBody(BodyType::STATIC_BODY, Point{ 0, 670 }, { 0, 670, 1280, 50 }, { 0, 0 }, { 0, 0 }, 1);
+	//	CreateBody(BodyType::STATIC_BODY, Point{ 1230, 0 }, { 1230, 0, 50, 720 }, { 0, 0 }, { 0, 0 }, 1);
+	//	//Obstacles
+	//	CreateBody(BodyType::STATIC_BODY, Point{ 200, 200 }, { 200, 200, 25, 400 }, { 0, 0 }, { 0, 0 }, 1);
+	//	CreateBody(BodyType::STATIC_BODY, Point{ 500, 200 }, { 500, 200, 25, 400 }, { 0, 0 }, { 0, 0 }, 1);
+	//	CreateBody(BodyType::STATIC_BODY, Point{ 780, 200 }, { 780, 200, 25, 400 }, { 0, 0 }, { 0, 0 }, 1);
+	//	CreateBody(BodyType::STATIC_BODY, Point{ 1080, 200 }, { 1080, 200, 25, 400 }, { 0, 0 }, { 0, 0 }, 1);
+	//	break;
+	}
+
+	notifier.Set(1, false);
+}
+
+void NPL::UpdatePhysicsPreset()
+{
+	Point friction = {};
+	Point gravity = {};
+	Point restitution = {};
+
+	switch (physicsPreset)
+	{
+	case PhysicsPreset::DEFAULT_PHYSICS_PRESET:
+		friction = 0.2f;
+		gravity = { 0.0f, 3.0f };
+		restitution = { 0.6f, 0.0f };
+		break;
+
+	case PhysicsPreset::NO_PHYSIC_PRESET:
+	default:
+		break;
+	}
+
+	physics->globalFriction = friction;
+	physics->globalGravity = gravity;
+	physics->globalRestitution = restitution;
+
+	notifier.Set(2, false);
 }
 
 float NPL::ComputePanning(float distance, float bodyX)

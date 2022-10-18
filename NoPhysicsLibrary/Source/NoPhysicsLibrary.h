@@ -36,13 +36,6 @@ public:
 	//  - Call it in your main update function
 	void Update(float* dt);
 
-	// Set a predesigned scenario
-	//  - This function destroys automatically the previous scenario
-	StaticBody* SetScenarioPreset(ScenarioPreset preset, Point windowSize = { 1080.0f, 720.0f }, int returnStatic = -1);
-
-	// Destroys all Static Bodies created
-	void DestroyScenario();
-
 	// Calculates & returns a rectsngle that englobes all the existent bodies
 	Rect ReturnScenarioRect();
 
@@ -60,13 +53,10 @@ public:
 	// Returns the global restitution vector
 	Point GetGlobalRestitution() const;
 
-	// Destroys a body whenever it's outside the rectangle setted. 
-	//    Returns true when a body is destroyed
-	bool DeathLimit(Rect limits);
-	bool DeathLimit(Rect limits, DynamicBody* body);
-
 	// Destroy a body, returns true if the body has been successfully deleted
 	bool DestroyBody(Body* body);
+	// Destroy all bodies of the inputted class, returns true if all bodies has been successfully deleted
+	bool DestroyBody(BodyClass clas);
 
 	// Load internally an audio file
 	void LoadSound(const char* path);
@@ -105,6 +95,8 @@ private: // Methods
 
 	void UpdateNotifier();
 		void UpdatePixelsToMeters();
+		void UpdateScenarioPreset();
+		void UpdatePhysicsPreset();
 
 private:
 
@@ -125,10 +117,10 @@ private:
 	// CONFIG VARIABLES
 	// - Physics
 
-	// Debug Collisions (0) |
-	Flag physicsConfig = {};
-	// Debug states (0) |
-	Flag bodiesConfig = {};
+	Flag physicsConfig = {}; // Debug Collisions (0) |
+	Flag bodiesConfig = {}; // Debug states (0) |
+	ScenarioPreset scenarioPreset = ScenarioPreset::NO_SCENARIO_PRESET; Point windowSize = {};
+	PhysicsPreset physicsPreset;
 
 	//_____________________
 	// - Acoustics
@@ -141,7 +133,6 @@ private:
 	Body* listener = nullptr;
 
 	//______Config Notifier______
-	// PixelsToMeters (0) |
-	Flag notifier = {};
+	Flag notifier = {}; // PixelsToMeters (0) | ScenarioPreset (1) | PhysicsPreset (2)
 
 };

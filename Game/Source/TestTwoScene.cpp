@@ -16,9 +16,8 @@ bool TestTwoScene::Start()
 
 	npl->Configure().CollisionsDebugging(false);
 	npl->Configure().PanRange(10, InUnit::IN_METERS);
-	npl->Configure().GlobalFriction(0.2f);
-	npl->Configure().GlobalRestitution({ 0.6f, 0.0f });
-	npl->Configure().GlobalGravity({ 0.0f, 3.0f }, InUnit::IN_METERS);
+	npl->Configure().Physics(PhysicsPreset::DEFAULT_PHYSICS_PRESET);
+	npl->Configure().Scenario(ScenarioPreset::LIMITS_SCENARIO_PRESET, window->GetSize());
 
 	player = npl->CreateBody({ 100.0f, 200.0f, npl->MetersToPixels(Point(0.3f, 0.75f)) }, 20).Dynamic();
 	npl->CreateBody({ 400.0f, 200.0f, npl->MetersToPixels(Point(0.3f, 0.75f)) }, 20).Dynamic();
@@ -26,8 +25,6 @@ bool TestTwoScene::Start()
 	npl->CreateBody({ 600, 600, npl->MetersToPixels(Point(1.0f, 3.0f)) }, 20).Liquid();
 
 
-	//-TODO: Add it in config?
-	emitter = npl->SetScenarioPreset(ScenarioPreset::CORRIDOR_SCENARIO_PRESET, window->GetSize(), 1);
 
 	npl->Configure().Listener(player);
 
