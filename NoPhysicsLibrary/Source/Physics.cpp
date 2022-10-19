@@ -144,7 +144,7 @@ void Physics::DetectCollisions(std::vector<Body*>* bodies)
 			Body* other = b2;
 			b1->GetClass() == BodyClass::DYNAMIC_BODY ? dyn = b1 : other = b1;
 
-			collisions.emplace_back(new Collision(dyn, other, intersect));
+			collisions.emplace_back(new Collision(dyn, other, intersect, pixelsToMeters));
 		}
 	}
 }
@@ -167,7 +167,7 @@ void Physics::Declip()
 	{
 		DynamicBody* dynBody = (DynamicBody*)c->GetDynBody();
 		//-TODO: In case two collisions same dynamic body, this will reset
-		Rect intersect = c->GetCollisionRectangle();
+		Rect intersect = c->GetCollisionRectangle(InUnit::IN_METERS);
 
 		Point directionVec = dynBody->GetPosition(InUnit::IN_METERS) - dynBody->backup.position;
 
@@ -182,7 +182,7 @@ void Physics::Declip()
 			Point directionVecAlter = body->GetPosition(InUnit::IN_METERS) - body->backup.position;
 			Point normal = {};
 
-			Point centerOfIntersecion = c->GetCollisionRectangle().GetPosition(Align::CENTER);
+			Point centerOfIntersecion = c->GetCollisionRectangle(InUnit::IN_METERS).GetPosition(Align::CENTER);
 			Ray ray(centerOfIntersecion.Apply(directionVec.Multiply(-1.0f)), centerOfIntersecion);
 			if (!MathUtils::RayCast(ray, body->GetRect(InUnit::IN_METERS), normal)) break;
 
@@ -255,7 +255,7 @@ void Physics::Declip()
 			StaticBody* body = (StaticBody*)c->GetBody();
 			Point normal = {};
 
-			Point centerOfIntersecion = c->GetCollisionRectangle().GetPosition(Align::CENTER);
+			Point centerOfIntersecion = c->GetCollisionRectangle(InUnit::IN_METERS).GetPosition(Align::CENTER);
 			Ray ray(centerOfIntersecion.Apply(directionVec.Multiply(-1.0f)), centerOfIntersecion);
 			if (!MathUtils::RayCast(ray, body->GetRect(InUnit::IN_METERS), normal)) break;
 

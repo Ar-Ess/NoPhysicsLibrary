@@ -14,7 +14,7 @@ bool TestTwoScene::Start()
 
 	npl->Init(128.0f);
 
-	npl->Configure().CollisionsDebugging(false);
+	npl->Configure().CollisionsDebugging(true);
 	npl->Configure().PanRange(10, InUnit::IN_METERS);
 	npl->Configure().Physics(PhysicsPreset::DEFAULT_PHYSICS_PRESET);
 	npl->Configure().Scenario(ScenarioPreset::LIMITS_SCENARIO_PRESET, window->GetSize());
@@ -23,8 +23,6 @@ bool TestTwoScene::Start()
 	npl->CreateBody({ 400.0f, 200.0f, npl->MetersToPixels(Point(0.3f, 0.75f)) }, 20).Dynamic();
 	npl->CreateBody({ 800.0f, 400.0f, npl->MetersToPixels(Point(0.8f, 0.8f)) }, 20).Gas(10, 1.414f, 1000);
 	npl->CreateBody({ 600, 600, npl->MetersToPixels(Point(1.0f, 3.0f)) }, 20).Liquid();
-
-
 
 	npl->Configure().Listener(player);
 
@@ -92,7 +90,7 @@ bool TestTwoScene::Update(float dt)
 	for (int i = 0; i < size; ++i)
 	{
 		const Collision* c = npl->GetCollisionsIterable(size, i);
-		if (c) render->DrawRectangle(c->GetCollisionRectangle(), { 100, 100, 255, 255 });
+		if (c) render->DrawRectangle(c->GetCollisionRectangle(InUnit::IN_PIXELS), { 100, 100, 255, 255 });
 	}
 
 	// Draw body states

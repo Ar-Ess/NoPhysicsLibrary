@@ -2,6 +2,8 @@
 
 #include "MathUtils.h"
 #include "Body.h"
+#include "ScenarioPresetEnum.h"
+#include "PhysicsPresetEnum.h"
 
 struct LibraryConfig
 {

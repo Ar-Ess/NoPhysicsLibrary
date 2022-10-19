@@ -1,20 +1,28 @@
 #pragma once
 #include "Rect.h"
+#include "InUnitsEnum.h"
 
 struct Collision
 {
-	Collision(Body* dynamicBody, Body* body, Rect intersecRect) : dynamicBody(dynamicBody), body(body), intersecRect(intersecRect) {}
+	Collision(Body* dynamicBody, Body* body, Rect intersecRect, const float* pixelsToMeters) : dynamicBody(dynamicBody), body(body), intersecRect(intersecRect), pixelsToMeters(pixelsToMeters) {}
 	
-	const Rect GetCollisionRectangle() const
+	const Rect GetCollisionRectangle(InUnit unit) const
 	{
-		return intersecRect;
+		Rect inter = intersecRect;
+
+		if (unit == InUnit::IN_PIXELS)
+		{
+			inter = {inter.GetPosition() * (1 / *pixelsToMeters), inter.GetSize() * (1 / *pixelsToMeters) };
+		}
+
+		return inter;
 	}
 
-	Body* GetDynBody()
+	const Body* GetDynBody() const
 	{
 		return dynamicBody;
 	}
-	Body* GetBody()
+	const Body* GetBody() const
 	{
 		return body;
 	}
@@ -24,5 +32,6 @@ private:
 	Body* dynamicBody = nullptr;
 	Body* body = nullptr;
 	Rect intersecRect = {};
+	const float* pixelsToMeters = nullptr;
 
 };
