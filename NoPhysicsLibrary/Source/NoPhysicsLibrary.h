@@ -32,26 +32,14 @@ public:
 	// Configure certain aspects of this library operation
 	LibraryConfig Configure();
 
+	GetData Get();
+
 	// Iterates the library
 	//  - Call it in your main update function
 	void Update(float* dt);
 
-	// Calculates & returns a rectsngle that englobes all the existent bodies
-	Rect ReturnScenarioRect();
-
-	// Returns wether the physics are paused
-	bool GetGlobalPause() const;
 	// Allows to pause or unpause the physics
 	void PausePhysics(bool pause);
-
-	// Returns the global gravity vector
-	Point GetGlobalGravity() const;
-
-	// Returns the global friction vector
-	Point GetGlobalFriction() const;
-
-	// Returns the global restitution vector
-	Point GetGlobalRestitution() const;
 
 	// Destroy a body, returns true if the body has been successfully deleted
 	bool DestroyBody(Body* body);
@@ -60,10 +48,6 @@ public:
 
 	// Load internally an audio file
 	void LoadSound(const char* path);
-
-	const Collision* GetCollisionsIterable(int &size, int index);
-
-	const Body* GetBodiesIterable(int& size, int index);
 
 	// Converts meter values into pixels values
 	Rect MetersToPixels(Rect rectangle);
@@ -98,7 +82,14 @@ private: // Methods
 		void UpdateScenarioPreset();
 		void UpdatePhysicsPreset();
 
+	bool IsGlobalPause() { return physics->globals.Get(0); }
+
 private:
+
+	//-TODO: Put auxiliars here as variables in heap. Initialize them in init, to not initialize them each time you call Config, CreateBody or Get
+	BodyCreation* bodyCreation = nullptr;
+	LibraryConfig* libraryConfig = nullptr;
+	GetData* getData = nullptr;
 
 	Physics* physics = nullptr;
 	Audio* audio = nullptr;

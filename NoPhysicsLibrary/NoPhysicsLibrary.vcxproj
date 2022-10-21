@@ -179,6 +179,7 @@
     <ClInclude Include="Source\External\miniaudio\miniaudio.h" />
     <ClInclude Include="Source\External\miniaudio\miniaudiodev.h" />
     <ClInclude Include="Source\Flag.h" />
+    <ClInclude Include="Source\GetDataAuxiliar.h" />
     <ClInclude Include="Source\InUnitsEnum.h" />
     <ClInclude Include="Source\LibraryConfigAux.h" />
     <ClInclude Include="Source\PhysVec.h" />

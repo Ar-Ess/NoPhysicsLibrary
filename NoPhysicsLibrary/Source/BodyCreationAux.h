@@ -9,6 +9,8 @@
 
 struct BodyCreation
 {
+private:
+
 	BodyCreation(Rect rect, float mass, std::vector<Body*>* bodies, std::vector<unsigned int*>* gasLocation, std::vector<unsigned int*>* liquidIndex, Physics* physics, const float* pixelsToMeters, Flag* bodiesConfig) :
 		mass(mass),
 		rect(rect),
@@ -20,13 +22,17 @@ struct BodyCreation
 		bodiesConfig(bodiesConfig)
 	{}
 
-	StaticBody* Static()
+	friend class NPL;
+
+public:
+
+	StaticBody* Static() const
 	{
 		bodies->emplace_back(new StaticBody(rect, mass, bodiesConfig, pixelsToMeters));
 		return (StaticBody*)bodies->back();
 	}
 
-	DynamicBody* Dynamic(Point gravityOffset = {0.0f, 0.0f }, InUnit unit = InUnit::IN_METERS)
+	DynamicBody* Dynamic(Point gravityOffset = {0.0f, 0.0f }, InUnit unit = InUnit::IN_METERS) const
 	{
 		if (!gravityOffset.IsZero() && unit == InUnit::IN_PIXELS) gravityOffset *= *pixelsToMeters;
 
@@ -34,14 +40,14 @@ struct BodyCreation
 		return (DynamicBody*)bodies->back();
 	}
 
-	LiquidBody* Liquid()
+	LiquidBody* Liquid() const
 	{
 		bodies->emplace_back(new LiquidBody(rect, mass, bodiesConfig, pixelsToMeters));
 		liquidIndex->emplace_back(new unsigned int(bodies->size() - 1));
 		return (LiquidBody*)bodies->back();
 	}
 
-	GasBody* Gas(float density, float heatRatio, float pressure)
+	GasBody* Gas(float density, float heatRatio, float pressure) const
 	{
 		bodies->emplace_back(new GasBody(rect, mass, bodiesConfig, density, heatRatio, pressure, pixelsToMeters));
 		gasIndex->emplace_back(new unsigned int(bodies->size() - 1));

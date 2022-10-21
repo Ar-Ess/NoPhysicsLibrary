@@ -67,11 +67,11 @@ bool TestTwoScene::Update(float dt)
 	npl->Update(&dt);
 
 	// Draw bodies
-	int size = 1;
+	unsigned int size = npl->Get().BodiesCount();
 	for (int i = 0; i < size; ++i)
 	{
 		// Not like this
-		const Body* b = npl->GetBodiesIterable(size, i);
+		const Body* b = npl->Get().Bodies(i);
 		SDL_Color color = { 0, 0, 0, 50 };
 
 		switch (b->GetClass())
@@ -86,10 +86,10 @@ bool TestTwoScene::Update(float dt)
 	}
 
 	// Draw the collisions
-	size = 1;
+	size = npl->Get().CollisionsCount();
 	for (int i = 0; i < size; ++i)
 	{
-		const Collision* c = npl->GetCollisionsIterable(size, i);
+		const Collision* c = npl->Get().Collisions(i);
 		if (c) render->DrawRectangle(c->GetCollisionRectangle(InUnit::IN_PIXELS), { 100, 100, 255, 255 });
 	}
 
@@ -99,6 +99,7 @@ bool TestTwoScene::Update(float dt)
 		state = !state;
 		npl->Configure().StateDebugging(state);
 	}
+
 	if (state)
 	{
 		render->DrawRectangle({ 0, 0, 170, 82 }, { 255, 255, 255, 150 }, {1.0f, 1.0f}, false);

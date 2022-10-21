@@ -7,6 +7,8 @@
 
 struct LibraryConfig
 {
+private:
+
 	LibraryConfig(float* panRange, Flag* physicsConfig, Flag* bodiesConfig, Point* globalGravity, Point* globalRestitution, Point* globalFriction, Body** listener, float* pixelsToMeters, float* ptmRatio, ScenarioPreset* scenarioPreset, Point* windowSize, PhysicsPreset* physicsPreset, Flag* notifier) :
 		panRange(panRange),
 		physicsConfig(physicsConfig),
@@ -22,7 +24,10 @@ struct LibraryConfig
 		physicsPreset(physicsPreset),
 		notifier(notifier)
 	{}
+	
+	friend class NPL;
 
+public:
 	// Set which distance (in meters) the audio will sound mono in one of the two channels (Left / Right)
 	// Remember to configure PixelsToMeters before configuring the panning range
 	void PanRange(float panRange, InUnit unit) 

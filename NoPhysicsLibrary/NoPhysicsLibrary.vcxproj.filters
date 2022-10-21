@@ -191,5 +191,8 @@
     <ClInclude Include="Source\BodyStateEnum.h">
       <Filter>Enums</Filter>
     </ClInclude>
+    <ClInclude Include="Source\GetDataAuxiliar.h">
+      <Filter>Aux</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

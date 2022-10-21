@@ -25,7 +25,7 @@ void NPL::Init(float pixelsPerMeter)
 
 void NPL::Update(float* dt)
 {
-	if (GetGlobalPause()) return;
+	if (IsGlobalPause()) return;
 
 	//INFO: Uniform forces independent from space use InUnit::IN_PIXELS, otherwise InUnit::IN_METERS
 	UpdateNotifier();
@@ -106,42 +106,9 @@ LibraryConfig NPL::Configure()
 	);
 }
 
-Rect NPL::ReturnScenarioRect()
+GetData NPL::Get()
 {
-	Rect first = bodies.front()->GetRect(InUnit::IN_PIXELS);
-	Point minP = { first.x, first.y };
-	Point maxP = { first.x + first.w, first.y + first.h};
-
-	for (Body* body : bodies)
-	{
-		Rect bodyRect = body->GetRect(InUnit::IN_PIXELS);
-		if (bodyRect.x + bodyRect.w > maxP.x) maxP.x = bodyRect.x + bodyRect.w;
-		if (bodyRect.y + bodyRect.h > maxP.y) maxP.y = bodyRect.y + bodyRect.h;
-		if (bodyRect.x < minP.x) minP.x = bodyRect.x;
-		if (bodyRect.y < minP.y) minP.y = bodyRect.y;
-	}
-
-	return Rect{ minP.x, minP.y, maxP.x - minP.x, maxP.y - minP.y};
-}
-
-bool NPL::GetGlobalPause() const
-{
-	return physics->globals.Get(0);
-}
-
-Point NPL::GetGlobalGravity() const
-{
-	return physics->globalGravity;
-}
-
-Point NPL::GetGlobalFriction() const
-{
-	return physics->globalFriction;
-}
-
-Point NPL::GetGlobalRestitution() const
-{
-	return physics->globalRestitution;
+	return GetData(&bodies, &physics->collisions, &physicsConfig, &physics->globalGravity, &physics->globalFriction, &physics->globalRestitution, &physics->globals );
 }
 
 bool NPL::DestroyBody(Body* body)
@@ -178,26 +145,6 @@ void NPL::LoadSound(const char* path)
 void NPL::PausePhysics(bool pause)
 {
 	physics->globals.Set(0, pause);
-}
-
-const Collision* NPL::GetCollisionsIterable(int& size, int index)
-{
-	if (!physicsConfig.Get(0)) return nullptr;
-
-	size = physics->collisions.size();
-
-	if (size == 0) return nullptr;
-
-	return physics->collisions[index];
-}
-
-const Body* NPL::GetBodiesIterable(int& size, int index)
-{
-	size = bodies.size();
-
-	if (size == 0) return nullptr;
-
-	return bodies[index];
 }
 
 Rect NPL::MetersToPixels(Rect rect)
