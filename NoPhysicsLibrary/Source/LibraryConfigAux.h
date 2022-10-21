@@ -24,13 +24,18 @@ private:
 		physicsPreset(physicsPreset),
 		notifier(notifier)
 	{}
+
+	const LibraryConfig* Access() const
+	{
+		return this;
+	}
 	
 	friend class NPL;
 
 public:
 	// Set which distance (in meters) the audio will sound mono in one of the two channels (Left / Right)
 	// Remember to configure PixelsToMeters before configuring the panning range
-	void PanRange(float panRange, InUnit unit) 
+	void PanRange(float panRange, InUnit unit) const
 	{ 
 		if (unit == InUnit::IN_PIXELS) panRange *= *pixelsToMeters;
 		*this->panRange = panRange > 0 ? panRange : 0; 
@@ -38,18 +43,18 @@ public:
 
 	// Allows to debug body collisions. If enabled, "GetCollisionsIterable()" inside NPL class will no longer return null. 
 	// Then draw the rectangle inside it. Enabling this might slightly slow the code iteration
-	void CollisionsDebugging(bool enable) { this->physicsConfig->Set(0, enable); }
+	void CollisionsDebugging(bool enable) const { this->physicsConfig->Set(0, enable); }
 
 	// Allows to debug body state of collision. If enabled, "IsColliding()" in DynamicBody class will no longer return false.
 	// will no longer return false. Enabling this might slightly slow the code iteration
-	void StateDebugging(bool enable) { this->bodiesConfig->Set(0, enable); }
+	void StateDebugging(bool enable) const { this->bodiesConfig->Set(0, enable); }
 
-	void GlobalGravity(Point gravity, InUnit unit)
+	void GlobalGravity(Point gravity, InUnit unit) const
 	{
 		if (unit == InUnit::IN_PIXELS) gravity *= *pixelsToMeters;
 		*globalGravity = gravity;
 	}
-	void GlobalGravity(float gravity, InUnit unit)
+	void GlobalGravity(float gravity, InUnit unit) const
 	{
 		if (unit == InUnit::IN_PIXELS) gravity *= *pixelsToMeters;
 		*globalGravity = gravity;
@@ -58,13 +63,13 @@ public:
 	// Restitution is a coeficient that can not be negative.
 	// More than 1 stablishes a higher kinematic energy after collision
 	// Invalid values are setted to 0
-	void GlobalRestitution(Point restitution)
+	void GlobalRestitution(Point restitution) const
 	{
 		if (restitution.x < 0) restitution.x = 0;
 		if (restitution.y < 0) restitution.y = 0;
 		*globalRestitution = restitution;
 	}
-	void GlobalRestitution(float restitution)
+	void GlobalRestitution(float restitution) const
 	{
 		if (restitution < 0 && restitution > 1) restitution = 0;
 		*globalRestitution = restitution;
@@ -72,21 +77,21 @@ public:
 
 	// Friction is a coeficient that lies between 0 and 1
 	// Invalid values are setted to 1
-	void GlobalFriction(Point friction)
+	void GlobalFriction(Point friction) const
 	{
 		if (friction.x < 0 && friction.x > 1) friction.x = 1;
 		if (friction.y < 0 && friction.y > 1) friction.y = 1;
 		*globalFriction = friction;
 	}
-	void GlobalFriction(float friction)
+	void GlobalFriction(float friction) const
 	{
 		if (friction < 0 && friction > 1) friction = 0;
 		*globalFriction = friction;
 	}
 
-	void Listener(Body* listener) { *this->listener = listener; }
+	void Listener(Body* listener) const { *this->listener = listener; }
 
-	void PixelsToMeters(float ratio)
+	void PixelsToMeters(float ratio) const
 	{
 		float old = *this->pixelsToMeters;
 		*this->pixelsToMeters = ratio > 0 ? 1 / ratio : 1;
@@ -94,7 +99,7 @@ public:
 		notifier->Set(0, true);
 	}
 
-	void Scenario(ScenarioPreset preset, Point windowSize)
+	void Scenario(ScenarioPreset preset, Point windowSize) const
 	{
 		if (preset == ScenarioPreset::NO_SCENARIO_PRESET) return;
 
@@ -103,7 +108,7 @@ public:
 		notifier->Set(1, true);
 	}
 
-	void Physics(PhysicsPreset preset)
+	void Physics(PhysicsPreset preset) const
 	{
 		*this->physicsPreset = preset;
 		notifier->Set(2, true);

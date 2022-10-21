@@ -21,6 +21,40 @@ void NPL::Init(float pixelsPerMeter)
 	audio = new Audio();
 
 	pixelsToMeters = pixelsPerMeter > 0 ? 1 / pixelsPerMeter : 1;
+
+	bodyCreation = new BodyCreation(
+		&bodies, 
+		&gasIndex, 
+		&liquidIndex, 
+		physics, 
+		&pixelsToMeters, 
+		&bodiesConfig);
+
+	libraryConfig = new LibraryConfig(
+		&panRange,
+		&physicsConfig,
+		&bodiesConfig,
+		&physics->globalGravity,
+		&physics->globalRestitution,
+		&physics->globalFriction,
+		&listener,
+		&pixelsToMeters,
+		&ptmRatio,
+		&scenarioPreset,
+		&windowSize,
+		&physicsPreset,
+		&notifier
+	);
+
+	getData = new GetData(
+		&bodies, 
+		&physics->collisions, 
+		&physicsConfig,
+		&physics->globalGravity, 
+		&physics->globalFriction, 
+		&physics->globalRestitution, 
+		&physics->globals
+	);
 }
 
 void NPL::Update(float* dt)
@@ -77,38 +111,24 @@ void NPL::CleanUp()
 
 }
 
-BodyCreation NPL::CreateBody(Rect rectangle, float mass)
+const BodyCreation* NPL::CreateBody(Rect rectangle, float mass)
 {
 	//Library not initialized. Call NPL::Init() first
 	assert(physics != nullptr);
 
 	rectangle = { rectangle.GetPosition() * pixelsToMeters, rectangle.GetSize() * pixelsToMeters };
 
-	return BodyCreation(rectangle, mass, &bodies, &gasIndex, &liquidIndex, physics, &pixelsToMeters, &bodiesConfig);
+	return bodyCreation->Access(rectangle, mass);
 }
 
-LibraryConfig NPL::Configure()
+const LibraryConfig* NPL::Configure()
 {
-	return LibraryConfig(
-		&panRange, 
-		&physicsConfig, 
-		&bodiesConfig, 
-		&physics->globalGravity, 
-		&physics ->globalRestitution, 
-		&physics->globalFriction, 
-		&listener, 
-		&pixelsToMeters, 
-		&ptmRatio, 
-		&scenarioPreset, 
-		&windowSize, 
-		&physicsPreset,
-		&notifier
-	);
+	return libraryConfig->Access();
 }
 
-GetData NPL::Get()
+const GetData* NPL::Get()
 {
-	return GetData(&bodies, &physics->collisions, &physicsConfig, &physics->globalGravity, &physics->globalFriction, &physics->globalRestitution, &physics->globals );
+	return getData->Access();
 }
 
 bool NPL::DestroyBody(Body* body)

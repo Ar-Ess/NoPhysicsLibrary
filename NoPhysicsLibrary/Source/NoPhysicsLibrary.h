@@ -27,12 +27,12 @@ public:
 	// Create a new body
 	//  - Follow this function with a "." to choose the body type
 	//  - Rect must be on pixels (use MetersToPixels() to do the conversion)
-	BodyCreation CreateBody(Rect rectangle, float mass);
+	const BodyCreation* CreateBody(Rect rectangle, float mass);
 
 	// Configure certain aspects of this library operation
-	LibraryConfig Configure();
+	const LibraryConfig* Configure();
 
-	GetData Get();
+	const GetData* Get();
 
 	// Iterates the library
 	//  - Call it in your main update function

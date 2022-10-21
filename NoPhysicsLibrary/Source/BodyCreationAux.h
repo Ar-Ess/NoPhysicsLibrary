@@ -11,9 +11,7 @@ struct BodyCreation
 {
 private:
 
-	BodyCreation(Rect rect, float mass, std::vector<Body*>* bodies, std::vector<unsigned int*>* gasLocation, std::vector<unsigned int*>* liquidIndex, Physics* physics, const float* pixelsToMeters, Flag* bodiesConfig) :
-		mass(mass),
-		rect(rect),
+	BodyCreation(std::vector<Body*>* bodies, std::vector<unsigned int*>* gasLocation, std::vector<unsigned int*>* liquidIndex, Physics* physics, const float* pixelsToMeters, Flag* bodiesConfig) :
 		bodies(bodies),
 		gasIndex(gasLocation),
 		liquidIndex(liquidIndex),
@@ -21,6 +19,13 @@ private:
 		pixelsToMeters(pixelsToMeters),
 		bodiesConfig(bodiesConfig)
 	{}
+
+	const BodyCreation* Access(Rect rect, float mass)
+	{
+		this->rect = rect;
+		this->mass = mass;
+		return this;
+	}
 
 	friend class NPL;
 

@@ -16,6 +16,12 @@ private:
 		globalRestitution(globalRestitution),
 		physicsGlobals(physicsGlobals)
 	{}
+
+	const GetData* Access() const
+	{
+		return this;
+	}
+
 	friend class NPL;
 
 public:
@@ -31,7 +37,7 @@ public:
 
 	unsigned int CollisionsCount() const { return collisions->size(); }
 
-	const Collision* Collisions(int index)
+	const Collision* Collisions(int index) const 
 	{
 		if (!physicsConfig->Get(0)) return nullptr;
 
