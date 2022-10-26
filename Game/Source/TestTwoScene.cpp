@@ -26,9 +26,6 @@ bool TestTwoScene::Start()
 
 	npl->Configure()->Listener(player);
 
-	//-TODO: Insert environment enum presets, in config?
-	//npl->CreateBody(npl->ReturnScenarioRect(), 1).Gas(10.0f, 1.414f, 1000);
-
 	npl->LoadSound("Assets/Audio/bounce.wav");
 
 	render->ResetCamera();
