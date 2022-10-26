@@ -400,10 +400,10 @@ void NPL::UpdateScenarioPreset()
 		float downLimitY = windowSize.y * 0.93f;
 		float rightLimitX = windowSize.x * 0.96f;
 		//Limits
-		CreateBody({ 0,          0,               windowSize.x, windowSize.y - downLimitY }, 1).Static();
-		CreateBody({ 0,          0, windowSize.x - rightLimitX,              windowSize.y }, 1).Static();
-		CreateBody({ 0, downLimitY,               windowSize.x, windowSize.y - downLimitY }, 1).Static();
-		CreateBody({ rightLimitX,0, windowSize.x - rightLimitX,              windowSize.x }, 1).Static();
+		CreateBody({ 0,          0,               windowSize.x, windowSize.y - downLimitY }, 1)->Static();
+		CreateBody({ 0,          0, windowSize.x - rightLimitX,              windowSize.y }, 1)->Static();
+		CreateBody({ 0, downLimitY,               windowSize.x, windowSize.y - downLimitY }, 1)->Static();
+		CreateBody({ rightLimitX,0, windowSize.x - rightLimitX,              windowSize.x }, 1)->Static();
 
 		break;
 	}
@@ -412,10 +412,10 @@ void NPL::UpdateScenarioPreset()
 		float downLimitY = windowSize.y * 0.93f;
 		float rightLimitX = windowSize.x * 0.96f;
 		//Limits
-		CreateBody({ 0,          0,                  4280, windowSize.y - downLimitY }, 1).Static();
-		CreateBody({ 0,          0, windowSize.x - rightLimitX,              windowSize.y }, 1).Static();
-		CreateBody({ 0, downLimitY,                  4280, windowSize.y - downLimitY }, 1).Static();
-		CreateBody({ 3000 + rightLimitX,          0, windowSize.x - rightLimitX,              windowSize.x }, 1).Static();
+		CreateBody({ 0,          0,                  4280, windowSize.y - downLimitY }, 1)->Static();
+		CreateBody({ 0,          0, windowSize.x - rightLimitX,              windowSize.y }, 1)->Static();
+		CreateBody({ 0, downLimitY,                  4280, windowSize.y - downLimitY }, 1)->Static();
+		CreateBody({ 3000 + rightLimitX,          0, windowSize.x - rightLimitX,              windowSize.x }, 1)->Static();
 
 		break;
 	}
