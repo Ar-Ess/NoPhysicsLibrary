@@ -125,28 +125,50 @@ void Physics::DetectCollisions(std::vector<Body*>* bodies)
 		}
 	}
 
+	// New (iterate dinamic bodies with all)
 	size_t size = bodies->size();
 	for (unsigned int i = 0; i < size - 1; ++i)
 	{
 		Body* b1 = bodies->at(i);
-		if (b1->GetClass() == BodyClass::GAS_BODY || b1->GetClass() == BodyClass::LIQUID_BODY) continue;
+		if (b1->GetClass() != BodyClass::DYNAMIC_BODY) continue;
 
-		for (unsigned int a = 1 + i; a < size; ++a)
+		for (unsigned int a = 0; a < size; ++a)
 		{
+			if (a == i) continue;
 			Body* b2 = bodies->at(a);
-			if (b2->GetClass() == BodyClass::GAS_BODY || b2->GetClass() == BodyClass::LIQUID_BODY) continue;
-			if (b1->GetClass() == BodyClass::STATIC_BODY && b2->GetClass() == BodyClass::STATIC_BODY) continue;
+			if (b2->GetClass() == BodyClass::GAS_BODY) continue;
+			if (b2->GetClass() == BodyClass::DYNAMIC_BODY && a < i) continue;
 
 			Rect intersect = MathUtils::IntersectRectangle(b1->GetRect(InUnit::IN_METERS), b2->GetRect(InUnit::IN_METERS));
 			if (!MathUtils::CheckCollision(b1->GetRect(InUnit::IN_METERS), b2->GetRect(InUnit::IN_METERS))) continue;
 
-			Body* dyn = b2;
-			Body* other = b2;
-			b1->GetClass() == BodyClass::DYNAMIC_BODY ? dyn = b1 : other = b1;
-
-			collisions.emplace_back(new Collision(dyn, other, intersect, pixelsToMeters));
+			collisions.emplace_back(new Collision(b1, b2, intersect, pixelsToMeters));
 		}
 	}
+
+	// Old (iterate all with all)
+	/*size_t size = bodies->size();
+	//for (unsigned int i = 0; i < size - 1; ++i)
+	//{
+	//	Body* b1 = bodies->at(i);
+	//	if (b1->GetClass() == BodyClass::GAS_BODY || b1->GetClass() == BodyClass::LIQUID_BODY) continue;
+	//
+	//	for (unsigned int a = 1 + i; a < size; ++a)
+	//	{
+	//		Body* b2 = bodies->at(a);
+	//		if (b2->GetClass() == BodyClass::GAS_BODY || b2->GetClass() == BodyClass::LIQUID_BODY) continue;
+	//		if (b1->GetClass() == BodyClass::STATIC_BODY && b2->GetClass() == BodyClass::STATIC_BODY) continue;
+	//
+	//		Rect intersect = MathUtils::IntersectRectangle(b1->GetRect(InUnit::IN_METERS), b2->GetRect(InUnit::IN_METERS));
+	//		if (!MathUtils::CheckCollision(b1->GetRect(InUnit::IN_METERS), b2->GetRect(InUnit::IN_METERS))) continue;
+	//
+	//		Body* dyn = b2;
+	//		Body* other = b2;
+	//		b1->GetClass() == BodyClass::DYNAMIC_BODY ? dyn = b1 : other = b1;
+	//
+	//		collisions.emplace_back(new Collision(dyn, other, intersect, pixelsToMeters));
+	//	}
+	//}*/
 }
 
 void Physics::ResetFlags(std::vector<Body*>* bodies)
