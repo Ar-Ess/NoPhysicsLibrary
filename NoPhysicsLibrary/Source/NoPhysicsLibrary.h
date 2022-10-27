@@ -111,7 +111,7 @@ private:
 	Flag physicsConfig = {}; // Debug Collisions (0) |
 	Flag bodiesConfig = {}; // Debug states (0) |
 	ScenarioPreset scenarioPreset = ScenarioPreset::NO_SCENARIO_PRESET; Point windowSize = {};
-	PhysicsPreset physicsPreset;
+	PhysicsPreset physicsPreset = PhysicsPreset::NO_PHYSIC_PRESET;
 
 	//_____________________
 	// - Acoustics

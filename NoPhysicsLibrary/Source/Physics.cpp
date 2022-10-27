@@ -188,19 +188,17 @@ void Physics::Declip()
 	for (Collision* c : collisions)
 	{
 		DynamicBody* dynBody = (DynamicBody*)c->GetDynBody();
-		//-TODO: In case two collisions same dynamic body, this will reset
-		Rect intersect = c->GetCollisionRectangle(InUnit::IN_METERS);
+		Body* b = (Body*)c->GetBody();
 
+		Rect intersect = c->GetCollisionRectangle(InUnit::IN_METERS);
 		Point directionVec = dynBody->GetPosition(InUnit::IN_METERS) - dynBody->backup.position;
 
-		switch (c->GetBody()->GetClass())
+		switch (b->GetClass())
 		{
 
 		case BodyClass::DYNAMIC_BODY:
 		{
-			//-Todone: raycast from center and detect intersection from infinite (just w/2 or h/2 of dynamic) plans of the static body
-			// prioritize go back in time rather than linear declipping :_)
-			DynamicBody* body = (DynamicBody*)c->GetBody();
+			DynamicBody* body = (DynamicBody*)b;
 			Point directionVecAlter = body->GetPosition(InUnit::IN_METERS) - body->backup.position;
 			Point normal = {};
 
@@ -272,9 +270,7 @@ void Physics::Declip()
 
 		case BodyClass::STATIC_BODY:
 		{
-			//-Todone: raycast from center and detect intersection from infinite (just w/2 or h/2 of dynamic) plans of the static body
-			// prioritize go back in time rather than linear declipping :_)
-			StaticBody* body = (StaticBody*)c->GetBody();
+			StaticBody* body = (StaticBody*)b;
 			Point normal = {};
 
 			Point centerOfIntersecion = c->GetCollisionRectangle(InUnit::IN_METERS).GetPosition(Align::CENTER);
@@ -335,6 +331,14 @@ void Physics::Declip()
 			}
 
 			break;
+		}
+
+		case BodyClass::LIQUID_BODY:
+		{
+			LiquidBody* body = (LiquidBody*)b;
+			float submergedVolume = intersect.GetArea();
+			float force = body->GetDensity(InUnit::IN_METERS) * submergedVolume * (globalGravity.y + dynBody->GetGravityOffset().y) * body->GetBuoyancy();
+			dynBody->ApplyForce({0, -force});
 		}
 
 		default:
