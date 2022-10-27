@@ -45,9 +45,10 @@ public:
 		return (DynamicBody*)bodies->back();
 	}
 
-	LiquidBody* Liquid() const
+	// Buoyancy is a coefficient, goes in between 0 and 1
+	LiquidBody* Liquid(float buoyancy) const
 	{
-		bodies->emplace_back(new LiquidBody(rect, mass, bodiesConfig, pixelsToMeters));
+		bodies->emplace_back(new LiquidBody(rect, mass, buoyancy, bodiesConfig, pixelsToMeters));
 		liquidIndex->emplace_back(new unsigned int(bodies->size() - 1));
 		return (LiquidBody*)bodies->back();
 	}
