@@ -20,9 +20,9 @@ bool TestTwoScene::Start()
 	npl->Configure()->Scenario(ScenarioPreset::LIMITS_SCENARIO_PRESET, window->GetSize());
 
 	player = npl->CreateBody({ 100.0f, 200.0f, npl->MetersToPixels(Point(0.3f, 0.75f)) }, 20)->Dynamic();
-	npl->CreateBody({ 400.0f, 200.0f, npl->MetersToPixels(Point(0.3f, 0.75f)) }, 1)->Dynamic();
+	npl->CreateBody({ 400.0f, 200.0f, npl->MetersToPixels(Point(0.3f, 0.75f)) }, 12)->Dynamic();
 	npl->CreateBody({ 800.0f, 400.0f, npl->MetersToPixels(Point(0.8f, 0.8f)) }, 20)->Gas(10, 1.414f, 1000);
-	npl->CreateBody({ 400, 400, npl->MetersToPixels(Point(1.0f, 6.0f)) }, 50)->Liquid(1);
+	npl->CreateBody({ 400, 400, npl->MetersToPixels(Point(1.0f, 6.0f)) }, 50)->Liquid(1.1);
 
 	npl->Configure()->Listener(player);
 

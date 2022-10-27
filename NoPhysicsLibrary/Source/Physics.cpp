@@ -46,10 +46,10 @@ void Physics::UpdateDynamic(float dt, Body* b)
 	//AutoApplyForces(); // Future
 
 	// Multiplying global gravity * mass to acquire the force (Global gravity falls :) )
-	body->ApplyForce(globalGravity.x * body->GetMass(), globalGravity.y * body->GetMass());
+	body->ApplyForce(globalGravity, InUnit::IN_METERS);
 
 	// Multiplying intrinsic gravity * mass to acquire the force (Local gravity falls :) )
-	body->ApplyForce(body->gravityOffset.x * body->GetMass(), body->gravityOffset.y * body->GetMass());
+	body->ApplyForce(body->gravityOffset, InUnit::IN_METERS);
 
 	// Second law newton
 	body->SecondNewton(); // Suma de forces a acceleració
@@ -338,6 +338,8 @@ void Physics::Declip()
 			LiquidBody* body = (LiquidBody*)b;
 			float submergedVolume = intersect.GetArea();
 			float force = body->GetDensity(InUnit::IN_METERS) * submergedVolume * (globalGravity.y + dynBody->GetGravityOffset().y) * body->GetBuoyancy();
+			//-TODO: estic multiplicant dos cops per la massa. 1 cop per la massa sumergida i un altre cop dins del appluforce per tota la massa.
+			// Fer un apply force internal que accepti massa i només jo pugui accedir??
 			dynBody->ApplyForce({0, -force});
 		}
 
