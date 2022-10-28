@@ -102,7 +102,6 @@ public:
 	void Scenario(ScenarioPreset preset, Point windowSize) const
 	{
 		if (preset == ScenarioPreset::NO_SCENARIO_PRESET) return;
-
 		*this->scenarioPreset = preset;
 		*this->windowSize = windowSize;
 		notifier->Set(1, true);

@@ -49,6 +49,7 @@ public:
 	// Load internally an audio file
 	void LoadSound(const char* path);
 
+	// Calculates & returns a rectsngle that englobes all the existent bodies
 	const Rect ReturnScenarioRect() const;
 
 private: // Methods
@@ -94,6 +95,7 @@ private:
 	//INFO: Fet aixi perquè amb unic ids s'hauria de fer moltes iteracions + protegir el vector de bodies
 	std::vector<unsigned int*> gasIndex;
 	std::vector<unsigned int*> liquidIndex;
+	Rect scenarioRects[4] = {};
 
 	const float maxSPL = 120.0f;
 	const float maxVolume = 10.0f;

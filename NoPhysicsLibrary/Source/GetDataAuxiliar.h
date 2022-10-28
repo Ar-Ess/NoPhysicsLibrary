@@ -59,27 +59,6 @@ public:
 	// Returns wether the physics are paused
 	bool GlobalPause() const { return physicsGlobals->Get(0); }
 
-	// Calculates & returns a rectsngle that englobes all the existent bodies
-	const Rect ScenarioRectangle() const
-	{
-		Rect first = bodies->front()->GetRect(InUnit::IN_PIXELS);
-		Point minP = { first.x, first.y };
-		Point maxP = { first.x + first.w, first.y + first.h };
-
-		for (Body* body : *bodies)
-		{
-			Rect bodyRect = body->GetRect(InUnit::IN_PIXELS);
-			if (bodyRect.x + bodyRect.w > maxP.x) maxP.x = bodyRect.x + bodyRect.w;
-			if (bodyRect.y + bodyRect.h > maxP.y) maxP.y = bodyRect.y + bodyRect.h;
-			if (bodyRect.x < minP.x) minP.x = bodyRect.x;
-			if (bodyRect.y < minP.y) minP.y = bodyRect.y;
-		}
-
-		//-TODO: iterate this accounting if the notifier of scenario preset is active!
-
-		return Rect{ minP.x, minP.y, maxP.x - minP.x, maxP.y - minP.y };
-	}
-
 	const float PixelsToMeters() const { return *pixelsToMeters; }
 	
 	const float MetersToPixels() const { return 1 / *pixelsToMeters; }

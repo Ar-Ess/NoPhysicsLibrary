@@ -169,7 +169,6 @@ void NPL::PausePhysics(bool pause)
 	physics->globals.Set(0, pause);
 }
 
-// Calculates & returns a rectsngle that englobes all the existent bodies
 const Rect NPL::ReturnScenarioRect() const
 {
 	Rect first = bodies.front()->GetRect(InUnit::IN_PIXELS);
@@ -185,10 +184,13 @@ const Rect NPL::ReturnScenarioRect() const
 		if (bodyRect.y < minP.y) minP.y = bodyRect.y;
 	}
 
-	//-TODO: iterate this accounting if the notifier of scenario preset is active!
-	if (!notifier.Get(1)) return Rect{ minP.x, minP.y, maxP.x - minP.x, maxP.y - minP.y };
+	Rect scenario = scenarioRects[(int)scenarioPreset];
+	if (!notifier.Get(1) || scenario.IsNull()) return Rect{ minP.x, minP.y, maxP.x - minP.x, maxP.y - minP.y };
 
-
+	if (scenario.x + scenario.w > maxP.x) maxP.x = scenario.x + scenario.w;
+	if (scenario.y + scenario.h > maxP.y) maxP.y = scenario.y + scenario.h;
+	if (scenario.x < minP.x) minP.x = scenario.x;
+	if (scenario.y < minP.y) minP.y = scenario.y;
 
 	return Rect{ minP.x, minP.y, maxP.x - minP.x, maxP.y - minP.y };
 }
@@ -401,6 +403,7 @@ void NPL::UpdateScenarioPreset()
 //-TOCHECK: Maybe should not do this \/
 	DestroyBody(BodyClass::STATIC_BODY);
 
+	//-TODO: Update scenarioRects with the info of the global rect englibing the scenario
 	switch (scenarioPreset)
 	{
 	case ScenarioPreset::LIMITS_SCENARIO_PRESET:
