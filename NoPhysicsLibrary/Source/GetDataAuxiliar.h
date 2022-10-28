@@ -96,4 +96,3 @@ private:
 	float* pixelsToMeters = nullptr;
 
 };
-

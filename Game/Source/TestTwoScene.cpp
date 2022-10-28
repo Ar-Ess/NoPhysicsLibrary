@@ -10,6 +10,7 @@ TestTwoScene::~TestTwoScene()
 
 bool TestTwoScene::Start()
 {
+
 	npl = new NPL();
 	npl->Init(128.0f);
 

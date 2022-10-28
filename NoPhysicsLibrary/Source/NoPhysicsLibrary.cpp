@@ -169,6 +169,30 @@ void NPL::PausePhysics(bool pause)
 	physics->globals.Set(0, pause);
 }
 
+// Calculates & returns a rectsngle that englobes all the existent bodies
+const Rect NPL::ReturnScenarioRect() const
+{
+	Rect first = bodies.front()->GetRect(InUnit::IN_PIXELS);
+	Point minP = { first.x, first.y };
+	Point maxP = { first.x + first.w, first.y + first.h };
+
+	for (Body* body : bodies)
+	{
+		Rect bodyRect = body->GetRect(InUnit::IN_PIXELS);
+		if (bodyRect.x + bodyRect.w > maxP.x) maxP.x = bodyRect.x + bodyRect.w;
+		if (bodyRect.y + bodyRect.h > maxP.y) maxP.y = bodyRect.y + bodyRect.h;
+		if (bodyRect.x < minP.x) minP.x = bodyRect.x;
+		if (bodyRect.y < minP.y) minP.y = bodyRect.y;
+	}
+
+	//-TODO: iterate this accounting if the notifier of scenario preset is active!
+	if (!notifier.Get(1)) return Rect{ minP.x, minP.y, maxP.x - minP.x, maxP.y - minP.y };
+
+
+
+	return Rect{ minP.x, minP.y, maxP.x - minP.x, maxP.y - minP.y };
+}
+
 //- Private --------------------------------------------------------------------------------
 
 void NPL::StepPhysics(float dt)

@@ -49,6 +49,8 @@ public:
 	// Load internally an audio file
 	void LoadSound(const char* path);
 
+	const Rect ReturnScenarioRect() const;
+
 private: // Methods
 
 	void StepPhysics(float dt);
@@ -80,7 +82,6 @@ private: // Methods
 
 private:
 
-	//-TODO: Put auxiliars here as variables in heap. Initialize them in init, to not initialize them each time you call Config, CreateBody or Get
 	BodyCreation* bodyCreation = nullptr;
 	LibraryConfig* libraryConfig = nullptr;
 	GetData* getData = nullptr;
@@ -94,7 +95,6 @@ private:
 	std::vector<unsigned int*> gasIndex;
 	std::vector<unsigned int*> liquidIndex;
 
-	// CONSTANTS
 	const float maxSPL = 120.0f;
 	const float maxVolume = 10.0f;
 
