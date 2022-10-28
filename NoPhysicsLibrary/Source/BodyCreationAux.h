@@ -6,6 +6,7 @@
 #include "DynamicBody.h"
 #include "LiquidBody.h"
 #include "GasBody.h"
+#include "MathUtils.h"
 
 struct BodyCreation
 {
@@ -20,10 +21,9 @@ private:
 		bodiesConfig(bodiesConfig)
 	{}
 
-	const BodyCreation* Access(Rect rect, float mass)
+	const BodyCreation* Access(Rect rect)
 	{
 		this->rect = rect;
-		this->mass = mass;
 		return this;
 	}
 
@@ -33,11 +33,11 @@ public:
 
 	StaticBody* Static() const
 	{
-		bodies->emplace_back(new StaticBody(rect, mass, bodiesConfig, pixelsToMeters));
+		bodies->emplace_back(new StaticBody(rect, 1.0f, bodiesConfig, pixelsToMeters));
 		return (StaticBody*)bodies->back();
 	}
 
-	DynamicBody* Dynamic(Point gravityOffset = {0.0f, 0.0f }, InUnit unit = InUnit::IN_METERS) const
+	DynamicBody* Dynamic(float mass, Point gravityOffset = { 0.0f, 0.0f }, InUnit unit = InUnit::IN_METERS) const
 	{
 		if (!gravityOffset.IsZero() && unit == InUnit::IN_PIXELS) gravityOffset *= *pixelsToMeters;
 
@@ -46,23 +46,37 @@ public:
 	}
 
 	// Buoyancy is a coefficient, goes in between 0 and 1
-	LiquidBody* Liquid(float buoyancy) const
+	LiquidBody* Liquid(float mass, float buoyancy) const
 	{
 		bodies->emplace_back(new LiquidBody(rect, mass, buoyancy, bodiesConfig, pixelsToMeters));
 		liquidIndex->emplace_back(new unsigned int(bodies->size() - 1));
 		return (LiquidBody*)bodies->back();
 	}
 
-	GasBody* Gas(float density, float heatRatio, float pressure) const
+	LiquidBody* Liquid(float density, float buoyancy, InUnit unit) const
 	{
-		bodies->emplace_back(new GasBody(rect, mass, bodiesConfig, density, heatRatio, pressure, pixelsToMeters));
+		if (unit == InUnit::IN_PIXELS) density *= MathUtils::Pow((1 / *pixelsToMeters),2);
+
+		bodies->emplace_back(new LiquidBody(rect, density * rect.GetArea(), buoyancy, bodiesConfig, pixelsToMeters));
+		liquidIndex->emplace_back(new unsigned int(bodies->size() - 1));
+		return (LiquidBody*)bodies->back();
+	}
+
+	GasBody* Gas(float density, float heatRatio, float pressure, InUnit unit) const
+	{
+		if (unit == InUnit::IN_PIXELS)
+		{
+			float pixToMetSquared = MathUtils::Pow((1 / *pixelsToMeters), 2);
+			density *= pixToMetSquared;
+			pressure *= pixToMetSquared;
+		}
+		bodies->emplace_back(new GasBody(rect, density * rect.GetArea(), bodiesConfig, heatRatio, pressure, pixelsToMeters));
 		gasIndex->emplace_back(new unsigned int(bodies->size() - 1));
 		return (GasBody*)bodies->back();
 	}
 
 private:
 
-	float mass = 1.0f;
 	Rect rect = {};
 	std::vector<Body*>* bodies = nullptr;
 	std::vector<unsigned int*>* gasIndex = nullptr;

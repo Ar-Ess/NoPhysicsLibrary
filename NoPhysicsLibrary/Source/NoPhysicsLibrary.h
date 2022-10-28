@@ -26,8 +26,8 @@ public:
 
 	// Create a new body
 	//  - Follow this function with a "." to choose the body type
-	//  - Rect must be on pixels (use MetersToPixels() to do the conversion)
-	const BodyCreation* CreateBody(Rect rectangle, float mass);
+	//  - Rect must be on pixels (Multiply meters by "metersToPixels" variable on npl->Get() function)
+	const BodyCreation* CreateBody(Rect rectangle);
 
 	// Configure certain aspects of this library operation
 	const LibraryConfig* Configure();
@@ -48,12 +48,6 @@ public:
 
 	// Load internally an audio file
 	void LoadSound(const char* path);
-
-	// Converts meter values into pixels values
-	Rect MetersToPixels(Rect rectangle);
-	Point MetersToPixels(Point rectangle);
-	float MetersToPixels(float rectangle);
-
 
 private: // Methods
 

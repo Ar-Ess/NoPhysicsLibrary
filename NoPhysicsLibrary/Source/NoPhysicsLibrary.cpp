@@ -20,6 +20,7 @@ void NPL::Init(float pixelsPerMeter)
 	physics = new Physics(&physicsConfig, &bodiesConfig, &pixelsToMeters);
 	audio = new Audio();
 
+	// Pixels To Meters = [ m / pxl ]
 	pixelsToMeters = pixelsPerMeter > 0 ? 1 / pixelsPerMeter : 1;
 
 	bodyCreation = new BodyCreation(
@@ -53,7 +54,8 @@ void NPL::Init(float pixelsPerMeter)
 		&physics->globalGravity, 
 		&physics->globalFriction, 
 		&physics->globalRestitution, 
-		&physics->globals
+		&physics->globals,
+		&pixelsToMeters
 	);
 }
 
@@ -111,14 +113,14 @@ void NPL::CleanUp()
 
 }
 
-const BodyCreation* NPL::CreateBody(Rect rectangle, float mass)
+const BodyCreation* NPL::CreateBody(Rect rectangle)
 {
 	//Library not initialized. Call NPL::Init() first
 	assert(physics != nullptr);
 
 	rectangle = { rectangle.GetPosition() * pixelsToMeters, rectangle.GetSize() * pixelsToMeters };
 
-	return bodyCreation->Access(rectangle, mass);
+	return bodyCreation->Access(rectangle);
 }
 
 const LibraryConfig* NPL::Configure()
@@ -165,24 +167,6 @@ void NPL::LoadSound(const char* path)
 void NPL::PausePhysics(bool pause)
 {
 	physics->globals.Set(0, pause);
-}
-
-Rect NPL::MetersToPixels(Rect rect)
-{
-	float metersToPixels = (1 / pixelsToMeters);
-	return Rect{ rect.GetPosition() * metersToPixels, rect.GetSize() * metersToPixels};
-}
-
-Point NPL::MetersToPixels(Point point)
-{
-	float metersToPixels = (1 / pixelsToMeters);
-	return Point{ point * metersToPixels };
-}
-
-float NPL::MetersToPixels(float value)
-{
-	float metersToPixels = (1 / pixelsToMeters);
-	return value * metersToPixels;
 }
 
 //- Private --------------------------------------------------------------------------------
@@ -400,10 +384,10 @@ void NPL::UpdateScenarioPreset()
 		float downLimitY = windowSize.y * 0.93f;
 		float rightLimitX = windowSize.x * 0.96f;
 		//Limits
-		CreateBody({ 0,          0,               windowSize.x, windowSize.y - downLimitY }, 1)->Static();
-		CreateBody({ 0,          0, windowSize.x - rightLimitX,              windowSize.y }, 1)->Static();
-		CreateBody({ 0, downLimitY,               windowSize.x, windowSize.y - downLimitY }, 1)->Static();
-		CreateBody({ rightLimitX,0, windowSize.x - rightLimitX,              windowSize.x }, 1)->Static();
+		CreateBody({ 0,          0,               windowSize.x, windowSize.y - downLimitY })->Static();
+		CreateBody({ 0,          0, windowSize.x - rightLimitX,              windowSize.y })->Static();
+		CreateBody({ 0, downLimitY,               windowSize.x, windowSize.y - downLimitY })->Static();
+		CreateBody({ rightLimitX,0, windowSize.x - rightLimitX,              windowSize.x })->Static();
 
 		break;
 	}
@@ -412,10 +396,10 @@ void NPL::UpdateScenarioPreset()
 		float downLimitY = windowSize.y * 0.93f;
 		float rightLimitX = windowSize.x * 0.96f;
 		//Limits
-		CreateBody({ 0,          0,                  4280, windowSize.y - downLimitY }, 1)->Static();
-		CreateBody({ 0,          0, windowSize.x - rightLimitX,              windowSize.y }, 1)->Static();
-		CreateBody({ 0, downLimitY,                  4280, windowSize.y - downLimitY }, 1)->Static();
-		CreateBody({ 3000 + rightLimitX,          0, windowSize.x - rightLimitX,              windowSize.x }, 1)->Static();
+		CreateBody({                  0,          0,                       4280, windowSize.y - downLimitY })->Static();
+		CreateBody({                  0,          0, windowSize.x - rightLimitX,              windowSize.y })->Static();
+		CreateBody({                  0, downLimitY,                       4280, windowSize.y - downLimitY })->Static();
+		CreateBody({ 3000 + rightLimitX,          0, windowSize.x - rightLimitX,              windowSize.x })->Static();
 
 		break;
 	}
@@ -458,8 +442,8 @@ void NPL::UpdatePhysicsPreset()
 	{
 	case PhysicsPreset::DEFAULT_PHYSICS_PRESET:
 		friction = 0.2f;
-		gravity = { 0.0f, 3.0f };
-		restitution = { 0.6f, 0.0f };
+		gravity = { 0.0f, 9.8f };
+		restitution = { 0.1f, 0.0f };
 		break;
 
 	case PhysicsPreset::NO_PHYSIC_PRESET:

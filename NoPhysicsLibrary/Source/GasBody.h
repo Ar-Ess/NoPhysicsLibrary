@@ -6,13 +6,13 @@ class GasBody : public Body
 {
 public:
 
-	GasBody(Rect rect, float mass, Flag* bodiesConfig, float density, float heatRatio, float pressure, const float* pixelsToMeters);
+	GasBody(Rect rect, float mass, Flag* bodiesConfig, float heatRatio, float pressure, const float* pixelsToMeters);
 
 	~GasBody() override;
 
 	float GetDensity() const
 	{
-		return density;
+		return mass / rect.GetArea();
 	}
 
 	float GetHeatRatio() const
@@ -27,7 +27,6 @@ public:
 
 private:
 
-	float density = 0;
 	float heatRatio = 0;
 	float pressure = 0;
 };

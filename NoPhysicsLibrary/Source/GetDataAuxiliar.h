@@ -7,14 +7,15 @@ class GetData
 {
 private:
 	
-	GetData(std::vector<Body*>* bodies, std::vector<Collision*>* collisions, Flag* physicsConfig, Point* globalGravity, Point* globalFriction, Point* globalRestitution, Flag* physicsGlobals) :
+	GetData(std::vector<Body*>* bodies, std::vector<Collision*>* collisions, Flag* physicsConfig, Point* globalGravity, Point* globalFriction, Point* globalRestitution, Flag* physicsGlobals, float* pixelsToMeters) :
 		bodies(bodies),
 		collisions(collisions),
 		physicsConfig(physicsConfig),
 		globalGravity(globalGravity),
 		globalFriction(globalFriction),
 		globalRestitution(globalRestitution),
-		physicsGlobals(physicsGlobals)
+		physicsGlobals(physicsGlobals),
+		pixelsToMeters(pixelsToMeters)
 	{}
 
 	const GetData* Access() const
@@ -74,8 +75,14 @@ public:
 			if (bodyRect.y < minP.y) minP.y = bodyRect.y;
 		}
 
+		//-TODO: iterate this accounting if the notifier of scenario preset is active!
+
 		return Rect{ minP.x, minP.y, maxP.x - minP.x, maxP.y - minP.y };
 	}
+
+	const float PixelsToMeters() const { return *pixelsToMeters; }
+	
+	const float MetersToPixels() const { return 1 / *pixelsToMeters; }
 
 private:
 
@@ -86,6 +93,7 @@ private:
 	Point* globalGravity = nullptr;
 	Point* globalFriction = nullptr;
 	Point* globalRestitution = nullptr;
+	float* pixelsToMeters = nullptr;
 
 };
 
