@@ -17,7 +17,7 @@ void NPL::Init(float pixelsPerMeter)
 	// You've alreay initialized the library once
 	assert(physics == nullptr && audio == nullptr);
 
-	physics = new Physics(&physicsConfig, &bodiesConfig, &pixelsToMeters);
+	physics = new Physics(&physicsConfig, &pixelsToMeters);
 	audio = new Audio();
 
 	// Pixels To Meters = [ m / pxl ]
@@ -28,22 +28,17 @@ void NPL::Init(float pixelsPerMeter)
 		&gasIndex, 
 		&liquidIndex, 
 		physics, 
-		&pixelsToMeters, 
-		&bodiesConfig);
+		&pixelsToMeters);
 
 	libraryConfig = new LibraryConfig(
 		&panRange,
 		&physicsConfig,
-		&bodiesConfig,
 		&physics->globalGravity,
 		&physics->globalRestitution,
 		&physics->globalFriction,
 		&listener,
 		&pixelsToMeters,
 		&ptmRatio,
-		&scenarioPreset,
-		&windowSize,
-		&physicsPreset,
 		&notifier
 	);
 
@@ -183,14 +178,6 @@ const Rect NPL::ReturnScenarioRect() const
 		if (bodyRect.x < minP.x) minP.x = bodyRect.x;
 		if (bodyRect.y < minP.y) minP.y = bodyRect.y;
 	}
-
-	Rect scenario = scenarioRects[(int)scenarioPreset];
-	if (!notifier.Get(1) || scenario.IsNull()) return Rect{ minP.x, minP.y, maxP.x - minP.x, maxP.y - minP.y };
-
-	if (scenario.x + scenario.w > maxP.x) maxP.x = scenario.x + scenario.w;
-	if (scenario.y + scenario.h > maxP.y) maxP.y = scenario.y + scenario.h;
-	if (scenario.x < minP.x) minP.x = scenario.x;
-	if (scenario.y < minP.y) minP.y = scenario.y;
 
 	return Rect{ minP.x, minP.y, maxP.x - minP.x, maxP.y - minP.y };
 }
@@ -338,57 +325,50 @@ void NPL::NoListenerLogic(Body* b)
 
 void NPL::UpdateStates()
 {
-	// If debug states is false
-	if (!bodiesConfig.Get(0)) return;
+	//-TODO: optimize logic to be open always
 
 	for (Body* b : bodies)
 	{
 		if (b->clas != BodyClass::DYNAMIC_BODY) continue;
 		DynamicBody* dB = (DynamicBody*)b;
 
+		// Detect floating (no collision with solids)
 		bool floating = true;
-		for (int i = 1; i < 5; ++i)
+		for (unsigned int i = 1; i < 5; ++i)
 		{
-			if (dB->bodyState.Get(i))
+			if (dB->IsColliding((BodyState)i))
 			{
 				floating = false;
 				break;
 			}
 		}
-		dB->bodyState.Set((int)BodyState::FLOAT, floating);
+		if (floating) dB->bodyState.Set((int)BodyState::FLOAT, true);
 
-		if (IsVoid()) dB->bodyState.Set((int)BodyState::GAS, false);
-		else
+		bool fullLiquidState = false;
+		float totalArea = 0.0f;
+		for (unsigned int* i : liquidIndex)
 		{
-			bool gas = false;
-			for (unsigned int* i : gasIndex)
+			if (MathUtils::CheckCollision(b->GetRect(InUnit::IN_METERS), bodies[*i]->GetRect(InUnit::IN_METERS)))
 			{
-				if (MathUtils::CheckCollision(b->GetRect(InUnit::IN_METERS), bodies[*i]->GetRect(InUnit::IN_METERS)))
-				{
-					gas = true;
-					break;
-				}
+				dB->bodyState.Set((int)BodyState::LIQUID, true);
+				totalArea += MathUtils::IntersectRectangle(b->GetRect(InUnit::IN_METERS), bodies[*i]->GetRect(InUnit::IN_METERS)).GetArea();
+				fullLiquidState = ( 0.0001f > MathUtils::Abs(b->GetRect(InUnit::IN_METERS).GetArea() - totalArea));
+				if (fullLiquidState) break;
 			}
-
-			dB->bodyState.Set((int)BodyState::GAS, gas);
 		}
 
-		if (IsDry()) dB->bodyState.Set((int)BodyState::LIQUID, false);
-		else
-		{
-			bool liquid = false;
-			for (unsigned int* i : liquidIndex)
-			{
-				if (MathUtils::CheckCollision(b->GetRect(InUnit::IN_METERS), bodies[*i]->GetRect(InUnit::IN_METERS)))
-				{
-					liquid = true;
-					break;
-				}
-			}
+		if (fullLiquidState) continue;
 
-			dB->bodyState.Set((int)BodyState::LIQUID, liquid);
+		for (unsigned int* i : gasIndex)
+		{
+			if (MathUtils::CheckCollision(b->GetRect(InUnit::IN_METERS), bodies[*i]->GetRect(InUnit::IN_METERS)))
+			{
+				dB->bodyState.Set((int)BodyState::GAS, true);
+				break;
+			}
 		}
 
+		
 	}
 }
 

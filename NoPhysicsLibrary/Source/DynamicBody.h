@@ -8,7 +8,7 @@ class DynamicBody : public Body
 {
 public: // Methods
 
-	DynamicBody(Rect rect, Point gravityOffset, float mass, Flag* bodiesConfig, Flag* globals, const float* pixelsToMeters);
+	DynamicBody(Rect rect, Point gravityOffset, float mass, Flag* globals, const float* pixelsToMeters);
 
 	~DynamicBody() override;
 
@@ -29,6 +29,8 @@ public: // Methods
 	void SetGravityOffset(Point gravityOffset, InUnit unit = InUnit::IN_METERS);
 	// Returns the local gravity vector of the body
 	Point GetGravityOffset(InUnit unit = InUnit::IN_METERS) const;
+
+	void ResetForces();
 
 private: // Methods
 

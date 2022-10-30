@@ -6,10 +6,9 @@
 #include "MathUtils.h"
 #include "Ray.h"
 
-Physics::Physics(const Flag* physicsConfig, const Flag* bodiesConfig, const float* pixelsToMeters)
+Physics::Physics(const Flag* physicsConfig, const float* pixelsToMeters)
 {
 	this->physicsConfig = physicsConfig;
-	this->bodiesConfig = bodiesConfig;
 	this->pixelsToMeters = pixelsToMeters;
 }
 
@@ -43,7 +42,7 @@ void Physics::CleanUp()
 void Physics::UpdateDynamic(float dt, Body* b)
 {
 	DynamicBody* body = (DynamicBody*)b;
-	//AutoApplyForces(); // Future
+	//AutoApplyForces(); //-TODO: Future
 
 	// Multiplying global gravity * mass to acquire the force (Global gravity falls :) )
 	body->ApplyForce(globalGravity, InUnit::IN_METERS);
@@ -173,8 +172,6 @@ void Physics::DetectCollisions(std::vector<Body*>* bodies)
 
 void Physics::ResetFlags(std::vector<Body*>* bodies)
 {
-	if (!bodiesConfig->Get(0)) return;
-
 	for (Body* b : *bodies)
 	{
 		if (b->GetClass() != BodyClass::DYNAMIC_BODY) continue;

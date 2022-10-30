@@ -20,9 +20,10 @@ bool TestTwoScene::Start()
 	float mTP = npl->Get()->MetersToPixels();
 
 	player = npl->CreateBody({ 100.0f, 200.0f, Point(mTP * 0.3f, mTP * 0.75f) })->Dynamic(12);
-	npl->CreateBody({ 400.0f, 200.0f, Point(mTP * 0.3f, mTP * 0.75f) })->Dynamic(12);
+	//npl->CreateBody({ 400.0f, 200.0f, Point(mTP * 0.3f, mTP * 0.75f) })->Dynamic(12);
 	npl->CreateBody(npl->ReturnScenarioRect())->Gas(10, 1.414f, 1000, InUnit::IN_METERS);
-	npl->CreateBody({ 400, 400, Point(mTP * 1.0f, mTP * 6.0f) })->Liquid(50, 1.1);
+	npl->CreateBody({ 400, 400, Point(mTP * 1.0f, mTP * 6.0f) })->Liquid(50, 1);
+	npl->CreateBody({ 400 + (mTP * 1.0f), 400, Point(mTP * 1.0f, mTP * 6.0f) })->Liquid(50, 1);
 
 	npl->Configure()->Listener(player);
 
@@ -46,12 +47,13 @@ bool TestTwoScene::Update(float dt)
 	if (render->camera.y < 0) render->camera.y = 0;
 
 	// Player Inputs
-	if (input->GetKey(SDL_SCANCODE_D) == KeyState::KEY_REPEAT) player->ApplyMomentum(  10, 0);
-	if (input->GetKey(SDL_SCANCODE_A) == KeyState::KEY_REPEAT) player->ApplyMomentum( -10, 0);
-	if (input->GetKey(SDL_SCANCODE_SPACE) == KeyState::KEY_DOWN) player->ApplyMomentum(0, -100);
+	if (input->GetKey(SDL_SCANCODE_D) == KeyState::KEY_REPEAT) player->ApplyMomentum(  10,   0);
+	if (input->GetKey(SDL_SCANCODE_A) == KeyState::KEY_REPEAT) player->ApplyMomentum( -10,   0);
+	if (input->GetKey(SDL_SCANCODE_SPACE) == KeyState::KEY_DOWN) player->ApplyMomentum( 0, -50);
+	if (input->GetKey(SDL_SCANCODE_C) == KeyState::KEY_DOWN) player->ResetForces();
 
 	if (input->GetKey(SDL_SCANCODE_LSHIFT) == KeyState::KEY_DOWN) player->Play(0, 80.0f);
-	if (input->GetKey(SDL_SCANCODE_RETURN) == KeyState::KEY_DOWN) emitter->Play(0, 80.0f);
+	//if (input->GetKey(SDL_SCANCODE_RETURN) == KeyState::KEY_DOWN) emitter->Play(0, 80.0f);
 
 	// Pauses the physics
 	if (input->GetKey(SDL_SCANCODE_ESCAPE) == KeyState::KEY_DOWN)
@@ -91,23 +93,17 @@ bool TestTwoScene::Update(float dt)
 	}
 
 	// Draw body states
-	if (input->GetKey(SDL_SCANCODE_B) == KeyState::KEY_DOWN)
-	{
-		state = !state;
-		npl->Configure()->StateDebugging(state);
-	}
-
+	if (input->GetKey(SDL_SCANCODE_B) == KeyState::KEY_DOWN) state = !state;
 	if (state)
 	{
-		render->DrawRectangle({ 0, 0, 170, 82 }, { 255, 255, 255, 150 }, {1.0f, 1.0f}, false);
-		if (player->IsColliding(BodyState::GAS))    render->DrawRectangle({  20, 10, 30, 14 }, { 150, 150, 255, 150 }, { 1.0f, 1.0f }, false);
-		if (player->IsColliding(BodyState::GROUND)) render->DrawRectangle({  20, 34, 30, 14 }, { 255,   0,   0, 150 }, { 1.0f, 1.0f }, false);
-		if (player->IsColliding(BodyState::LEFT))   render->DrawRectangle({  20, 58, 30, 14 }, { 255, 255,   0, 150 }, { 1.0f, 1.0f }, false);
-		if (player->IsColliding(BodyState::RIGHT))  render->DrawRectangle({  70, 10, 30, 14 }, { 255,   0, 255, 150 }, { 1.0f, 1.0f }, false);
-		if (player->IsColliding(BodyState::ROOF))   render->DrawRectangle({  70, 34, 30, 14 }, {   0, 255,   0, 150 }, { 1.0f, 1.0f }, false);
-		if (player->IsColliding(BodyState::LIQUID)) render->DrawRectangle({  70, 58, 30, 14 }, {   0,   0, 255, 150 }, { 1.0f, 1.0f }, false);
-		if (player->IsColliding(BodyState::FLOAT))  render->DrawRectangle({ 120, 10, 30, 14 }, { 100, 100, 100, 150 }, { 1.0f, 1.0f }, false);
-		if (!player->IsColliding(BodyState::GAS))   render->DrawRectangle({ 120, 34, 30, 14 }, {   0,   0,   0, 150 }, { 1.0f, 1.0f }, false);
+		render->DrawRectangle({ 0, 0, 120, 88 }, { 255, 255, 255, 150 }, {1.0f, 1.0f}, false);
+		if (player->IsColliding(BodyState::GROUND)) render->DrawRectangle({  20, 10, 30, 10 }, { 255,   0,   0, 150 }, { 1.0f, 1.0f }, false);
+		if (player->IsColliding(BodyState::LEFT))   render->DrawRectangle({  20, 30, 30, 10 }, { 255, 255,   0, 150 }, { 1.0f, 1.0f }, false);
+		if (player->IsColliding(BodyState::RIGHT))  render->DrawRectangle({  20, 50, 30, 10 }, { 255,   0, 255, 150 }, { 1.0f, 1.0f }, false);
+		if (player->IsColliding(BodyState::ROOF))   render->DrawRectangle({  20, 70, 30, 10 }, {   0, 255,   0, 150 }, { 1.0f, 1.0f }, false);
+		if (player->IsColliding(BodyState::GAS))    render->DrawRectangle({  70, 10, 30, 10 }, { 150, 150, 255, 150 }, { 1.0f, 1.0f }, false);
+		if (player->IsColliding(BodyState::LIQUID)) render->DrawRectangle({  70, 30, 30, 10 }, {   0,   0, 255, 150 }, { 1.0f, 1.0f }, false);
+		if (player->IsColliding(BodyState::FLOAT))  render->DrawRectangle({  70, 50, 30, 10 }, { 100, 100, 100, 150 }, { 1.0f, 1.0f }, false);
 	}
 
 	//Change scene

@@ -1,6 +1,6 @@
 #include "DynamicBody.h"
 
-DynamicBody::DynamicBody(Rect rect, Point gravityOffset, float mass, Flag* bodiesConfig, Flag* globals, const float* pixelsToMeters) : Body(BodyClass::DYNAMIC_BODY, rect, mass, bodiesConfig, pixelsToMeters)
+DynamicBody::DynamicBody(Rect rect, Point gravityOffset, float mass, Flag* globals, const float* pixelsToMeters) : Body(BodyClass::DYNAMIC_BODY, rect, mass, pixelsToMeters)
 {
 	this->gravityOffset = gravityOffset;
 	this->globals = globals;
@@ -24,8 +24,6 @@ void DynamicBody::Backup()
 
 bool DynamicBody::IsColliding(BodyState collision)
 {
-	if (!bodiesConfig->Get(0)) return false;
-
 	return bodyState.Get((int)collision);
 }
 
@@ -123,4 +121,12 @@ void DynamicBody::FirstBuxeda()
 	// SUM Forces = massa * acceleració
 	velocity.x += totalMomentum.vector.x / mass;
 	velocity.y += totalMomentum.vector.y / mass;
+}
+
+void DynamicBody::ResetForces()
+{
+	acceleration.Zero();
+	velocity.Zero();
+	forces.clear();
+	momentums.clear();
 }

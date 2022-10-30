@@ -107,7 +107,6 @@ private:
 	// - Physics
 
 	Flag physicsConfig = {}; // Debug Collisions (0) |
-	Flag bodiesConfig = {}; // Debug states (0) |
 
 	//_____________________
 	// - Acoustics

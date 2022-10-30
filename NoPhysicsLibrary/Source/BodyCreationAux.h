@@ -12,13 +12,12 @@ struct BodyCreation
 {
 private:
 
-	BodyCreation(std::vector<Body*>* bodies, std::vector<unsigned int*>* gasLocation, std::vector<unsigned int*>* liquidIndex, Physics* physics, const float* pixelsToMeters, Flag* bodiesConfig) :
+	BodyCreation(std::vector<Body*>* bodies, std::vector<unsigned int*>* gasLocation, std::vector<unsigned int*>* liquidIndex, Physics* physics, const float* pixelsToMeters) :
 		bodies(bodies),
 		gasIndex(gasLocation),
 		liquidIndex(liquidIndex),
 		physics(physics),
-		pixelsToMeters(pixelsToMeters),
-		bodiesConfig(bodiesConfig)
+		pixelsToMeters(pixelsToMeters)
 	{}
 
 	const BodyCreation* Access(Rect rect)
@@ -33,7 +32,7 @@ public:
 
 	StaticBody* Static() const
 	{
-		bodies->emplace_back(new StaticBody(rect, 1.0f, bodiesConfig, pixelsToMeters));
+		bodies->emplace_back(new StaticBody(rect, 1.0f, pixelsToMeters));
 		return (StaticBody*)bodies->back();
 	}
 
@@ -41,14 +40,14 @@ public:
 	{
 		if (!gravityOffset.IsZero() && unit == InUnit::IN_PIXELS) gravityOffset *= *pixelsToMeters;
 
-		bodies->emplace_back(new DynamicBody(rect, gravityOffset, mass, bodiesConfig, &physics->globals, pixelsToMeters));
+		bodies->emplace_back(new DynamicBody(rect, gravityOffset, mass, &physics->globals, pixelsToMeters));
 		return (DynamicBody*)bodies->back();
 	}
 
 	// Buoyancy is a coefficient, goes in between 0 and 1
 	LiquidBody* Liquid(float mass, float buoyancy) const
 	{
-		bodies->emplace_back(new LiquidBody(rect, mass, buoyancy, bodiesConfig, pixelsToMeters));
+		bodies->emplace_back(new LiquidBody(rect, mass, buoyancy, pixelsToMeters));
 		liquidIndex->emplace_back(new unsigned int(bodies->size() - 1));
 		return (LiquidBody*)bodies->back();
 	}
@@ -57,7 +56,7 @@ public:
 	{
 		if (unit == InUnit::IN_PIXELS) density *= MathUtils::Pow((1 / *pixelsToMeters),2);
 
-		bodies->emplace_back(new LiquidBody(rect, density * rect.GetArea(), buoyancy, bodiesConfig, pixelsToMeters));
+		bodies->emplace_back(new LiquidBody(rect, density * rect.GetArea(), buoyancy, pixelsToMeters));
 		liquidIndex->emplace_back(new unsigned int(bodies->size() - 1));
 		return (LiquidBody*)bodies->back();
 	}
@@ -70,7 +69,7 @@ public:
 			density *= pixToMetSquared;
 			pressure *= pixToMetSquared;
 		}
-		bodies->emplace_back(new GasBody(rect, density * rect.GetArea(), bodiesConfig, heatRatio, pressure, pixelsToMeters));
+		bodies->emplace_back(new GasBody(rect, density * rect.GetArea(), heatRatio, pressure, pixelsToMeters));
 		gasIndex->emplace_back(new unsigned int(bodies->size() - 1));
 		return (GasBody*)bodies->back();
 	}

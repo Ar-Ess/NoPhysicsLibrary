@@ -12,7 +12,7 @@ class Physics
 {
 public: // Methods
 
-	Physics(const Flag* physicsConfig, const Flag* bodiesConfig, const float* pixelsToMeters);
+	Physics(const Flag* physicsConfig, const float* pixelsToMeters);
 
 	virtual ~Physics();
 
@@ -42,8 +42,6 @@ private: // Methods
 	void ResetFlags(std::vector<Body*>* bodies);
 	void Declip();
 
-
-
 public: // Variables
 
 	Point globalGravity = {0.0f, 0.0f };
@@ -57,7 +55,6 @@ public: // Variables
 
 	// Config
 	const Flag* physicsConfig = nullptr;
-	const Flag* bodiesConfig = nullptr;
 	const float* pixelsToMeters = nullptr;
 
 };

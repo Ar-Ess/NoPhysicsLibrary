@@ -55,7 +55,7 @@ public: // Methods
 
 protected: // Methods
 
-	Body(BodyClass clas, Rect rect, float mass, Flag* bodiesConfig, const float* pixelsToMeters);
+	Body(BodyClass clas, Rect rect, float mass, const float* pixelsToMeters);
 
 protected: // Variables
 
@@ -71,7 +71,5 @@ protected: // Variables
 
 	// Collidable | 
 	Flag properties = {};
-
-	const Flag* bodiesConfig = {};
 
 };
