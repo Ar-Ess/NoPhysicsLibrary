@@ -195,6 +195,85 @@ const Rect NPL::ReturnScenarioRect() const
 	return Rect{ minP.x, minP.y, maxP.x - minP.x, maxP.y - minP.y };
 }
 
+void NPL::SetScenarioPreset(ScenarioPreset preset, Point windowSize)
+{
+	switch (preset)
+	{
+	case ScenarioPreset::LIMITS_SCENARIO_PRESET:
+	{
+		float downLimitY = windowSize.y * 0.93f;
+		float rightLimitX = windowSize.x * 0.96f;
+		//Limits
+		CreateBody({ 0,          0,               windowSize.x, windowSize.y - downLimitY })->Static();
+		CreateBody({ 0,          0, windowSize.x - rightLimitX,              windowSize.y })->Static();
+		CreateBody({ 0, downLimitY,               windowSize.x, windowSize.y - downLimitY })->Static();
+		CreateBody({ rightLimitX,0, windowSize.x - rightLimitX,              windowSize.x })->Static();
+
+		break;
+	}
+	case ScenarioPreset::CORRIDOR_SCENARIO_PRESET:
+	{
+		float downLimitY = windowSize.y * 0.93f;
+		float rightLimitX = windowSize.x * 0.96f;
+		//Limits
+		CreateBody({ 0,          0,                       4280, windowSize.y - downLimitY })->Static();
+		CreateBody({ 0,          0, windowSize.x - rightLimitX,              windowSize.y })->Static();
+		CreateBody({ 0, downLimitY,                       4280, windowSize.y - downLimitY })->Static();
+		CreateBody({ 3000 + rightLimitX,          0, windowSize.x - rightLimitX,              windowSize.x })->Static();
+
+		break;
+	}
+
+	//case ScenarioPreset::PLATFORMER_SCENARIO_PRESET:
+	//	//Limits
+	//	CreateBody({ 0,   0, 1280,  50 }, 1);
+	//	CreateBody({ 0,   0,   50, 720 }, 1);
+	//	CreateBody({ 0, 670, 1280,  50 }, 1);
+	//	CreateBody({ 1230, 0,  50, 720 }, 1);
+	//	//Obstacles
+	//	CreateBody(BodyType::STATIC_BODY, Point{ 340, 490 }, { 340, 490, 600, 25 }, { 0, 0 }, { 0, 0 }, 1);
+	//	CreateBody(BodyType::STATIC_BODY, Point{ 540, 220 }, { 540, 220, 200, 25 }, { 0, 0 }, { 0, 0 }, 1);
+	//	break;
+
+	//case ScenarioPreset::WALLJUMP_SCENARIO_PRESET:
+	//	//Limits
+	//	CreateBody(BodyType::STATIC_BODY, Point{ 0, 0 }, { 0, 0, 1280, 50 }, { 0, 0 }, { 0, 0 }, 1);
+	//	CreateBody(BodyType::STATIC_BODY, Point{ 0, 0 }, { 0, 0, 50, 720 }, { 0, 0 }, { 0, 0 }, 1);
+	//	CreateBody(BodyType::STATIC_BODY, Point{ 0, 670 }, { 0, 670, 1280, 50 }, { 0, 0 }, { 0, 0 }, 1);
+	//	CreateBody(BodyType::STATIC_BODY, Point{ 1230, 0 }, { 1230, 0, 50, 720 }, { 0, 0 }, { 0, 0 }, 1);
+	//	//Obstacles
+	//	CreateBody(BodyType::STATIC_BODY, Point{ 200, 200 }, { 200, 200, 25, 400 }, { 0, 0 }, { 0, 0 }, 1);
+	//	CreateBody(BodyType::STATIC_BODY, Point{ 500, 200 }, { 500, 200, 25, 400 }, { 0, 0 }, { 0, 0 }, 1);
+	//	CreateBody(BodyType::STATIC_BODY, Point{ 780, 200 }, { 780, 200, 25, 400 }, { 0, 0 }, { 0, 0 }, 1);
+	//	CreateBody(BodyType::STATIC_BODY, Point{ 1080, 200 }, { 1080, 200, 25, 400 }, { 0, 0 }, { 0, 0 }, 1);
+	//	break;
+	}
+}
+
+void NPL::SetPhysicsPreset(PhysicsPreset preset)
+{
+	Point friction = {};
+	Point gravity = {};
+	Point restitution = {};
+
+	switch (preset)
+	{
+	case PhysicsPreset::DEFAULT_PHYSICS_PRESET:
+		friction = 0.2f;
+		gravity = { 0.0f, 9.8f };
+		restitution = { 0.1f, 0.0f };
+		break;
+
+	case PhysicsPreset::NO_PHYSIC_PRESET:
+	default:
+		break;
+	}
+
+	physics->globalFriction = friction;
+	physics->globalGravity = gravity;
+	physics->globalRestitution = restitution;
+}
+
 //- Private --------------------------------------------------------------------------------
 
 void NPL::StepPhysics(float dt)
@@ -362,8 +441,6 @@ void NPL::UpdateNotifier()
 	if (!notifier.IsAnyTrue()) return;
 
 	if (notifier.Get(0)) UpdatePixelsToMeters();
-	if (notifier.Get(1)) UpdateScenarioPreset();
-	if (notifier.Get(2)) UpdatePhysicsPreset();
 
 	notifier.Clear();
 }
@@ -395,94 +472,6 @@ void NPL::UpdatePixelsToMeters()
 
 	panRange *= ptmRatio;
 	physics->globalGravity *= ptmRatio;
-}
-
-void NPL::UpdateScenarioPreset()
-{
-
-//-TOCHECK: Maybe should not do this \/
-	DestroyBody(BodyClass::STATIC_BODY);
-
-	//-TODO: Update scenarioRects with the info of the global rect englibing the scenario
-	switch (scenarioPreset)
-	{
-	case ScenarioPreset::LIMITS_SCENARIO_PRESET:
-	{
-		float downLimitY = windowSize.y * 0.93f;
-		float rightLimitX = windowSize.x * 0.96f;
-		//Limits
-		CreateBody({ 0,          0,               windowSize.x, windowSize.y - downLimitY })->Static();
-		CreateBody({ 0,          0, windowSize.x - rightLimitX,              windowSize.y })->Static();
-		CreateBody({ 0, downLimitY,               windowSize.x, windowSize.y - downLimitY })->Static();
-		CreateBody({ rightLimitX,0, windowSize.x - rightLimitX,              windowSize.x })->Static();
-
-		break;
-	}
-	case ScenarioPreset::CORRIDOR_SCENARIO_PRESET:
-	{
-		float downLimitY = windowSize.y * 0.93f;
-		float rightLimitX = windowSize.x * 0.96f;
-		//Limits
-		CreateBody({                  0,          0,                       4280, windowSize.y - downLimitY })->Static();
-		CreateBody({                  0,          0, windowSize.x - rightLimitX,              windowSize.y })->Static();
-		CreateBody({                  0, downLimitY,                       4280, windowSize.y - downLimitY })->Static();
-		CreateBody({ 3000 + rightLimitX,          0, windowSize.x - rightLimitX,              windowSize.x })->Static();
-
-		break;
-	}
-
-	//case ScenarioPreset::PLATFORMER_SCENARIO_PRESET:
-	//	//Limits
-	//	CreateBody({ 0,   0, 1280,  50 }, 1);
-	//	CreateBody({ 0,   0,   50, 720 }, 1);
-	//	CreateBody({ 0, 670, 1280,  50 }, 1);
-	//	CreateBody({ 1230, 0,  50, 720 }, 1);
-	//	//Obstacles
-	//	CreateBody(BodyType::STATIC_BODY, Point{ 340, 490 }, { 340, 490, 600, 25 }, { 0, 0 }, { 0, 0 }, 1);
-	//	CreateBody(BodyType::STATIC_BODY, Point{ 540, 220 }, { 540, 220, 200, 25 }, { 0, 0 }, { 0, 0 }, 1);
-	//	break;
-
-	//case ScenarioPreset::WALLJUMP_SCENARIO_PRESET:
-	//	//Limits
-	//	CreateBody(BodyType::STATIC_BODY, Point{ 0, 0 }, { 0, 0, 1280, 50 }, { 0, 0 }, { 0, 0 }, 1);
-	//	CreateBody(BodyType::STATIC_BODY, Point{ 0, 0 }, { 0, 0, 50, 720 }, { 0, 0 }, { 0, 0 }, 1);
-	//	CreateBody(BodyType::STATIC_BODY, Point{ 0, 670 }, { 0, 670, 1280, 50 }, { 0, 0 }, { 0, 0 }, 1);
-	//	CreateBody(BodyType::STATIC_BODY, Point{ 1230, 0 }, { 1230, 0, 50, 720 }, { 0, 0 }, { 0, 0 }, 1);
-	//	//Obstacles
-	//	CreateBody(BodyType::STATIC_BODY, Point{ 200, 200 }, { 200, 200, 25, 400 }, { 0, 0 }, { 0, 0 }, 1);
-	//	CreateBody(BodyType::STATIC_BODY, Point{ 500, 200 }, { 500, 200, 25, 400 }, { 0, 0 }, { 0, 0 }, 1);
-	//	CreateBody(BodyType::STATIC_BODY, Point{ 780, 200 }, { 780, 200, 25, 400 }, { 0, 0 }, { 0, 0 }, 1);
-	//	CreateBody(BodyType::STATIC_BODY, Point{ 1080, 200 }, { 1080, 200, 25, 400 }, { 0, 0 }, { 0, 0 }, 1);
-	//	break;
-	}
-
-	notifier.Set(1, false);
-}
-
-void NPL::UpdatePhysicsPreset()
-{
-	Point friction = {};
-	Point gravity = {};
-	Point restitution = {};
-
-	switch (physicsPreset)
-	{
-	case PhysicsPreset::DEFAULT_PHYSICS_PRESET:
-		friction = 0.2f;
-		gravity = { 0.0f, 9.8f };
-		restitution = { 0.1f, 0.0f };
-		break;
-
-	case PhysicsPreset::NO_PHYSIC_PRESET:
-	default:
-		break;
-	}
-
-	physics->globalFriction = friction;
-	physics->globalGravity = gravity;
-	physics->globalRestitution = restitution;
-
-	notifier.Set(2, false);
 }
 
 float NPL::ComputePanning(float distance, float bodyX)

@@ -15,13 +15,13 @@ bool TestTwoScene::Start()
 
 	npl->Configure()->CollisionsDebugging(true);
 	npl->Configure()->PanRange(10, InUnit::IN_METERS);
-	npl->Configure()->Physics(PhysicsPreset::DEFAULT_PHYSICS_PRESET);
-	npl->Configure()->Scenario(ScenarioPreset::LIMITS_SCENARIO_PRESET, window->GetSize());
+	npl->SetPhysicsPreset(PhysicsPreset::DEFAULT_PHYSICS_PRESET);
+	npl->SetScenarioPreset(ScenarioPreset::LIMITS_SCENARIO_PRESET, window->GetSize());
 	float mTP = npl->Get()->MetersToPixels();
 
 	player = npl->CreateBody({ 100.0f, 200.0f, Point(mTP * 0.3f, mTP * 0.75f) })->Dynamic(12);
 	npl->CreateBody({ 400.0f, 200.0f, Point(mTP * 0.3f, mTP * 0.75f) })->Dynamic(12);
-	npl->CreateBody(npl->Get()->ScenarioRectangle())->Gas(10, 1.414f, 1000, InUnit::IN_METERS);
+	npl->CreateBody(npl->ReturnScenarioRect())->Gas(10, 1.414f, 1000, InUnit::IN_METERS);
 	npl->CreateBody({ 400, 400, Point(mTP * 1.0f, mTP * 6.0f) })->Liquid(50, 1.1);
 
 	npl->Configure()->Listener(player);

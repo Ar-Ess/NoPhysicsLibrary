@@ -52,6 +52,10 @@ public:
 	// Calculates & returns a rectsngle that englobes all the existent bodies
 	const Rect ReturnScenarioRect() const;
 
+	void SetScenarioPreset(ScenarioPreset preset, Point windowSize);
+
+	void SetPhysicsPreset(PhysicsPreset preset);
+
 private: // Methods
 
 	void StepPhysics(float dt);
@@ -76,8 +80,6 @@ private: // Methods
 
 	void UpdateNotifier();
 		void UpdatePixelsToMeters();
-		void UpdateScenarioPreset();
-		void UpdatePhysicsPreset();
 
 	bool IsGlobalPause() { return physics->globals.Get(0); }
 
@@ -106,8 +108,6 @@ private:
 
 	Flag physicsConfig = {}; // Debug Collisions (0) |
 	Flag bodiesConfig = {}; // Debug states (0) |
-	ScenarioPreset scenarioPreset = ScenarioPreset::NO_SCENARIO_PRESET; Point windowSize = {};
-	PhysicsPreset physicsPreset = PhysicsPreset::NO_PHYSIC_PRESET;
 
 	//_____________________
 	// - Acoustics
@@ -120,6 +120,6 @@ private:
 	Body* listener = nullptr;
 
 	//______Config Notifier______
-	Flag notifier = {}; // PixelsToMeters (0) | ScenarioPreset (1) | PhysicsPreset (2)
+	Flag notifier = {}; // PixelsToMeters (0)
 
 };

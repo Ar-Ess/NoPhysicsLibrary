@@ -9,7 +9,7 @@ struct LibraryConfig
 {
 private:
 
-	LibraryConfig(float* panRange, Flag* physicsConfig, Flag* bodiesConfig, Point* globalGravity, Point* globalRestitution, Point* globalFriction, Body** listener, float* pixelsToMeters, float* ptmRatio, ScenarioPreset* scenarioPreset, Point* windowSize, PhysicsPreset* physicsPreset, Flag* notifier) :
+	LibraryConfig(float* panRange, Flag* physicsConfig, Flag* bodiesConfig, Point* globalGravity, Point* globalRestitution, Point* globalFriction, Body** listener, float* pixelsToMeters, float* ptmRatio, Flag* notifier) :
 		panRange(panRange),
 		physicsConfig(physicsConfig),
 		bodiesConfig(bodiesConfig),
@@ -19,9 +19,6 @@ private:
 		listener(listener),
 		pixelsToMeters(pixelsToMeters),
 		ptmRatio(ptmRatio),
-		scenarioPreset(scenarioPreset),
-		windowSize(windowSize),
-		physicsPreset(physicsPreset),
 		notifier(notifier)
 	{}
 
@@ -99,20 +96,6 @@ public:
 		notifier->Set(0, true);
 	}
 
-	void Scenario(ScenarioPreset preset, Point windowSize) const
-	{
-		if (preset == ScenarioPreset::NO_SCENARIO_PRESET) return;
-		*this->scenarioPreset = preset;
-		*this->windowSize = windowSize;
-		notifier->Set(1, true);
-	}
-
-	void Physics(PhysicsPreset preset) const
-	{
-		*this->physicsPreset = preset;
-		notifier->Set(2, true);
-	}
-
 private:
 
 	float* panRange = nullptr;
@@ -124,9 +107,6 @@ private:
 	Point* globalRestitution = nullptr;
 	Point* globalFriction = nullptr;
 	Body** listener = nullptr;
-	ScenarioPreset* scenarioPreset = nullptr;
-	Point* windowSize = nullptr;
-	PhysicsPreset* physicsPreset = nullptr;
 
 	Flag* notifier = nullptr;
 };
