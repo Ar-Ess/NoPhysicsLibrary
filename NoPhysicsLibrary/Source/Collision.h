@@ -1,10 +1,11 @@
 #pragma once
 #include "Rect.h"
 #include "InUnitsEnum.h"
+#include "DynamicBody.h"
 
 struct Collision
 {
-	Collision(Body* dynamicBody, Body* body, Rect intersecRect, const float* pixelsToMeters) : dynamicBody(dynamicBody), body(body), intersecRect(intersecRect), pixelsToMeters(pixelsToMeters) {}
+	Collision(DynamicBody* dynamicBody, Body* body, Rect intersecRect, const float* pixelsToMeters) : dynamicBody(dynamicBody), body(body), intersecRect(intersecRect), pixelsToMeters(pixelsToMeters) {}
 	
 	const Rect GetCollisionRectangle(InUnit unit) const
 	{
@@ -29,7 +30,7 @@ struct Collision
 
 private:
 
-	Body* dynamicBody = nullptr;
+	DynamicBody* dynamicBody = nullptr;
 	Body* body = nullptr;
 	Rect intersecRect = {};
 	const float* pixelsToMeters = nullptr;

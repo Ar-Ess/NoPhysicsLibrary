@@ -52,7 +52,9 @@ public:
 	// Calculates & returns a rectsngle that englobes all the existent bodies
 	const Rect ReturnScenarioRect() const;
 
-	void SetScenarioPreset(ScenarioPreset preset, Point windowSize);
+	// Sets a scenario preset. WindowSize variable must be in pixels.
+	// Provide a std::vector pointer to get the scenario bodies
+	void SetScenarioPreset(ScenarioPreset preset, Point windowSize, std::vector<StaticBody*>* scenarioBodies = nullptr);
 
 	void SetPhysicsPreset(PhysicsPreset preset);
 

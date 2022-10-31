@@ -50,8 +50,8 @@ public: // Methods
 	inline bool IsCollidable() const { return properties.Get(0); }
 
 	// Sets the collidable property of the body
-	//-TODO: implement it in the physics engine
-	inline void SetCollidable(bool set) { properties.Set(set, 1); }
+	//-TODONE: implement it in the physics engine
+	inline void SetCollidable(bool set) { properties.Set(0, set); }
 
 protected: // Methods
 

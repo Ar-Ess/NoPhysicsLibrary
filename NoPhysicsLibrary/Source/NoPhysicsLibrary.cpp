@@ -182,7 +182,7 @@ const Rect NPL::ReturnScenarioRect() const
 	return Rect{ minP.x, minP.y, maxP.x - minP.x, maxP.y - minP.y };
 }
 
-void NPL::SetScenarioPreset(ScenarioPreset preset, Point windowSize)
+void NPL::SetScenarioPreset(ScenarioPreset preset, Point windowSize, std::vector<StaticBody*>* scenarioBodies)
 {
 	switch (preset)
 	{
@@ -190,11 +190,16 @@ void NPL::SetScenarioPreset(ScenarioPreset preset, Point windowSize)
 	{
 		float downLimitY = windowSize.y * 0.93f;
 		float rightLimitX = windowSize.x * 0.96f;
+
+		const unsigned int maxStatic = 4;
+		StaticBody* scenario[maxStatic] = { nullptr, nullptr, nullptr, nullptr };
 		//Limits
-		CreateBody({ 0,          0,               windowSize.x, windowSize.y - downLimitY })->Static();
-		CreateBody({ 0,          0, windowSize.x - rightLimitX,              windowSize.y })->Static();
-		CreateBody({ 0, downLimitY,               windowSize.x, windowSize.y - downLimitY })->Static();
-		CreateBody({ rightLimitX,0, windowSize.x - rightLimitX,              windowSize.x })->Static();
+		scenario[0] = CreateBody({ 0,          0,               windowSize.x, windowSize.y - downLimitY })->Static();
+		scenario[1] = CreateBody({ 0,          0, windowSize.x - rightLimitX,              windowSize.y })->Static();
+		scenario[2] = CreateBody({ 0, downLimitY,               windowSize.x, windowSize.y - downLimitY })->Static();
+		scenario[3] = CreateBody({ rightLimitX,0, windowSize.x - rightLimitX,              windowSize.x })->Static();
+
+		if (scenarioBodies != nullptr) for (unsigned int i = 0; i < maxStatic; ++i) scenarioBodies->push_back(scenario[i]);
 
 		break;
 	}
@@ -202,11 +207,17 @@ void NPL::SetScenarioPreset(ScenarioPreset preset, Point windowSize)
 	{
 		float downLimitY = windowSize.y * 0.93f;
 		float rightLimitX = windowSize.x * 0.96f;
+
+		const unsigned int maxStatic = 4;
+		StaticBody* scenario[maxStatic] = { nullptr, nullptr, nullptr, nullptr };
+
 		//Limits
 		CreateBody({ 0,          0,                       4280, windowSize.y - downLimitY })->Static();
 		CreateBody({ 0,          0, windowSize.x - rightLimitX,              windowSize.y })->Static();
 		CreateBody({ 0, downLimitY,                       4280, windowSize.y - downLimitY })->Static();
 		CreateBody({ 3000 + rightLimitX,          0, windowSize.x - rightLimitX,              windowSize.x })->Static();
+
+		if (scenarioBodies != nullptr) for (unsigned int i = 0; i < maxStatic; ++i) scenarioBodies->push_back(scenario[i]);
 
 		break;
 	}
@@ -265,8 +276,7 @@ void NPL::SetPhysicsPreset(PhysicsPreset preset)
 
 void NPL::StepPhysics(float dt)
 {
-	//-TOCHECK: Think about a pointer (std::vector<Body*>*) inside physics class & making for inside Step function
-	for (Body* b : bodies) physics->Step(b, dt);
+	physics->Step(&bodies, dt);
 
 	physics->SolveCollisions(&bodies);
 

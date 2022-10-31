@@ -19,6 +19,8 @@ Body::Body(BodyClass clas, Rect rect, float mass, const float* pixelsToMeters)
 	this->properties.Set(true, 0);
 
 	id = reinterpret_cast<int>(this);
+
+	properties.Set(0b00000001);
 }
 
 void Body::Play(int index, float decibels)

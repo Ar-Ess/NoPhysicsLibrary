@@ -16,7 +16,7 @@ public: // Methods
 
 	virtual ~Physics();
 
-	void Step(Body* body, float dt);
+	void Step(std::vector<Body*>* bodies, float dt);
 
 	void SolveCollisions(std::vector<Body*>* bodies);
 

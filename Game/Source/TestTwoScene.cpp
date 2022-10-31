@@ -22,7 +22,7 @@ bool TestTwoScene::Start()
 	player = npl->CreateBody({ 100.0f, 200.0f, Point(mTP * 0.3f, mTP * 0.75f) })->Dynamic(12);
 	//npl->CreateBody({ 400.0f, 200.0f, Point(mTP * 0.3f, mTP * 0.75f) })->Dynamic(12);
 	npl->CreateBody(npl->ReturnScenarioRect())->Gas(10, 1.414f, 1000, InUnit::IN_METERS);
-	npl->CreateBody({ 400, 400, Point(mTP * 1.0f, mTP * 6.0f) })->Liquid(50, 1);
+	npl->CreateBody({ 400, 400, Point(mTP * 1.0f, mTP * 6.0f) })->Liquid(50, 1)->SetCollidable(false);
 	npl->CreateBody({ 400 + (mTP * 1.0f), 400, Point(mTP * 1.0f, mTP * 6.0f) })->Liquid(50, 1);
 
 	npl->Configure()->Listener(player);
@@ -49,7 +49,7 @@ bool TestTwoScene::Update(float dt)
 	// Player Inputs
 	if (input->GetKey(SDL_SCANCODE_D) == KeyState::KEY_REPEAT) player->ApplyMomentum(  10,   0);
 	if (input->GetKey(SDL_SCANCODE_A) == KeyState::KEY_REPEAT) player->ApplyMomentum( -10,   0);
-	if (input->GetKey(SDL_SCANCODE_SPACE) == KeyState::KEY_DOWN) player->ApplyMomentum( 0, -50);
+	if (player->IsColliding(BodyState::GROUND) && input->GetKey(SDL_SCANCODE_SPACE) == KeyState::KEY_DOWN) player->ApplyMomentum( 0, -50);
 	if (input->GetKey(SDL_SCANCODE_C) == KeyState::KEY_DOWN) player->ResetForces();
 
 	if (input->GetKey(SDL_SCANCODE_LSHIFT) == KeyState::KEY_DOWN) player->Play(0, 80.0f);

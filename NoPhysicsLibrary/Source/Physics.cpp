@@ -15,20 +15,23 @@ Physics::Physics(const Flag* physicsConfig, const float* pixelsToMeters)
 Physics::~Physics()
 {}
 
-void Physics::Step(Body* body, float dt)
+void Physics::Step(std::vector<Body*>* bodies, float dt)
 {
-	switch (body->GetClass())
+	for (Body* b : *bodies)
 	{
-		case BodyClass::DYNAMIC_BODY: UpdateDynamic(dt, body); break;
-		case BodyClass::LIQUID_BODY : UpdateLiquid (dt, body); break;
+		switch (b->GetClass())
+		{
+		case BodyClass::DYNAMIC_BODY: UpdateDynamic(dt, b); break;
+		case BodyClass::LIQUID_BODY:  UpdateLiquid( dt, b); break;
+		}
 	}
 }
 
 void Physics::SolveCollisions(std::vector<Body*>* bodies)
 {
-	DetectCollisions(bodies);
-
 	ResetFlags(bodies);
+
+	DetectCollisions(bodies);
 
 	Declip();
 }
@@ -124,24 +127,25 @@ void Physics::DetectCollisions(std::vector<Body*>* bodies)
 		}
 	}
 
-	// New (iterate dinamic bodies with all)
+	// New (iterate dynamic bodies with all)
 	size_t size = bodies->size();
 	for (unsigned int i = 0; i < size - 1; ++i)
 	{
 		Body* b1 = bodies->at(i);
 		if (b1->GetClass() != BodyClass::DYNAMIC_BODY) continue;
+		if (!b1->IsCollidable()) continue;
 
 		for (unsigned int a = 0; a < size; ++a)
 		{
 			if (a == i) continue;
 			Body* b2 = bodies->at(a);
-			if (b2->GetClass() == BodyClass::GAS_BODY) continue;
+			if (b2->GetClass() == BodyClass::GAS_BODY || !b2->IsCollidable()) continue;
 			if (b2->GetClass() == BodyClass::DYNAMIC_BODY && a < i) continue;
 
 			Rect intersect = MathUtils::IntersectRectangle(b1->GetRect(InUnit::IN_METERS), b2->GetRect(InUnit::IN_METERS));
 			if (!MathUtils::CheckCollision(b1->GetRect(InUnit::IN_METERS), b2->GetRect(InUnit::IN_METERS))) continue;
 
-			collisions.emplace_back(new Collision(b1, b2, intersect, pixelsToMeters));
+			collisions.emplace_back(new Collision((DynamicBody*)b1, b2, intersect, pixelsToMeters));
 		}
 	}
 
