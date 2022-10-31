@@ -325,7 +325,7 @@ void NPL::NoListenerLogic(Body* b)
 
 void NPL::UpdateStates()
 {
-	//-TODO: optimize logic to be open always
+	//-TODONE: optimize logic to be open always
 
 	for (Body* b : bodies)
 	{
