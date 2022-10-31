@@ -12,7 +12,7 @@ LiquidBody::~LiquidBody()
 float LiquidBody::GetVolume(InUnit unit)
 {
 	float inPixels = 1;
-	if (unit == InUnit::IN_PIXELS) inPixels /= *pixelsToMeters;
+	if (unit == InUnit::IN_PIXELS) inPixels /= (*pixelsToMeters * *pixelsToMeters);
 
 	return  rect.GetArea() * inPixels;
 }

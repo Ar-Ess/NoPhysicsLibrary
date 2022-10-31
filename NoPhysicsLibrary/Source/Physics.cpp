@@ -338,10 +338,9 @@ void Physics::Declip()
 		{
 			LiquidBody* body = (LiquidBody*)b;
 			float submergedVolume = intersect.GetArea();
-			float force = body->GetDensity(InUnit::IN_METERS) * submergedVolume * (globalGravity.y + dynBody->GetGravityOffset().y) * body->GetBuoyancy();
-			//-TODO: estic multiplicant dos cops per la massa. 1 cop per la massa sumergida i un altre cop dins del appluforce per tota la massa.
-			// Fer un apply force internal que accepti massa i només jo pugui accedir??
-			dynBody->ApplyForce({0, -force});
+			// INFO: this formula is: Density * Volume submerged * gravity * buoyancy. I give just 1/volume because ApplyForce internally applies mass, so 1/volume * mass = density
+			float force = body->GetDensity(InUnit::IN_METERS) * submergedVolume * (globalGravity.y + dynBody->GetGravityOffset(InUnit::IN_METERS).y) * body->GetBuoyancy();
+			dynBody->forces.push_back(new Force(Point{ 0.0f, -force }, InUnit::IN_METERS));
 		}
 
 		default:
