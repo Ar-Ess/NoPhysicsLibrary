@@ -25,6 +25,11 @@ public:
 
 	void CleanUp();
 
+	const size_t GetSoundSize() const
+	{
+		return sounds.size();
+	}
+
 private:
 
 	ma_engine engine;

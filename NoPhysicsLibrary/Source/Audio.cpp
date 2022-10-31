@@ -25,9 +25,8 @@ Audio::~Audio()
 
 void Audio::Playback(SoundData* data, float* dt)
 {
-    //-TODO: put this while processiong acoustic data. Delete acoustic data with this kind of indexes
+    //-TODONE: put this while processiong acoustic data. Delete acoustic data with this kind of indexes
     // This index does not exist
-    assert(data->index >= 0 && data->index < sounds.size());
     ma_node* lastNode = nullptr;
     
     // Delay Logic Approach (not totally working)

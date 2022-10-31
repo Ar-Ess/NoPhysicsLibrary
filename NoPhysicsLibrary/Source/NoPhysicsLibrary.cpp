@@ -283,6 +283,55 @@ void NPL::StepPhysics(float dt)
 	//-TODO: Funció per reflexar velocitat segons vaires merdes
 }
 
+void NPL::UpdateStates()
+{
+	//-TODONE: optimize logic to be open always
+
+	for (Body* b : bodies)
+	{
+		if (b->clas != BodyClass::DYNAMIC_BODY) continue;
+		DynamicBody* dB = (DynamicBody*)b;
+
+		// Detect floating (no collision with solids)
+		bool floating = true;
+		for (unsigned int i = 1; i < 5; ++i)
+		{
+			if (dB->IsColliding((BodyState)i))
+			{
+				floating = false;
+				break;
+			}
+		}
+		if (floating) dB->bodyState.Set((int)BodyState::FLOAT, true);
+
+		bool fullLiquidState = false;
+		float totalArea = 0.0f;
+		for (unsigned int* i : liquidIndex)
+		{
+			if (MathUtils::CheckCollision(b->GetRect(InUnit::IN_METERS), bodies[*i]->GetRect(InUnit::IN_METERS)))
+			{
+				dB->bodyState.Set((int)BodyState::LIQUID, true);
+				totalArea += MathUtils::IntersectRectangle(b->GetRect(InUnit::IN_METERS), bodies[*i]->GetRect(InUnit::IN_METERS)).GetArea();
+				fullLiquidState = (0.0001f > MathUtils::Abs(b->GetRect(InUnit::IN_METERS).GetArea() - totalArea));
+				if (fullLiquidState) break;
+			}
+		}
+
+		if (fullLiquidState) continue;
+
+		for (unsigned int* i : gasIndex)
+		{
+			if (MathUtils::CheckCollision(b->GetRect(InUnit::IN_METERS), bodies[*i]->GetRect(InUnit::IN_METERS)))
+			{
+				dB->bodyState.Set((int)BodyState::GAS, true);
+				break;
+			}
+		}
+
+
+	}
+}
+
 void NPL::StepAcoustics()
 {
 	// If no listener & environment is void
@@ -326,6 +375,11 @@ void NPL::NoListenerLogic(Body* b)
 {
 	for (AcousticData* data : b->acousticDataList)
 	{
+		if (data->index <= 0 || data->index > audio->GetSoundSize())
+		{
+			RELEASE(data);
+			continue;
+		}
 		float volume = data->spl / maxSPL;
 		soundDataList.push_back(new SoundData(data->index, 0, volume, 0));
 		RELEASE(data);
@@ -333,73 +387,23 @@ void NPL::NoListenerLogic(Body* b)
 	b->acousticDataList.clear();
 }
 
-void NPL::UpdateStates()
-{
-	//-TODONE: optimize logic to be open always
-
-	for (Body* b : bodies)
-	{
-		if (b->clas != BodyClass::DYNAMIC_BODY) continue;
-		DynamicBody* dB = (DynamicBody*)b;
-
-		// Detect floating (no collision with solids)
-		bool floating = true;
-		for (unsigned int i = 1; i < 5; ++i)
-		{
-			if (dB->IsColliding((BodyState)i))
-			{
-				floating = false;
-				break;
-			}
-		}
-		if (floating) dB->bodyState.Set((int)BodyState::FLOAT, true);
-
-		bool fullLiquidState = false;
-		float totalArea = 0.0f;
-		for (unsigned int* i : liquidIndex)
-		{
-			if (MathUtils::CheckCollision(b->GetRect(InUnit::IN_METERS), bodies[*i]->GetRect(InUnit::IN_METERS)))
-			{
-				dB->bodyState.Set((int)BodyState::LIQUID, true);
-				totalArea += MathUtils::IntersectRectangle(b->GetRect(InUnit::IN_METERS), bodies[*i]->GetRect(InUnit::IN_METERS)).GetArea();
-				fullLiquidState = ( 0.0001f > MathUtils::Abs(b->GetRect(InUnit::IN_METERS).GetArea() - totalArea));
-				if (fullLiquidState) break;
-			}
-		}
-
-		if (fullLiquidState) continue;
-
-		for (unsigned int* i : gasIndex)
-		{
-			if (MathUtils::CheckCollision(b->GetRect(InUnit::IN_METERS), bodies[*i]->GetRect(InUnit::IN_METERS)))
-			{
-				dB->bodyState.Set((int)BodyState::GAS, true);
-				break;
-			}
-		}
-
-		
-	}
-}
-
 void NPL::ListenerLogic(Body* b, GasBody* environment)
 {
 	// If listener emit sound
 	if (b->GetId() == listener->id)
 	{
-		for (AcousticData* data : b->acousticDataList)
-		{
-			float volume = ComputeVolume(1, data->spl);
-
-			soundDataList.emplace_back(new SoundData(data->index, 0, volume, 0));
-			RELEASE(data);
-		}
-		b->acousticDataList.clear();
+		NoListenerLogic(b);
 		return;
 	}
 
 	for (AcousticData* data : b->acousticDataList)
 	{
+		if (data->index <= 0 || data->index > audio->GetSoundSize())
+		{
+			RELEASE(data);
+			continue;
+		}
+
 		// Get the distance between Body & Listener
 		float distance = listener->GetPosition(InUnit::IN_METERS).Distance(data->position);
 
