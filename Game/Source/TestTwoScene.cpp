@@ -20,10 +20,10 @@ bool TestTwoScene::Start()
 	float mTP = npl->Get()->MetersToPixels();
 
 	player = npl->CreateBody({ 100.0f, 200.0f, Point(mTP * 0.3f, mTP * 0.75f) })->Dynamic(80);
-	npl->CreateBody({ 400, 400, Point(mTP * 1.0f, mTP * 6.0f) })->Liquid(997, 0.8f, InUnit::IN_METERS);
+	LiquidBody* listener = npl->CreateBody({600, 400, Point(mTP * 1.0f, mTP * 6.0f) })->Liquid(997, 0.8f, InUnit::IN_METERS);
 	npl->CreateBody(npl->ReturnScenarioRect())->Gas(10, 1.414f, 1000, InUnit::IN_METERS);
 
-	npl->Configure()->Listener(player);
+	npl->Configure()->Listener(listener);
 	npl->LoadSound("Assets/Audio/bounce.wav");
 
 	render->ResetCamera();
@@ -49,8 +49,10 @@ bool TestTwoScene::Update(float dt)
 	if (player->IsColliding(BodyState::GROUND) && input->GetKey(SDL_SCANCODE_SPACE) == KeyState::KEY_DOWN) player->ApplyMomentum( 0, -250);
 	if (input->GetKey(SDL_SCANCODE_C) == KeyState::KEY_DOWN) player->ResetForces();
 
-	if (input->GetKey(SDL_SCANCODE_LSHIFT) == KeyState::KEY_DOWN) player->Play(0, 80.0f);
-	//if (input->GetKey(SDL_SCANCODE_RETURN) == KeyState::KEY_DOWN) emitter->Play(0, 80.0f);
+	if (input->GetKey(SDL_SCANCODE_LSHIFT) == KeyState::KEY_DOWN)
+	{
+		player->Play(0, 80.0f);
+	}
 
 	// Pauses the physics
 	if (input->GetKey(SDL_SCANCODE_ESCAPE) == KeyState::KEY_DOWN)

@@ -8,7 +8,7 @@ Body::Body(BodyClass clas, Rect rect, float mass, const float* pixelsToMeters)
 {
 	this->clas = clas;
 	this->rect = rect;
-	this->emissionPoint = rect.GetPosition(Align::CENTER);
+	this->emissionPoint = rect.GetPosition(Align::CENTER) - rect.GetPosition(Align::TOP_LEFT);
 	this->pixelsToMeters = pixelsToMeters;
 
 	// You idiot, mass can not be zero :}
@@ -28,11 +28,12 @@ void Body::Play(int index, float decibels)
 	if (decibels > 120) decibels = 120;
 	if (decibels < 0) decibels = 0;
 
-	acousticDataList.emplace_back(new AcousticData(index, emissionPoint, decibels));
+	acousticDataList.emplace_back(new AcousticData(index, rect.GetPosition().Apply(emissionPoint), decibels));
 }
 
 void Body::SetEmissionPoint(Point point, InUnit unit)
 {
+	//-TODO: Review emission point set logic. Needs to be an offset from top-left, not a position
 	if (unit == InUnit::IN_PIXELS) point *= *pixelsToMeters;
 
 	Rect emissionRect = {point.Apply(-1.0f, -1.0f), 2, 2};

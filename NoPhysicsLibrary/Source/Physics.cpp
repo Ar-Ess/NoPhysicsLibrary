@@ -148,30 +148,6 @@ void Physics::DetectCollisions(std::vector<Body*>* bodies)
 			collisions.emplace_back(new Collision((DynamicBody*)b1, b2, intersect, pixelsToMeters));
 		}
 	}
-
-	// Old (iterate all with all)
-	/*size_t size = bodies->size();
-	//for (unsigned int i = 0; i < size - 1; ++i)
-	//{
-	//	Body* b1 = bodies->at(i);
-	//	if (b1->GetClass() == BodyClass::GAS_BODY || b1->GetClass() == BodyClass::LIQUID_BODY) continue;
-	//
-	//	for (unsigned int a = 1 + i; a < size; ++a)
-	//	{
-	//		Body* b2 = bodies->at(a);
-	//		if (b2->GetClass() == BodyClass::GAS_BODY || b2->GetClass() == BodyClass::LIQUID_BODY) continue;
-	//		if (b1->GetClass() == BodyClass::STATIC_BODY && b2->GetClass() == BodyClass::STATIC_BODY) continue;
-	//
-	//		Rect intersect = MathUtils::IntersectRectangle(b1->GetRect(InUnit::IN_METERS), b2->GetRect(InUnit::IN_METERS));
-	//		if (!MathUtils::CheckCollision(b1->GetRect(InUnit::IN_METERS), b2->GetRect(InUnit::IN_METERS))) continue;
-	//
-	//		Body* dyn = b2;
-	//		Body* other = b2;
-	//		b1->GetClass() == BodyClass::DYNAMIC_BODY ? dyn = b1 : other = b1;
-	//
-	//		collisions.emplace_back(new Collision(dyn, other, intersect, pixelsToMeters));
-	//	}
-	//}*/
 }
 
 void Physics::ResetFlags(std::vector<Body*>* bodies)
@@ -339,8 +315,9 @@ void Physics::Declip()
 			LiquidBody* body = (LiquidBody*)b;
 			float submergedVolume = intersect.GetArea();
 			// INFO: this formula is: Density * Volume submerged * gravity * buoyancy. I give just 1/volume because ApplyForce internally applies mass, so 1/volume * mass = density
-			float force = body->GetDensity(InUnit::IN_METERS) * submergedVolume * (globalGravity.y + dynBody->GetGravityOffset(InUnit::IN_METERS).y) * body->GetBuoyancy();
-			dynBody->forces.push_back(new Force(Point{ 0.0f, -force }, InUnit::IN_METERS));
+			float forcex = body->GetDensity(InUnit::IN_METERS) * submergedVolume * (globalGravity.x + dynBody->GetGravityOffset(InUnit::IN_METERS).x) * body->GetBuoyancy();
+			float forcey = body->GetDensity(InUnit::IN_METERS) * submergedVolume * (globalGravity.y + dynBody->GetGravityOffset(InUnit::IN_METERS).y) * body->GetBuoyancy();
+			dynBody->forces.push_back(new Force(Point{ -forcex, -forcey }, InUnit::IN_METERS));
 		}
 
 		default:

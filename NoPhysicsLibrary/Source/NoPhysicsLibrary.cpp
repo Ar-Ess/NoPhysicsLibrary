@@ -375,7 +375,7 @@ void NPL::NoListenerLogic(Body* b)
 {
 	for (AcousticData* data : b->acousticDataList)
 	{
-		if (data->index <= 0 || data->index > audio->GetSoundSize())
+		if (data->index < 0 || data->index >= audio->GetSoundSize())
 		{
 			RELEASE(data);
 			continue;
@@ -398,7 +398,7 @@ void NPL::ListenerLogic(Body* b, GasBody* environment)
 
 	for (AcousticData* data : b->acousticDataList)
 	{
-		if (data->index <= 0 || data->index > audio->GetSoundSize())
+		if (data->index < 0 || data->index >= audio->GetSoundSize())
 		{
 			RELEASE(data);
 			continue;
@@ -407,7 +407,7 @@ void NPL::ListenerLogic(Body* b, GasBody* environment)
 		// Get the distance between Body & Listener
 		float distance = listener->GetPosition(InUnit::IN_METERS).Distance(data->position);
 
-		float pan = ComputePanning(distance, data->position.x * pixelsToMeters);
+		float pan = ComputePanning(distance, data->position.x);
 
 		float volume = ComputeVolume(distance, data->spl);
 
@@ -479,7 +479,7 @@ float NPL::ComputePanning(float distance, float bodyX)
 	if (distance < -panRange) distance = -panRange;
 
 	// Compute pan (normalized between [ 1, -1])
-	return distance / -panRange;
+	return distance / panRange * direction;
 }
 
 float NPL::ComputeVolume(float distance, float spl)
