@@ -81,6 +81,7 @@ bool TestTwoScene::Update(float dt)
 		}
 
 		render->DrawRectangle(b->GetRect(InUnit::IN_PIXELS), color);
+		render->DrawRectangle(b->GetEmissionPoint(InUnit::IN_PIXELS), {155, 155, 255, 255});
 	}
 
 	// Draw the collisions

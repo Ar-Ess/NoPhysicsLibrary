@@ -37,6 +37,9 @@ public: // Methods
 	// Returns the pointer to the rectangle of the body
 	Rect GetRect(InUnit unit) const { return { GetPosition(unit), GetSize(unit) }; }
 
+	// Returns the emission point of the body
+	Rect GetEmissionPoint(InUnit unit) const { return { GetPosition(unit).Apply(GetEmissionPointOffset(unit)).Apply({-1.0f, -1.0f}), 3.0f, 3.0f }; }
+	
 	// Returns the body class enum
 	inline BodyClass GetClass() const { return clas; }
 
@@ -56,6 +59,15 @@ public: // Methods
 protected: // Methods
 
 	Body(BodyClass clas, Rect rect, float mass, const float* pixelsToMeters);
+
+private: // Methods
+
+	Point GetEmissionPointOffset(InUnit unit) const
+	{
+		float conversion = 1.0f;
+		if (unit == InUnit::IN_PIXELS) conversion /= *pixelsToMeters;
+		return emissionPoint.Multiply(conversion);
+	}
 
 protected: // Variables
 
