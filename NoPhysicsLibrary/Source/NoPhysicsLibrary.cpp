@@ -405,9 +405,9 @@ void NPL::ListenerLogic(Body* b, GasBody* environment)
 		}
 
 		// Get the distance between Body & Listener
-		float distance = listener->GetPosition(InUnit::IN_METERS).Distance(data->position);
+		float distance = listener->GetPosition(InUnit::IN_METERS).Apply(listener->emissionPoint).Distance(data->emissionPosition);
 
-		float pan = ComputePanning(distance, data->position.x);
+		float pan = ComputePanning(distance, data->emissionPosition.x);
 
 		float volume = ComputeVolume(distance, data->spl);
 
@@ -472,7 +472,7 @@ float NPL::ComputePanning(float distance, float bodyX)
 {
 	// Check direction for audio panning (50L(neg) or 50R(pos))
 	float direction = 1;
-	if (listener->GetPosition(InUnit::IN_METERS).x < bodyX) direction *= -1;
+	if (listener->GetPosition(InUnit::IN_METERS).Apply(listener->emissionPoint).x < bodyX) direction *= -1;
 
 	// Narrow down distance over Range for panning operations
 	if (distance > panRange) distance = panRange;

@@ -40,7 +40,7 @@ void Body::SetEmissionPoint(Point point, InUnit unit)
 	emissionPoint = point;
 	if (MathUtils::CheckCollision(rect, emissionRect)) return;
 
-	emissionPoint = MathUtils::ClosestRectIntersectionFromOutsidePoint(emissionPoint, rect);
+	emissionPoint = MathUtils::ClosestRectIntersectionFromOutsidePoint(emissionPoint, rect) - rect.GetPosition(Align::TOP_LEFT);
 }
 
 void Body::SetEmissionPoint(Align alignment, Point offset, InUnit unit)
@@ -54,7 +54,7 @@ void Body::SetEmissionPoint(Align alignment, Point offset, InUnit unit)
 	Rect emissionRect = { emissionPoint, 2, 2 };
 	if (MathUtils::CheckCollision(rect, emissionRect)) return;
 
-	emissionPoint = MathUtils::ClosestRectIntersectionFromOutsidePoint(emissionPoint, rect);
+	emissionPoint = MathUtils::ClosestRectIntersectionFromOutsidePoint(emissionPoint, rect) - rect.GetPosition(Align::TOP_LEFT);
 }
 
 Point Body::GetPosition(InUnit unit) const

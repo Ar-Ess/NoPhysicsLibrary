@@ -6,9 +6,9 @@ struct AcousticData
 {
 public:
 
-	AcousticData(int index, Point position, float spl) : index(index), position(position), spl(spl) {}
+	AcousticData(int index, Point emissionPosition, float spl) : index(index), emissionPosition(emissionPosition), spl(spl) {}
 
 	int index = -1;
-	Point position = {};
+	Point emissionPosition = {};
 	float spl = 0;
 };
