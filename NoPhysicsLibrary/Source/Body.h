@@ -38,11 +38,11 @@ public: // Methods
 	Rect GetRect(InUnit unit) const { return { GetPosition(unit), GetSize(unit) }; }
 
 	// Returns the emission point of the body
-	Rect GetEmissionPoint(InUnit unit) const 
+	Point GetEmissionPoint(InUnit unit) const 
 	{ 
 		float conversion = 1;
 		if (unit == InUnit::IN_METERS) conversion = *pixelsToMeters;
-		return { GetPosition(unit).Apply(GetEmissionPointOffset(unit)), 3.0f * conversion, 3.0f * conversion };
+		return GetPosition(unit).Apply(GetEmissionPointOffset(unit));
 	}
 	
 	// Returns the body class enum

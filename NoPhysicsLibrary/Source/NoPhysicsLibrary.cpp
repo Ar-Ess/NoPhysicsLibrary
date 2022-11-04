@@ -194,10 +194,10 @@ void NPL::SetScenarioPreset(ScenarioPreset preset, Point windowSize, std::vector
 		const unsigned int maxStatic = 4;
 		StaticBody* scenario[maxStatic] = { nullptr, nullptr, nullptr, nullptr };
 		//Limits
-		scenario[0] = CreateBody({ 0,          0,               windowSize.x, windowSize.y - downLimitY })->Static();
-		scenario[1] = CreateBody({ 0,          0, windowSize.x - rightLimitX,              windowSize.y })->Static();
-		scenario[2] = CreateBody({ 0, downLimitY,               windowSize.x, windowSize.y - downLimitY })->Static();
-		scenario[3] = CreateBody({ rightLimitX,0, windowSize.x - rightLimitX,              windowSize.x })->Static();
+		scenario[0] = CreateBody({           0,          0,               windowSize.x, windowSize.y - downLimitY })->Static();
+		scenario[1] = CreateBody({           0,          0, windowSize.x - rightLimitX,              windowSize.y })->Static();
+		scenario[2] = CreateBody({           0, downLimitY,               windowSize.x, windowSize.y - downLimitY })->Static();
+		scenario[3] = CreateBody({ rightLimitX,          0, windowSize.x - rightLimitX,              windowSize.y })->Static();
 
 		if (scenarioBodies != nullptr) for (unsigned int i = 0; i < maxStatic; ++i) scenarioBodies->push_back(scenario[i]);
 
