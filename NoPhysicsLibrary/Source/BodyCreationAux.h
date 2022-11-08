@@ -61,7 +61,8 @@ public:
 		return (LiquidBody*)bodies->back();
 	}
 
-	GasBody* Gas(float density, float heatRatio, float pressure, InUnit unit) const
+	// Aerodrag Coefficient is a value from 0 to 1. Out of bounds values will be clamped.
+	GasBody* Gas(float density, float heatRatio, float pressure, Point aerodragCoefficient, InUnit unit) const
 	{
 		if (unit == InUnit::IN_PIXELS)
 		{
@@ -69,7 +70,7 @@ public:
 			density *= pixToMetSquared;
 			pressure *= pixToMetSquared;
 		}
-		bodies->emplace_back(new GasBody(rect, density * rect.GetArea(), heatRatio, pressure, pixelsToMeters));
+		bodies->emplace_back(new GasBody(rect, density * rect.GetArea(), heatRatio, pressure, aerodragCoefficient, pixelsToMeters));
 		gasIndex->emplace_back(new unsigned int(bodies->size() - 1));
 		return (GasBody*)bodies->back();
 	}

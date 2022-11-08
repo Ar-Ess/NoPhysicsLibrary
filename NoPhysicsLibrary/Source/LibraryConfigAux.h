@@ -52,7 +52,7 @@ public:
 		*globalGravity = gravity;
 	}
 
-	// Restitution is a coeficient that can not be negative.
+	// Restitution is a coefficient that can not be negative.
 	// More than 1 stablishes a higher kinematic energy after collision
 	// Invalid values are setted to 0
 	void GlobalRestitution(Point restitution) const
@@ -67,7 +67,7 @@ public:
 		*globalRestitution = restitution;
 	}
 
-	// Friction is a coeficient that lies between 0 and 1
+	// Friction is a coefficient that lies between 0 and 1
 	// Invalid values are setted to 1
 	void GlobalFriction(Point friction) const
 	{

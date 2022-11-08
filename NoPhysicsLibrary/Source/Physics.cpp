@@ -104,6 +104,7 @@ void Physics::AutoApplyForces(DynamicBody* body)
 
 void Physics::AutoApplyAeroDrag(DynamicBody* body)
 {
+	LOG("%f", body->velocity.x);
 	if (!body->IsColliding(BodyState::FLOAT) && body->IsColliding(BodyState::GAS)) return;
 
 	const float fullArea = body->GetRect(InUnit::IN_METERS).GetArea();
@@ -116,8 +117,10 @@ void Physics::AutoApplyAeroDrag(DynamicBody* body)
 		areaCovered += area;
 		//-TODO: Check whether we need to multiply the mass inside AddForce function or create an "AddForceInternal" that avoids multiplying by the mass
 		//-TODO: check if this is actually working
-		float aerodragX = -0.5 * gas->GetDensity() * MathUtils::Pow(body->velocity.x, 2) * area * gas->GetDragCoeficient().x;
-		float aerodragY = -0.5 * gas->GetDensity() * MathUtils::Pow(body->velocity.y, 2) * area * gas->GetDragCoeficient().y;
+		int neg = -1;
+		if (body->velocity.x < 0) neg = 1;
+		float aerodragX = neg * 0.5 * gas->GetDensity() * MathUtils::Pow(body->velocity.x, 2) * 1 * gas->GetDragCoefficient().x;
+		float aerodragY = neg * 0.5 * gas->GetDensity() * MathUtils::Pow(body->velocity.y, 2) * 1 * gas->GetDragCoefficient().y;
 		body->forces.emplace_back(new Force(aerodragX, aerodragY, InUnit::IN_METERS));
 		if (areaCovered - fullArea < 0.0001f) break;
 	}
