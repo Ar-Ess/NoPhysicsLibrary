@@ -45,7 +45,8 @@ void Physics::CleanUp()
 void Physics::UpdateDynamic(float dt, Body* b)
 {
 	DynamicBody* body = (DynamicBody*)b;
-	//AutoApplyForces(); //-TODO: Future
+	
+	AutoApplyForces(body); //-TODO: Future
 
 	// Multiplying global gravity * mass to acquire the force (Global gravity falls :) )
 	body->ApplyForce(globalGravity, InUnit::IN_METERS);
@@ -83,34 +84,41 @@ void Physics::Integrate(float dt, Body* b)
 	body->velocity.y += body->acceleration.y * dt;
 }
 
-void Physics::AutoApplyForces()
+void Physics::AutoApplyForces(DynamicBody* body)
 {
 	// -TODO: Iteration check collision with environment
 
-	AutoApplyHydroDrag();
-	AutoApplyHydroLift();
-	AutoApplyAeroDrag();
-	AutoApplyAeroLift();
-	AutoApplyBuoyancy();
+	//AutoApplyHydroDrag(body);
+
+	//AutoApplyHydroLift(body);
+
+	AutoApplyAeroDrag(body);
+
+	//AutoApplyAeroLift(body);
+
+	//AutoApplyBuoyancy(body);
 }
 
-void Physics::AutoApplyAeroDrag()
+void Physics::AutoApplyAeroDrag(DynamicBody* body)
+{
+	if (!body->IsColliding(BodyState::FLOAT) && body->IsColliding(BodyState::GAS)) return;
+
+
+}
+
+void Physics::AutoApplyAeroLift(DynamicBody* body)
 {
 }
 
-void Physics::AutoApplyAeroLift()
+void Physics::AutoApplyHydroDrag(DynamicBody* body)
 {
 }
 
-void Physics::AutoApplyHydroDrag()
+void Physics::AutoApplyHydroLift(DynamicBody* body)
 {
 }
 
-void Physics::AutoApplyHydroLift()
-{
-}
-
-void Physics::AutoApplyBuoyancy()
+void Physics::AutoApplyBuoyancy(DynamicBody* body)
 {
 }
 

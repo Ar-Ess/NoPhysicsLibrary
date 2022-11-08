@@ -12,18 +12,21 @@ bool TestTwoScene::Start()
 {
 	npl = new NPL();
 	npl->Init(128.0f);
+	const GetData* get = npl->Get();
+	float mTP = get->MetersToPixels();
+	const BodyCreation* createPlayer = npl->CreateBody({ 100.0f, 200.0f, Point(mTP * 0.3f, mTP * 0.75f) });
+	const LibraryConfig* config = npl->Configure();
+	player = createPlayer->Dynamic(80);
 
-	npl->Configure()->CollisionsDebugging(true);
-	npl->Configure()->PanRange(10, InUnit::IN_METERS);
+	config->CollisionsDebugging(true);
+	config->PanRange(10, InUnit::IN_METERS);
 	npl->SetPhysicsPreset(PhysicsPreset::DEFAULT_PHYSICS_PRESET);
 	npl->SetScenarioPreset(ScenarioPreset::LIMITS_SCENARIO_PRESET, window->GetSize());
-	float mTP = npl->Get()->MetersToPixels();
 
-	player = npl->CreateBody({ 100.0f, 200.0f, Point(mTP * 0.3f, mTP * 0.75f) })->Dynamic(80);
 	LiquidBody* listener = npl->CreateBody({600, 400, Point(mTP * 1.0f, mTP * 2.1f) })->Liquid(997, 0.8f, InUnit::IN_METERS);
 	npl->CreateBody(npl->ReturnScenarioRect())->Gas(10, 1.414f, 1000, InUnit::IN_METERS);
 
-	npl->Configure()->Listener(listener);
+	config->Listener(listener);
 	npl->LoadSound("Assets/Audio/bounce.wav");
 
 	render->ResetCamera();

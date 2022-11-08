@@ -57,7 +57,7 @@ private: // Variables
 	Force totalForces = {};
 	Momentum totalMomentum = {};
 
-	// Voided | Ground | Roof | Left | Right | Liquid | Gas | Float
+	// Gas | Ground | Roof | Left | Right | Liquid | Float
 	Flag bodyState = {};
 
 	Flag* globals = nullptr;
