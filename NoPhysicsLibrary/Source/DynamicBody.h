@@ -49,8 +49,6 @@ private: // Variables
 	Point velocity = {};
 	Point gravityOffset = {};
 	Point acceleration = {};
-	Point coeficientRestitution = { 1.0f,1.0f };
-	Point frictionCoeficient = { 0.0f,0.0f };
 
 	std::vector<Force*> forces;
 	std::vector<Momentum*> momentums;

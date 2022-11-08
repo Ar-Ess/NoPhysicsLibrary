@@ -24,7 +24,7 @@ bool TestTwoScene::Start()
 	npl->SetScenarioPreset(ScenarioPreset::LIMITS_SCENARIO_PRESET, window->GetSize());
 
 	LiquidBody* listener = npl->CreateBody({600, 400, Point(mTP * 1.0f, mTP * 2.1f) })->Liquid(997, 0.8f, InUnit::IN_METERS);
-	npl->CreateBody(npl->ReturnScenarioRect())->Gas(10, 1.414f, 1000, InUnit::IN_METERS);
+	npl->CreateBody(npl->ReturnScenarioRect())->Gas(500, 1.414f, 1000, InUnit::IN_METERS);
 
 	config->Listener(listener);
 	npl->LoadSound("Assets/Audio/bounce.wav");

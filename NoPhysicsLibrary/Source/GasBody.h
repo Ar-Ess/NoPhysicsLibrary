@@ -25,8 +25,14 @@ public:
 		return pressure;
 	}
 
+	Point GetDragCoeficient() const
+	{
+		return dragCoeficient;
+	}
+
 private:
 
 	float heatRatio = 0;
 	float pressure = 0;
+	Point dragCoeficient = {1.0f, 1.0f};
 };

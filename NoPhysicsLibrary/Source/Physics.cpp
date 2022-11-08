@@ -1,14 +1,17 @@
 #include "Physics.h"
 #include "LiquidBody.h"
+#include "GasBody.h"
 #include "DynamicBody.h"
 #include "StaticBody.h"
 
 #include "MathUtils.h"
 #include "Ray.h"
 
-Physics::Physics(const Flag* physicsConfig, const float* pixelsToMeters)
+Physics::Physics(const std::vector<Body*>* bodies, const Flag* physicsConfig, const std::vector<unsigned int*>* gasIndex, const float* pixelsToMeters)
 {
+	this->bodies = bodies;
 	this->physicsConfig = physicsConfig;
+	this->gasIndex = gasIndex;
 	this->pixelsToMeters = pixelsToMeters;
 }
 
@@ -103,7 +106,21 @@ void Physics::AutoApplyAeroDrag(DynamicBody* body)
 {
 	if (!body->IsColliding(BodyState::FLOAT) && body->IsColliding(BodyState::GAS)) return;
 
-
+	const float fullArea = body->GetRect(InUnit::IN_METERS).GetArea();
+	float areaCovered = 0;
+	for (unsigned int* i : *gasIndex)
+	{
+		GasBody* gas = (GasBody*)bodies->at(*i);
+		if (!MathUtils::CheckCollision(gas->GetRect(InUnit::IN_METERS), body->GetRect(InUnit::IN_METERS))) continue;
+		float area = MathUtils::IntersectRectangle(bodies->at(*i)->GetRect(InUnit::IN_METERS), body->GetRect(InUnit::IN_METERS)).GetArea();
+		areaCovered += area;
+		//-TODO: Check whether we need to multiply the mass inside AddForce function or create an "AddForceInternal" that avoids multiplying by the mass
+		//-TODO: check if this is actually working
+		float aerodragX = -0.5 * gas->GetDensity() * MathUtils::Pow(body->velocity.x, 2) * area * gas->GetDragCoeficient().x;
+		float aerodragY = -0.5 * gas->GetDensity() * MathUtils::Pow(body->velocity.y, 2) * area * gas->GetDragCoeficient().y;
+		body->forces.emplace_back(new Force(aerodragX, aerodragY, InUnit::IN_METERS));
+		if (areaCovered - fullArea < 0.0001f) break;
+	}
 }
 
 void Physics::AutoApplyAeroLift(DynamicBody* body)
@@ -323,9 +340,10 @@ void Physics::Declip()
 			LiquidBody* body = (LiquidBody*)b;
 			float submergedVolume = intersect.GetArea();
 			// INFO: this formula is: Density * Volume submerged * gravity * buoyancy. I give just 1/volume because ApplyForce internally applies mass, so 1/volume * mass = density
+			//-TODO: Check whether we need to multiply the mass inside AddForce function or create an "AddForceInternal" that avoids multiplying by the mass
 			float forcex = body->GetDensity(InUnit::IN_METERS) * submergedVolume * (globalGravity.x + dynBody->GetGravityOffset(InUnit::IN_METERS).x) * body->GetBuoyancy();
 			float forcey = body->GetDensity(InUnit::IN_METERS) * submergedVolume * (globalGravity.y + dynBody->GetGravityOffset(InUnit::IN_METERS).y) * body->GetBuoyancy();
-			dynBody->forces.push_back(new Force(Point{ -forcex, -forcey }, InUnit::IN_METERS));
+			dynBody->forces.emplace_back(new Force(Point{ -forcex, -forcey }, InUnit::IN_METERS));
 		}
 
 		default:

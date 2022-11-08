@@ -17,7 +17,7 @@ void NPL::Init(float pixelsPerMeter)
 	// You've alreay initialized the library once
 	assert(physics == nullptr && audio == nullptr);
 
-	physics = new Physics(&physicsConfig, &pixelsToMeters);
+	physics = new Physics(&bodies, &physicsConfig, &gasIndex, &pixelsToMeters);
 	audio = new Audio();
 
 	// Pixels To Meters = [ m / pxl ]
@@ -199,7 +199,7 @@ void NPL::SetScenarioPreset(ScenarioPreset preset, Point windowSize, std::vector
 		scenario[2] = CreateBody({           0, downLimitY,               windowSize.x, windowSize.y - downLimitY })->Static();
 		scenario[3] = CreateBody({ rightLimitX,          0, windowSize.x - rightLimitX,              windowSize.y })->Static();
 
-		if (scenarioBodies != nullptr) for (unsigned int i = 0; i < maxStatic; ++i) scenarioBodies->push_back(scenario[i]);
+		if (scenarioBodies != nullptr) for (unsigned int i = 0; i < maxStatic; ++i) scenarioBodies->emplace_back(scenario[i]);
 
 		break;
 	}
@@ -217,7 +217,7 @@ void NPL::SetScenarioPreset(ScenarioPreset preset, Point windowSize, std::vector
 		CreateBody({ 0, downLimitY,                       4280, windowSize.y - downLimitY })->Static();
 		CreateBody({ 3000 + rightLimitX,          0, windowSize.x - rightLimitX,              windowSize.x })->Static();
 
-		if (scenarioBodies != nullptr) for (unsigned int i = 0; i < maxStatic; ++i) scenarioBodies->push_back(scenario[i]);
+		if (scenarioBodies != nullptr) for (unsigned int i = 0; i < maxStatic; ++i) scenarioBodies->emplace_back(scenario[i]);
 
 		break;
 	}
@@ -381,7 +381,7 @@ void NPL::NoListenerLogic(Body* b)
 			continue;
 		}
 		float volume = data->spl / maxSPL;
-		soundDataList.push_back(new SoundData(data->index, 0, volume, 0));
+		soundDataList.emplace_back(new SoundData(data->index, 0, volume, 0));
 		RELEASE(data);
 	}
 	b->acousticDataList.clear();

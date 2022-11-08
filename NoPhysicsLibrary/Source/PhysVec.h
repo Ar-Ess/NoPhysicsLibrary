@@ -16,6 +16,13 @@ struct PhysVec
 		this->unit = unit;
 	}
 
+	PhysVec(float x, float y, InUnit unit)
+	{
+		this->vector = Point{x, y};
+		this->module = vector.Module();
+		this->unit = unit;
+	}
+
 	~PhysVec()
 	{
 
