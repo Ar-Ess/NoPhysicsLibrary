@@ -7,11 +7,12 @@
 #include "MathUtils.h"
 #include "Ray.h"
 
-Physics::Physics(const std::vector<Body*>* bodies, const Flag* physicsConfig, const std::vector<unsigned int*>* gasIndex, const float* pixelsToMeters)
+Physics::Physics(const std::vector<Body*>* bodies, const Flag* physicsConfig, const std::vector<unsigned int*>* gasIndex, const std::vector<unsigned int*>* liquidIndex, const float* pixelsToMeters)
 {
 	this->bodies = bodies;
 	this->physicsConfig = physicsConfig;
 	this->gasIndex = gasIndex;
+	this->liquidIndex = liquidIndex;
 	this->pixelsToMeters = pixelsToMeters;
 }
 
@@ -104,7 +105,6 @@ void Physics::AutoApplyForces(DynamicBody* body)
 
 void Physics::AutoApplyAeroDrag(DynamicBody* body)
 {
-	LOG("%f", body->velocity.x);
 	if (!body->IsColliding(BodyState::FLOAT) && body->IsColliding(BodyState::GAS)) return;
 
 	const float fullArea = body->GetRect(InUnit::IN_METERS).GetArea();
@@ -119,8 +119,8 @@ void Physics::AutoApplyAeroDrag(DynamicBody* body)
 		//-TODO: check if this is actually working
 		int neg = -1;
 		if (body->velocity.x < 0) neg = 1;
-		float aerodragX = neg * 0.5 * gas->GetDensity() * MathUtils::Pow(body->velocity.x, 2) * 1 * gas->GetDragCoefficient().x;
-		float aerodragY = neg * 0.5 * gas->GetDensity() * MathUtils::Pow(body->velocity.y, 2) * 1 * gas->GetDragCoefficient().y;
+		float aerodragX = neg * 0.5 * gas->GetDensity() * MathUtils::Pow(body->velocity.x, 2) * area * gas->GetDragCoefficient().x;
+		float aerodragY = neg * 0.5 * gas->GetDensity() * MathUtils::Pow(body->velocity.y, 2) * area * gas->GetDragCoefficient().y;
 		body->forces.emplace_back(new Force(aerodragX, aerodragY, InUnit::IN_METERS));
 		if (areaCovered - fullArea < 0.0001f) break;
 	}
@@ -132,6 +132,25 @@ void Physics::AutoApplyAeroLift(DynamicBody* body)
 
 void Physics::AutoApplyHydroDrag(DynamicBody* body)
 {
+	if (!body->IsColliding(BodyState::LIQUID)) return;
+
+	const float fullArea = body->GetRect(InUnit::IN_METERS).GetArea();
+	float areaCovered = 0;
+	for (unsigned int* i : *liquidIndex)
+	{
+		LiquidBody* liquid = (LiquidBody*)bodies->at(*i);
+		if (!MathUtils::CheckCollision(liquid->GetRect(InUnit::IN_METERS), body->GetRect(InUnit::IN_METERS))) continue;
+		float area = MathUtils::IntersectRectangle(bodies->at(*i)->GetRect(InUnit::IN_METERS), body->GetRect(InUnit::IN_METERS)).GetArea();
+		areaCovered += area;
+		//-TODO: Check whether we need to multiply the mass inside AddForce function or create an "AddForceInternal" that avoids multiplying by the mass
+		//-TODO: check if this is actually working
+		int neg = -1;
+		if (body->velocity.x < 0) neg = 1;
+		float hydrodragX = neg * 0.5 * liquid->GetDensity(InUnit::IN_METERS) * MathUtils::Pow(body->velocity.x, 2) * area /* * liquid->GetDragCoefficient().x*/;
+		float hydrodragY = neg * 0.5 * liquid->GetDensity(InUnit::IN_METERS) * MathUtils::Pow(body->velocity.y, 2) * area /* * liquid->GetDragCoefficient().y*/;
+		body->forces.emplace_back(new Force(hydrodragX, hydrodragY, InUnit::IN_METERS));
+		if (areaCovered - fullArea < 0.0001f) break;
+	}
 }
 
 void Physics::AutoApplyHydroLift(DynamicBody* body)

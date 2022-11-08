@@ -12,7 +12,7 @@ class Physics
 {
 public: // Methods
 
-	Physics(const std::vector<Body*>* bodies, const Flag* physicsConfig, const std::vector<unsigned int*>* gasIndex, const float* pixelsToMeters);
+	Physics(const std::vector<Body*>* bodies, const Flag* physicsConfig, const std::vector<unsigned int*>* gasIndex, const std::vector<unsigned int*>* liquidIndex, const float* pixelsToMeters);
 
 	virtual ~Physics();
 
@@ -53,6 +53,7 @@ public: // Variables
 
 	std::vector<Collision*> collisions;
 	const std::vector<unsigned int*>* gasIndex;
+	const std::vector<unsigned int*>* liquidIndex;
 	const std::vector<Body*>* bodies;
 
 	// Config

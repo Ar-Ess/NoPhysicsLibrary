@@ -12,6 +12,7 @@ public:
 
 	float GetDensity() const
 	{
+		//-TODO: available to return as pixels. look how liquidbody does it
 		return mass / rect.GetArea();
 	}
 

@@ -17,7 +17,7 @@ void NPL::Init(float pixelsPerMeter)
 	// You've alreay initialized the library once
 	assert(physics == nullptr && audio == nullptr);
 
-	physics = new Physics(&bodies, &physicsConfig, &gasIndex, &pixelsToMeters);
+	physics = new Physics(&bodies, &physicsConfig, &gasIndex, &liquidIndex, &pixelsToMeters);
 	audio = new Audio();
 
 	// Pixels To Meters = [ m / pxl ]
