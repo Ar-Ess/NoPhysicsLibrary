@@ -92,7 +92,7 @@ void Physics::AutoApplyForces(DynamicBody* body)
 {
 	// -TODO: Iteration check collision with environment
 
-	//AutoApplyHydroDrag(body);
+	AutoApplyHydroDrag(body);
 
 	//AutoApplyHydroLift(body);
 
@@ -117,10 +117,12 @@ void Physics::AutoApplyAeroDrag(DynamicBody* body)
 		areaCovered += area;
 		//-TODO: Check whether we need to multiply the mass inside AddForce function or create an "AddForceInternal" that avoids multiplying by the mass
 		//-TODO: check if this is actually working
-		int neg = -1;
-		if (body->velocity.x < 0) neg = 1;
-		float aerodragX = neg * 0.5 * gas->GetDensity() * MathUtils::Pow(body->velocity.x, 2) * area * gas->GetDragCoefficient().x;
-		float aerodragY = neg * 0.5 * gas->GetDensity() * MathUtils::Pow(body->velocity.y, 2) * area * gas->GetDragCoefficient().y;
+		int negx = -1;
+		int negy = -1;
+		if (body->velocity.x < 0) negx = 1;
+		if (body->velocity.y < 0) negy = 1;
+		float aerodragX = negx * 0.5 * gas->GetDensity() * MathUtils::Pow(body->velocity.x, 2) * area * gas->GetDragCoefficient().x;
+		float aerodragY = negy * 0.5 * gas->GetDensity() * MathUtils::Pow(body->velocity.y, 2) * area * gas->GetDragCoefficient().y;
 		body->forces.emplace_back(new Force(aerodragX, aerodragY, InUnit::IN_METERS));
 		if (areaCovered - fullArea < 0.0001f) break;
 	}
@@ -144,10 +146,12 @@ void Physics::AutoApplyHydroDrag(DynamicBody* body)
 		areaCovered += area;
 		//-TODO: Check whether we need to multiply the mass inside AddForce function or create an "AddForceInternal" that avoids multiplying by the mass
 		//-TODO: check if this is actually working
-		int neg = -1;
-		if (body->velocity.x < 0) neg = 1;
-		float hydrodragX = neg * 0.5 * liquid->GetDensity(InUnit::IN_METERS) * MathUtils::Pow(body->velocity.x, 2) * area /* * liquid->GetDragCoefficient().x*/;
-		float hydrodragY = neg * 0.5 * liquid->GetDensity(InUnit::IN_METERS) * MathUtils::Pow(body->velocity.y, 2) * area /* * liquid->GetDragCoefficient().y*/;
+		int negx = -1;
+		int negy = -1;
+		if (body->velocity.x < 0) negx *= -1;
+		if (body->velocity.y < 0) negy *= -1;
+		float hydrodragX = negx * 0.5 * liquid->GetDensity(InUnit::IN_METERS) * MathUtils::Pow(body->velocity.x, 2) * area /* * liquid->GetDragCoefficient().x*/;
+		float hydrodragY = negy * 0.5 * liquid->GetDensity(InUnit::IN_METERS) * MathUtils::Pow(body->velocity.y, 2) * area /* * liquid->GetDragCoefficient().y*/;
 		body->forces.emplace_back(new Force(hydrodragX, hydrodragY, InUnit::IN_METERS));
 		if (areaCovered - fullArea < 0.0001f) break;
 	}
