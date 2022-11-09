@@ -8,5 +8,6 @@ enum class BodyState
 	LEFT,
 	RIGHT,
 	LIQUID,
-	FLOAT
+	FLOAT,
+	MOVING //Not done
 };

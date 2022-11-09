@@ -257,9 +257,9 @@ void NPL::SetPhysicsPreset(PhysicsPreset preset)
 	switch (preset)
 	{
 	case PhysicsPreset::DEFAULT_PHYSICS_PRESET:
-		friction = 0.2f;
+		friction = { 0.5f, 0.0f };
 		gravity = { 0.0f, 9.8f };
-		restitution = { 0.1f, 0.0f };
+		restitution = { 0.9f, 1.0f };
 		break;
 
 	case PhysicsPreset::NO_PHYSIC_PRESET:
@@ -292,6 +292,11 @@ void NPL::UpdateStates()
 		if (b->clas != BodyClass::DYNAMIC_BODY) continue;
 		DynamicBody* dB = (DynamicBody*)b;
 
+		// Detect moving
+		//-TODO: check why jumping runing left does not jump that much as to the right
+		if (MathUtils::Abs(0 - MathUtils::Abs(dB->velocity.x)) > 0.001f || MathUtils::Abs(0 - MathUtils::Abs(dB->velocity.y)) > 0.001f)
+			dB->bodyState.Set((int)BodyState::MOVING, true);
+
 		// Detect floating (no collision with solids)
 		bool floating = true;
 		for (unsigned int i = 1; i < 5; ++i)
@@ -304,6 +309,7 @@ void NPL::UpdateStates()
 		}
 		if (floating) dB->bodyState.Set((int)BodyState::FLOAT, true);
 
+		// Detect liquid & Gas
 		bool fullLiquidState = false;
 		float totalArea = 0.0f;
 		for (unsigned int* i : liquidIndex)
@@ -327,8 +333,6 @@ void NPL::UpdateStates()
 				break;
 			}
 		}
-
-
 	}
 }
 

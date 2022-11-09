@@ -7,8 +7,8 @@ GasBody::GasBody(Rect rect, float mass, float heatRatio, float pressure, Point d
 
 	if (dragCoefficient.x < 0) dragCoefficient.x = 0;
 	if (dragCoefficient.y < 0) dragCoefficient.y = 0;
-	if (dragCoefficient.x > 1) dragCoefficient.x = 1;
-	if (dragCoefficient.y > 1) dragCoefficient.y = 1;
+	if (dragCoefficient.x > 1.5f) dragCoefficient.x = 1.5f;
+	if (dragCoefficient.y > 1.5f) dragCoefficient.y = 1.5f;
 	this->dragCoefficient = dragCoefficient;
 }
 

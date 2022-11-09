@@ -61,7 +61,7 @@ public:
 		return (LiquidBody*)bodies->back();
 	}
 
-	// Aerodrag Coefficient is a value from 0 to 1. Out of bounds values will be clamped.
+	// Aerodrag Coefficient is a value from 0 to 1.5. Out-of-bounds values will be clamped.
 	GasBody* Gas(float density, float heatRatio, float pressure, Point aerodragCoefficient, InUnit unit) const
 	{
 		if (unit == InUnit::IN_PIXELS)

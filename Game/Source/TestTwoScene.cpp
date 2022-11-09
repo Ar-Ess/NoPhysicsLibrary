@@ -23,8 +23,8 @@ bool TestTwoScene::Start()
 	npl->SetPhysicsPreset(PhysicsPreset::DEFAULT_PHYSICS_PRESET);
 	npl->SetScenarioPreset(ScenarioPreset::LIMITS_SCENARIO_PRESET, window->GetSize());
 
-	LiquidBody* listener = npl->CreateBody({600, 400, Point(mTP * 1.0f, mTP * 2.1f) })->Liquid(997, 0.8f, InUnit::IN_METERS);
-	npl->CreateBody(npl->ReturnScenarioRect())->Gas(500, 1.414f, 1000, {1.0f, 0.1f}, InUnit::IN_METERS);
+	LiquidBody* listener = npl->CreateBody({900, 400, Point(mTP * 1.0f, mTP * 2.1f) })->Liquid(997, 0.8f, InUnit::IN_METERS);
+	npl->CreateBody(npl->ReturnScenarioRect())->Gas(1500, 1.414f, 1000, {1.5f, 0.1f}, InUnit::IN_METERS);
 
 	config->Listener(listener);
 	npl->LoadSound("Assets/Audio/bounce.wav");
@@ -39,6 +39,8 @@ bool TestTwoScene::Update(float dt)
 	bool ret = true;
 	static bool pause = false;
 	static bool state = false;
+	bool ground = player->IsColliding(BodyState::GROUND);
+	bool shift = (input->GetKey(SDL_SCANCODE_LSHIFT) == KeyState::KEY_REPEAT);
 
 	// Information: The user will listen from the point of view of the listener body.
 	if (player->GetPosition(InUnit::IN_PIXELS).x >= 625) render->camera.x = player->GetPosition(InUnit::IN_PIXELS).x - 625;
@@ -47,12 +49,31 @@ bool TestTwoScene::Update(float dt)
 	if (render->camera.y < 0) render->camera.y = 0;
 
 	// Player Inputs
-	if (input->GetKey(SDL_SCANCODE_D) == KeyState::KEY_REPEAT) player->ApplyMomentum(  50,   0);
-	if (input->GetKey(SDL_SCANCODE_A) == KeyState::KEY_REPEAT) player->ApplyMomentum( -50,   0);
-	if (player->IsColliding(BodyState::GROUND) && input->GetKey(SDL_SCANCODE_SPACE) == KeyState::KEY_DOWN) player->ApplyMomentum( 0, -250);
+	if (input->GetKey(SDL_SCANCODE_D) == KeyState::KEY_REPEAT)
+	{
+		player->ApplyMomentum( 50, 0);
+		if (ground && shift) player->ApplyForce(50, 0);
+	}
+
+	if (input->GetKey(SDL_SCANCODE_A) == KeyState::KEY_REPEAT)
+	{
+		player->ApplyMomentum(-50, 0);
+		if (ground && shift) player->ApplyForce(-50, 0);
+	}
+
+	if (ground && input->GetKey(SDL_SCANCODE_SPACE) == KeyState::KEY_DOWN)
+	{
+		float plus = 0;
+		if (shift && player->IsColliding(BodyState::MOVING))
+		{
+			plus = -65;
+		}
+		player->ApplyMomentum(0, -300 + plus);
+	}
+
 	if (input->GetKey(SDL_SCANCODE_C) == KeyState::KEY_DOWN) player->ResetForces();
 
-	if (input->GetKey(SDL_SCANCODE_LSHIFT) == KeyState::KEY_DOWN) player->Play(0, 80.0f);
+	//if (input->GetKey(SDL_SCANCODE_LSHIFT) == KeyState::KEY_DOWN) player->Play(0, 80.0f);
 
 	// Pauses the physics
 	if (input->GetKey(SDL_SCANCODE_ESCAPE) == KeyState::KEY_DOWN)
@@ -98,13 +119,15 @@ bool TestTwoScene::Update(float dt)
 	if (state)
 	{
 		render->DrawRectangle({ 0, 0, 120, 88 }, { 255, 255, 255, 150 }, {1.0f, 1.0f}, false);
-		if (player->IsColliding(BodyState::GROUND)) render->DrawRectangle({  20, 10, 30, 10 }, { 255,   0,   0, 150 }, { 1.0f, 1.0f }, false);
+		if (ground)                                 render->DrawRectangle({  20, 10, 30, 10 }, { 255,   0,   0, 150 }, { 1.0f, 1.0f }, false);
 		if (player->IsColliding(BodyState::LEFT))   render->DrawRectangle({  20, 30, 30, 10 }, { 255, 255,   0, 150 }, { 1.0f, 1.0f }, false);
 		if (player->IsColliding(BodyState::RIGHT))  render->DrawRectangle({  20, 50, 30, 10 }, { 255,   0, 255, 150 }, { 1.0f, 1.0f }, false);
 		if (player->IsColliding(BodyState::ROOF))   render->DrawRectangle({  20, 70, 30, 10 }, {   0, 255,   0, 150 }, { 1.0f, 1.0f }, false);
 		if (player->IsColliding(BodyState::GAS))    render->DrawRectangle({  70, 10, 30, 10 }, { 150, 150, 255, 150 }, { 1.0f, 1.0f }, false);
 		if (player->IsColliding(BodyState::LIQUID)) render->DrawRectangle({  70, 30, 30, 10 }, {   0,   0, 255, 150 }, { 1.0f, 1.0f }, false);
 		if (player->IsColliding(BodyState::FLOAT))  render->DrawRectangle({  70, 50, 30, 10 }, { 100, 100, 100, 150 }, { 1.0f, 1.0f }, false);
+		if (player->IsColliding(BodyState::MOVING)) render->DrawRectangle({  70, 70, 30, 10 }, {  50, 200,  50, 150 }, { 1.0f, 1.0f }, false);
+		//-TODO: Change name of function by something like "GetBodyState()" os "IsBody()" <. best option
 	}
 
 	//Change scene
