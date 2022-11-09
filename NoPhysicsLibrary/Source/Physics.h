@@ -28,12 +28,14 @@ private: // Methods
 	void UpdateDynamic(float dt, Body* body);
 	void UpdateLiquid(float dt, Body* body);
 
-	void AutoApplyForces(DynamicBody* body);
-	void AutoApplyAeroDrag(DynamicBody* body);
-	void AutoApplyAeroLift(DynamicBody* body);
-	void AutoApplyHydroDrag(DynamicBody* body);
-	void AutoApplyHydroLift(DynamicBody* body); // Future idea, maybe implementable
-	void AutoApplyBuoyancy(DynamicBody* body);
+	void ApplyNaturalForces(DynamicBody* body);
+		void ApplyHydroForces(DynamicBody* body);
+			void ApplyHydroDrag(DynamicBody* body, Body* env, float area);
+			void ApplyHydroLift(DynamicBody* body, Body* env, float area); // Future idea, maybe implementable
+			void  ApplyBuoyancy(DynamicBody* body, Body* env, float area);
+		void ApplyAeroForces(DynamicBody* body);
+			void ApplyAeroDrag(DynamicBody* body, Body* env, float area);
+			void ApplyAeroLift(DynamicBody* body, Body* env, float area);
 
 	void Integrate(float dt, Body* body);
 
