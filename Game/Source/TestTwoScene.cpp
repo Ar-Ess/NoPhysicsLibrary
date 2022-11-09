@@ -23,7 +23,10 @@ bool TestTwoScene::Start()
 	npl->SetPhysicsPreset(PhysicsPreset::DEFAULT_PHYSICS_PRESET);
 	npl->SetScenarioPreset(ScenarioPreset::LIMITS_SCENARIO_PRESET, window->GetSize());
 
-	LiquidBody* listener = npl->CreateBody({900, 400, Point(mTP * 1.0f, mTP * 2.1f) })->Liquid(997, 0.8f, InUnit::IN_METERS);
+	npl->CreateBody({ 600, 500, 50, 10 })->Static();
+	npl->CreateBody({ 800, 300, 50, 10 })->Static();
+
+	LiquidBody* listener = npl->CreateBody({900, 400, Point(mTP * 2.6f, mTP * 2.1f) })->Liquid(997, 0.8f, InUnit::IN_METERS);
 	npl->CreateBody(npl->ReturnScenarioRect())->Gas(1500, 1.414f, 1000, {1.5f, 0.1f}, InUnit::IN_METERS);
 
 	config->Listener(listener);
@@ -68,7 +71,7 @@ bool TestTwoScene::Update(float dt)
 		{
 			plus = -65;
 		}
-		player->ApplyMomentum(0, -300 + plus);
+		player->ApplyMomentum(0, -550 + plus);
 	}
 
 	if (input->GetKey(SDL_SCANCODE_C) == KeyState::KEY_DOWN) player->ResetForces();

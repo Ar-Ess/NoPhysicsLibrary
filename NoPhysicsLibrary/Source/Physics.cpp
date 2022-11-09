@@ -109,7 +109,7 @@ void Physics::ApplyHydroForces(DynamicBody* body)
 		float area = MathUtils::IntersectRectangle(bodies->at(*i)->GetRect(InUnit::IN_METERS), body->GetRect(InUnit::IN_METERS)).GetArea();
 		areaCovered += area;
 
-		ApplyHydroDrag(body, liquid, area);
+		ApplyHydroDrag(body, liquid);
 		//-TODO: End HydroForces
 		ApplyHydroLift(body, liquid, area);
 		ApplyBuoyancy(body, liquid, area);
@@ -118,7 +118,7 @@ void Physics::ApplyHydroForces(DynamicBody* body)
 	}
 }
 
-void Physics::ApplyHydroDrag(DynamicBody* body, Body* env, float area)
+void Physics::ApplyHydroDrag(DynamicBody* body, Body* env)
 {
 	//-TODO: Check whether we need to multiply the mass inside AddForce function or create an "AddForceInternal" that avoids multiplying by the mass
 	//-TODO: check if this is actually working
@@ -126,9 +126,9 @@ void Physics::ApplyHydroDrag(DynamicBody* body, Body* env, float area)
 	int negx = -1;
 	int negy = -1;
 	if (body->velocity.x < 0) negx *= -1;
-	if (body->velocity.y < 0) negy *= -1;
-	float hydrodragX = negx * 0.5 * liquid->GetDensity(InUnit::IN_METERS) * MathUtils::Pow(body->velocity.x, 2) * area /* * liquid->GetDragCoefficient().x*/;
-	float hydrodragY = negy * 0.5 * liquid->GetDensity(InUnit::IN_METERS) * MathUtils::Pow(body->velocity.y, 2) * area /* * liquid->GetDragCoefficient().y*/;
+	if (body->velocity.y < 0) negy *= -1;                                                                      //-TOCHECK: check if this is right. The function acts with the projected area. I input the "submerjed area or the width?"
+	float hydrodragX = negx * 0.5 * liquid->GetDensity(InUnit::IN_METERS) * MathUtils::Pow(body->velocity.x, 2) * body->GetRect(InUnit::IN_METERS).w /* * liquid->GetDragCoefficient().x*/;
+	float hydrodragY = negy * 0.5 * liquid->GetDensity(InUnit::IN_METERS) * MathUtils::Pow(body->velocity.y, 2) * body->GetRect(InUnit::IN_METERS).h /* * liquid->GetDragCoefficient().y*/;
 	body->forces.emplace_back(new Force(hydrodragX, hydrodragY, InUnit::IN_METERS));
 }
 
