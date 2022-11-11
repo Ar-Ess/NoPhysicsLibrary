@@ -259,10 +259,12 @@ void NPL::SetPhysicsPreset(PhysicsPreset preset)
 	case PhysicsPreset::DEFAULT_PHYSICS_PRESET:
 		friction = { 0.5f, 0.0f };
 		gravity = { 0.0f, 9.8f };
-		restitution = { 0.9f, 1.0f };
+		restitution = { 0.0f, 0.0f };
 		break;
 
 	case PhysicsPreset::NO_PHYSIC_PRESET:
+		break;
+
 	default:
 		break;
 	}

@@ -275,7 +275,7 @@ void Physics::Declip()
 				dynBody->velocity.y *= -1;
 
 				// Loss of energy
-				dynBody->velocity.y *= MathUtils::Abs(1 - globalRestitution.y);
+				dynBody->velocity.y *= globalRestitution.y;
 				dynBody->velocity.x *= MathUtils::Abs(1 - globalFriction.x);
 
 			}
@@ -300,7 +300,7 @@ void Physics::Declip()
 				dynBody->velocity.x *= -1;
 
 				// Loss of energy
-				dynBody->velocity.x *= MathUtils::Abs(1 - globalRestitution.x);
+				dynBody->velocity.x *= globalRestitution.x;
 				dynBody->velocity.y *= MathUtils::Abs(1 - globalFriction.y);
 
 			}
@@ -344,7 +344,7 @@ void Physics::Declip()
 				dynBody->velocity.y *= -1;
 
 				// Loss of energy
-				dynBody->velocity.y *= MathUtils::Abs(1 - globalRestitution.y);
+				dynBody->velocity.y *= globalRestitution.y;
 				dynBody->velocity.x *= MathUtils::Abs(1 - globalFriction.x);
 			}
 			else if (normal.y == 0) // Horizontal collision with vertical surface
@@ -366,7 +366,7 @@ void Physics::Declip()
 				dynBody->velocity.x *= -1;
 
 				// Loss of energy
-				dynBody->velocity.x *= MathUtils::Abs(1 - globalRestitution.x);
+				dynBody->velocity.x *= globalRestitution.x;
 				dynBody->velocity.y *= MathUtils::Abs(1 - globalFriction.y);
 			}
 			else

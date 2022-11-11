@@ -63,7 +63,7 @@ public:
 	}
 	void GlobalRestitution(float restitution) const
 	{
-		if (restitution < 0 && restitution > 1) restitution = 0;
+		if (restitution < 0) restitution = 0;
 		*globalRestitution = restitution;
 	}
 

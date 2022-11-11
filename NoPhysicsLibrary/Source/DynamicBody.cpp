@@ -41,6 +41,7 @@ void DynamicBody::ApplyForce(float newtonsX, float newtonsY, InUnit unit)
 
 void DynamicBody::ApplyForce(Point newtons, InUnit unit)
 {
+	if (globals->Get(0)) return; // Physics are paused
 	if (newtons.IsZero()) return; // If newtons is null
 
 	newtons *= mass;
