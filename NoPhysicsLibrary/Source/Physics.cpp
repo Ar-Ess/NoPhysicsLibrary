@@ -147,7 +147,7 @@ void Physics::ApplyBuoyancy(DynamicBody* body, Body* env, float area)
 
 void Physics::ApplyAeroForces(DynamicBody* body)
 {
-	if (!body->IsColliding(BodyState::FLOAT) && body->IsColliding(BodyState::GAS)) return;
+	if (!body->IsColliding(BodyState::GAS)) return;
 
 	const float fullArea = body->GetRect(InUnit::IN_METERS).GetArea();
 	float areaCovered = 0;

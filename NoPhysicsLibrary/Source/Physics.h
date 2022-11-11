@@ -50,7 +50,7 @@ public: // Variables
 	Point globalRestitution = {1.0f, 1.0f };
 	Point globalFriction = {1.0f, 1.0f };
 
-	// Pause 0 | Restitution 1 |
+	// Pause 0
 	Flag globals = {};
 
 	std::vector<Collision*> collisions;
