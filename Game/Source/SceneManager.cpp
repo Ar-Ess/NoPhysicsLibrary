@@ -1,6 +1,6 @@
 #include "SceneManager.h"
 #include "InitialScene.h"
-#include "TestTwoScene.h"
+#include "TestThreeScene.h"
 
 SceneManager::SceneManager(Render* render, Input* input, Window* window)
 {
@@ -20,7 +20,7 @@ bool SceneManager::Start()
 	texture->Start();
 
 	PushScene(new InitialScene());
-	PushScene(new TestTwoScene());
+	PushScene(new TestThreeScene());
 
 	ChangeScene(0);
 
