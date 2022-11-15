@@ -22,5 +22,6 @@ private:
 	NPL* npl = nullptr;
 	DynamicBody* player = nullptr;
 	StaticBody* emitter = nullptr;
+	StaticBody* gravable = nullptr;
 };
 

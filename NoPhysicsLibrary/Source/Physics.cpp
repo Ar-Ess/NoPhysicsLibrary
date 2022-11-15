@@ -97,7 +97,7 @@ void Physics::ApplyNaturalForces(DynamicBody* body)
 
 void Physics::ApplyHydroForces(DynamicBody* body)
 {
-	if (!body->IsColliding(BodyState::LIQUID)) return;
+	if (!body->GetBodyState(BodyState::LIQUID)) return;
 
 	const float fullArea = body->GetRect(InUnit::IN_METERS).GetArea();
 	float areaCovered = 0;
@@ -147,7 +147,7 @@ void Physics::ApplyBuoyancy(DynamicBody* body, Body* env, float area)
 
 void Physics::ApplyAeroForces(DynamicBody* body)
 {
-	if (!body->IsColliding(BodyState::GAS)) return;
+	if (!body->GetBodyState(BodyState::GAS)) return;
 
 	const float fullArea = body->GetRect(InUnit::IN_METERS).GetArea();
 	float areaCovered = 0;
@@ -344,7 +344,7 @@ void Physics::Declip()
 				dynBody->velocity.y *= -1;
 
 				// Loss of energy
-				dynBody->velocity.y *= globalRestitution.y;
+				dynBody->velocity.y *= (globalRestitution.y + body->GetRestitutionOffset().y);
 				dynBody->velocity.x *= MathUtils::Abs(1 - globalFriction.x);
 			}
 			else if (normal.y == 0) // Horizontal collision with vertical surface
@@ -366,7 +366,7 @@ void Physics::Declip()
 				dynBody->velocity.x *= -1;
 
 				// Loss of energy
-				dynBody->velocity.x *= globalRestitution.x;
+				dynBody->velocity.x *= (globalRestitution.x + body->GetRestitutionOffset().x);
 				dynBody->velocity.y *= MathUtils::Abs(1 - globalFriction.y);
 			}
 			else

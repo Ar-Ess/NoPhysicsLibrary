@@ -27,3 +27,15 @@ float LiquidBody::GetBuoyancy()
 {
 	return buoyancy;
 }
+
+void LiquidBody::SetDensity(float density, InUnit unit)
+{
+	if (unit == InUnit::IN_PIXELS) density *= ((1 / *pixelsToMeters) * (1 / *pixelsToMeters));
+
+	this->mass = density * rect.GetArea();
+}
+
+void LiquidBody::SetBuoyancy(float buoyancy)
+{
+	buoyancy < 0 ? this->buoyancy = 0 : buoyancy > 1 ? this->buoyancy = 1 : this->buoyancy = buoyancy;
+}

@@ -13,7 +13,7 @@ public: // Methods
 	~DynamicBody() override;
 
 	// Returns if this body is colliding with any other body in the specified situation
-	bool IsColliding(BodyState collision);
+	bool GetBodyState(BodyState collision);
 	
 	// Applies an specific force to this body
 	void ApplyForce(float newtonsX, float newtonsY, InUnit unit = InUnit::IN_METERS);

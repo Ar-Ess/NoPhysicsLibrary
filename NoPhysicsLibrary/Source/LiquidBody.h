@@ -16,6 +16,10 @@ public:
 
 	float GetBuoyancy();
 
+	void SetDensity(float density, InUnit unit);
+
+	void SetBuoyancy(float buoyancy);
+
 private:
 
 	float buoyancy = 0.0f;

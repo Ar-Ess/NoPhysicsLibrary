@@ -29,14 +29,14 @@ bool TestThreeScene::Start()
 		->Dynamic(80);
 
 	// Static
-	npl->CreateBody({ 600, 500, 50, 10 })
+	gravable = npl->CreateBody({ 600, 500, 50, 10 })
 		->Static();
 	npl->CreateBody({ 800, 300, 50, 10 })
 		->Static();
 
 	// Liquid
 	npl->CreateBody({ 900, 400, Point(metersToPixels * 2.6f, metersToPixels * 2.1f) })
-		->Liquid(997, 0.8f, InUnit::IN_METERS);
+		->Liquid(997, 1.0f, InUnit::IN_METERS);
 
 	// Gas
 	npl->CreateBody(npl->ReturnScenarioRect())
@@ -53,7 +53,7 @@ bool TestThreeScene::Update(float dt)
 	// Variables
 	static bool pause = false;
 	static bool state = false;
-	bool ground = player->IsColliding(BodyState::GROUND);
+	bool ground = player->GetBodyState(BodyState::GROUND);
 	bool shift = (input->GetKey(SDL_SCANCODE_LSHIFT) == KeyState::KEY_REPEAT);
 
 	// Camera movement
@@ -78,12 +78,16 @@ bool TestThreeScene::Update(float dt)
 	if (ground && input->GetKey(SDL_SCANCODE_SPACE) == KeyState::KEY_DOWN)
 	{
 		float plus = 0;
-		if (shift && player->IsColliding(BodyState::MOVING))
+		if (shift && player->GetBodyState(BodyState::MOVING))
 		{
 			plus = -65;
 		}
 		player->ApplyMomentum(0, -550 + plus);
 	}
+
+
+	if (shift) gravable->SetRestitutionOffset({ 0.0f, -1.1f });
+	else gravable->SetRestitutionOffset({ 0.0f, 0.0f });
 
 	// Functionalities
 	// Reset forces
@@ -102,7 +106,7 @@ bool TestThreeScene::Update(float dt)
 	// Draw Library
 	// Draw bodies
 	unsigned int size = npl->Get()->BodiesCount();
-	for (int i = 0; i < size; ++i)
+	for (unsigned int i = 0; i < size; ++i)
 	{
 		const Body* b = npl->Get()->Bodies(i);
 		SDL_Color color = { 0, 0, 0, 50 };
@@ -114,14 +118,18 @@ bool TestThreeScene::Update(float dt)
 		case BodyClass::LIQUID_BODY:  color = { 100, 100, 255, color.a }; break;
 		case BodyClass::GAS_BODY:     color = { 255, 255, 255, (Uint8)(color.a - 20) }; break;
 		}
-
+		if (gravable->GetId() == b->GetId())
+		{
+			color.b = 150;
+			color.g = 100;
+		}
 		render->DrawRectangle(b->GetRect(InUnit::IN_PIXELS), color);
 		render->DrawRectangle(Rect{ b->GetEmissionPoint(InUnit::IN_PIXELS).Apply({-3.0f, -3}), 6, 6 }, { 155, 255, 155, 255 });
 	}
 
 	// Draw the collisions
 	size = npl->Get()->CollisionsCount();
-	for (int i = 0; i < size; ++i)
+	for (unsigned int i = 0; i < size; ++i)
 	{
 		const Collision* c = npl->Get()->Collisions(i);
 		if (c) render->DrawRectangle(c->GetCollisionRectangle(InUnit::IN_PIXELS), { 100, 100, 255, 255 });
@@ -133,13 +141,13 @@ bool TestThreeScene::Update(float dt)
 	{
 		render->DrawRectangle({ 0, 0, 120, 88 }, { 255, 255, 255, 150 }, { 1.0f, 1.0f }, false);
 		if (ground)                                 render->DrawRectangle({ 20, 10, 30, 10 }, { 255,   0,   0, 150 }, { 1.0f, 1.0f }, false);
-		if (player->IsColliding(BodyState::LEFT))   render->DrawRectangle({ 20, 30, 30, 10 }, { 255, 255,   0, 150 }, { 1.0f, 1.0f }, false);
-		if (player->IsColliding(BodyState::RIGHT))  render->DrawRectangle({ 20, 50, 30, 10 }, { 255,   0, 255, 150 }, { 1.0f, 1.0f }, false);
-		if (player->IsColliding(BodyState::ROOF))   render->DrawRectangle({ 20, 70, 30, 10 }, { 0, 255,   0, 150 }, { 1.0f, 1.0f }, false);
-		if (player->IsColliding(BodyState::GAS))    render->DrawRectangle({ 70, 10, 30, 10 }, { 150, 150, 255, 150 }, { 1.0f, 1.0f }, false);
-		if (player->IsColliding(BodyState::LIQUID)) render->DrawRectangle({ 70, 30, 30, 10 }, { 0,   0, 255, 150 }, { 1.0f, 1.0f }, false);
-		if (player->IsColliding(BodyState::FLOAT))  render->DrawRectangle({ 70, 50, 30, 10 }, { 100, 100, 100, 150 }, { 1.0f, 1.0f }, false);
-		if (player->IsColliding(BodyState::MOVING)) render->DrawRectangle({ 70, 70, 30, 10 }, { 50, 200,  50, 150 }, { 1.0f, 1.0f }, false);
+		if (player->GetBodyState(BodyState::LEFT))   render->DrawRectangle({ 20, 30, 30, 10 }, { 255, 255,   0, 150 }, { 1.0f, 1.0f }, false);
+		if (player->GetBodyState(BodyState::RIGHT))  render->DrawRectangle({ 20, 50, 30, 10 }, { 255,   0, 255, 150 }, { 1.0f, 1.0f }, false);
+		if (player->GetBodyState(BodyState::ROOF))   render->DrawRectangle({ 20, 70, 30, 10 }, { 0, 255,   0, 150 }, { 1.0f, 1.0f }, false);
+		if (player->GetBodyState(BodyState::GAS))    render->DrawRectangle({ 70, 10, 30, 10 }, { 150, 150, 255, 150 }, { 1.0f, 1.0f }, false);
+		if (player->GetBodyState(BodyState::LIQUID)) render->DrawRectangle({ 70, 30, 30, 10 }, { 0,   0, 255, 150 }, { 1.0f, 1.0f }, false);
+		if (player->GetBodyState(BodyState::FLOAT))  render->DrawRectangle({ 70, 50, 30, 10 }, { 100, 100, 100, 150 }, { 1.0f, 1.0f }, false);
+		if (player->GetBodyState(BodyState::MOVING)) render->DrawRectangle({ 70, 70, 30, 10 }, { 50, 200,  50, 150 }, { 1.0f, 1.0f }, false);
 		//-TODO: Change name of function by something like "GetBodyState()" os "IsBody()" <. best option
 	}
 

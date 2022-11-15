@@ -22,7 +22,7 @@ void DynamicBody::Backup()
 	backup = BodyBackup(rect.GetPosition(), velocity, acceleration, totalMomentum, totalForces);
 }
 
-bool DynamicBody::IsColliding(BodyState collision)
+bool DynamicBody::GetBodyState(BodyState collision)
 {
 	return bodyState.Get((int)collision);
 }

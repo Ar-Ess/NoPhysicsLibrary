@@ -7,3 +7,8 @@ StaticBody::StaticBody(Rect rect, float mass, const float* pixelsToMeters) : Bod
 StaticBody::~StaticBody()
 {
 }
+
+void StaticBody::SetRestitutionOffset(Point offset)
+{
+	this->restitutionOffset = offset;
+}

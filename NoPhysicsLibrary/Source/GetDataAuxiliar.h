@@ -29,20 +29,20 @@ public:
 
 	unsigned int BodiesCount() const { return bodies->size(); }
 
-	const Body* Bodies(int index) const 
+	const Body* Bodies(unsigned int index) const 
 	{
-		if (index > BodiesCount() - 1 || index < 0) return nullptr;
+		if (unsigned(index) > BodiesCount() - 1) return nullptr;
 
 		return bodies->at(index);
 	}
 
 	unsigned int CollisionsCount() const { return collisions->size(); }
 
-	const Collision* Collisions(int index) const 
+	const Collision* Collisions(unsigned int index) const 
 	{
 		if (!physicsConfig->Get(0)) return nullptr;
 
-		if (index > CollisionsCount() - 1 || index < 0) return nullptr;
+		if (index > CollisionsCount() - 1) return nullptr;
 
 		return collisions->at(index);
 	}

@@ -46,13 +46,16 @@ public: // Methods
 	}
 	
 	// Returns the body class enum
-	inline BodyClass GetClass() const { return clas; }
+	BodyClass GetClass() const { return clas; }
 
 	// Returns the mass of the body
-	inline float GetMass() const { return mass; }
+	float GetMass() const { return mass; }
 
 	// Returns the body id
-	inline intptr_t GetId() const { return id; }
+	intptr_t GetId() const { return id; }
+
+	//  Set the object's mass
+	void SetMass(float mass) { mass <= 0 ? this->mass = 0.1f : this->mass = mass; }
 
 	// Returns wether the body is collidable
 	inline bool IsCollidable() const { return properties.Get(0); }

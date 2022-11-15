@@ -325,7 +325,7 @@ void NPL::UpdateStates()
 		bool floating = true;
 		for (unsigned int i = 1; i < 5; ++i)
 		{
-			if (dB->IsColliding((BodyState)i))
+			if (dB->GetBodyState((BodyState)i))
 			{
 				floating = false;
 				break;
