@@ -194,9 +194,9 @@ void NPL::SetScenarioPreset(ScenarioPreset preset, Point windowSize, std::vector
 		const unsigned int maxStatic = 4;
 		StaticBody* scenario[maxStatic] = { nullptr, nullptr, nullptr, nullptr };
 		//Limits
-		scenario[0] = CreateBody({           0,          0,               windowSize.x, windowSize.y - downLimitY })->Static();
-		scenario[1] = CreateBody({           0,          0, windowSize.x - rightLimitX,              windowSize.y })->Static();
-		scenario[2] = CreateBody({           0, downLimitY,               windowSize.x, windowSize.y - downLimitY })->Static();
+		scenario[0] = CreateBody({ 0,          0,               windowSize.x, windowSize.y - downLimitY })->Static();
+		scenario[1] = CreateBody({ 0,          0, windowSize.x - rightLimitX,              windowSize.y })->Static();
+		scenario[2] = CreateBody({ 0, downLimitY,               windowSize.x, windowSize.y - downLimitY })->Static();
 		scenario[3] = CreateBody({ rightLimitX,          0, windowSize.x - rightLimitX,              windowSize.y })->Static();
 
 		if (scenarioBodies != nullptr) for (unsigned int i = 0; i < maxStatic; ++i) scenarioBodies->emplace_back(scenario[i]);
@@ -222,17 +222,29 @@ void NPL::SetScenarioPreset(ScenarioPreset preset, Point windowSize, std::vector
 		break;
 	}
 
-	//case ScenarioPreset::PLATFORMER_SCENARIO_PRESET:
-	//	//Limits
-	//	CreateBody({ 0,   0, 1280,  50 }, 1);
-	//	CreateBody({ 0,   0,   50, 720 }, 1);
-	//	CreateBody({ 0, 670, 1280,  50 }, 1);
-	//	CreateBody({ 1230, 0,  50, 720 }, 1);
-	//	//Obstacles
-	//	CreateBody(BodyType::STATIC_BODY, Point{ 340, 490 }, { 340, 490, 600, 25 }, { 0, 0 }, { 0, 0 }, 1);
-	//	CreateBody(BodyType::STATIC_BODY, Point{ 540, 220 }, { 540, 220, 200, 25 }, { 0, 0 }, { 0, 0 }, 1);
-	//	break;
+	case ScenarioPreset::PLATFORMER_SCENARIO_PRESET:
+	{
+		float downLimitY = windowSize.y * 0.93f;
+		float rightLimitX = windowSize.x * 0.96f;
 
+		const unsigned int maxStatic = 6;
+		StaticBody* scenario[maxStatic] = { nullptr, nullptr, nullptr, nullptr, nullptr, nullptr };
+
+		//Limits
+		scenario[0] = CreateBody({ 0,          0,               windowSize.x, windowSize.y - downLimitY })->Static();
+		scenario[1] = CreateBody({ 0,          0, windowSize.x - rightLimitX,              windowSize.y })->Static();
+		scenario[2] = CreateBody({ 0, downLimitY,               windowSize.x, windowSize.y - downLimitY })->Static();
+		scenario[3] = CreateBody({ rightLimitX,          0, windowSize.x - rightLimitX,              windowSize.y })->Static();
+
+		//Obstacles
+		scenario[4] = CreateBody({ windowSize.x * 0.26f, windowSize.y * 0.62f, windowSize.x * 0.46f, windowSize.y * 0.034f })->Static();
+		scenario[5] = CreateBody({ windowSize.x * 0.42f, windowSize.y * 0.30f, windowSize.x * 0.15f, windowSize.y * 0.034f })->Static();
+
+		if (scenarioBodies != nullptr) for (unsigned int i = 0; i < maxStatic; ++i) scenarioBodies->emplace_back(scenario[i]);
+
+		break;
+	}
+	
 	//case ScenarioPreset::WALLJUMP_SCENARIO_PRESET:
 	//	//Limits
 	//	CreateBody(BodyType::STATIC_BODY, Point{ 0, 0 }, { 0, 0, 1280, 50 }, { 0, 0 }, { 0, 0 }, 1);

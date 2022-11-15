@@ -36,10 +36,13 @@
     <ClCompile Include="Source\PerfTimer.cpp">
       <Filter>Utils</Filter>
     </ClCompile>
-    <ClCompile Include="Source\TestTwoScene.cpp">
+    <ClCompile Include="Source\InitialScene.cpp">
       <Filter>Scenes</Filter>
     </ClCompile>
-    <ClCompile Include="Source\InitialScene.cpp">
+    <ClCompile Include="Source\TestThreeScene.cpp">
+      <Filter>Scenes</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\ExamScene.cpp">
       <Filter>Scenes</Filter>
     </ClCompile>
   </ItemGroup>
@@ -87,10 +90,13 @@
     <ClInclude Include="Source\PerfTimer.h">
       <Filter>Utils</Filter>
     </ClInclude>
-    <ClInclude Include="Source\TestTwoScene.h">
+    <ClInclude Include="Source\InitialScene.h">
       <Filter>Scenes</Filter>
     </ClInclude>
-    <ClInclude Include="Source\InitialScene.h">
+    <ClInclude Include="Source\TestThreeScene.h">
+      <Filter>Scenes</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\ExamScene.h">
       <Filter>Scenes</Filter>
     </ClInclude>
   </ItemGroup>

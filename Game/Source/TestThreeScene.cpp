@@ -19,7 +19,7 @@ bool TestThreeScene::Start()
 	npl->Configure()->CollisionsDebugging(true);
 	npl->Configure()->PanRange(10, InUnit::IN_METERS);
 	npl->SetPhysicsPreset(PhysicsPreset::DEFAULT_PHYSICS_PRESET);
-	npl->SetScenarioPreset(ScenarioPreset::LIMITS_SCENARIO_PRESET, window->GetSize());
+	npl->SetScenarioPreset(ScenarioPreset::PLATFORMER_SCENARIO_PRESET, window->GetSize());
 	npl->Configure()->Listener(player);
 	npl->LoadSound("Assets/Audio/bounce.wav");
 
@@ -102,10 +102,8 @@ bool TestThreeScene::Update(float dt)
 	// Draw Library
 	// Draw bodies
 	unsigned int size = npl->Get()->BodiesCount();
-	static bool change = true;
 	for (int i = 0; i < size; ++i)
 	{
-		// Not like this
 		const Body* b = npl->Get()->Bodies(i);
 		SDL_Color color = { 0, 0, 0, 50 };
 

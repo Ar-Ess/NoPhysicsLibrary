@@ -1,6 +1,7 @@
 #include "SceneManager.h"
 #include "InitialScene.h"
 #include "TestThreeScene.h"
+#include "ExamScene.h"
 
 SceneManager::SceneManager(Render* render, Input* input, Window* window)
 {
@@ -21,6 +22,7 @@ bool SceneManager::Start()
 
 	PushScene(new InitialScene());
 	PushScene(new TestThreeScene());
+	PushScene(new ExamScene());
 
 	ChangeScene(0);
 
