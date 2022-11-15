@@ -203,6 +203,7 @@ void NPL::SetScenarioPreset(ScenarioPreset preset, Point windowSize, std::vector
 
 		break;
 	}
+
 	case ScenarioPreset::CORRIDOR_SCENARIO_PRESET:
 	{
 		float downLimitY = windowSize.y * 0.93f;
@@ -244,19 +245,28 @@ void NPL::SetScenarioPreset(ScenarioPreset preset, Point windowSize, std::vector
 
 		break;
 	}
-	
-	//case ScenarioPreset::WALLJUMP_SCENARIO_PRESET:
-	//	//Limits
-	//	CreateBody(BodyType::STATIC_BODY, Point{ 0, 0 }, { 0, 0, 1280, 50 }, { 0, 0 }, { 0, 0 }, 1);
-	//	CreateBody(BodyType::STATIC_BODY, Point{ 0, 0 }, { 0, 0, 50, 720 }, { 0, 0 }, { 0, 0 }, 1);
-	//	CreateBody(BodyType::STATIC_BODY, Point{ 0, 670 }, { 0, 670, 1280, 50 }, { 0, 0 }, { 0, 0 }, 1);
-	//	CreateBody(BodyType::STATIC_BODY, Point{ 1230, 0 }, { 1230, 0, 50, 720 }, { 0, 0 }, { 0, 0 }, 1);
-	//	//Obstacles
-	//	CreateBody(BodyType::STATIC_BODY, Point{ 200, 200 }, { 200, 200, 25, 400 }, { 0, 0 }, { 0, 0 }, 1);
-	//	CreateBody(BodyType::STATIC_BODY, Point{ 500, 200 }, { 500, 200, 25, 400 }, { 0, 0 }, { 0, 0 }, 1);
-	//	CreateBody(BodyType::STATIC_BODY, Point{ 780, 200 }, { 780, 200, 25, 400 }, { 0, 0 }, { 0, 0 }, 1);
-	//	CreateBody(BodyType::STATIC_BODY, Point{ 1080, 200 }, { 1080, 200, 25, 400 }, { 0, 0 }, { 0, 0 }, 1);
-	//	break;
+
+	case ScenarioPreset::WALLJUMP_SCENARIO_PRESET:
+	{
+		float downLimitY = windowSize.y * 0.93f;
+		float rightLimitX = windowSize.x * 0.96f;
+
+		const unsigned int maxStatic = 8;
+		StaticBody* scenario[maxStatic] = { nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr };
+
+		//Limits
+		scenario[0] = CreateBody({ 0,          0,               windowSize.x, windowSize.y - downLimitY })->Static();
+		scenario[1] = CreateBody({ 0,          0, windowSize.x - rightLimitX,              windowSize.y })->Static();
+		scenario[2] = CreateBody({ 0, downLimitY,               windowSize.x, windowSize.y - downLimitY })->Static();
+		scenario[3] = CreateBody({ rightLimitX,          0, windowSize.x - rightLimitX,    windowSize.y })->Static();
+
+		//Obstacles
+		CreateBody({ windowSize.x * 0.23f, windowSize.y * 0.27f, windowSize.x * 0.02f, windowSize.y * 0.55f })->Static();
+		CreateBody({ windowSize.x * 0.40f, windowSize.y * 0.27f, windowSize.x * 0.02f, windowSize.y * 0.55f })->Static();
+		CreateBody({ windowSize.x * 0.61f, windowSize.y * 0.27f, windowSize.x * 0.02f, windowSize.y * 0.55f })->Static();
+		CreateBody({ windowSize.x * 0.84f, windowSize.y * 0.27f, windowSize.x * 0.02f, windowSize.y * 0.55f })->Static();
+		break;
+	}
 	}
 }
 

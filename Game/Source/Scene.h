@@ -12,7 +12,7 @@ enum class Scenes
 	NO_SCENE = -1,
 	INITIAL_SCENE,
 	TEST_SCENE,
-	EXAM _SCENE
+	EXAM_SCENE
 };
 
 class Scene

@@ -19,7 +19,7 @@ bool TestThreeScene::Start()
 	npl->Configure()->CollisionsDebugging(true);
 	npl->Configure()->PanRange(10, InUnit::IN_METERS);
 	npl->SetPhysicsPreset(PhysicsPreset::DEFAULT_PHYSICS_PRESET);
-	npl->SetScenarioPreset(ScenarioPreset::PLATFORMER_SCENARIO_PRESET, window->GetSize());
+	npl->SetScenarioPreset(ScenarioPreset::LIMITS_SCENARIO_PRESET, window->GetSize());
 	npl->Configure()->Listener(player);
 	npl->LoadSound("Assets/Audio/bounce.wav");
 
