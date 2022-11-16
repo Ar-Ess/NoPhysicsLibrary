@@ -276,11 +276,10 @@ void NPL::SetPhysicsPreset(PhysicsPreset preset)
 
 void NPL::StepPhysics(float dt)
 {
-	physics->Step(&bodies, dt);
+	for (Body* body : bodies) physics->Step(body, dt);
 
 	physics->SolveCollisions(&bodies);
 
-	//-TODO: Funció per reflexar velocitat segons vaires merdes
 }
 
 void NPL::UpdateStates()

@@ -57,11 +57,11 @@ void Body::SetEmissionPoint(Align alignment, Point offset, InUnit unit)
 	emissionPoint = MathUtils::ClosestRectIntersectionFromOutsidePoint(emissionPoint, rect) - rect.GetPosition(Align::TOP_LEFT);
 }
 
-Point Body::GetPosition(InUnit unit) const
+Point Body::GetPosition(InUnit unit, Align align) const
 {
 	float conversion = 1;
 	if (unit == InUnit::IN_PIXELS) conversion = (1 / *pixelsToMeters);
-	return rect.GetPosition() * conversion;
+	return rect.GetPosition(align) * conversion;
 }
 
 Point Body::GetSize(InUnit unit) const
