@@ -15,16 +15,33 @@ DynamicBody::~DynamicBody()
 	acousticDataList.clear();
 	forces.clear();
 	momentums.clear();
+	excludeCollisionIds.clear();
 }
 
 void DynamicBody::Backup()
 {
-	backup = BodyBackup(rect.GetPosition(), velocity, acceleration, totalMomentum, totalForces);
+	backup = BodyBackup(rect, velocity, acceleration, totalMomentum, totalForces);
+}
+
+bool DynamicBody::IsIdExcludedFromCollision(intptr_t id)
+{
+	for (intptr_t i : excludeCollisionIds)
+	{
+		if (i == id) return true;
+	}
+
+	return false;
 }
 
 bool DynamicBody::GetBodyState(BodyState collision)
 {
 	return bodyState.Get((int)collision);
+}
+
+//-TODO: IncludeForCollision()??? In case someone wants to dinamically exclude and include some collision in a game
+void DynamicBody::ExcludeForCollision(const Body* b)
+{
+	excludeCollisionIds.emplace_back(b->GetId());
 }
 
 void DynamicBody::ApplyForce(float newtonsX, float newtonsY, InUnit unit)

@@ -29,7 +29,7 @@ public: // Methods
 	void SetEmissionPoint(Align align, Point offset, InUnit unit);
 
 	// Returns the x & y coordinates of the body
-	Point GetPosition(InUnit unit) const;
+	Point GetPosition(InUnit unit, Align align = Align::TOP_LEFT) const;
 
 	// Returns the width & height of the body
 	Point GetSize(InUnit unit) const;

@@ -19,16 +19,32 @@ Physics::Physics(const std::vector<Body*>* bodies, const Flag* physicsConfig, co
 Physics::~Physics()
 {}
 
-void Physics::Step(std::vector<Body*>* bodies, float dt)
+void Physics::Step(Body* b, float dt)
 {
-	for (Body* b : *bodies)
-	{
-		switch (b->GetClass())
-		{
-		case BodyClass::DYNAMIC_BODY: UpdateDynamic(dt, b); break;
-		case BodyClass::LIQUID_BODY:  UpdateLiquid( dt, b); break;
-		}
-	}
+	if (b->GetClass() != BodyClass::DYNAMIC_BODY) return;
+
+	DynamicBody* body = (DynamicBody*)b;
+
+	// Apply gas and liquid forces
+	ApplyNaturalForces(body);
+
+	// Multiplying global gravity * mass to acquire the force (Global gravity falls :) )
+	body->ApplyForce(globalGravity, InUnit::IN_METERS);
+
+	// Multiplying intrinsic gravity * mass to acquire the force (Local gravity falls :) )
+	body->ApplyForce(body->gravityOffset, InUnit::IN_METERS);
+
+	// Second law newton
+	body->SecondNewton(); // Suma de forces a acceleració
+
+	// First law Buxeda
+	body->FirstBuxeda(); // Suma de momentum a velocity
+
+	// Generate & save previous instance of body
+	body->Backup();
+
+	// Integrate
+	Integrate(dt, b);
 }
 
 void Physics::SolveCollisions(std::vector<Body*>* bodies)
@@ -44,36 +60,6 @@ void Physics::CleanUp()
 {
 	for (Collision* c : collisions) RELEASE(c);
 	collisions.clear();
-}
-
-void Physics::UpdateDynamic(float dt, Body* b)
-{
-	DynamicBody* body = (DynamicBody*)b;
-	
-	ApplyNaturalForces(body); //-TODO: Future
-
-	// Multiplying global gravity * mass to acquire the force (Global gravity falls :) )
-	body->ApplyForce(globalGravity, InUnit::IN_METERS);
-
-	// Multiplying intrinsic gravity * mass to acquire the force (Local gravity falls :) )
-	body->ApplyForce(body->gravityOffset, InUnit::IN_METERS);
-
-	// Second law newton
-	body->SecondNewton(); // Suma de forces a acceleració
-
-	// First law Buxeda
-	body->FirstBuxeda(); // Suma de momentum a velocity
-
-	body->Backup();
-
-	// Integrate
-	Integrate(dt, b);
-
-}
-
-void Physics::UpdateLiquid(float dt, Body* b)
-{
-	LiquidBody* body = (LiquidBody*)b;
 }
 
 void Physics::Integrate(float dt, Body* b)
@@ -202,21 +188,36 @@ void Physics::DetectCollisions(std::vector<Body*>* bodies)
 	size_t size = bodies->size();
 	for (unsigned int i = 0; i < size - 1; ++i)
 	{
-		Body* b1 = bodies->at(i);
-		if (b1->GetClass() != BodyClass::DYNAMIC_BODY) continue;
-		if (!b1->IsCollidable()) continue;
+		Body* b = bodies->at(i);
+		if (b->GetClass() != BodyClass::DYNAMIC_BODY) continue;
+		if (!b->IsCollidable()) continue;
+
+		DynamicBody* b1 = (DynamicBody*)b;
 
 		for (unsigned int a = 0; a < size; ++a)
 		{
 			if (a == i) continue;
 			Body* b2 = bodies->at(a);
-			if (b2->GetClass() == BodyClass::GAS_BODY || !b2->IsCollidable()) continue;
+			if (b2->GetClass() == BodyClass::GAS_BODY || b2->GetClass() == BodyClass::LIQUID_BODY || !b2->IsCollidable()) continue;
 			if (b2->GetClass() == BodyClass::DYNAMIC_BODY && a < i) continue;
+			if (b1->IsIdExcludedFromCollision(b2->GetId())) continue;
 
 			Rect intersect = MathUtils::IntersectRectangle(b1->GetRect(InUnit::IN_METERS), b2->GetRect(InUnit::IN_METERS));
-			if (!MathUtils::CheckCollision(b1->GetRect(InUnit::IN_METERS), b2->GetRect(InUnit::IN_METERS))) continue;
+			Point intersectionPoint = {};
+			// Try to check a collision
+			if (!MathUtils::CheckCollision(b1->GetRect(InUnit::IN_METERS), b2->GetRect(InUnit::IN_METERS)))
+			{
+				continue;
+				// In Process
+				// Try to check if tunneling
+				if (!MathUtils::RayCast(
+					Ray(b1->GetPosition(InUnit::IN_METERS, Align::CENTER), b1->backup.rectangle.GetPosition(Align::CENTER)),
+					b2->GetRect(InUnit::IN_METERS),
+					intersectionPoint
+				)) continue;
+			}
 
-			collisions.emplace_back(new Collision((DynamicBody*)b1, b2, intersect, pixelsToMeters));
+			collisions.emplace_back(new Collision(b1, b2, intersect, pixelsToMeters));
 		}
 	}
 }

@@ -14,6 +14,10 @@ public: // Methods
 
 	// Returns if this body is colliding with any other body in the specified situation
 	bool GetBodyState(BodyState collision);
+
+	// Adds an specific body to a query to not process a possible collision with it.
+	// Good Practice: Add all bodies with impossible collision with this one to improve physics engine performance
+	void ExcludeForCollision(const Body* b);
 	
 	// Applies an specific force to this body
 	void ApplyForce(float newtonsX, float newtonsY, InUnit unit = InUnit::IN_METERS);
@@ -39,6 +43,8 @@ private: // Methods
 
 	void Backup();
 
+	bool IsIdExcludedFromCollision(intptr_t id);
+
 public: // Variables
 
 private: // Variables
@@ -61,4 +67,6 @@ private: // Variables
 	Flag* globals = nullptr;
 
 	BodyBackup backup = {};
+
+	std::vector<intptr_t> excludeCollisionIds;
 };

@@ -16,17 +16,13 @@ public: // Methods
 
 	virtual ~Physics();
 
-	void Step(std::vector<Body*>* bodies, float dt);
+	void Step(Body* b, float dt);
 
 	void SolveCollisions(std::vector<Body*>* bodies);
 
 	void CleanUp();
 
 private: // Methods
-
-	// Step
-	void UpdateDynamic(float dt, Body* body);
-	void UpdateLiquid(float dt, Body* body);
 
 	void ApplyNaturalForces(DynamicBody* body);
 		void ApplyHydroForces(DynamicBody* body);
