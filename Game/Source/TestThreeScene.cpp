@@ -27,6 +27,8 @@ bool TestThreeScene::Start()
 	// Dynamic
 	player = npl->CreateBody({ 100.0f, 200.0f, Point(metersToPixels * 0.3f, metersToPixels * 0.75f) })
 		->Dynamic(80);
+	//-TODO: offset not working correctly
+	player->SetEmissionPoint(Align::TOP_LEFT, Point(-5.0f, 30), InUnit::IN_PIXELS);
 
 	// Static
 	gravable = npl->CreateBody({ 600, 500, 50, 10 })
@@ -53,7 +55,7 @@ bool TestThreeScene::Update(float dt)
 	// Variables
 	static bool pause = false;
 	static bool state = false;
-	bool ground = player->GetBodyState(BodyState::GROUND);
+	bool ground = player->IsBody(BodyState::ON_GROUND);
 	bool shift = (input->GetKey(SDL_SCANCODE_LSHIFT) == KeyState::KEY_REPEAT);
 
 	// Camera movement
@@ -78,7 +80,7 @@ bool TestThreeScene::Update(float dt)
 	if (ground && input->GetKey(SDL_SCANCODE_SPACE) == KeyState::KEY_DOWN)
 	{
 		float plus = 0;
-		if (shift && player->GetBodyState(BodyState::MOVING))
+		if (shift && player->IsBody(BodyState::MOVING))
 		{
 			plus = -65;
 		}
@@ -140,15 +142,14 @@ bool TestThreeScene::Update(float dt)
 	if (state)
 	{
 		render->DrawRectangle({ 0, 0, 120, 88 }, { 255, 255, 255, 150 }, { 1.0f, 1.0f }, false);
-		if (ground)                                 render->DrawRectangle({ 20, 10, 30, 10 }, { 255,   0,   0, 150 }, { 1.0f, 1.0f }, false);
-		if (player->GetBodyState(BodyState::LEFT))   render->DrawRectangle({ 20, 30, 30, 10 }, { 255, 255,   0, 150 }, { 1.0f, 1.0f }, false);
-		if (player->GetBodyState(BodyState::RIGHT))  render->DrawRectangle({ 20, 50, 30, 10 }, { 255,   0, 255, 150 }, { 1.0f, 1.0f }, false);
-		if (player->GetBodyState(BodyState::ROOF))   render->DrawRectangle({ 20, 70, 30, 10 }, { 0, 255,   0, 150 }, { 1.0f, 1.0f }, false);
-		if (player->GetBodyState(BodyState::GAS))    render->DrawRectangle({ 70, 10, 30, 10 }, { 150, 150, 255, 150 }, { 1.0f, 1.0f }, false);
-		if (player->GetBodyState(BodyState::LIQUID)) render->DrawRectangle({ 70, 30, 30, 10 }, { 0,   0, 255, 150 }, { 1.0f, 1.0f }, false);
-		if (player->GetBodyState(BodyState::FLOAT))  render->DrawRectangle({ 70, 50, 30, 10 }, { 100, 100, 100, 150 }, { 1.0f, 1.0f }, false);
-		if (player->GetBodyState(BodyState::MOVING)) render->DrawRectangle({ 70, 70, 30, 10 }, { 50, 200,  50, 150 }, { 1.0f, 1.0f }, false);
-		//-TODO: Change name of function by something like "GetBodyState()" os "IsBody()" <. best option
+		if (ground)                               render->DrawRectangle({ 20, 10, 30, 10 }, { 255,   0,   0, 150 }, { 1.0f, 1.0f }, false);
+		if (player->IsBody(BodyState::ON_LEFT  )) render->DrawRectangle({ 20, 30, 30, 10 }, { 255, 255,   0, 150 }, { 1.0f, 1.0f }, false);
+		if (player->IsBody(BodyState::ON_RIGHT )) render->DrawRectangle({ 20, 50, 30, 10 }, { 255,   0, 255, 150 }, { 1.0f, 1.0f }, false);
+		if (player->IsBody(BodyState::ON_ROOF  )) render->DrawRectangle({ 20, 70, 30, 10 }, {   0, 255,   0, 150 }, { 1.0f, 1.0f }, false);
+		if (player->IsBody(BodyState::IN_GAS   )) render->DrawRectangle({ 70, 10, 30, 10 }, { 150, 150, 255, 150 }, { 1.0f, 1.0f }, false);
+		if (player->IsBody(BodyState::IN_LIQUID)) render->DrawRectangle({ 70, 30, 30, 10 }, {   0,   0, 255, 150 }, { 1.0f, 1.0f }, false);
+		if (player->IsBody(BodyState::FLOATING )) render->DrawRectangle({ 70, 50, 30, 10 }, { 100, 100, 100, 150 }, { 1.0f, 1.0f }, false);
+		if (player->IsBody(BodyState::MOVING   )) render->DrawRectangle({ 70, 70, 30, 10 }, {  50, 200,  50, 150 }, { 1.0f, 1.0f }, false);
 	}
 
 	//Change scene

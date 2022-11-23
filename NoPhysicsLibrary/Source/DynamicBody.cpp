@@ -33,7 +33,7 @@ bool DynamicBody::IsIdExcludedFromCollision(intptr_t id)
 	return false;
 }
 
-bool DynamicBody::GetBodyState(BodyState collision)
+bool DynamicBody::IsBody(BodyState collision)
 {
 	return bodyState.Get((int)collision);
 }

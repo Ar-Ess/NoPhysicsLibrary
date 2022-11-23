@@ -13,7 +13,7 @@ public: // Methods
 	~DynamicBody() override;
 
 	// Returns if this body is colliding with any other body in the specified situation
-	bool GetBodyState(BodyState collision);
+	bool IsBody(BodyState collision);
 
 	// Adds an specific body to a query to not process a possible collision with it.
 	// Good Practice: Add all bodies with impossible collision with this one to improve physics engine performance

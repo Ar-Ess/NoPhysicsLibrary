@@ -324,13 +324,13 @@ void NPL::UpdateStates()
 		bool floating = true;
 		for (unsigned int i = 1; i < 5; ++i)
 		{
-			if (dB->GetBodyState((BodyState)i))
+			if (dB->IsBody((BodyState)i))
 			{
 				floating = false;
 				break;
 			}
 		}
-		if (floating) dB->bodyState.Set((int)BodyState::FLOAT, true);
+		if (floating) dB->bodyState.Set((int)BodyState::FLOATING, true);
 
 		// Detect liquid & Gas
 		bool fullLiquidState = false;
@@ -339,7 +339,7 @@ void NPL::UpdateStates()
 		{
 			if (MathUtils::CheckCollision(b->GetRect(InUnit::IN_METERS), bodies[*i]->GetRect(InUnit::IN_METERS)))
 			{
-				dB->bodyState.Set((int)BodyState::LIQUID, true);
+				dB->bodyState.Set((int)BodyState::IN_LIQUID, true);
 				totalArea += MathUtils::IntersectRectangle(b->GetRect(InUnit::IN_METERS), bodies[*i]->GetRect(InUnit::IN_METERS)).GetArea();
 				fullLiquidState = (0.0001f > MathUtils::Abs(b->GetRect(InUnit::IN_METERS).GetArea() - totalArea));
 				if (fullLiquidState) break;
@@ -352,7 +352,7 @@ void NPL::UpdateStates()
 		{
 			if (MathUtils::CheckCollision(b->GetRect(InUnit::IN_METERS), bodies[*i]->GetRect(InUnit::IN_METERS)))
 			{
-				dB->bodyState.Set((int)BodyState::GAS, true);
+				dB->bodyState.Set((int)BodyState::IN_GAS, true);
 				break;
 			}
 		}

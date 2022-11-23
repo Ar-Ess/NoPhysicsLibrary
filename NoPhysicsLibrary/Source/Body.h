@@ -22,11 +22,14 @@ public: // Methods
 	// Sets the body emission point, where the body sound will emit from.
 	// Values out of body bounds will be set to the closest point inside it
 	// X increments from left to right. Y increments from top to bottom
-	void SetEmissionPoint(Point point, InUnit unit);
+	void SetEmissionPoint(Point point, InUnit pointUnit = InUnit::IN_PIXELS);
 
 	// Sets the body emission point, where the body sound will emit from.
 	// Values out of body bounds will be set to the closest point inside it
-	void SetEmissionPoint(Align align, Point offset, InUnit unit);
+	void SetEmissionPoint(Align align, Point offset, InUnit offsetUnit);
+
+	// Sets the body emission point, where the body sound will emit from.
+	void SetEmissionPoint(Align align);
 
 	// Returns the x & y coordinates of the body
 	Point GetPosition(InUnit unit, Align align = Align::TOP_LEFT) const;
@@ -61,7 +64,6 @@ public: // Methods
 	inline bool IsCollidable() const { return properties.Get(0); }
 
 	// Sets the collidable property of the body
-	//-TODONE: implement it in the physics engine
 	inline void SetCollidable(bool set) { properties.Set(0, set); }
 
 protected: // Methods

@@ -2,12 +2,12 @@
 
 enum class BodyState
 {
-	GAS = 0,
-	GROUND,
-	ROOF,
-	LEFT,
-	RIGHT,
-	LIQUID,
-	FLOAT,
-	MOVING //Not done
+	IN_GAS = 0,
+	ON_GROUND,
+	ON_ROOF,
+	ON_LEFT,
+	ON_RIGHT,
+	IN_LIQUID,
+	FLOATING,
+	MOVING //-TODO: Do moving flag
 };

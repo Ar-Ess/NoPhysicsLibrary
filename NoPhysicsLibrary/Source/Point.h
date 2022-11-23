@@ -58,10 +58,17 @@ struct Point
 		return (x == 0 && y == 0);
 	}
 
+	// Negates the point internally, modifying its values
 	void Negate()
 	{
 		this->x *= -1;
 		this->y *= -1;
+	}
+	
+	// Returns the point negated. Does not modify this point internally.
+	Point Negative()
+	{
+		return Point(this->x * -1,  this->y * -1);
 	}
 
 	void Set(float x, float y)

@@ -25,7 +25,6 @@ Audio::~Audio()
 
 void Audio::Playback(SoundData* data, float* dt)
 {
-    //-TODONE: put this while processiong acoustic data. Delete acoustic data with this kind of indexes
     // This index does not exist
     ma_node* lastNode = nullptr;
     
@@ -92,7 +91,6 @@ void Audio::Update()
 
 void Audio::LoadSound(const char* path)
 {
-    //-TODONE: Calculate sound length
     ma_sound* sound = new ma_sound();
     ma_sound_init_from_file(&engine, path, 0, NULL, NULL, sound);
     float length = 0.0f;
