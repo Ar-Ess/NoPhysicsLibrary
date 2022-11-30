@@ -318,19 +318,19 @@ void NPL::UpdateStates()
 		// Detect moving
 		//-TODO: check why jumping runing left does not jump that much as to the right
 		if (MathUtils::Abs(0 - MathUtils::Abs(dB->velocity.x)) > 0.001f || MathUtils::Abs(0 - MathUtils::Abs(dB->velocity.y)) > 0.001f)
-			dB->bodyState.Set((int)BodyState::MOVING, true);
+			dB->bodyStateStill.Set((int)BodyState::MOVING, true);
 
 		// Detect floating (no collision with solids)
 		bool floating = true;
 		for (unsigned int i = 1; i < 5; ++i)
 		{
-			if (dB->IsBody((BodyState)i))
+			if (dB->IsBodyStill((BodyState)i))
 			{
 				floating = false;
 				break;
 			}
 		}
-		if (floating) dB->bodyState.Set((int)BodyState::FLOATING, true);
+		if (floating) dB->bodyStateStill.Set((int)BodyState::FLOATING, true);
 
 		// Detect liquid & Gas
 		bool fullLiquidState = false;
@@ -339,7 +339,7 @@ void NPL::UpdateStates()
 		{
 			if (MathUtils::CheckCollision(b->GetRect(InUnit::IN_METERS), bodies[*i]->GetRect(InUnit::IN_METERS)))
 			{
-				dB->bodyState.Set((int)BodyState::IN_LIQUID, true);
+				dB->bodyStateStill.Set((int)BodyState::IN_LIQUID, true);
 				totalArea += MathUtils::IntersectRectangle(b->GetRect(InUnit::IN_METERS), bodies[*i]->GetRect(InUnit::IN_METERS)).GetArea();
 				fullLiquidState = (0.0001f > MathUtils::Abs(b->GetRect(InUnit::IN_METERS).GetArea() - totalArea));
 				if (fullLiquidState) break;
@@ -352,7 +352,7 @@ void NPL::UpdateStates()
 		{
 			if (MathUtils::CheckCollision(b->GetRect(InUnit::IN_METERS), bodies[*i]->GetRect(InUnit::IN_METERS)))
 			{
-				dB->bodyState.Set((int)BodyState::IN_GAS, true);
+				dB->bodyStateStill.Set((int)BodyState::IN_GAS, true);
 				break;
 			}
 		}
@@ -377,7 +377,7 @@ void NPL::StepAcoustics()
 
 	for (Body* b : bodies)
 	{
-		if (b->acousticDataList.empty()) continue;
+		if (b->acousticDataList.empty() || !b->properties.Get(2)) continue;
 
 		if (!listener)
 		{

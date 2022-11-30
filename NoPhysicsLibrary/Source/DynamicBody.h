@@ -13,7 +13,7 @@ public: // Methods
 	~DynamicBody() override;
 
 	// Returns if this body is colliding with any other body in the specified situation
-	bool IsBody(BodyState collision);
+	bool IsBodyStill(BodyState collision);
 
 	// Adds an specific body to a query to not process a possible collision with it.
 	// Good Practice: Add all bodies with impossible collision with this one to improve physics engine performance
@@ -36,6 +36,15 @@ public: // Methods
 
 	void ResetForces();
 
+	Point GetFrictionOffset() { return frictionOffset; }
+
+	// Vaulue between 0 and 1. Out of bounds values will be clamped to 1.
+	void SetFrictionOffset(Point offset);
+	
+	Point GetRestitutionOffset() { return restitutionOffset; }
+
+	void SetRestitutionOffset(Point offset);
+
 private: // Methods
 
 	void SecondNewton();
@@ -54,6 +63,8 @@ private: // Variables
 
 	Point velocity = {};
 	Point gravityOffset = {};
+	Point frictionOffset = {};
+	Point restitutionOffset = {};
 	Point acceleration = {};
 
 	std::vector<Force*> forces;
@@ -62,7 +73,8 @@ private: // Variables
 	Momentum totalMomentum = {};
 
 	// Gas | Ground | Roof | Left | Right | Liquid | Float
-	Flag bodyState = {};
+	Flag bodyStateStill = {}; // BodyStateStay
+	//-TODO: IsBodyStart (BodyStateStart), IsBodyExit (BodyStateExit). Basically unity's "on collision enter/stay/exit".
 
 	Flag* globals = nullptr;
 

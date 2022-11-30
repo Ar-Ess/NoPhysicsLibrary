@@ -40,6 +40,9 @@ private: // Methods
 	void ResetFlags(std::vector<Body*>* bodies);
 	void Declip();
 
+	// Internal
+	Point CalculateFriction(DynamicBody* body);
+
 public: // Variables
 
 	Point globalGravity = {0.0f, 0.0f };

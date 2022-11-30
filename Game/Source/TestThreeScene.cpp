@@ -10,6 +10,7 @@ TestThreeScene::~TestThreeScene()
 
 bool TestThreeScene::Start()
 {
+	//-TODO: Users can't "new" any body class
 	// Initialize Variables
 	npl = new NPL();
 	npl->Init(128);
@@ -19,7 +20,7 @@ bool TestThreeScene::Start()
 	npl->Configure()->CollisionsDebugging(true);
 	npl->Configure()->PanRange(10, InUnit::IN_METERS);
 	npl->SetPhysicsPreset(PhysicsPreset::DEFAULT_PHYSICS_PRESET);
-	npl->SetScenarioPreset(ScenarioPreset::LIMITS_SCENARIO_PRESET, window->GetSize());
+	npl->SetScenarioPreset(ScenarioPreset::CORRIDOR_SCENARIO_PRESET, window->GetSize());
 	npl->Configure()->Listener(player);
 	npl->LoadSound("Assets/Audio/bounce.wav");
 
@@ -35,14 +36,32 @@ bool TestThreeScene::Start()
 		->Static();
 	npl->CreateBody({ 800, 300, 50, 10 })
 		->Static();
+	
+	// Shell Obstacles
+	npl->CreateBody({ 1300, 600, 30, 60 })
+		->Static();
+	npl->CreateBody({ 2000, 600, 30, 60 })
+		->Static();
 
 	// Liquid
 	npl->CreateBody({ 900, 400, Point(metersToPixels * 2.6f, metersToPixels * 2.1f) })
 		->Liquid(997, 1.0f, InUnit::IN_METERS);
+	
+	npl->CreateBody({ 1600, 550, 30, 60 })
+		->Liquid(997, 1.0f, InUnit::IN_METERS);
 
 	// Gas
-	npl->CreateBody(npl->ReturnScenarioRect())
+	const GasBody* gas = npl->CreateBody(npl->ReturnScenarioRect())
 		->Gas(1500, 1.414f, 1000, { 1.5f, 0.1f }, InUnit::IN_METERS);
+
+	// Shell
+	shell = npl->CreateBody({ 1900, 500, 50, 50 })
+		->Dynamic(40);
+	shell->ApplyMomentum({ -200.0f, 0 });
+	shell->SetFrictionOffset({ -0.5f, 0.0f });
+	shell->SetRestitutionOffset({ 1.0f, 0.0f });
+	shell->ExcludeForCollision(gas);
+	shell->SetPhysicsUpdatability(false);
 
 	// Camera
 	render->ResetCamera();
@@ -55,7 +74,7 @@ bool TestThreeScene::Update(float dt)
 	// Variables
 	static bool pause = false;
 	static bool state = false;
-	bool ground = player->IsBody(BodyState::ON_GROUND);
+	bool ground = player->IsBodyStill(BodyState::ON_GROUND);
 	bool shift = (input->GetKey(SDL_SCANCODE_LSHIFT) == KeyState::KEY_REPEAT);
 
 	// Camera movement
@@ -63,6 +82,9 @@ bool TestThreeScene::Update(float dt)
 	if (render->camera.x < 0) render->camera.x = 0;
 	if (render->camera.x > 3000) render->camera.x = 3000;
 	if (render->camera.y < 0) render->camera.y = 0;
+
+	if (MathUtils::CheckCollision(shell->GetRect(InUnit::IN_PIXELS), render->camera)) shell->SetPhysicsUpdatability(true);
+	else shell->SetPhysicsUpdatability(false);
 
 	// Inputs
 	if (input->GetKey(SDL_SCANCODE_D) == KeyState::KEY_REPEAT)
@@ -80,7 +102,7 @@ bool TestThreeScene::Update(float dt)
 	if (ground && input->GetKey(SDL_SCANCODE_SPACE) == KeyState::KEY_DOWN)
 	{
 		float plus = 0;
-		if (shift && player->IsBody(BodyState::MOVING))
+		if (shift && player->IsBodyStill(BodyState::MOVING))
 		{
 			plus = -65;
 		}
@@ -143,13 +165,13 @@ bool TestThreeScene::Update(float dt)
 	{
 		render->DrawRectangle({ 0, 0, 120, 88 }, { 255, 255, 255, 150 }, { 1.0f, 1.0f }, false);
 		if (ground)                               render->DrawRectangle({ 20, 10, 30, 10 }, { 255,   0,   0, 150 }, { 1.0f, 1.0f }, false);
-		if (player->IsBody(BodyState::ON_LEFT  )) render->DrawRectangle({ 20, 30, 30, 10 }, { 255, 255,   0, 150 }, { 1.0f, 1.0f }, false);
-		if (player->IsBody(BodyState::ON_RIGHT )) render->DrawRectangle({ 20, 50, 30, 10 }, { 255,   0, 255, 150 }, { 1.0f, 1.0f }, false);
-		if (player->IsBody(BodyState::ON_ROOF  )) render->DrawRectangle({ 20, 70, 30, 10 }, {   0, 255,   0, 150 }, { 1.0f, 1.0f }, false);
-		if (player->IsBody(BodyState::IN_GAS   )) render->DrawRectangle({ 70, 10, 30, 10 }, { 150, 150, 255, 150 }, { 1.0f, 1.0f }, false);
-		if (player->IsBody(BodyState::IN_LIQUID)) render->DrawRectangle({ 70, 30, 30, 10 }, {   0,   0, 255, 150 }, { 1.0f, 1.0f }, false);
-		if (player->IsBody(BodyState::FLOATING )) render->DrawRectangle({ 70, 50, 30, 10 }, { 100, 100, 100, 150 }, { 1.0f, 1.0f }, false);
-		if (player->IsBody(BodyState::MOVING   )) render->DrawRectangle({ 70, 70, 30, 10 }, {  50, 200,  50, 150 }, { 1.0f, 1.0f }, false);
+		if (player->IsBodyStill(BodyState::ON_LEFT  )) render->DrawRectangle({ 20, 30, 30, 10 }, { 255, 255,   0, 150 }, { 1.0f, 1.0f }, false);
+		if (player->IsBodyStill(BodyState::ON_RIGHT )) render->DrawRectangle({ 20, 50, 30, 10 }, { 255,   0, 255, 150 }, { 1.0f, 1.0f }, false);
+		if (player->IsBodyStill(BodyState::ON_ROOF  )) render->DrawRectangle({ 20, 70, 30, 10 }, {   0, 255,   0, 150 }, { 1.0f, 1.0f }, false);
+		if (player->IsBodyStill(BodyState::IN_GAS   )) render->DrawRectangle({ 70, 10, 30, 10 }, { 150, 150, 255, 150 }, { 1.0f, 1.0f }, false);
+		if (player->IsBodyStill(BodyState::IN_LIQUID)) render->DrawRectangle({ 70, 30, 30, 10 }, {   0,   0, 255, 150 }, { 1.0f, 1.0f }, false);
+		if (player->IsBodyStill(BodyState::FLOATING )) render->DrawRectangle({ 70, 50, 30, 10 }, { 100, 100, 100, 150 }, { 1.0f, 1.0f }, false);
+		if (player->IsBodyStill(BodyState::MOVING   )) render->DrawRectangle({ 70, 70, 30, 10 }, {  50, 200,  50, 150 }, { 1.0f, 1.0f }, false);
 	}
 
 	//Change scene

@@ -77,7 +77,7 @@ public:
 	}
 	void GlobalFriction(float friction) const
 	{
-		if (friction < 0 && friction > 1) friction = 0;
+		if (friction < 0 && friction > 1) friction = 1;
 		*globalFriction = friction;
 	}
 

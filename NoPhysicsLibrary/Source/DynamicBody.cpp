@@ -1,4 +1,5 @@
 #include "DynamicBody.h"
+#include "MathUtils.h"
 
 DynamicBody::DynamicBody(Rect rect, Point gravityOffset, float mass, Flag* globals, const float* pixelsToMeters) : Body(BodyClass::DYNAMIC_BODY, rect, mass, pixelsToMeters)
 {
@@ -33,9 +34,9 @@ bool DynamicBody::IsIdExcludedFromCollision(intptr_t id)
 	return false;
 }
 
-bool DynamicBody::IsBody(BodyState collision)
+bool DynamicBody::IsBodyStill(BodyState collision)
 {
-	return bodyState.Get((int)collision);
+	return bodyStateStill.Get((int)collision);
 }
 
 //-TODO: IncludeForCollision()??? In case someone wants to dinamically exclude and include some collision in a game
@@ -147,4 +148,16 @@ void DynamicBody::ResetForces()
 	velocity.Zero();
 	forces.clear();
 	momentums.clear();
+}
+
+void DynamicBody::SetFrictionOffset(Point offset)
+{
+	if (offset.x < 0 && offset.x > 1) offset.x = 1;
+	if (offset.y < 0 && offset.y > 1) offset.y = 1;
+	this->frictionOffset = offset;
+}
+
+void DynamicBody::SetRestitutionOffset(Point offset)
+{
+	this->restitutionOffset = offset;
 }

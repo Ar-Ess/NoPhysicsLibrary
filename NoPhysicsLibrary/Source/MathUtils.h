@@ -72,6 +72,12 @@ namespace MathUtils
 		return num;
 	}
 
+	inline void Clamp(float& value, float min, float max)
+	{
+		if (value < min) value = min;
+		else if (value > max) value = max;
+	}
+
 	inline Rect IntersectRectangle(Rect r1, Rect r2)
 	{
 		float x = Max(r1.x, r2.x);

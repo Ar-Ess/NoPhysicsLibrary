@@ -22,8 +22,9 @@ Physics::~Physics()
 void Physics::Step(Body* b, float dt)
 {
 	if (b->GetClass() != BodyClass::DYNAMIC_BODY) return;
-
 	DynamicBody* body = (DynamicBody*)b;
+
+	if (!body->properties.Get(1)) return;
 
 	// Apply gas and liquid forces
 	ApplyNaturalForces(body);
@@ -83,13 +84,15 @@ void Physics::ApplyNaturalForces(DynamicBody* body)
 
 void Physics::ApplyHydroForces(DynamicBody* body)
 {
-	if (!body->IsBody(BodyState::IN_LIQUID)) return;
+	if (!body->IsBodyStill(BodyState::IN_LIQUID)) return;
 
 	const float fullArea = body->GetRect(InUnit::IN_METERS).GetArea();
 	float areaCovered = 0;
 	for (unsigned int* i : *liquidIndex)
 	{
 		Body* liquid = bodies->at(*i);
+
+		if (body->IsIdExcludedFromCollision(liquid->GetId())) continue;
 
 		if (!MathUtils::CheckCollision(liquid->GetRect(InUnit::IN_METERS), body->GetRect(InUnit::IN_METERS))) continue;
 		float area = MathUtils::IntersectRectangle(bodies->at(*i)->GetRect(InUnit::IN_METERS), body->GetRect(InUnit::IN_METERS)).GetArea();
@@ -133,13 +136,15 @@ void Physics::ApplyBuoyancy(DynamicBody* body, Body* env, float area)
 
 void Physics::ApplyAeroForces(DynamicBody* body)
 {
-	if (!body->IsBody(BodyState::IN_GAS)) return;
+	if (!body->IsBodyStill(BodyState::IN_GAS)) return;
 
 	const float fullArea = body->GetRect(InUnit::IN_METERS).GetArea();
 	float areaCovered = 0;
 	for (unsigned int* i : *gasIndex)
 	{
 		Body* gas = bodies->at(*i);
+
+		if (body->IsIdExcludedFromCollision(gas->GetId())) continue;
 
 		if (!MathUtils::CheckCollision(gas->GetRect(InUnit::IN_METERS), body->GetRect(InUnit::IN_METERS))) continue;
 		float area = MathUtils::IntersectRectangle(bodies->at(*i)->GetRect(InUnit::IN_METERS), body->GetRect(InUnit::IN_METERS)).GetArea();
@@ -186,13 +191,15 @@ void Physics::DetectCollisions(std::vector<Body*>* bodies)
 
 	// New (iterate dynamic bodies with all)
 	size_t size = bodies->size();
-	for (unsigned int i = 0; i < size - 1; ++i)
+	for (unsigned int i = 0; i < size; ++i)
 	{
 		Body* b = bodies->at(i);
 		if (b->GetClass() != BodyClass::DYNAMIC_BODY) continue;
 		if (!b->IsCollidable()) continue;
 
 		DynamicBody* b1 = (DynamicBody*)b;
+
+		if (!b1->properties.Get(1)) continue;
 
 		for (unsigned int a = 0; a < size; ++a)
 		{
@@ -228,7 +235,7 @@ void Physics::ResetFlags(std::vector<Body*>* bodies)
 	{
 		if (b->GetClass() != BodyClass::DYNAMIC_BODY) continue;
 
-		((DynamicBody*)b)->bodyState.Clear();
+		((DynamicBody*)b)->bodyStateStill.Clear();
 	}
 }
 
@@ -262,14 +269,14 @@ void Physics::Declip()
 				{
 					dynBody->rect.y -= intersect.h / 2;
 					body->rect.y += intersect.h / 2;
-					dynBody->bodyState.Set((int)BodyState::ON_GROUND, true);
+					dynBody->bodyStateStill.Set((int)BodyState::ON_GROUND, true);
 				}
 				// Bottom -> Top
 				if (directionVec.y < 0)
 				{
 					dynBody->rect.y += intersect.h / 2;
 					body->rect.y -= intersect.h / 2;
-					dynBody->bodyState.Set((int)BodyState::ON_ROOF, true);
+					dynBody->bodyStateStill.Set((int)BodyState::ON_ROOF, true);
 				}
 
 				// Perfectly elastic collision
@@ -287,14 +294,14 @@ void Physics::Declip()
 				{
 					dynBody->rect.x -= intersect.w / 2;
 					body->rect.x += intersect.w / 2;
-					dynBody->bodyState.Set((int)BodyState::ON_RIGHT, true);
+					dynBody->bodyStateStill.Set((int)BodyState::ON_RIGHT, true);
 				}
 				// Right -> Left
 				if (directionVec.x < 0)
 				{
 					dynBody->rect.x += intersect.w / 2;
 					body->rect.x -= intersect.w / 2;
-					dynBody->bodyState.Set((int)BodyState::ON_LEFT, true);
+					dynBody->bodyStateStill.Set((int)BodyState::ON_LEFT, true);
 				}
 
 				// Perfectly elastic collision
@@ -332,21 +339,21 @@ void Physics::Declip()
 				if (directionVec.y > 0)
 				{
 					dynBody->rect.y = body->GetPosition(InUnit::IN_METERS).y - dynBody->rect.h;
-					dynBody->bodyState.Set((int)BodyState::ON_GROUND, true);
+					dynBody->bodyStateStill.Set((int)BodyState::ON_GROUND, true);
 				}
 				// Bottom -> Top
 				if (directionVec.y < 0)
 				{
 					dynBody->rect.y = body->GetRect(InUnit::IN_METERS).GetPosition(Align::BOTTOM_CENTER).y;
-					dynBody->bodyState.Set((int)BodyState::ON_ROOF, true);
+					dynBody->bodyStateStill.Set((int)BodyState::ON_ROOF, true);
 				}
 
 				// Perfectly elastic collision
 				dynBody->velocity.y *= -1;
 
 				// Loss of energy
-				dynBody->velocity.y *= (globalRestitution.y + body->GetRestitutionOffset().y);
-				dynBody->velocity.x *= MathUtils::Abs(1 - globalFriction.x);
+				dynBody->velocity.y *= (globalRestitution.y + body->GetRestitutionOffset().y + dynBody->GetRestitutionOffset().y);
+				dynBody->velocity.x *= CalculateFriction(dynBody).x;
 			}
 			else if (normal.y == 0) // Horizontal collision with vertical surface
 			{
@@ -354,21 +361,21 @@ void Physics::Declip()
 				if (directionVec.x > 0)
 				{
 					dynBody->rect.x = body->GetPosition(InUnit::IN_METERS).x - dynBody->rect.w;
-					dynBody->bodyState.Set((int)BodyState::ON_RIGHT, true);
+					dynBody->bodyStateStill.Set((int)BodyState::ON_RIGHT, true);
 				}
 				// Right -> Left
 				if (directionVec.x < 0)
 				{
 					dynBody->rect.x = body->GetRect(InUnit::IN_METERS).GetPosition(Align::CENTER_RIGHT).x;
-					dynBody->bodyState.Set((int)BodyState::ON_LEFT, true);
+					dynBody->bodyStateStill.Set((int)BodyState::ON_LEFT, true);
 				}
 
 				// Perfectly elastic collision
 				dynBody->velocity.x *= -1;
 
 				// Loss of energy
-				dynBody->velocity.x *= (globalRestitution.x + body->GetRestitutionOffset().x);
-				dynBody->velocity.y *= MathUtils::Abs(1 - globalFriction.y);
+				dynBody->velocity.x *= (globalRestitution.x + body->GetRestitutionOffset().x + dynBody->GetRestitutionOffset().x);
+				dynBody->velocity.y *= CalculateFriction(dynBody).y;
 			}
 			else
 			{
@@ -392,4 +399,15 @@ void Physics::Declip()
 
 	// If collision debugging is disabled
 	if (!physicsConfig->Get(0)) collisions.clear();
+}
+
+Point Physics::CalculateFriction(DynamicBody* body)
+{
+	Point gF = { MathUtils::Abs(1 - globalFriction.x), MathUtils::Abs(1 - globalFriction.y) };
+	Point outFriction = {gF.x - body->frictionOffset.x, gF.y - body->frictionOffset.y};
+
+	MathUtils::Clamp(outFriction.x, 0, 1);
+	MathUtils::Clamp(outFriction.y, 0, 1);
+
+	return outFriction;
 }

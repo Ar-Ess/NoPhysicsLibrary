@@ -61,10 +61,16 @@ public: // Methods
 	void SetMass(float mass) { mass <= 0 ? this->mass = 0.1f : this->mass = mass; }
 
 	// Returns wether the body is collidable
-	inline bool IsCollidable() const { return properties.Get(0); }
+	bool IsCollidable() const { return properties.Get(0); }
 
 	// Sets the collidable property of the body
-	inline void SetCollidable(bool set) { properties.Set(0, set); }
+	void SetCollidability(bool set) { properties.Set(0, set); }
+	
+	// Sets the physics updatability property of the body
+	void SetPhysicsUpdatability(bool set) { properties.Set(1, set); }
+	
+	// Sets the acoustic updatability property of the body
+	void SetAcousticsUpdatability(bool set) { properties.Set(2, set); }
 
 protected: // Methods
 
@@ -91,7 +97,7 @@ protected: // Variables
 	const float* pixelsToMeters = nullptr;
 	std::vector<AcousticData*> acousticDataList;
 
-	// Collidable | 
+	// Collidable | UpdatePhysics | UpdateAcoustics
 	Flag properties = {};
 
 };
