@@ -47,8 +47,8 @@ bool TestThreeScene::Start()
 	npl->CreateBody({ 900, 400, Point(metersToPixels * 2.6f, metersToPixels * 2.1f) })
 		->Liquid(997, 1.0f, InUnit::IN_METERS);
 	
-	npl->CreateBody({ 1600, 550, 30, 60 })
-		->Liquid(997, 1.0f, InUnit::IN_METERS);
+	npl->CreateBody({ 1600, 550, 90, 120 })
+		->Liquid(400, 1.0f, InUnit::IN_METERS);
 
 	// Gas
 	const GasBody* gas = npl->CreateBody(npl->ReturnScenarioRect())
