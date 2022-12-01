@@ -28,7 +28,6 @@ bool TestThreeScene::Start()
 	// Dynamic
 	player = npl->CreateBody({ 100.0f, 200.0f, Point(metersToPixels * 0.3f, metersToPixels * 0.75f) })
 		->Dynamic(80);
-	//-TODO: Delete clamp to rect :D
 	player->SetEmissionPoint(Align::TOP_LEFT, Point(-5.0f, 30), InUnit::IN_PIXELS);
 
 	// Static

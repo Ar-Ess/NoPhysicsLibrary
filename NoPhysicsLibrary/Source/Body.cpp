@@ -37,10 +37,6 @@ void Body::SetEmissionPoint(Point point, InUnit unit)
 
 	Rect emissionRect = { emissionPoint.Apply(-1.0f, -1.0f) * *pixelsToMeters, Point(2.0f, 2.0f) * *pixelsToMeters };
 	emissionPoint = rect.GetPosition().Apply(point.Negative());
-
-	if (MathUtils::CheckCollision(rect, emissionRect)) return;
-
-	emissionPoint = rect.GetPosition() - MathUtils::ClosestRectIntersectionFromOutsidePoint(emissionPoint, rect);
 }
 
 void Body::SetEmissionPoint(Align alignment, Point offset, InUnit unit)
@@ -52,9 +48,6 @@ void Body::SetEmissionPoint(Align alignment, Point offset, InUnit unit)
 
 	emissionPoint += offset;
 	Rect emissionRect = { emissionPoint.Apply(-1.0f, -1.0f) * *pixelsToMeters, Point(2.0f, 2.0f) * *pixelsToMeters };
-	if (MathUtils::CheckCollision(rect, emissionRect)) return;
-
-	emissionPoint = rect.GetPosition() - MathUtils::ClosestRectIntersectionFromOutsidePoint(emissionPoint, rect);
 }
 
 void Body::SetEmissionPoint(Align alignment)
