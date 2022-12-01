@@ -19,6 +19,8 @@ public: // Methods
 	// Good Practice: Add all bodies with impossible collision with this one to improve physics engine performance
 	void ExcludeForCollision(const Body* b);
 	
+	bool IncludeForCollision(const Body* b);
+	
 	// Applies an specific force to this body
 	void ApplyForce(float newtonsX, float newtonsY, InUnit unit = InUnit::IN_METERS);
 	// Applies an specific force to this body

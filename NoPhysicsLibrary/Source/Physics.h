@@ -27,7 +27,7 @@ private: // Methods
 	void ApplyNaturalForces(DynamicBody* body);
 		void ApplyHydroForces(DynamicBody* body);
 			void ApplyHydroDrag(DynamicBody* body, Body* env);
-			void ApplyHydroLift(DynamicBody* body, Body* env, float area); // Future idea, maybe implementable
+			void ApplyHydroLift(DynamicBody* body, Body* env);
 			void  ApplyBuoyancy(DynamicBody* body, Body* env, float area);
 		void ApplyAeroForces(DynamicBody* body);
 			void ApplyAeroDrag(DynamicBody* body, Body* env, float area);

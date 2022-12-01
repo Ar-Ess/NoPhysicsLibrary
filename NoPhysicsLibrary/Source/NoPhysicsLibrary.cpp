@@ -316,7 +316,6 @@ void NPL::UpdateStates()
 		DynamicBody* dB = (DynamicBody*)b;
 
 		// Detect moving
-		//-TODO: check why jumping runing left does not jump that much as to the right
 		if (MathUtils::Abs(0 - MathUtils::Abs(dB->velocity.x)) > 0.001f || MathUtils::Abs(0 - MathUtils::Abs(dB->velocity.y)) > 0.001f)
 			dB->bodyStateStill.Set((int)BodyState::MOVING, true);
 

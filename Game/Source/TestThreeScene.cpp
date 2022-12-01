@@ -28,7 +28,7 @@ bool TestThreeScene::Start()
 	// Dynamic
 	player = npl->CreateBody({ 100.0f, 200.0f, Point(metersToPixels * 0.3f, metersToPixels * 0.75f) })
 		->Dynamic(80);
-	//-TODO: offset not working correctly
+	//-TODO: Delete clamp to rect :D
 	player->SetEmissionPoint(Align::TOP_LEFT, Point(-5.0f, 30), InUnit::IN_PIXELS);
 
 	// Static
@@ -36,6 +36,9 @@ bool TestThreeScene::Start()
 		->Static();
 	npl->CreateBody({ 800, 300, 50, 10 })
 		->Static();
+	StaticBody* bouncyBoy = npl->CreateBody({ 200, 600, 50, 50 })
+		->Static();
+	bouncyBoy->SetRestitutionOffset({0.0f, 1.2f});
 	
 	// Shell Obstacles
 	npl->CreateBody({ 1300, 600, 30, 60 })
@@ -47,12 +50,12 @@ bool TestThreeScene::Start()
 	npl->CreateBody({ 900, 400, Point(metersToPixels * 2.6f, metersToPixels * 2.1f) })
 		->Liquid(997, 1.0f, InUnit::IN_METERS);
 	
-	npl->CreateBody({ 1600, 550, 90, 120 })
-		->Liquid(400, 1.0f, InUnit::IN_METERS);
+	//npl->CreateBody({ 1600, 550, 90, 120 })
+	//	->Liquid(400, 1.0f, InUnit::IN_METERS);
 
 	// Gas
 	const GasBody* gas = npl->CreateBody(npl->ReturnScenarioRect())
-		->Gas(1500, 1.414f, 1000, { 1.5f, 0.1f }, InUnit::IN_METERS);
+		->Gas(10, 1.414f, 1000, { 3.0f, 0.1f }, InUnit::IN_METERS);
 
 	// Shell
 	shell = npl->CreateBody({ 1900, 500, 50, 50 })
@@ -89,14 +92,14 @@ bool TestThreeScene::Update(float dt)
 	// Inputs
 	if (input->GetKey(SDL_SCANCODE_D) == KeyState::KEY_REPEAT)
 	{
-		player->ApplyMomentum(50, 0);
-		if (ground && shift) player->ApplyForce(50, 0);
+		player->ApplyMomentum(20, 0);
+		if (ground && shift) player->ApplyForce(30, 0);
 	}
 
 	if (input->GetKey(SDL_SCANCODE_A) == KeyState::KEY_REPEAT)
 	{
-		player->ApplyMomentum(-50, 0);
-		if (ground && shift) player->ApplyForce(-50, 0);
+		player->ApplyMomentum(-20, 0);
+		if (ground && shift) player->ApplyForce(-30, 0);
 	}
 
 	if (ground && input->GetKey(SDL_SCANCODE_SPACE) == KeyState::KEY_DOWN)
@@ -106,9 +109,8 @@ bool TestThreeScene::Update(float dt)
 		{
 			plus = -65;
 		}
-		player->ApplyMomentum(0, -550 + plus);
+		player->ApplyMomentum(0, -400 + plus);
 	}
-
 
 	if (shift) gravable->SetRestitutionOffset({ 0.0f, -1.1f });
 	else gravable->SetRestitutionOffset({ 0.0f, 0.0f });

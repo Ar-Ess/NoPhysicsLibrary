@@ -39,10 +39,23 @@ bool DynamicBody::IsBodyStill(BodyState collision)
 	return bodyStateStill.Get((int)collision);
 }
 
-//-TODO: IncludeForCollision()??? In case someone wants to dinamically exclude and include some collision in a game
 void DynamicBody::ExcludeForCollision(const Body* b)
 {
 	excludeCollisionIds.emplace_back(b->GetId());
+}
+
+bool DynamicBody::IncludeForCollision(const Body* b)
+{
+	size_t size = excludeCollisionIds.size();
+	for (unsigned int i = 0; i < size; ++i)
+	{
+		if (excludeCollisionIds.at(i) == b->GetId())
+		{
+			excludeCollisionIds.erase(excludeCollisionIds.begin() + i);
+			return true;
+		}
+	}
+	return false;
 }
 
 void DynamicBody::ApplyForce(float newtonsX, float newtonsY, InUnit unit)
@@ -52,8 +65,6 @@ void DynamicBody::ApplyForce(float newtonsX, float newtonsY, InUnit unit)
 
 	if (newtons.IsZero()) return; // If newtons is null
 
-	newtons *= mass;
-
 	forces.emplace_back(new Force(newtons, unit));
 }
 
@@ -61,8 +72,6 @@ void DynamicBody::ApplyForce(Point newtons, InUnit unit)
 {
 	if (globals->Get(0)) return; // Physics are paused
 	if (newtons.IsZero()) return; // If newtons is null
-
-	newtons *= mass;
 
 	forces.emplace_back(new Force(newtons, unit));
 }

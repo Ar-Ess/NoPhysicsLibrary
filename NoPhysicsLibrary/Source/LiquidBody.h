@@ -20,8 +20,13 @@ public:
 
 	void SetBuoyancy(float buoyancy);
 
+	Point GetLiftCoefficient() const
+	{
+		return liftCoefficient;
+	}
+
 private:
 
 	float buoyancy = 0.0f;
-
+	Point liftCoefficient = {0.0f, 0.1f};
 };

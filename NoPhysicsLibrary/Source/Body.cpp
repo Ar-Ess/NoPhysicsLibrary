@@ -33,7 +33,6 @@ void Body::Play(int index, float decibels)
 
 void Body::SetEmissionPoint(Point point, InUnit unit)
 {
-	//-TODO: Review emission point set logic. Needs to be an offset from top-left, not a position
 	if (unit == InUnit::IN_PIXELS) point *= *pixelsToMeters;
 
 	Rect emissionRect = { emissionPoint.Apply(-1.0f, -1.0f) * *pixelsToMeters, Point(2.0f, 2.0f) * *pixelsToMeters };

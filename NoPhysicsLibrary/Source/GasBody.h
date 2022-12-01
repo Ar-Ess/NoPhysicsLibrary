@@ -31,9 +31,15 @@ public:
 		return dragCoefficient;
 	}
 
+	Point GetLiftCoefficient() const
+	{
+		return liftCoefficient;
+	}
+
 private:
 
 	float heatRatio = 0;
 	float pressure = 0;
 	Point dragCoefficient = {1.0f, 1.0f};
+	Point liftCoefficient = {0.0f, 0.0f};
 };

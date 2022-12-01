@@ -30,10 +30,10 @@ void Physics::Step(Body* b, float dt)
 	ApplyNaturalForces(body);
 
 	// Multiplying global gravity * mass to acquire the force (Global gravity falls :) )
-	body->ApplyForce(globalGravity, InUnit::IN_METERS);
+	body->ApplyForce(globalGravity * b->GetMass(), InUnit::IN_METERS);
 
 	// Multiplying intrinsic gravity * mass to acquire the force (Local gravity falls :) )
-	body->ApplyForce(body->gravityOffset, InUnit::IN_METERS);
+	body->ApplyForce(body->gravityOffset * b->GetMass(), InUnit::IN_METERS);
 
 	// Second law newton
 	body->SecondNewton(); // Suma de forces a acceleració
@@ -100,7 +100,7 @@ void Physics::ApplyHydroForces(DynamicBody* body)
 
 		ApplyHydroDrag(body, liquid);
 		//-TODO: End HydroForces
-		ApplyHydroLift(body, liquid, area);
+		ApplyHydroLift(body, liquid);
 		ApplyBuoyancy(body, liquid, area);
 
 		if (areaCovered - fullArea < 0.0001f) break;
@@ -109,29 +109,38 @@ void Physics::ApplyHydroForces(DynamicBody* body)
 
 void Physics::ApplyHydroDrag(DynamicBody* body, Body* env)
 {
-	//-TODO: Check whether we need to multiply the mass inside AddForce function or create an "AddForceInternal" that avoids multiplying by the mass
-	//-TODO: check if this is actually working
 	LiquidBody* liquid = (LiquidBody*)env;
 	int negx = -1;
 	int negy = -1;
 	if (body->velocity.x < 0) negx *= -1;
-	if (body->velocity.y < 0) negy *= -1;                                                                      //-TOCHECK: check if this is right. The function acts with the projected area. I input the "submerjed area or the width?"
-	float hydrodragX = negx * 0.5 * liquid->GetDensity(InUnit::IN_METERS) * MathUtils::Pow(body->velocity.x, 2) * body->GetRect(InUnit::IN_METERS).w /* * liquid->GetDragCoefficient().x*/;
+	if (body->velocity.y < 0) negy *= -1;
 	float hydrodragY = negy * 0.5 * liquid->GetDensity(InUnit::IN_METERS) * MathUtils::Pow(body->velocity.y, 2) * body->GetRect(InUnit::IN_METERS).h /* * liquid->GetDragCoefficient().y*/;
-	body->forces.emplace_back(new Force(hydrodragX, hydrodragY, InUnit::IN_METERS));
+	float hydrodragX = negx * 0.5 * liquid->GetDensity(InUnit::IN_METERS) * MathUtils::Pow(body->velocity.x, 2) * body->GetRect(InUnit::IN_METERS).w /* * liquid->GetDragCoefficient().x*/;
+	body->ApplyForce(hydrodragX, hydrodragY, InUnit::IN_METERS);
+	//-TODO: Change the formula to this one -> neg * b * V. B is drag coefficient. I can split velocity iei
 }
 
-void Physics::ApplyHydroLift(DynamicBody* body, Body* env, float area)
+void Physics::ApplyHydroLift(DynamicBody* body, Body* env)
 {
 	LiquidBody* liquid = (LiquidBody*)env;
+	int negx = -1;
+	int negy = 1;
+	if (body->velocity.x < 0) negx = 1;
+	if (body->velocity.y < 0) negy = -1;
+	float hydroliftY = negx * 0.5 * liquid->GetDensity(InUnit::IN_METERS) * MathUtils::Pow(body->velocity.x, 2) * body->GetRect(InUnit::IN_METERS).h * liquid->GetLiftCoefficient().x;
+	float hydroliftX = negy * 0.5 * liquid->GetDensity(InUnit::IN_METERS) * MathUtils::Pow(body->velocity.y, 2) * body->GetRect(InUnit::IN_METERS).w * liquid->GetLiftCoefficient().y;
+	// La atrocitat probocada aquí constitueix la rotació de 90º en forma de x = -y i y = x (El lift sempre va a 90 graus respecte el drag)
+	if (hydroliftY > 0) hydroliftY *= -1; // Maintain y axis lift always looking up :D
+	body->ApplyForce(hydroliftX, hydroliftY, InUnit::IN_METERS);
 }
 
 void Physics::ApplyBuoyancy(DynamicBody* body, Body* env, float area)
 {
 	LiquidBody* liquid = (LiquidBody*)env;
+	// Density * Area * gravity force (+ buoyancy coeficcient)
 	float forcex = liquid->GetDensity(InUnit::IN_METERS) * area * (globalGravity.x + body->GetGravityOffset(InUnit::IN_METERS).x) * liquid->GetBuoyancy();
 	float forcey = liquid->GetDensity(InUnit::IN_METERS) * area * (globalGravity.y + body->GetGravityOffset(InUnit::IN_METERS).y) * liquid->GetBuoyancy();
-	body->forces.emplace_back(new Force(-forcex, -forcey , InUnit::IN_METERS));
+	body->ApplyForce(-forcex, -forcey , InUnit::IN_METERS);
 }
 
 void Physics::ApplyAeroForces(DynamicBody* body)
@@ -161,19 +170,27 @@ void Physics::ApplyAeroForces(DynamicBody* body)
 void Physics::ApplyAeroDrag(DynamicBody* body, Body* env, float area)
 {
 	GasBody* gas = (GasBody*)env;
-	//-TODO: Check whether we need to multiply the mass inside AddForce function or create an "AddForceInternal" that avoids multiplying by the mass
 	int negx = -1;
 	int negy = -1;
 	if (body->velocity.x < 0) negx = 1;
 	if (body->velocity.y < 0) negy = 1;
 	float aerodragX = negx * 0.5 * gas->GetDensity() * MathUtils::Pow(body->velocity.x, 2) * area * gas->GetDragCoefficient().x;
 	float aerodragY = negy * 0.5 * gas->GetDensity() * MathUtils::Pow(body->velocity.y, 2) * area * gas->GetDragCoefficient().y;
-	body->forces.emplace_back(new Force(aerodragX, aerodragY, InUnit::IN_METERS));
+	body->ApplyForce(aerodragX, aerodragY, InUnit::IN_METERS);
 }
 
 void Physics::ApplyAeroLift(DynamicBody* body, Body* env, float area)
 {
 	GasBody* gas = (GasBody*)env;
+	int negx = -1;
+	int negy = 1;
+	if (body->velocity.x < 0) negx = 1;
+	if (body->velocity.y < 0) negy = -1;
+	float aeroliftY = negx * 0.5 * gas->GetDensity() * MathUtils::Pow(body->velocity.x, 2) * body->GetRect(InUnit::IN_METERS).h * gas->GetLiftCoefficient().x;
+	float aeroliftX = negy * 0.5 * gas->GetDensity() * MathUtils::Pow(body->velocity.y, 2) * body->GetRect(InUnit::IN_METERS).w * gas->GetLiftCoefficient().y;
+	// La atrocitat probocada aquí constitueix la rotació de 90º en forma de x = -y i y = x (El lift sempre va a 90 graus respecte el drag)
+	if (aeroliftY > 0) aeroliftY *= -1; // Maintain y axis lift always looking up :D
+	body->ApplyForce(aeroliftX, aeroliftY, InUnit::IN_METERS);
 }
 
 void Physics::DetectCollisions(std::vector<Body*>* bodies)

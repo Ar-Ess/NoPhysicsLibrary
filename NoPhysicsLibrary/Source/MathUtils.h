@@ -21,6 +21,7 @@ namespace MathUtils
 	inline float Pow(float num, float power)
 	{
 		if (power == 2) return num * num;
+		else if (power == 3) return num * num * num;
 
 		return (float)pow((double)num, (double)power);
 	}
