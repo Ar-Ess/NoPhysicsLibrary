@@ -9,5 +9,5 @@ enum class BodyState
 	ON_RIGHT,
 	IN_LIQUID,
 	FLOATING,
-	MOVING //-TODO: Do moving flag
+	MOVING
 };

@@ -316,7 +316,7 @@ void NPL::UpdateStates()
 		DynamicBody* dB = (DynamicBody*)b;
 
 		// Detect moving
-		if (MathUtils::Abs(0 - MathUtils::Abs(dB->velocity.x)) > 0.001f || MathUtils::Abs(0 - MathUtils::Abs(dB->velocity.y)) > 0.001f)
+		if (MathUtils::Abs(MathUtils::Abs(dB->velocity.x)) > 0.001f || MathUtils::Abs(MathUtils::Abs(dB->velocity.y)) > 0.001f)
 			dB->bodyStateStill.Set((int)BodyState::MOVING, true);
 
 		// Detect floating (no collision with solids)

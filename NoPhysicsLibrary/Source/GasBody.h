@@ -10,21 +10,17 @@ public:
 
 	~GasBody() override;
 
-	float GetDensity() const
-	{
-		//-TODO: available to return as pixels. look how liquidbody does it
-		return mass / rect.GetArea();
-	}
+	float GetVolume(InUnit unit);
 
-	float GetHeatRatio() const
-	{
-		return heatRatio;
-	}
+	float GetDensity(InUnit unit);
 
-	float GetPressure() const
-	{
-		return pressure;
-	}
+	float GetHeatRatio() const;
+
+	float GetPressure() const;
+
+	void SetDensity(float density, InUnit unit);
+
+	void SetHeatRatio(float heatRatio);
 
 	Point GetDragCoefficient() const
 	{
