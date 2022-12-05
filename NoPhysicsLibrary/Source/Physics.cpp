@@ -174,8 +174,8 @@ void Physics::ApplyAeroDrag(DynamicBody* body, Body* env, float area)
 	int negy = -1;
 	if (body->velocity.x < 0) negx = 1;
 	if (body->velocity.y < 0) negy = 1;
-	float aerodragX = negx * 0.5 * gas->GetDensity() * MathUtils::Pow(body->velocity.x, 2) * area * gas->GetDragCoefficient().x;
-	float aerodragY = negy * 0.5 * gas->GetDensity() * MathUtils::Pow(body->velocity.y, 2) * area * gas->GetDragCoefficient().y;
+	float aerodragX = negx * 0.5 * gas->GetDensity(InUnit::IN_METERS) * MathUtils::Pow(body->velocity.x, 2) * area * gas->GetDragCoefficient().x;
+	float aerodragY = negy * 0.5 * gas->GetDensity(InUnit::IN_METERS) * MathUtils::Pow(body->velocity.y, 2) * area * gas->GetDragCoefficient().y;
 	body->ApplyForce(aerodragX, aerodragY, InUnit::IN_METERS);
 }
 
@@ -186,8 +186,8 @@ void Physics::ApplyAeroLift(DynamicBody* body, Body* env, float area)
 	int negy = 1;
 	if (body->velocity.x < 0) negx = 1;
 	if (body->velocity.y < 0) negy = -1;
-	float aeroliftY = negx * 0.5 * gas->GetDensity() * MathUtils::Pow(body->velocity.x, 2) * body->GetRect(InUnit::IN_METERS).h * gas->GetLiftCoefficient().x;
-	float aeroliftX = negy * 0.5 * gas->GetDensity() * MathUtils::Pow(body->velocity.y, 2) * body->GetRect(InUnit::IN_METERS).w * gas->GetLiftCoefficient().y;
+	float aeroliftY = negx * 0.5 * gas->GetDensity(InUnit::IN_METERS) * MathUtils::Pow(body->velocity.x, 2) * body->GetRect(InUnit::IN_METERS).h * gas->GetLiftCoefficient().x;
+	float aeroliftX = negy * 0.5 * gas->GetDensity(InUnit::IN_METERS) * MathUtils::Pow(body->velocity.y, 2) * body->GetRect(InUnit::IN_METERS).w * gas->GetLiftCoefficient().y;
 	// La atrocitat probocada aquí constitueix la rotació de 90º en forma de x = -y i y = x (El lift sempre va a 90 graus respecte el drag)
 	if (aeroliftY > 0) aeroliftY *= -1; // Maintain y axis lift always looking up :D
 	body->ApplyForce(aeroliftX, aeroliftY, InUnit::IN_METERS);

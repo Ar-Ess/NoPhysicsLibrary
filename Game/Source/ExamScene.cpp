@@ -1,4 +1,5 @@
 #include "ExamScene.h"
+#include "Vector.h"
 
 ExamScene::ExamScene()
 {

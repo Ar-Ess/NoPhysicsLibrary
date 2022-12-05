@@ -524,7 +524,7 @@ float NPL::ComputeTimeDelay(float distance, GasBody* environment)
 	// 1. Vel = sqrt( lambda * Pa / ro )
 	// 2. Time = distance / vel
 	float timeDelay = 0;
-	float vel = MathUtils::Sqrt(environment->GetHeatRatio() * environment->GetPressure() / environment->GetDensity());
+	float vel = MathUtils::Sqrt(environment->GetHeatRatio() * environment->GetPressure() / environment->GetDensity(InUnit::IN_METERS));
 	return distance / vel;
 }
 
