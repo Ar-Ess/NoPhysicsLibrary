@@ -13,7 +13,13 @@ public: // Methods
 	~DynamicBody() override;
 
 	// Returns if this body is colliding with any other body in the specified situation
+	bool IsBodyEnter(BodyState collision);
+
+	// Returns if this body is colliding with any other body in the specified situation
 	bool IsBodyStill(BodyState collision);
+
+	// Returns if this body is colliding with any other body in the specified situation
+	bool IsBodyExit(BodyState collision);
 
 	// Adds an specific body to a query to not process a possible collision with it.
 	// Good Practice: Add all bodies with impossible collision with this one to improve physics engine performance
@@ -74,8 +80,10 @@ private: // Variables
 	Force totalForces = {};
 	Momentum totalMomentum = {};
 
-	// Gas | Ground | Roof | Left | Right | Liquid | Float
-	Flag bodyStateStill = {}; // BodyStateStay
+	// Gas | Ground | Roof | Left | Right | Liquid | Floating | Moving
+	Flag bodyStateEnter = {};
+	Flag bodyStateStay = {};
+	Flag bodyStateExit = {};
 	//-TODO: IsBodyStart (BodyStateStart), IsBodyExit (BodyStateExit). Basically unity's "on collision enter/stay/exit".
 
 	Flag* globals = nullptr;

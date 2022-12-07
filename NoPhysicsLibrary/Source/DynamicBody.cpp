@@ -34,9 +34,19 @@ bool DynamicBody::IsIdExcludedFromCollision(intptr_t id)
 	return false;
 }
 
+bool DynamicBody::IsBodyEnter(BodyState collision)
+{
+	return bodyStateEnter.Get((int)collision);
+}
+
 bool DynamicBody::IsBodyStill(BodyState collision)
 {
-	return bodyStateStill.Get((int)collision);
+	return bodyStateStay.Get((int)collision);
+}
+
+bool DynamicBody::IsBodyExit(BodyState collision)
+{
+	return bodyStateExit.Get((int)collision);
 }
 
 void DynamicBody::ExcludeForCollision(const Body* b)

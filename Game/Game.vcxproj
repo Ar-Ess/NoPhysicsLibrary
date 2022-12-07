@@ -106,6 +106,7 @@
     <ClCompile Include="Source\TestThreeScene.cpp" />
     <ClCompile Include="Source\Textures.cpp" />
     <ClCompile Include="Source\Window.cpp" />
+    <ClInclude Include="Source\Array.h" />
     <ClInclude Include="Source\AssetsManager.h" />
     <ClInclude Include="Source\Circle.h" />
     <ClInclude Include="Source\Easing.h" />
@@ -114,6 +115,7 @@
     <ClInclude Include="Source\InitialScene.h" />
     <ClInclude Include="Source\Input.h" />
     <ClInclude Include="Source\App.h" />
+    <ClInclude Include="Source\Map.h" />
     <ClInclude Include="Source\Module.h" />
     <ClInclude Include="Source\PerfTimer.h" />
     <ClInclude Include="Source\Render.h" />

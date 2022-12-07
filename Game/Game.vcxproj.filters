@@ -100,7 +100,13 @@
       <Filter>Scenes</Filter>
     </ClInclude>
     <ClInclude Include="Source\Vector.h">
-      <Filter>Utils</Filter>
+      <Filter>Utils\Data Structures</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Array.h">
+      <Filter>Utils\Data Structures</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Map.h">
+      <Filter>Utils\Data Structures</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -118,6 +124,9 @@
     </Filter>
     <Filter Include="Scenes">
       <UniqueIdentifier>{ef7aa7b2-c433-4129-8049-bdba8e49182e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Utils\Data Structures">
+      <UniqueIdentifier>{c5ea655c-769e-4e82-a483-6926ada47076}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

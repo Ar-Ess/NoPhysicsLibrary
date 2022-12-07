@@ -308,8 +308,6 @@ void NPL::StepPhysics(float dt)
 
 void NPL::UpdateStates()
 {
-	//-TODONE: optimize logic to be open always
-
 	for (Body* b : bodies)
 	{
 		if (b->clas != BodyClass::DYNAMIC_BODY) continue;
@@ -317,7 +315,10 @@ void NPL::UpdateStates()
 
 		// Detect moving
 		if (MathUtils::Abs(MathUtils::Abs(dB->velocity.x)) > 0.001f || MathUtils::Abs(MathUtils::Abs(dB->velocity.y)) > 0.001f)
-			dB->bodyStateStill.Set((int)BodyState::MOVING, true);
+		{
+			if (!dB->IsBodyStill(BodyState::MOVING)) dB->bodyStateEnter.Set((int)BodyState::MOVING, true);
+			dB->bodyStateStay.Set((int)BodyState::MOVING, true);
+		}
 
 		// Detect floating (no collision with solids)
 		bool floating = true;
@@ -329,7 +330,7 @@ void NPL::UpdateStates()
 				break;
 			}
 		}
-		if (floating) dB->bodyStateStill.Set((int)BodyState::FLOATING, true);
+		if (floating) dB->bodyStateStay.Set((int)BodyState::FLOATING, true);
 
 		// Detect liquid & Gas
 		bool fullLiquidState = false;
@@ -338,7 +339,7 @@ void NPL::UpdateStates()
 		{
 			if (MathUtils::CheckCollision(b->GetRect(InUnit::IN_METERS), bodies[*i]->GetRect(InUnit::IN_METERS)))
 			{
-				dB->bodyStateStill.Set((int)BodyState::IN_LIQUID, true);
+				dB->bodyStateStay.Set((int)BodyState::IN_LIQUID, true);
 				totalArea += MathUtils::IntersectRectangle(b->GetRect(InUnit::IN_METERS), bodies[*i]->GetRect(InUnit::IN_METERS)).GetArea();
 				fullLiquidState = (0.0001f > MathUtils::Abs(b->GetRect(InUnit::IN_METERS).GetArea() - totalArea));
 				if (fullLiquidState) break;
@@ -351,7 +352,7 @@ void NPL::UpdateStates()
 		{
 			if (MathUtils::CheckCollision(b->GetRect(InUnit::IN_METERS), bodies[*i]->GetRect(InUnit::IN_METERS)))
 			{
-				dB->bodyStateStill.Set((int)BodyState::IN_GAS, true);
+				dB->bodyStateStay.Set((int)BodyState::IN_GAS, true);
 				break;
 			}
 		}

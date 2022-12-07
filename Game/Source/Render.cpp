@@ -141,7 +141,7 @@ bool Render::DrawTexture(SDL_Texture* texture, Point position, Point size, bool 
 	return ret;
 }
 
-bool Render::DrawRectangle(Rect rect, SDL_Color color, Point size, bool anchored, bool fill) const
+bool Render::DrawRectangle(Rect rect, SDL_Color color, Point offset, Point size, bool anchored, bool fill) const
 {
 	bool ret = true;
 
@@ -149,6 +149,9 @@ bool Render::DrawRectangle(Rect rect, SDL_Color color, Point size, bool anchored
 	SDL_SetRenderDrawColor(renderer, color.r, color.g, color.b, color.a);
 
 	Rect rec(rect);
+
+	rec.x += offset.x;
+	rec.y += offset.y;
 
 	if (anchored)
 	{

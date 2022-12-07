@@ -160,7 +160,6 @@ void Physics::ApplyAeroForces(DynamicBody* body)
 		areaCovered += area;
 
 		ApplyAeroDrag(body, gas, area);
-		//-TODO: End AeroForces
 		ApplyAeroLift(body, gas, area);
 
 		if (areaCovered - fullArea < 0.0001f) break;
@@ -252,7 +251,10 @@ void Physics::ResetFlags(std::vector<Body*>* bodies)
 	{
 		if (b->GetClass() != BodyClass::DYNAMIC_BODY) continue;
 
-		((DynamicBody*)b)->bodyStateStill.Clear();
+		DynamicBody* body = (DynamicBody*)b;
+		body->bodyStateEnter.Clear();
+		body->bodyStateStay.Clear();
+		body->bodyStateExit.Clear();
 	}
 }
 
@@ -286,14 +288,16 @@ void Physics::Declip()
 				{
 					dynBody->rect.y -= intersect.h / 2;
 					body->rect.y += intersect.h / 2;
-					dynBody->bodyStateStill.Set((int)BodyState::ON_GROUND, true);
+					if (!dynBody->IsBodyStill(BodyState::ON_GROUND)) dynBody->bodyStateEnter.Set((int)BodyState::ON_GROUND, true);
+					dynBody->bodyStateStay.Set((int)BodyState::ON_GROUND, true);
 				}
 				// Bottom -> Top
 				if (directionVec.y < 0)
 				{
 					dynBody->rect.y += intersect.h / 2;
 					body->rect.y -= intersect.h / 2;
-					dynBody->bodyStateStill.Set((int)BodyState::ON_ROOF, true);
+					if (!dynBody->IsBodyStill(BodyState::ON_ROOF)) dynBody->bodyStateEnter.Set((int)BodyState::ON_ROOF, true);
+					dynBody->bodyStateStay.Set((int)BodyState::ON_ROOF, true);
 				}
 
 				// Perfectly elastic collision
@@ -311,14 +315,16 @@ void Physics::Declip()
 				{
 					dynBody->rect.x -= intersect.w / 2;
 					body->rect.x += intersect.w / 2;
-					dynBody->bodyStateStill.Set((int)BodyState::ON_RIGHT, true);
+					if (!dynBody->IsBodyStill(BodyState::ON_RIGHT)) dynBody->bodyStateEnter.Set((int)BodyState::ON_RIGHT, true);
+					dynBody->bodyStateStay.Set((int)BodyState::ON_RIGHT, true);
 				}
 				// Right -> Left
 				if (directionVec.x < 0)
 				{
 					dynBody->rect.x += intersect.w / 2;
 					body->rect.x -= intersect.w / 2;
-					dynBody->bodyStateStill.Set((int)BodyState::ON_LEFT, true);
+					if (!dynBody->IsBodyStill(BodyState::ON_LEFT)) dynBody->bodyStateEnter.Set((int)BodyState::ON_LEFT, true);
+					dynBody->bodyStateStay.Set((int)BodyState::ON_LEFT, true);
 				}
 
 				// Perfectly elastic collision
@@ -356,13 +362,15 @@ void Physics::Declip()
 				if (directionVec.y > 0)
 				{
 					dynBody->rect.y = body->GetPosition(InUnit::IN_METERS).y - dynBody->rect.h;
-					dynBody->bodyStateStill.Set((int)BodyState::ON_GROUND, true);
+					if (!dynBody->IsBodyStill(BodyState::ON_GROUND)) dynBody->bodyStateEnter.Set((int)BodyState::ON_GROUND, true);
+					dynBody->bodyStateStay.Set((int)BodyState::ON_GROUND, true);
 				}
 				// Bottom -> Top
 				if (directionVec.y < 0)
 				{
 					dynBody->rect.y = body->GetRect(InUnit::IN_METERS).GetPosition(Align::BOTTOM_CENTER).y;
-					dynBody->bodyStateStill.Set((int)BodyState::ON_ROOF, true);
+					if (!dynBody->IsBodyStill(BodyState::ON_ROOF)) dynBody->bodyStateEnter.Set((int)BodyState::ON_ROOF, true);
+					dynBody->bodyStateStay.Set((int)BodyState::ON_ROOF, true);
 				}
 
 				// Perfectly elastic collision
@@ -378,13 +386,15 @@ void Physics::Declip()
 				if (directionVec.x > 0)
 				{
 					dynBody->rect.x = body->GetPosition(InUnit::IN_METERS).x - dynBody->rect.w;
-					dynBody->bodyStateStill.Set((int)BodyState::ON_RIGHT, true);
+					if (!dynBody->IsBodyStill(BodyState::ON_RIGHT)) dynBody->bodyStateEnter.Set((int)BodyState::ON_RIGHT, true);
+					dynBody->bodyStateStay.Set((int)BodyState::ON_RIGHT, true);
 				}
 				// Right -> Left
 				if (directionVec.x < 0)
 				{
 					dynBody->rect.x = body->GetRect(InUnit::IN_METERS).GetPosition(Align::CENTER_RIGHT).x;
-					dynBody->bodyStateStill.Set((int)BodyState::ON_LEFT, true);
+					if (!dynBody->IsBodyStill(BodyState::ON_LEFT)) dynBody->bodyStateEnter.Set((int)BodyState::ON_LEFT, true);
+					dynBody->bodyStateStay.Set((int)BodyState::ON_LEFT, true);
 				}
 
 				// Perfectly elastic collision
