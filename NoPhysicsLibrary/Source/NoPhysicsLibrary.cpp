@@ -316,7 +316,7 @@ void NPL::UpdateStates()
 		// Detect moving
 		if (MathUtils::Abs(MathUtils::Abs(dB->velocity.x)) > 0.001f || MathUtils::Abs(MathUtils::Abs(dB->velocity.y)) > 0.001f)
 		{
-			if (!dB->IsBodyStill(BodyState::MOVING)) dB->bodyStateEnter.Set((int)BodyState::MOVING, true);
+			if (!dB->prevBodyState.Get((int)BodyState::MOVING)) dB->bodyStateEnter.Set((int)BodyState::MOVING, true);
 			dB->bodyStateStay.Set((int)BodyState::MOVING, true);
 		}
 
@@ -346,16 +346,19 @@ void NPL::UpdateStates()
 			}
 		}
 
-		if (fullLiquidState) continue;
-
-		for (unsigned int* i : gasIndex)
+		if (!fullLiquidState)
 		{
-			if (MathUtils::CheckCollision(b->GetRect(InUnit::IN_METERS), bodies[*i]->GetRect(InUnit::IN_METERS)))
+			for (unsigned int* i : gasIndex)
 			{
-				dB->bodyStateStay.Set((int)BodyState::IN_GAS, true);
-				break;
+				if (MathUtils::CheckCollision(b->GetRect(InUnit::IN_METERS), bodies[*i]->GetRect(InUnit::IN_METERS)))
+				{
+					dB->bodyStateStay.Set((int)BodyState::IN_GAS, true);
+					break;
+				}
 			}
 		}
+
+		dB->SetPreviousBodyState();
 	}
 }
 

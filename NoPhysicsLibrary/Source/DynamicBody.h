@@ -62,6 +62,8 @@ private: // Methods
 
 	bool IsIdExcludedFromCollision(intptr_t id);
 
+	void SetPreviousBodyState();
+
 public: // Variables
 
 private: // Variables
@@ -84,6 +86,7 @@ private: // Variables
 	Flag bodyStateEnter = {};
 	Flag bodyStateStay = {};
 	Flag bodyStateExit = {};
+	Flag prevBodyState = {};
 	//-TODO: IsBodyStart (BodyStateStart), IsBodyExit (BodyStateExit). Basically unity's "on collision enter/stay/exit".
 
 	Flag* globals = nullptr;

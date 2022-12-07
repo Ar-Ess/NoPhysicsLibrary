@@ -288,7 +288,7 @@ void Physics::Declip()
 				{
 					dynBody->rect.y -= intersect.h / 2;
 					body->rect.y += intersect.h / 2;
-					if (!dynBody->IsBodyStill(BodyState::ON_GROUND)) dynBody->bodyStateEnter.Set((int)BodyState::ON_GROUND, true);
+					if (!dynBody->prevBodyState.Get((int)BodyState::ON_GROUND)) dynBody->bodyStateEnter.Set((int)BodyState::ON_GROUND, true);
 					dynBody->bodyStateStay.Set((int)BodyState::ON_GROUND, true);
 				}
 				// Bottom -> Top
@@ -296,7 +296,7 @@ void Physics::Declip()
 				{
 					dynBody->rect.y += intersect.h / 2;
 					body->rect.y -= intersect.h / 2;
-					if (!dynBody->IsBodyStill(BodyState::ON_ROOF)) dynBody->bodyStateEnter.Set((int)BodyState::ON_ROOF, true);
+					if (!dynBody->prevBodyState.Get((int)BodyState::ON_ROOF)) dynBody->bodyStateEnter.Set((int)BodyState::ON_ROOF, true);
 					dynBody->bodyStateStay.Set((int)BodyState::ON_ROOF, true);
 				}
 
@@ -315,7 +315,7 @@ void Physics::Declip()
 				{
 					dynBody->rect.x -= intersect.w / 2;
 					body->rect.x += intersect.w / 2;
-					if (!dynBody->IsBodyStill(BodyState::ON_RIGHT)) dynBody->bodyStateEnter.Set((int)BodyState::ON_RIGHT, true);
+					if (!dynBody->prevBodyState.Get((int)BodyState::ON_RIGHT)) dynBody->bodyStateEnter.Set((int)BodyState::ON_RIGHT, true);
 					dynBody->bodyStateStay.Set((int)BodyState::ON_RIGHT, true);
 				}
 				// Right -> Left
@@ -323,7 +323,7 @@ void Physics::Declip()
 				{
 					dynBody->rect.x += intersect.w / 2;
 					body->rect.x -= intersect.w / 2;
-					if (!dynBody->IsBodyStill(BodyState::ON_LEFT)) dynBody->bodyStateEnter.Set((int)BodyState::ON_LEFT, true);
+					if (!dynBody->prevBodyState.Get((int)BodyState::ON_LEFT)) dynBody->bodyStateEnter.Set((int)BodyState::ON_LEFT, true);
 					dynBody->bodyStateStay.Set((int)BodyState::ON_LEFT, true);
 				}
 
@@ -362,14 +362,14 @@ void Physics::Declip()
 				if (directionVec.y > 0)
 				{
 					dynBody->rect.y = body->GetPosition(InUnit::IN_METERS).y - dynBody->rect.h;
-					if (!dynBody->IsBodyStill(BodyState::ON_GROUND)) dynBody->bodyStateEnter.Set((int)BodyState::ON_GROUND, true);
+					if (!dynBody->prevBodyState.Get((int)BodyState::ON_GROUND)) dynBody->bodyStateEnter.Set((int)BodyState::ON_GROUND, true);
 					dynBody->bodyStateStay.Set((int)BodyState::ON_GROUND, true);
 				}
 				// Bottom -> Top
 				if (directionVec.y < 0)
 				{
 					dynBody->rect.y = body->GetRect(InUnit::IN_METERS).GetPosition(Align::BOTTOM_CENTER).y;
-					if (!dynBody->IsBodyStill(BodyState::ON_ROOF)) dynBody->bodyStateEnter.Set((int)BodyState::ON_ROOF, true);
+					if (!dynBody->prevBodyState.Get((int)BodyState::ON_ROOF)) dynBody->bodyStateEnter.Set((int)BodyState::ON_ROOF, true);
 					dynBody->bodyStateStay.Set((int)BodyState::ON_ROOF, true);
 				}
 
@@ -386,14 +386,14 @@ void Physics::Declip()
 				if (directionVec.x > 0)
 				{
 					dynBody->rect.x = body->GetPosition(InUnit::IN_METERS).x - dynBody->rect.w;
-					if (!dynBody->IsBodyStill(BodyState::ON_RIGHT)) dynBody->bodyStateEnter.Set((int)BodyState::ON_RIGHT, true);
+					if (!dynBody->prevBodyState.Get((int)BodyState::ON_RIGHT)) dynBody->bodyStateEnter.Set((int)BodyState::ON_RIGHT, true);
 					dynBody->bodyStateStay.Set((int)BodyState::ON_RIGHT, true);
 				}
 				// Right -> Left
 				if (directionVec.x < 0)
 				{
 					dynBody->rect.x = body->GetRect(InUnit::IN_METERS).GetPosition(Align::CENTER_RIGHT).x;
-					if (!dynBody->IsBodyStill(BodyState::ON_LEFT)) dynBody->bodyStateEnter.Set((int)BodyState::ON_LEFT, true);
+					if (!dynBody->prevBodyState.Get((int)BodyState::ON_LEFT)) dynBody->bodyStateEnter.Set((int)BodyState::ON_LEFT, true);
 					dynBody->bodyStateStay.Set((int)BodyState::ON_LEFT, true);
 				}
 

@@ -18,6 +18,12 @@ public:
 		this->flag = flag;
 	}
 
+	// Returns the binary flags in a number of 8 bits
+	uint8_t Binary() const
+	{
+		return flag;
+	}
+
 	// Set an specific flag from slot 0 to 7
 	void Set(short int index, bool state)
 	{

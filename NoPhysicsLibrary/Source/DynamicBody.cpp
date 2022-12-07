@@ -34,6 +34,11 @@ bool DynamicBody::IsIdExcludedFromCollision(intptr_t id)
 	return false;
 }
 
+void DynamicBody::SetPreviousBodyState()
+{
+	prevBodyState.Set(bodyStateStay.Binary());
+}
+
 bool DynamicBody::IsBodyEnter(BodyState collision)
 {
 	return bodyStateEnter.Get((int)collision);
