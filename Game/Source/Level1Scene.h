@@ -19,6 +19,12 @@ public:
 
 private:
 
+	bool UpdateLevel(float dt);
+
+	bool DrawLevel();
+
+private:
+
 	NPL* npl = nullptr;
 	DynamicBody* player = nullptr;
 
