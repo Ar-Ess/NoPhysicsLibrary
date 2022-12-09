@@ -25,8 +25,14 @@ public:
 		return liftCoefficient;
 	}
 
+	Point GetDragCoefficient() const
+	{
+		return dragCoefficient;
+	}
+
 private:
 
 	float buoyancy = 0.0f;
-	Point liftCoefficient = {0.0f, 0.1f};
+	Point liftCoefficient = {0.1f, 0.0f};
+	Point dragCoefficient = {1.0f, 0.0f};
 };

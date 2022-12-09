@@ -87,7 +87,7 @@ private: // Variables
 	Flag bodyStateStay = {};
 	Flag bodyStateExit = {};
 	Flag prevBodyState = {};
-	//-TODO: IsBodyStart (BodyStateStart), IsBodyExit (BodyStateExit). Basically unity's "on collision enter/stay/exit".
+	//-TODO: IsBodyExit (BodyStateExit). Basically unity's "on collision enter/stay/exit".
 
 	Flag* globals = nullptr;
 
