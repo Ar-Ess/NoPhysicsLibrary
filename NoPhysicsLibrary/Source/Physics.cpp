@@ -114,8 +114,8 @@ void Physics::ApplyHydroForces(DynamicBody* body)
 void Physics::ApplyHydroDrag(DynamicBody* body, Body* env)
 {
 	LiquidBody* liquid = (LiquidBody*)env;
-	int negx = 1;
-	int negy = 1;
+	int negx = -1;
+	int negy = -1;
 	if (body->velocity.x < 0) negx *= -1;
 	if (body->velocity.y < 0) negy *= -1;
 	float hydrodragY = negy * 0.5 * liquid->GetDensity(InUnit::IN_METERS) * MathUtils::Pow(body->velocity.y, 2) * body->GetRect(InUnit::IN_METERS).h /* * liquid->GetDragCoefficient().y*/;
