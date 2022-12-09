@@ -45,6 +45,9 @@
     <ClCompile Include="Source\ExamScene.cpp">
       <Filter>Scenes</Filter>
     </ClCompile>
+    <ClCompile Include="Source\Level1Scene.cpp">
+      <Filter>Scenes\Game</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\App.h" />
@@ -108,6 +111,9 @@
     <ClInclude Include="Source\Map.h">
       <Filter>Utils\Data Structures</Filter>
     </ClInclude>
+    <ClInclude Include="Source\Level1Scene.h">
+      <Filter>Scenes\Game</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="External">
@@ -127,6 +133,9 @@
     </Filter>
     <Filter Include="Utils\Data Structures">
       <UniqueIdentifier>{c5ea655c-769e-4e82-a483-6926ada47076}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Scenes\Game">
+      <UniqueIdentifier>{3b8c6d12-35b4-4ab3-8650-c712c700a892}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>
