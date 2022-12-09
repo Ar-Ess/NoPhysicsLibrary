@@ -119,6 +119,17 @@ const BodyCreation* NPL::CreateBody(Rect rectangle)
 	return bodyCreation->Access(rectangle);
 }
 
+const BodyCreation* NPL::CreateBody(float x, float y, float width, float height)
+{
+	//Library not initialized. Call NPL::Init() first
+	assert(physics != nullptr);
+
+	Rect rectangle = { x, y, width, height };
+	rectangle = { rectangle.GetPosition() * pixelsToMeters, rectangle.GetSize() * pixelsToMeters };
+
+	return bodyCreation->Access(rectangle);
+}
+
 const LibraryConfig* NPL::Configure()
 {
 	return libraryConfig->Access();

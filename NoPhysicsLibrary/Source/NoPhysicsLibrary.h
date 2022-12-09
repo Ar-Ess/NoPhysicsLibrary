@@ -28,6 +28,7 @@ public:
 	//  - Follow this function with a "." to choose the body type
 	//  - Rect must be on pixels (Multiply meters by "metersToPixels" variable on npl->Get() function)
 	const BodyCreation* CreateBody(Rect rectangle);
+	const BodyCreation* CreateBody(float x, float y, float width, float height);
 
 	// Configure certain aspects of this library operation
 	const LibraryConfig* Configure();
