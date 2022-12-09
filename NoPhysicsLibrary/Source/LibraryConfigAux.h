@@ -9,7 +9,7 @@ struct LibraryConfig
 {
 private:
 
-	LibraryConfig(float* panRange, Flag* physicsConfig, Point* globalGravity, Point* globalRestitution, Point* globalFriction, Body** listener, float* pixelsToMeters, float* ptmRatio, Flag* notifier) :
+	LibraryConfig(float* panRange, Flag* physicsConfig, Point* globalGravity, Point* globalRestitution, Point* globalFriction, Body** listener, float* pixelsToMeters, float* ptmRatio, unsigned int* physIterations, Flag* notifier) :
 		panRange(panRange),
 		physicsConfig(physicsConfig),
 		globalGravity(globalGravity),
@@ -18,6 +18,7 @@ private:
 		listener(listener),
 		pixelsToMeters(pixelsToMeters),
 		ptmRatio(ptmRatio),
+		physIterations(physIterations),
 		notifier(notifier)
 	{}
 
@@ -91,6 +92,14 @@ public:
 		notifier->Set(0, true);
 	}
 
+	// Define the amount of collision detection and declipping iterations per frame
+	// The higher iterations, the better collisions will be, but more computational cost
+	// Default value is set to 40
+	void PhysicsIterations(unsigned int iterations) const
+	{
+		*physIterations = iterations;
+	}
+
 private:
 
 	float* panRange = nullptr;
@@ -102,6 +111,7 @@ private:
 	Point* globalRestitution = nullptr;
 	Point* globalFriction = nullptr;
 	Body** listener = nullptr;
+	unsigned int* physIterations = nullptr;
 
 	Flag* notifier = nullptr;
 };

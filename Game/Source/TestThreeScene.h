@@ -23,6 +23,5 @@ private:
 	DynamicBody* player = nullptr;
 	DynamicBody* shell = nullptr;
 	StaticBody* emitter = nullptr;
-	StaticBody* gravable = nullptr;
 };
 

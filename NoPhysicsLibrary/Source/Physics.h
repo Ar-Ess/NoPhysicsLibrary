@@ -12,7 +12,7 @@ class Physics
 {
 public: // Methods
 
-	Physics(const std::vector<Body*>* bodies, const Flag* physicsConfig, const std::vector<unsigned int*>* gasIndex, const std::vector<unsigned int*>* liquidIndex, const float* pixelsToMeters);
+	Physics(const std::vector<Body*>* bodies, const Flag* physicsConfig, const std::vector<unsigned int*>* gasIndex, const std::vector<unsigned int*>* liquidIndex, const float* pixelsToMeters, const unsigned int* physIterations);
 
 	virtual ~Physics();
 
@@ -60,5 +60,6 @@ public: // Variables
 	// Config
 	const Flag* physicsConfig = nullptr;
 	const float* pixelsToMeters = nullptr;
+	const unsigned int* physIterations = nullptr;
 
 };

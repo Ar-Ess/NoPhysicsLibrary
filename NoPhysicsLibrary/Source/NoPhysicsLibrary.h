@@ -109,6 +109,7 @@ private:
 	// - Physics
 
 	Flag physicsConfig = {}; // Debug Collisions (0) |
+	unsigned int physIterations = 40;
 
 	//_____________________
 	// - Acoustics

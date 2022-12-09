@@ -7,13 +7,14 @@
 #include "MathUtils.h"
 #include "Ray.h"
 
-Physics::Physics(const std::vector<Body*>* bodies, const Flag* physicsConfig, const std::vector<unsigned int*>* gasIndex, const std::vector<unsigned int*>* liquidIndex, const float* pixelsToMeters)
+Physics::Physics(const std::vector<Body*>* bodies, const Flag* physicsConfig, const std::vector<unsigned int*>* gasIndex, const std::vector<unsigned int*>* liquidIndex, const float* pixelsToMeters, const unsigned int* physIterations)
 {
 	this->bodies = bodies;
 	this->physicsConfig = physicsConfig;
 	this->gasIndex = gasIndex;
 	this->liquidIndex = liquidIndex;
 	this->pixelsToMeters = pixelsToMeters;
+	this->physIterations = physIterations;
 }
 
 Physics::~Physics()
@@ -52,9 +53,12 @@ void Physics::SolveCollisions(std::vector<Body*>* bodies)
 {
 	ResetFlags(bodies);
 
-	DetectCollisions(bodies);
+	for (int i = 0; i < *physIterations; ++i)
+	{
+		DetectCollisions(bodies);
 
-	Declip();
+		Declip();
+	}
 }
 
 void Physics::CleanUp()

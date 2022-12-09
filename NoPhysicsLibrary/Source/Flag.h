@@ -10,7 +10,7 @@ public:
 
 	Flag()
 	{
-
+		this->flag = 0;
 	}
 
 	Flag(uint8_t flag)
