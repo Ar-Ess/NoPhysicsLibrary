@@ -1,15 +1,15 @@
-#include "Level1Scene.h"
+#include "EditorScene.h"
 #include "Vector.h"
 
-Level1Scene::Level1Scene()
+EditorScene::EditorScene()
 {
 }
 
-Level1Scene::~Level1Scene()
+EditorScene::~EditorScene()
 {
 }
 
-bool Level1Scene::Start()
+bool EditorScene::Start()
 {
 	Point wSize = window->GetSize();
 	npl = new NPL();
@@ -33,7 +33,7 @@ bool Level1Scene::Start()
 	return true;
 }
 
-bool Level1Scene::Update(float dt)
+bool EditorScene::Update(float dt)
 {
 	UpdateLevel(dt);
 	DrawLevel();
@@ -44,7 +44,7 @@ bool Level1Scene::Update(float dt)
 	return true;
 }
 
-bool Level1Scene::CleanUp()
+bool EditorScene::CleanUp()
 {
 	if (!npl)
 	{
@@ -56,7 +56,7 @@ bool Level1Scene::CleanUp()
 	return true;
 }
 
-bool Level1Scene::UpdateLevel(float dt)
+bool EditorScene::UpdateLevel(float dt)
 {
 	bool ground = player->IsBodyStill(BodyState::ON_GROUND);
 	bool shift = (input->GetKey(SDL_SCANCODE_LSHIFT) == KeyState::KEY_REPEAT);
@@ -95,7 +95,7 @@ bool Level1Scene::UpdateLevel(float dt)
 	return true;
 }
 
-bool Level1Scene::DrawLevel()
+bool EditorScene::DrawLevel()
 {
 	unsigned int size = npl->Get()->BodiesCount();
 	for (unsigned int i = 0; i < size; ++i)
