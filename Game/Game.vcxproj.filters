@@ -45,9 +45,6 @@
     <ClCompile Include="Source\ExamScene.cpp">
       <Filter>Scenes</Filter>
     </ClCompile>
-    <ClCompile Include="Source\EditorScene.cpp">
-      <Filter>Scenes</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\App.h" />
@@ -110,9 +107,6 @@
     </ClInclude>
     <ClInclude Include="Source\Map.h">
       <Filter>Utils\Data Structures</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\EditorScene.h">
-      <Filter>Scenes</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
