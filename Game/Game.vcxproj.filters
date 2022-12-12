@@ -46,7 +46,7 @@
       <Filter>Scenes</Filter>
     </ClCompile>
     <ClCompile Include="Source\Level1Scene.cpp">
-      <Filter>Scenes\Game</Filter>
+      <Filter>Scenes</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -112,7 +112,7 @@
       <Filter>Utils\Data Structures</Filter>
     </ClInclude>
     <ClInclude Include="Source\Level1Scene.h">
-      <Filter>Scenes\Game</Filter>
+      <Filter>Scenes</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -133,9 +133,6 @@
     </Filter>
     <Filter Include="Utils\Data Structures">
       <UniqueIdentifier>{c5ea655c-769e-4e82-a483-6926ada47076}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Scenes\Game">
-      <UniqueIdentifier>{3b8c6d12-35b4-4ab3-8650-c712c700a892}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>
