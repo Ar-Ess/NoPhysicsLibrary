@@ -1,25 +1,16 @@
 #pragma once
 #include "Vector.h"
 typedef unsigned int uint;
-template <class T> class Grid
+template <class T> 
+class Grid
 {
-    struct Node
-    {
-        Node(Node* prev, Node* post, T value = nullptr)
-        {
-            this->value = value;
-            this->prev = prev;
-            this->post = post;
-        }
-        Node* prev = nullptr;
-        Node* post = nullptr;
-        T value = nullptr;
-    };
-
 public:
 
-    Grid(uint width, uint height)
+    //-TODO: make grid dynamic possible
+    Grid(uint width, uint height, bool dynamic = false)
     {
+        dynamic = false;
+        this->dynamic = dynamic;
         this->width = width;
         this->height = height;
         this->grid = Vector<Vector<T>*>();
@@ -28,6 +19,14 @@ public:
             grid.PushBack(new Vector<T>());
             for (uint x = 0; x < width; ++x) grid.Front()->PushBack(T());
         }
+    }
+
+    bool Add(T value, uint x, uint y)
+    {
+        if (x >= width && !dynamic) return false;
+        if (y >= height && !dynamic) return false;
+
+        // Borrar anterior valor i asignar nou :O
     }
 
     //bool PushBack(T value)
@@ -208,7 +207,7 @@ public:
 
 private:
 
-    Node* GetNode(unsigned int index) const
+    /*Node* GetNode(unsigned int index) const
     {
         int length = size - 1;
         int medium = (length / 2) + (length % 2);
@@ -226,7 +225,7 @@ private:
         }
 
         return node;
-    }
+    }*/
 
 private:
 
@@ -234,5 +233,6 @@ private:
 
     uint width = 0;
     uint height = 0;
+    bool dynamic = false;
 
 };
