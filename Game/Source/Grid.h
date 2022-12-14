@@ -1,9 +1,15 @@
 #pragma once
 #include "Vector.h"
 typedef unsigned int uint;
-template <class T> 
+template <class T>
 class Grid
 {
+
+    struct Value
+    {
+        T value;
+    };
+
 public:
 
     //-TODO: make grid dynamic possible
@@ -11,13 +17,14 @@ public:
     {
         dynamic = false;
         this->dynamic = dynamic;
+        this->isPointer = std::is_pointer<T>::value;
         this->width = width;
         this->height = height;
-        this->grid = Vector<Vector<T>*>();
+        this->grid = Vector<Vector<Value*>*>();
         for (uint y = 0; y < height; ++y)
         {
-            grid.PushBack(new Vector<T>());
-            for (uint x = 0; x < width; ++x) grid.Front()->PushBack(T());
+            grid.PushBack(new Vector<Value*>());
+            for (uint x = 0; x < width; ++x) grid.Back()->PushBack(new Value());
         }
     }
 
@@ -26,7 +33,9 @@ public:
         if (x >= width && !dynamic) return false;
         if (y >= height && !dynamic) return false;
 
-        // Borrar anterior valor i asignar nou :O
+        Value* v = grid.At(y)->At(x);
+        if (isPointer) delete v->value;
+        v->value = value;
     }
 
     //bool PushBack(T value)
@@ -229,10 +238,11 @@ private:
 
 private:
 
-    Vector<Vector<T>*> grid;
+    Vector<Vector<Value*>*> grid;
 
     uint width = 0;
     uint height = 0;
     bool dynamic = false;
+    bool isPointer = false;
 
 };
