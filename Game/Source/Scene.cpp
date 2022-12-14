@@ -30,3 +30,13 @@ bool Scene::PushScene(Scene* push)
 
 	return true;
 }
+
+Scenes Scene::GetCurrentScene() const
+{
+	return (Scenes)scene->currScene;
+}
+
+Scenes Scene::GetPreviousScene() const
+{
+	return (Scenes)scene->prevScene;
+}

@@ -1,5 +1,4 @@
 #include "EditorScene.h"
-#include "Vector.h"
 
 EditorScene::EditorScene()
 {
@@ -12,22 +11,23 @@ EditorScene::~EditorScene()
 bool EditorScene::Start()
 {
 	Point wSize = window->GetSize();
-	npl = new NPL();
-	npl->Init(128);
-	npl->Configure()->PanRange(10, InUnit::IN_METERS);
-	npl->Configure()->PhysicsIterations(40);
-	npl->SetPhysicsPreset(PhysicsPreset::DEFAULT_PHYSICS_PRESET);
-	npl->Configure()->Listener(player);
-	npl->LoadSound("Assets/Audio/bounce.wav");
+	physics = new NPL();
+	physics->Init(128);
+	physics->Configure()->PanRange(10, InUnit::IN_METERS);
+	physics->Configure()->PhysicsIterations(40);
+	physics->SetPhysicsPreset(PhysicsPreset::DEFAULT_PHYSICS_PRESET);
+	physics->Configure()->Listener(player);
+	physics->LoadSound("Assets/Audio/bounce.wav");
 
 
-	player = npl->CreateBody({ 100.0f, 200.0f, 38.0f, 90.0f })
+	player = physics->CreateBody({ 100.0f, 200.0f, 38.0f, 90.0f })
 		->Dynamic(80);
 
 	// Ground
-	npl->CreateBody(0, wSize.y - 20, 4000, 20)->Static();
-	npl->CreateBody(-20, 0, 20, 720)->Static();
+	physics->CreateBody(0, wSize.y - 20, 4000, 20)->Static();
+	physics->CreateBody(-20, 0, 20, 720)->Static();
 
+	physics->PausePhysics(editMode);
 	render->ResetCamera();
 
 	return true;
@@ -35,8 +35,16 @@ bool EditorScene::Start()
 
 bool EditorScene::Update(float dt)
 {
-	UpdateLevel(dt);
-	DrawLevel();
+	UpdateEditMode(dt);
+	DrawEditMode(dt);
+
+	physics->Update(&dt);
+
+	if (input->GetKey(SDL_SCANCODE_RETURN) == KeyState::KEY_DOWN)
+	{
+		editMode = !editMode;
+		physics->PausePhysics(editMode);
+	}
 
 	//Change scene
 	if (input->GetKey(SDL_SCANCODE_BACKSPACE) == KeyState::KEY_DOWN) SetScene(Scenes::INITIAL_SCENE);
@@ -44,20 +52,58 @@ bool EditorScene::Update(float dt)
 	return true;
 }
 
+bool EditorScene::Draw(float dt)
+{
+	unsigned int size = physics->Get()->BodiesCount();
+	for (unsigned int i = 0; i < size; ++i)
+	{
+		const Body* b = physics->Get()->Bodies(i);
+		SDL_Color color = { 0, 0, 0, 50 };
+
+		switch (b->GetClass())
+		{
+		case BodyClass::STATIC_BODY:  color = { 255,   0,   0, color.a }; break;
+		case BodyClass::DYNAMIC_BODY: color = { 0, 255,   0, color.a }; break;
+		case BodyClass::LIQUID_BODY:  color = { 100, 100, 255, color.a }; break;
+		case BodyClass::GAS_BODY:     color = { 255, 255, 255, (Uint8)(color.a - 20) }; break;
+		}
+		render->DrawRectangle(b->GetRect(InUnit::IN_PIXELS), color);
+		render->DrawRectangle(Rect{ b->GetEmissionPoint(InUnit::IN_PIXELS).Apply({-3.0f, -3}), 6, 6 }, { 155, 255, 155, 255 });
+	}
+
+	return true;
+}
+
 bool EditorScene::CleanUp()
 {
-	if (!npl)
+	if (!physics)
 	{
-		npl->CleanUp();
-		RELEASE(npl);
+		physics->CleanUp();
+		RELEASE(physics);
 	}
 
 	player = nullptr;
 	return true;
 }
 
-bool EditorScene::UpdateLevel(float dt)
+bool EditorScene::UpdateEditMode(float dt)
 {
+	if (!editMode) return true;
+
+	return true;
+}
+
+bool EditorScene::DrawEditMode(float dt)
+{
+	if (!editMode) return true;
+
+	return true;
+}
+
+bool EditorScene::UpdatePlayMode(float dt)
+{
+	if (editMode) return true;
+
 	bool ground = player->IsBodyStill(BodyState::ON_GROUND);
 	bool shift = (input->GetKey(SDL_SCANCODE_LSHIFT) == KeyState::KEY_REPEAT);
 
@@ -90,29 +136,12 @@ bool EditorScene::UpdateLevel(float dt)
 		player->ApplyMomentum(0, -400 + plus);
 	}
 
-	npl->Update(&dt);
-
 	return true;
 }
 
-bool EditorScene::DrawLevel()
+bool EditorScene::DrawPlayMode(float dt)
 {
-	unsigned int size = npl->Get()->BodiesCount();
-	for (unsigned int i = 0; i < size; ++i)
-	{
-		const Body* b = npl->Get()->Bodies(i);
-		SDL_Color color = { 0, 0, 0, 50 };
-
-		switch (b->GetClass())
-		{
-		case BodyClass::STATIC_BODY:  color = { 255,   0,   0, color.a }; break;
-		case BodyClass::DYNAMIC_BODY: color = { 0, 255,   0, color.a }; break;
-		case BodyClass::LIQUID_BODY:  color = { 100, 100, 255, color.a }; break;
-		case BodyClass::GAS_BODY:     color = { 255, 255, 255, (Uint8)(color.a - 20) }; break;
-		}
-		render->DrawRectangle(b->GetRect(InUnit::IN_PIXELS), color);
-		render->DrawRectangle(Rect{ b->GetEmissionPoint(InUnit::IN_PIXELS).Apply({-3.0f, -3}), 6, 6 }, { 155, 255, 155, 255 });
-	}
+	if (editMode) return true;
 
 	return true;
 }

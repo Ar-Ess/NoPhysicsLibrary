@@ -1,6 +1,4 @@
 #pragma once
-#include <iostream>
-#include <string>
 
 template <class T>
 class Vector
@@ -30,17 +28,6 @@ public:
         if (size <= 1) startNode = node;
 
         return true;
-
-        //return;
-        //if (size <= 1)
-        //{
-        //    PushInitialValue(node);
-        //    return;
-        //}
-        //finalNode->post = node;
-        //Node* prev = finalNode;
-        //finalNode = node;
-        //finalNode->prev = prev;
     }
 
     bool PushFront(T value)
@@ -53,16 +40,6 @@ public:
         if (size <= 1) finalNode = node;
 
         return true;
-
-        //if (size <= 1)
-        //{
-        //    PushInitialValue(node);
-        //    return;
-        //}
-        //startNode->prev = node;
-        //Node* post = startNode;
-        //startNode = node;
-        //startNode->post = post;
     }
 
     bool Insert(T value, unsigned int index)
@@ -117,7 +94,6 @@ public:
         return size;
     }
 
-    //TODO: with iterators
     bool Clear()
     {
         Node* node = finalNode;
@@ -225,12 +201,6 @@ public:
     }
 
 private:
-
-    //void PushInitialValue(Node* node) 
-    //{
-    //    finalNode = node;
-    //    startNode = node;
-    //}
 
     Node* GetNode(unsigned int index) const
     {

@@ -30,10 +30,10 @@ public:
 
 	int changeScene = -1; // Flag to change scene index
 
-private: // Variables
-
 	int currScene = -1;
 	int prevScene = -1;
+
+private: // Variables
 
 	Render* render = nullptr;
 	Input* input = nullptr;

@@ -13,7 +13,7 @@ enum class Scenes
 	INITIAL_SCENE,
 	TEST_SCENE,
 	EXAM_SCENE,
-	LEVEL_1_SCENE
+	EDITOR_SCENE
 };
 
 class Scene
@@ -26,6 +26,8 @@ public: // Methods
 
 	virtual bool Update(float dt) { return true; }
 
+	virtual bool Draw(float dt) { return true; }
+
 	virtual bool CleanUp() { return true; }
 
 	void SetModules(Render* render, Input* input, Textures* texture, AssetsManager* assets, Window* window, SceneManager* scene);
@@ -37,6 +39,10 @@ protected: // Methods
 	bool SetScene(Scenes index);
 
 	bool PushScene(Scene* push);
+
+	Scenes GetCurrentScene() const;
+
+	Scenes GetPreviousScene() const;
 
 protected: // Variables
 

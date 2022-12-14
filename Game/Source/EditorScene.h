@@ -2,6 +2,7 @@
 
 #include "Scene.h"
 #include "NoPhysicsLibrary.h"
+#include "Grid.h"
 
 class EditorScene : public Scene
 {
@@ -15,17 +16,26 @@ public:
 
 	bool Update(float dt) override;
 
+	bool Draw(float dt) override;
+
 	bool CleanUp() override;
 
 private:
 
-	bool UpdateLevel(float dt);
+	bool UpdateEditMode(float dt);
+	bool DrawEditMode(float dt);
 
-	bool DrawLevel();
+	bool UpdatePlayMode(float dt);
+	bool DrawPlayMode(float dt);
 
 private:
 
-	NPL* npl = nullptr;
+	// Editor
+	Grid<int*> grid = Grid<int*>(24, 14);
+	bool editMode = true;
+
+	// Physics
+	NPL* physics = nullptr;
 	DynamicBody* player = nullptr;
 
 };

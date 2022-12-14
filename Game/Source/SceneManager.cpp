@@ -2,6 +2,7 @@
 #include "InitialScene.h"
 #include "TestThreeScene.h"
 #include "ExamScene.h"
+#include "EditorScene.h"
 
 SceneManager::SceneManager(Render* render, Input* input, Window* window)
 {
@@ -23,6 +24,7 @@ bool SceneManager::Start()
 	PushScene(new InitialScene());
 	PushScene(new TestThreeScene());
 	PushScene(new ExamScene());
+	PushScene(new EditorScene());
 
 	ChangeScene(0);
 
@@ -36,6 +38,8 @@ bool SceneManager::Update(float dt)
 	if (currScene <= -1) return true;
 
 	ret = scenes[currScene]->Update(dt);
+
+	ret = scenes[currScene]->Draw(dt);
 
 	if (changeScene > -1) ChangeScene(changeScene);
 

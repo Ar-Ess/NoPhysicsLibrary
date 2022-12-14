@@ -39,10 +39,13 @@
     <ClCompile Include="Source\InitialScene.cpp">
       <Filter>Scenes</Filter>
     </ClCompile>
-    <ClCompile Include="Source\TestThreeScene.cpp">
-      <Filter>Scenes</Filter>
-    </ClCompile>
     <ClCompile Include="Source\ExamScene.cpp">
+      <Filter>Scenes\Test</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\TestThreeScene.cpp">
+      <Filter>Scenes\Test</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\EditorScene.cpp">
       <Filter>Scenes</Filter>
     </ClCompile>
   </ItemGroup>
@@ -93,12 +96,6 @@
     <ClInclude Include="Source\InitialScene.h">
       <Filter>Scenes</Filter>
     </ClInclude>
-    <ClInclude Include="Source\TestThreeScene.h">
-      <Filter>Scenes</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\ExamScene.h">
-      <Filter>Scenes</Filter>
-    </ClInclude>
     <ClInclude Include="Source\Vector.h">
       <Filter>Utils\Data Structures</Filter>
     </ClInclude>
@@ -106,6 +103,18 @@
       <Filter>Utils\Data Structures</Filter>
     </ClInclude>
     <ClInclude Include="Source\Map.h">
+      <Filter>Utils\Data Structures</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\ExamScene.h">
+      <Filter>Scenes\Test</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\TestThreeScene.h">
+      <Filter>Scenes\Test</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\EditorScene.h">
+      <Filter>Scenes</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Grid.h">
       <Filter>Utils\Data Structures</Filter>
     </ClInclude>
   </ItemGroup>
@@ -127,6 +136,9 @@
     </Filter>
     <Filter Include="Utils\Data Structures">
       <UniqueIdentifier>{c5ea655c-769e-4e82-a483-6926ada47076}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Scenes\Test">
+      <UniqueIdentifier>{c8d8bca4-8cd3-4d69-aa03-02475f9cd6a9}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>
