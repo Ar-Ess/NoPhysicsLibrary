@@ -10,8 +10,14 @@ EditorScene::~EditorScene()
 
 bool EditorScene::Start()
 {
-	grid.Add(int(1), 1, 2);
+	grid.Set(int(1), 1, 2);
 	int i = grid.At(1, 2);
+	i = grid.Width();
+	i = grid.Heigth();
+	i = grid.SizeRow(2);
+	i = grid.SizeCol(1);
+	i = grid.Size();
+	i = grid.SizeMax();
 
 	Point wSize = window->GetSize();
 	physics = new NPL();

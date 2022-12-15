@@ -9,6 +9,7 @@ class Grid
     {
         Value(T value = NULL) { this->value = NULL; }
         T value = NULL;
+        bool empty = true;
     };
 
 public:
@@ -24,17 +25,21 @@ public:
         for (uint y = 0; y < height; ++y)
         {
             grid.PushBack(new Vector<Value*>());
+            columnSize.PushBack(0);
             for (uint x = 0; x < width; ++x) grid.Back()->PushBack(new Value());
         }
     }
 
-    bool Add(T value, uint x, uint y)
+    bool Set(T value, uint x, uint y)
     {
         if (x >= width && !dynamic) return false;
         if (y >= height && !dynamic) return false;
 
         Value* v = grid.At(y)->At(x);
         v->value = value;
+        v->empty = false;
+        columnSize.Asign(columnSize.At(x) + 1, x);
+        size++;
     }
 
     T At(uint x, uint y) const
@@ -52,7 +57,7 @@ public:
     }
 
     // Returns the total amount of nodes
-    uint MaxSize() const
+    uint SizeMax() const
     {
         return width * height;
     }
@@ -64,23 +69,23 @@ public:
 
     uint Heigth() const
     {
-        return heigth;
+        return height;
     }
 
     // Returns the amount of not empty nodes in a row
-    uint RowSize(uint row) const
+    uint SizeRow(uint row) const
     {
         if (row >= width) return 0;
 
-        return grid.At(row).Size();
+        return grid.At(row)->Size(); //-TODO: wrong, need to count the amount of not empty nodes
     }
 
     // Returns the amount of not empty nodes in a column
-    uint RowSize(uint col) const
+    uint SizeCol(uint col) const
     {
         if (col >= height) return 0;
 
-        return 0; //-TODO: keep track of this with another vector<int>
+        return columnSize.At(col);
     }
 
     //bool PushBack(T value)
@@ -255,6 +260,7 @@ public:
 private:
 
     Vector<Vector<Value*>*> grid;
+    Vector<uint> columnSize;
 
     uint width = 0;
     uint height = 0;

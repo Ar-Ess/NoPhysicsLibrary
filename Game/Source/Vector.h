@@ -3,6 +3,7 @@
 template <class T>
 class Vector
 {
+    //-TODO: Specialize vector for pointers and for variables to delete them
     struct Node
     {
         Node(T value, Node* prev, Node* post)
@@ -61,6 +62,17 @@ public:
         if (index >= size) return 0;
 
         return GetNode(index)->value;
+    }
+
+    bool Asign(T value, unsigned int index)
+    {
+        if (index >= size) return false;
+
+        Node* node = GetNode(index);
+        //-TODO: delete previous value
+        node->value = value;
+
+        return true;
     }
 
     int Find(T value) const
@@ -204,6 +216,8 @@ private:
 
     Node* GetNode(unsigned int index) const
     {
+        if (index == 0) return startNode;
+        if (index == size - 1) return finalNode;
         int length = size - 1;
         int medium = (length / 2) + (length % 2);
 
