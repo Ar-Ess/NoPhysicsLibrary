@@ -10,6 +10,9 @@ EditorScene::~EditorScene()
 
 bool EditorScene::Start()
 {
+	grid.Add(int(1), 1, 2);
+	int i = grid.At(1, 2);
+
 	Point wSize = window->GetSize();
 	physics = new NPL();
 	physics->Init(128);

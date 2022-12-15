@@ -31,7 +31,7 @@ private:
 private:
 
 	// Editor
-	Grid<int*> grid = Grid<int*>(24, 14);
+	Grid<int> grid = Grid<int>(24, 14);
 	bool editMode = true;
 
 	// Physics
