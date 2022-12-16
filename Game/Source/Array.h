@@ -26,6 +26,17 @@ public:
         final = node;
         ++size;
     }
+
+    bool Assign(T value, unsigned int index)
+    {
+        if (index >= size) return false;
+
+        Node* node = GetNode(index);
+        //-TODO: delete previous value
+        node->value = value;
+
+        return true;
+    }
     
     void Erase(uint index)
     {
@@ -60,7 +71,7 @@ public:
         return size;
     }
     
-    T At(uint index)
+    T At(uint index) const
     {
         return GetNode(index)->value;
     }
@@ -99,9 +110,9 @@ public:
     
 private:
 
-    Node* GetNode(uint index)
+    Node* GetNode(uint index) const
     {
-	if (index >= size) return;
+	    if (index >= size) return nullptr;
         if (index == 0) return start;
         if (index == size - 1) return final;
         uint middle = size / 2 + size % 2;

@@ -1,4 +1,5 @@
 #include "EditorScene.h"
+#include "PerfTimer.h"
 
 EditorScene::EditorScene()
 {
@@ -33,9 +34,11 @@ bool EditorScene::Start()
 	i = gred.Size();
 	i = gred.SizeMax();
 
-	gred[3];
-
-	//Grid<int> grod(10, 10); // És una grid 10/10
+	int result[5] = {};
+	for (int i = 0; i < gred.Size(); ++i)
+	{
+		result[i] = gred[i];
+	}
 
 	Point wSize = window->GetSize();
 	physics = new NPL();

@@ -23,7 +23,7 @@ uint32 LightTimer::Read() const
 	return SDL_GetTicks() - startTime;
 }
 
-float LightTimer::ReadSec() const
+double LightTimer::ReadSec() const
 {
-	return float(SDL_GetTicks() - startTime) / 1000.0f;
+	return (SDL_GetTicks() - startTime) / 1000.0;
 }

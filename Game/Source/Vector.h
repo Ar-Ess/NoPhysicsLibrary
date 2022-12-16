@@ -64,7 +64,7 @@ public:
         return GetNode(index)->value;
     }
 
-    bool Asign(T value, unsigned int index)
+    bool Assign(T value, unsigned int index)
     {
         if (index >= size) return false;
 

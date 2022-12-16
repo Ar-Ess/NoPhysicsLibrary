@@ -13,7 +13,7 @@ public:
 	void Start();
 	double ReadMs() const;
 	uint64 ReadTicks() const;
-	float ReadSec() const;
+	double ReadSec() const;
 
 private:
 	uint32	started_at;
