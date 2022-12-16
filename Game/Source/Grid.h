@@ -8,8 +8,23 @@ class Grid
     struct Value
     {
         Value(T value = NULL) { this->value = NULL; }
+        void Set(T value)
+        {
+            this->value = value;
+            this->empty = false;
+        }
         T value = NULL;
         bool empty = true;
+    };
+
+    struct Row
+    {
+        Vector<Value*> row;
+        uint size = 0;
+        Value* GetValue(uint x)
+        {
+            return row.At(x);
+        }
     };
 
 public:
@@ -21,12 +36,12 @@ public:
         this->dynamic = dynamic;
         this->width = width;
         this->height = height;
-        this->grid = Vector<Vector<Value*>*>();
+        this->grid = Vector<Row*>();
         for (uint y = 0; y < height; ++y)
         {
-            grid.PushBack(new Vector<Value*>());
+            grid.PushBack(new Row());
             columnSize.PushBack(0);
-            for (uint x = 0; x < width; ++x) grid.Back()->PushBack(new Value());
+            for (uint x = 0; x < width; ++x) grid.Back()->row.PushBack(new Value());
         }
     }
 
@@ -35,10 +50,11 @@ public:
         if (x >= width && !dynamic) return false;
         if (y >= height && !dynamic) return false;
 
-        Value* v = grid.At(y)->At(x);
-        v->value = value;
-        v->empty = false;
-        columnSize.Asign(columnSize.At(x) + 1, x);
+        Row* row = GetRow(y);
+        row->size++;
+
+        row->GetValue(x)->Set(value);
+        AddColumnSize(1, x);
         size++;
     }
 
@@ -47,7 +63,7 @@ public:
         assert(x < width || dynamic);
         assert(y < height || dynamic);
 
-        return grid.At(y)->At(x)->value;
+        return grid.At(y)->row.At(x)->value;
     }
 
     // Returns the amount of not empty nodes
@@ -77,7 +93,7 @@ public:
     {
         if (row >= width) return 0;
 
-        return grid.At(row)->Size(); //-TODO: wrong, need to count the amount of not empty nodes
+        return grid.At(row)->size;
     }
 
     // Returns the amount of not empty nodes in a column
@@ -259,7 +275,19 @@ public:
 
 private:
 
-    Vector<Vector<Value*>*> grid;
+    Row* GetRow(uint y)
+    {
+        return grid.At(y);
+    }
+
+    void AddColumnSize(int add, uint x)
+    {
+        columnSize.Asign(columnSize.At(x) + add, x);
+    }
+
+private:
+
+    Vector<Row*> grid;
     Vector<uint> columnSize;
 
     uint width = 0;

@@ -10,14 +10,30 @@ EditorScene::~EditorScene()
 
 bool EditorScene::Start()
 {
-	grid.Set(int(1), 1, 2);
-	int i = grid.At(1, 2);
-	i = grid.Width();
-	i = grid.Heigth();
-	i = grid.SizeRow(2);
-	i = grid.SizeCol(1);
-	i = grid.Size();
-	i = grid.SizeMax();
+	Grid<int> gred(3, 3);
+	int i = 0;
+	gred.Set(int(2), 1, 2);
+	gred.Set(int(5), 0, 2);
+	gred.Set(int(4), 2, 1);
+	gred.Set(int(1), 0, 0);
+	gred.Set(int(9), 2, 0);
+	i = gred.At(1, 2);
+	i = gred.At(0, 2);
+	i = gred.At(2, 1);
+	i = gred.At(0, 0);
+	i = gred.At(2, 0);
+	i = gred.Width();
+	i = gred.Heigth();
+	i = gred.SizeRow(0);
+	i = gred.SizeRow(1);
+	i = gred.SizeRow(2);
+	i = gred.SizeCol(0);
+	i = gred.SizeCol(1);
+	i = gred.SizeCol(2);
+	i = gred.Size();
+	i = gred.SizeMax();
+
+	//Grid<int> grod(10, 10); // És una grid 10/10
 
 	Point wSize = window->GetSize();
 	physics = new NPL();
