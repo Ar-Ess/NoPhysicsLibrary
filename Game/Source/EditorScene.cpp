@@ -33,7 +33,7 @@ bool EditorScene::Start()
 	i = gred.Size();
 	i = gred.SizeMax();
 
-	gred[1];
+	gred[3];
 
 	//Grid<int> grod(10, 10); // És una grid 10/10
 

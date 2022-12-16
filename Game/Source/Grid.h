@@ -15,6 +15,7 @@ class Grid
         }
         T value = NULL;
         bool empty = true;
+        //-TODO: GetNonEmpty(uint index)
     };
 
     struct Row
@@ -122,16 +123,20 @@ public:
         assert(size > 0);
 
         int cellAmount = 0;
-        for (uint i = 0; i < height; ++i)
+        uint offset = index / width;
+        for (uint i = offset; i < height; ++i)
         {
+            int indx = index - (width * i);
             Row* row = GetRow(i);
 
-            if (index < cellAmount + row->size - 1)
+            if (row->size - 1 >= indx)
             {
-                // Search the value of the row
+                int i = 0; // Search for whis is the "indx"ond non-empty value of the array.
             }
-            cellAmount += row->size;
+
         }
+
+        return T();
 
     }
 
@@ -316,7 +321,7 @@ private:
         columnSize.Asign(columnSize.At(x) + add, x);
     }
 
-    uint GetColumnSize(uint x)
+    uint GetColumnSize(uint x) const
     {
         return columnSize.At(x);
     }
