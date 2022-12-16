@@ -89,6 +89,13 @@ public:
     {
         return size == 0;
     }
+
+    T operator[](unsigned int index) const
+    {
+        if (index >= size) return 0;
+
+        return GetNode(index)->value;
+    }
     
 private:
 

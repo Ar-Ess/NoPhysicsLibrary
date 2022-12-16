@@ -101,7 +101,38 @@ public:
     {
         if (col >= height) return 0;
 
-        return columnSize.At(col);
+        return GetColumnSize(col);
+    }
+
+    bool Empty() const
+    {
+        return (size <= 0);
+    }
+
+    bool Empty(uint x, uint y) const
+    {
+        return GetRow(y)->GetValue(x)->empty;
+    }
+
+    // Returns the not empty cells in an unspecified order.
+    // Optimized to Update not empty cells.
+    T operator[](uint index)
+    {
+        assert(index < size);
+        assert(size > 0);
+
+        int cellAmount = 0;
+        for (uint i = 0; i < height; ++i)
+        {
+            Row* row = GetRow(i);
+
+            if (index < cellAmount + row->size - 1)
+            {
+                // Search the value of the row
+            }
+            cellAmount += row->size;
+        }
+
     }
 
     //bool PushBack(T value)
@@ -283,6 +314,11 @@ private:
     void AddColumnSize(int add, uint x)
     {
         columnSize.Asign(columnSize.At(x) + add, x);
+    }
+
+    uint GetColumnSize(uint x)
+    {
+        return columnSize.At(x);
     }
 
 private:
