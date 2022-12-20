@@ -11,7 +11,7 @@ EditorScene::~EditorScene()
 
 bool EditorScene::Start()
 {
-	Grid<int> gred(32, 32);
+	Grid<int> gred(32, 3);
 
 	int i = sizeof(grid);
 	gred.Set(int(5), 1, 2);
@@ -20,6 +20,12 @@ bool EditorScene::Start()
 	gred.Set(int(1), 0, 0);
 	gred.Set(int(2), 2, 0);
 
+	// Pick Up testing
+	
+	// -----------------
+
+	// Iteration testing
+	{	
 	PerfTimer timer1;
 	int result1[5] = {};
 	for (int i = 0; i < gred.Size(); ++i)
@@ -29,14 +35,21 @@ bool EditorScene::Start()
 	double a = timer1.ReadMs();
 	PerfTimer timer2;
 	int result2[5] = {};
+	uint ret = 0;
 	for (int j = 0; j < gred.Heigth(); ++j)
 	{
 		for (int i = 0; i < gred.Width(); ++i)
 		{
-			if (!gred.Empty(i, j)) result2[i] = gred.At(i, j);
+			if (!gred.Empty(i, j))
+			{
+				result2[ret] = gred.At(i, j);
+				ret++;
+			}
 		}
 	}
 	double b = timer2.ReadMs();
+	}
+	// -----------------
 
 	Point wSize = window->GetSize();
 	physics = new NPL();
