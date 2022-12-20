@@ -5,7 +5,6 @@ typedef unsigned int uint;
 template <class T>
 class Grid
 {
-
     struct Row
     {
         Row(uint width)
@@ -28,7 +27,7 @@ class Grid
         {
             uint setIndex = x / 8;
             uint flagIndex = x - 8 * setIndex;
-            return !full.At(setIndex).Get(flagIndex);
+            return !full.At(setIndex)->Get(flagIndex);
         }
         bool Empty()
         {
@@ -39,11 +38,10 @@ class Grid
             uint fullCells = 0;
             for (uint i = 0; i < width; ++i)
             {
-                if (full.At(i / 8)->Get(i))
-                {
-                    ++fullCells;
-                    if (x == fullCells - 1) return row.At(i);
-                }
+                if (Empty(i)) continue;
+
+                ++fullCells;
+                if (x == fullCells - 1) return row.At(i);
             }
 
             return T();
@@ -56,38 +54,32 @@ class Grid
 public:
 
     //-TODO: make grid dynamic possible
-    Grid(uint width, uint height, bool dynamic = false)
+    Grid(uint width, uint height)
     {
-        dynamic = false;
-        this->dynamic = dynamic;
         this->width = width;
         this->height = height;
         this->grid = Array<Row*>();
         for (uint y = 0; y < height; ++y)
         {
             grid.Add(new Row(width));
-            columnSize.Add(0);
             for (uint x = 0; x < width; ++x) grid.At(y)->row.Add(T());
         }
     }
 
     bool Set(T value, uint x, uint y)
     {
-        if (x >= width && !dynamic) return false;
-        if (y >= height && !dynamic) return false;
+        if (x >= width && y >= height) return false;
 
         Row* row = GetRow(y);
         row->size++;
 
         row->SetValue(value, x);
-        AddColumnSize(1, x);
         size++;
     }
 
     T At(uint x, uint y) const
     {
-        assert(x < width || dynamic);
-        assert(y < height || dynamic);
+        assert(x < width && y < height);
 
         return grid.At(y)->row.At(x);
     }
@@ -122,14 +114,6 @@ public:
         return grid.At(row)->size;
     }
 
-    // Returns the amount of not empty nodes in a column
-    uint SizeCol(uint col) const
-    {
-        if (col >= height) return 0;
-
-        return GetColumnSize(col);
-    }
-
     bool Empty() const
     {
         return (size <= 0);
@@ -140,18 +124,18 @@ public:
         return GetRow(y)->Empty(x);
     }
 
-    // Returns the not empty cells in an unspecified order.
-    // Optimized to Update not empty cells.
+    // Returns the not empty cells sequentially
+    // Optimized to iterate
     T operator[](uint index)
     {
         assert(index < size);
         assert(size > 0);
-        const int iter = index + 1;
+        const uint offset = index / width;
 
-        for (uint i = 0; i < iter; ++i)
+        for (uint i = 0; i < height; ++i)
         {
             Row* row = GetRow(i);
-            if (int(index) - int(row->size) < 0) return row->GetNonEmptyValue(index, width);
+            if (i >= offset && int(index) - int(row->size) < 0) return row->GetNonEmptyValue(index, width);
             index -= row->size;
         }
 
@@ -340,30 +324,19 @@ public:
 
 private:
 
-    Row* GetRow(uint y)
+    Row* GetRow(uint y) const
     {
         return grid.At(y);
-    }
-
-    void AddColumnSize(int add, uint x)
-    {
-        columnSize.Assign(columnSize.At(x) + add, x);
-    }
-
-    uint GetColumnSize(uint x) const
-    {
-        return columnSize.At(x);
     }
 
 private:
 
     Array<Row*> grid;
-    Array<uint> columnSize;
+    Array<T*> flatGrid;
 
     uint width = 0;
     uint height = 0;
     uint size = 0;
-    bool dynamic = false;
 
 };
 

@@ -11,34 +11,32 @@ EditorScene::~EditorScene()
 
 bool EditorScene::Start()
 {
-	Grid<int> gred(3, 3);
-	int i = 0;
-	gred.Set(int(2), 1, 2);
-	gred.Set(int(5), 0, 2);
-	gred.Set(int(4), 2, 1);
-	gred.Set(int(1), 0, 0);
-	gred.Set(int(9), 2, 0);
-	i = gred.At(1, 2);
-	i = gred.At(0, 2);
-	i = gred.At(2, 1);
-	i = gred.At(0, 0);
-	i = gred.At(2, 0);
-	i = gred.Width();
-	i = gred.Heigth();
-	i = gred.SizeRow(0);
-	i = gred.SizeRow(1);
-	i = gred.SizeRow(2);
-	i = gred.SizeCol(0);
-	i = gred.SizeCol(1);
-	i = gred.SizeCol(2);
-	i = gred.Size();
-	i = gred.SizeMax();
+	Grid<int> gred(32, 32);
 
-	int result[5] = {};
+	int i = sizeof(grid);
+	gred.Set(int(5), 1, 2);
+	gred.Set(int(4), 0, 2);
+	gred.Set(int(3), 2, 1);
+	gred.Set(int(1), 0, 0);
+	gred.Set(int(2), 2, 0);
+
+	PerfTimer timer1;
+	int result1[5] = {};
 	for (int i = 0; i < gred.Size(); ++i)
 	{
-		result[i] = gred[i];
+		result1[i] = gred[i];
 	}
+	double a = timer1.ReadMs();
+	PerfTimer timer2;
+	int result2[5] = {};
+	for (int j = 0; j < gred.Heigth(); ++j)
+	{
+		for (int i = 0; i < gred.Width(); ++i)
+		{
+			if (!gred.Empty(i, j)) result2[i] = gred.At(i, j);
+		}
+	}
+	double b = timer2.ReadMs();
 
 	Point wSize = window->GetSize();
 	physics = new NPL();
