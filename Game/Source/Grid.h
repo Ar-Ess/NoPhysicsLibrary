@@ -1,6 +1,7 @@
 #pragma once
 #include "Array.h"
 #include "Flag.h"
+#include "Point.h"
 typedef unsigned int uint;
 template <class T>
 class Grid
@@ -46,6 +47,12 @@ class Grid
 
             return T();
         }
+        void Clear()
+        {
+            size = 0;
+            for (uint i = 0; i < full.Size(); ++i) full[i]->Clear();
+        }
+
         Array<T> row;
         Array<Flag*> full;
         uint size = 0;
@@ -53,16 +60,15 @@ class Grid
 
 public:
 
-    //-TODO: make grid dynamic possible
     Grid(uint width, uint height)
     {
         this->width = width;
         this->height = height;
-        this->grid = Array<Row*>();
+        this->grid = new Array<Row*>();
         for (uint y = 0; y < height; ++y)
         {
-            grid.Add(new Row(width));
-            for (uint x = 0; x < width; ++x) grid.At(y)->row.Add(T());
+            grid->Add(new Row(width));
+            for (uint x = 0; x < width; ++x) grid->At(y)->row.Add(T());
         }
     }
 
@@ -76,12 +82,38 @@ public:
         row->SetValue(value, x);
         size++;
     }
+    
+    bool Set(T value, Point coords)
+    {
+        if (coords.x >= width && coords.y >= height) return false;
+
+        Row* row = GetRow(coords.y);
+        row->size++;
+
+        row->SetValue(value, coords.x);
+        size++;
+    }
 
     T At(uint x, uint y) const
     {
         assert(x < width && y < height);
 
-        return grid.At(y)->row.At(x);
+        return GetRow(y)->row.At(x);
+    }
+
+    T At(Point coords) const
+    {
+        assert(coords.x < width&& coords.y < height);
+
+        return GetRow(coords.y)->row.At(coords.x);
+    }
+
+    T At(uint index) const
+    {
+        assert(index < width * height);
+        Point coords = FromIndexToCoords(index);
+
+        return GetRow(coords.y)->row.At(coords.x);
     }
 
     // Returns the amount of not empty nodes
@@ -111,7 +143,7 @@ public:
     {
         if (row >= width) return 0;
 
-        return grid.At(row)->size;
+        return GetRow(row)->size;
     }
 
     bool Empty() const
@@ -121,7 +153,14 @@ public:
 
     bool Empty(uint x, uint y) const
     {
+        assert(x < width && y < height);
         return GetRow(y)->Empty(x);
+    }
+
+    bool Empty(Point coords) const
+    {
+        assert(x < width&& y < height);
+        return GetRow(coords.y)->Empty(coords.x);
     }
 
     // Returns the not empty cells sequentially
@@ -139,200 +178,111 @@ public:
             index -= row->size;
         }
 
-        //uint rowIndex = index / width;
-        //int indx = index - (width * rowIndex);
-        //for (uint i = rowIndexº; i < height; ++i)
-        //{
-        //    Row* row = GetRow(i);
-        //    if (row->Empty()) continue;
-        //    if (row->size - 1 >= indx) return row->GetNonEmptyValue(indx, width);
-        //    indx -= row->size;
-        //}
-
         return T();
-
     }
 
-    //bool PushBack(T value)
-    //{
-    //    Node* node = new Node(value, finalNode, nullptr);
-    //    if (finalNode != nullptr) finalNode->post = node;
-    //    finalNode = node;
-    //    ++size;
-    //
-    //    if (size <= 1) startNode = node;
-    //
-    //    return true;
-    //}
+    Point Find(T value) const
+    {
+        assert(!Empty());
 
-    //bool PushFront(T value)
-    //{
-    //    Node* node = new Node(value, nullptr, startNode);
-    //    if (startNode != nullptr) startNode->prev = node;
-    //    startNode = node;
-    //    ++size;
-    //
-    //    if (size <= 1) finalNode = node;
-    //
-    //    return true;
-    //}
+        Point ret = {-1, -1};
+        for (uint i = 0; i < height; ++i)
+        {
+            Row* row = GetRow(i);
+            if (row->Empty()) continue;
+            int index = row->Find(value);
+            if (index == -1) continue;
+            ret = {index, i};
+            break;
+        }
 
-    //bool Insert(T value, unsigned int index)
-    //{
-    //    if (index >= size) return false;
-    //    if (index == 0) return PushFront(value);
-    //
-    //    Node* post = GetNode(index);
-    //    Node* node = new Node(value, post->prev, post);
-    //    post->prev->post = node;
-    //    post->prev = node;
-    //    size++;
-    //
-    //    return true;
-    //}
+        return ret;
+    }
 
-    //int Find(T value) const
-    //{
-    //    if (Empty()) return -1;
-    // 
-    //    int i = 0;
-    //    for (Node* node = startNode; node != nullptr; node = node->post)
-    //    {
-    //        if (node->value == value) return i;
-    //        ++i;
-    //    }
-    // 
-    //    return -1;
-    //}
+    // Empty all cells
+    bool Clear()
+    {
+        if (Empty()) return true;
 
-    //bool Contains(T value) const
-    //{
-    //    if (Empty()) return false;
-    // 
-    //    for (Node* node = startNode; node != nullptr; node = node->post)
-    //    {
-    //        if (node->value == value) return true;
-    //    }
-    // 
-    //    return false;
-    //}
+        for (uint i = 0; i < height; ++i) GetRow(i)->Clear();
+        size = 0;
 
-    //unsigned int Size() const
-    //{
-    //    return width * height;
-    //}
+        return true;
+    }
 
-    //unsigned int Width() const
-    //{
-    //    return width;
-    //}
+    // Clean the structure. Return to a 0 by 0 grid
+    bool CleanUp()
+    {
+        for (uint i = 0; i < height: ++i)
+        {
+            Row* row = GetRow(i);
+            row->full->Clear();
+            row->row->Clear();
+            size = 0;
+        }
+        grid->Clear();
+        delete grid;
+        grid = nullptr;
 
-    //unsigned int Height() const
-    //{
-    //    return height;
-    //}
+        this->width = 0;
+        this->height = 0;
+        this->size = 0;
 
-    //bool Clear()
-    //{
-    //    Node* node = finalNode;
-    //    for (int i = 0; i < size; ++i)
-    //    {
-    //        if (node->post)
-    //        {
-    //            delete node->post;
-    //            node->post = nullptr;
-    //        }
-    //        if (node->prev) node = node->prev;
-    //    }
-    //    delete node;
-    //    node = nullptr;
-    // 
-    //    finalNode = nullptr;
-    //    startNode = nullptr;
-    //    size = 0;
-    // 
-    //    return true;
-    //}
+        return true;
+    }
 
-    //T Front() const
-    //{
-    //    return startNode->value;
-    //}
+    bool Erase(uint x, uint y)
+    {
+        assert(x < width && y < height);
 
-    //T Back() const
-    //{
-    //    return finalNode->value;
-    //}
+        Row* row = GetRow(y);
+        row->size--;
+        row->SetFullFlag(x, false);
 
-    //bool Empty() const
-    //{
-    //    return size == 0;
-    //}
+        return true;
+    }
+    
+    bool Erase(Point coords)
+    {
+        assert(coords.x < width && coords.y < height);
 
-    //bool PopBack()
-    //{
-    //    if (Empty()) return false;
-    //    if (size <= 1) return Clear();
-    // 
-    //    --size;
-    //    Node* prev = finalNode->prev;
-    //    delete finalNode;
-    //    finalNode = prev;
-    //    prev->post = nullptr;
-    // 
-    // 
-    //    return true;
-    //}
+        Row* row = GetRow(coords.y);
+        row->size--;
+        row->SetFullFlag(coords.x, false);
 
-    //bool PopFront()
-    //{
-    //    if (Empty()) return false;
-    //    if (size <= 1) return Clear();
-    // 
-    //    --size;
-    //    Node* post = startNode->post;
-    //    delete startNode;
-    //    startNode = post;
-    //    post->prev = nullptr;
-    // 
-    //    return true;
-    //}
+        return true;
+    }
 
-    //bool Erase(unsigned int index)
-    //{
-    //    if (index >= size) return false;
-    //    if (index == 0) return PopFront();
-    //    if (index == size - 1) return PopBack();
-    // 
-    //    Node* node = GetNode(index);
-    //    node->prev->post = node->post;
-    //    node->post->prev = node->prev;
-    // 
-    //    delete node;
-    //    node = nullptr;
-    //    --size;
-    // 
-    //    return true;
-    //}
+    bool Erase(uint index)
+    {
+        assert(index < width * height);
+        Point coords = FromIndexToCoords(index);
+        Row* row = GetRow(coords.y);
 
-    //T operator[](unsigned int index) const
-    //{
-    //    if (index >= size) return 0;
-    // 
-    //    return GetNode(index)->value;
-    //}
+        row->size--;
+        row->SetFullFlag(coords.x, false);
+
+        return true;
+    }
 
 private:
 
     Row* GetRow(uint y) const
     {
-        return grid.At(y);
+        return grid->At(y);
+    }
+
+    Point FromIndexToCoords(uint index)
+    {
+        uint y = index / width;
+        uint x = index - width * y;
+
+        return {x, y};
     }
 
 private:
 
-    Array<Row*> grid;
-    Array<T*> flatGrid;
+    Array<Row*>* grid = nullptr;
 
     uint width = 0;
     uint height = 0;
@@ -340,227 +290,301 @@ private:
 
 };
 
-//template <class T>
-//class Grid<T*>
-//{
-//
-//    struct Value
-//    {
-//        Value(T* value = nullptr) { this->value = value; }
-//        ~Value() { delete value; }
-//        T* value = nullptr;
-//    };
-//
-//public:
-//
-//    //-TODO: make grid dynamic possible
-//    Grid(uint width, uint height, bool dynamic = false)
-//    {
-//        dynamic = false;
-//        this->dynamic = dynamic;
-//        this->width = width;
-//        this->height = height;
-//        this->grid = Vector<Vector<Value*>*>();
-//        for (uint y = 0; y < height; ++y)
-//        {
-//            grid.PushBack(new Vector<Value*>());
-//            for (uint x = 0; x < width; ++x) grid.Back()->PushBack(new Value());
-//        }
-//    }
-//
-//    bool Add(T* value, uint x, uint y)
-//    {
-//        if (x >= width && !dynamic) return false;
-//        if (y >= height && !dynamic) return false;
-//
-//        Value* v = grid.At(y)->At(x);
-//        delete v->value;
-//        v->value = value;
-//    }
-//
-//    T* At(uint x, uint y) const
-//    {
-//        assert(x < width || dynamic);
-//        assert(y < height || dynamic);
-//
-//        return grid.At(y)->At(x)->value;
-//    }
-//
-//    //bool PushBack(T value)
-//    //{
-//    //    Node* node = new Node(value, finalNode, nullptr);
-//    //    if (finalNode != nullptr) finalNode->post = node;
-//    //    finalNode = node;
-//    //    ++size;
-//    //
-//    //    if (size <= 1) startNode = node;
-//    //
-//    //    return true;
-//    //}
-//
-//    //bool PushFront(T value)
-//    //{
-//    //    Node* node = new Node(value, nullptr, startNode);
-//    //    if (startNode != nullptr) startNode->prev = node;
-//    //    startNode = node;
-//    //    ++size;
-//    //
-//    //    if (size <= 1) finalNode = node;
-//    //
-//    //    return true;
-//    //}
-//
-//    //bool Insert(T value, unsigned int index)
-//    //{
-//    //    if (index >= size) return false;
-//    //    if (index == 0) return PushFront(value);
-//    //
-//    //    Node* post = GetNode(index);
-//    //    Node* node = new Node(value, post->prev, post);
-//    //    post->prev->post = node;
-//    //    post->prev = node;
-//    //    size++;
-//    //
-//    //    return true;
-//    //}
-//
-//    //int Find(T value) const
-//    //{
-//    //    if (Empty()) return -1;
-//    // 
-//    //    int i = 0;
-//    //    for (Node* node = startNode; node != nullptr; node = node->post)
-//    //    {
-//    //        if (node->value == value) return i;
-//    //        ++i;
-//    //    }
-//    // 
-//    //    return -1;
-//    //}
-//
-//    //bool Contains(T value) const
-//    //{
-//    //    if (Empty()) return false;
-//    // 
-//    //    for (Node* node = startNode; node != nullptr; node = node->post)
-//    //    {
-//    //        if (node->value == value) return true;
-//    //    }
-//    // 
-//    //    return false;
-//    //}
-//
-//    //unsigned int Size() const
-//    //{
-//    //    return width * height;
-//    //}
-//
-//    //unsigned int Width() const
-//    //{
-//    //    return width;
-//    //}
-//
-//    //unsigned int Height() const
-//    //{
-//    //    return height;
-//    //}
-//
-//    //bool Clear()
-//    //{
-//    //    Node* node = finalNode;
-//    //    for (int i = 0; i < size; ++i)
-//    //    {
-//    //        if (node->post)
-//    //        {
-//    //            delete node->post;
-//    //            node->post = nullptr;
-//    //        }
-//    //        if (node->prev) node = node->prev;
-//    //    }
-//    //    delete node;
-//    //    node = nullptr;
-//    // 
-//    //    finalNode = nullptr;
-//    //    startNode = nullptr;
-//    //    size = 0;
-//    // 
-//    //    return true;
-//    //}
-//
-//    //T Front() const
-//    //{
-//    //    return startNode->value;
-//    //}
-//
-//    //T Back() const
-//    //{
-//    //    return finalNode->value;
-//    //}
-//
-//    //bool Empty() const
-//    //{
-//    //    return size == 0;
-//    //}
-//
-//    //bool PopBack()
-//    //{
-//    //    if (Empty()) return false;
-//    //    if (size <= 1) return Clear();
-//    // 
-//    //    --size;
-//    //    Node* prev = finalNode->prev;
-//    //    delete finalNode;
-//    //    finalNode = prev;
-//    //    prev->post = nullptr;
-//    // 
-//    // 
-//    //    return true;
-//    //}
-//
-//    //bool PopFront()
-//    //{
-//    //    if (Empty()) return false;
-//    //    if (size <= 1) return Clear();
-//    // 
-//    //    --size;
-//    //    Node* post = startNode->post;
-//    //    delete startNode;
-//    //    startNode = post;
-//    //    post->prev = nullptr;
-//    // 
-//    //    return true;
-//    //}
-//
-//    //bool Erase(unsigned int index)
-//    //{
-//    //    if (index >= size) return false;
-//    //    if (index == 0) return PopFront();
-//    //    if (index == size - 1) return PopBack();
-//    // 
-//    //    Node* node = GetNode(index);
-//    //    node->prev->post = node->post;
-//    //    node->post->prev = node->prev;
-//    // 
-//    //    delete node;
-//    //    node = nullptr;
-//    //    --size;
-//    // 
-//    //    return true;
-//    //}
-//
-//    //T operator[](unsigned int index) const
-//    //{
-//    //    if (index >= size) return 0;
-//    // 
-//    //    return GetNode(index)->value;
-//    //}
-//
-//private:
-//
-//    Array<Array<Value*>*> grid;
-//
-//    uint width = 0;
-//    uint height = 0;
-//    bool dynamic = false;
-//
-//};
+template <class T>
+class Grid<T*>
+{
+    struct Row
+    {
+        Row(uint width)
+        {
+            uint flagAmount = (uint)ceil(width / 8.0f);
+            for (uint i = 0; i < flagAmount; ++i) full.Add(new Flag());
+        }
+        void SetValue(T* value, uint x)
+        {
+            row.Assign(value, x);
+        }
+        bool Empty(uint x)
+        {
+            return row->At(x) == nullptr;
+        }
+        bool Empty()
+        {
+            return size == 0;
+        }
+        T* GetNonEmptyValue(uint x, uint width)
+        {
+            uint fullCells = 0;
+            for (uint i = 0; i < width; ++i)
+            {
+                if (Empty(i)) continue;
+
+                ++fullCells;
+                if (x == fullCells - 1) return row.At(i);
+            }
+
+            return nullptr;
+        }
+        void Clear()
+        {
+            size = 0;
+            for (uint i = 0; i < row->Size(); ++i)
+            {
+                T* value = row[i];
+                delete value;
+                value = nullptr;
+            }
+        }
+
+        Array<T*> row;
+        uint size = 0;
+    };
+
+public:
+
+    Grid(uint width, uint height)
+    {
+        this->width = width;
+        this->height = height;
+        this->grid = new Array<Row*>();
+        for (uint y = 0; y < height; ++y)
+        {
+            grid->Add(new Row(width));
+            for (uint x = 0; x < width; ++x) grid->At(y)->row.Add(nullptr);
+        }
+    }
+
+    bool Set(T* value, uint x, uint y)
+    {
+        if (x >= width && y >= height) return false;
+
+        Row* row = GetRow(y);
+        row->size++;
+
+        row->SetValue(value, x);
+        size++;
+    }
+
+    bool Set(T* value, Point coords)
+    {
+        if (coords.x >= width && coords.y >= height) return false;
+
+        Row* row = GetRow(coords.y);
+        row->size++;
+
+        row->SetValue(value, coords.x);
+        size++;
+    }
+
+    bool Set(T* value, uint index)
+    {
+        if (index < width * height) return false;
+
+        Point coords = FromIndexToCoords(index);
+
+        Row* row = GetRow(coords.y);
+        row->size++;
+
+        row->SetValue(value, coords.x);
+        size++;
+    }
+
+    T* At(uint x, uint y) const
+    {
+        assert(x < width&& y < height);
+
+        return GetRow(y)->row.At(x);
+    }
+
+    T* At(Point coords) const
+    {
+        assert(coords.x < width&& coords.y < height);
+
+        return GetRow(coords.y)->row.At(coords.x);
+    }
+
+    T* At(uint index) const
+    {
+        assert(index < width* height);
+        Point coords = FromIndexToCoords(index);
+
+        return GetRow(coords.y)->row.At(coords.x);
+    }
+
+    // Returns the amount of not empty nodes
+    uint Size() const
+    {
+        return size;
+    }
+
+    // Returns the total amount of nodes
+    uint SizeMax() const
+    {
+        return width * height;
+    }
+
+    uint Width() const
+    {
+        return width;
+    }
+
+    uint Heigth() const
+    {
+        return height;
+    }
+
+    // Returns the amount of not empty nodes in a row
+    uint SizeRow(uint row) const
+    {
+        if (row >= width) return 0;
+
+        return GetRow(row)->size;
+    }
+
+    bool Empty() const
+    {
+        return (size <= 0);
+    }
+
+    bool Empty(uint x, uint y) const
+    {
+        assert(x < width&& y < height);
+        return GetRow(y)->Empty(x);
+    }
+
+    bool Empty(Point coords) const
+    {
+        assert(x < width&& y < height);
+        return GetRow(coords.y)->Empty(coords.x);
+    }
+
+    // Returns the not empty cells sequentially
+    // Optimized to iterate
+    T operator[](uint index)
+    {
+        assert(index < size);
+        assert(size > 0);
+        const uint offset = index / width;
+
+        for (uint i = 0; i < height; ++i)
+        {
+            Row* row = GetRow(i);
+            if (i >= offset && int(index) - int(row->size) < 0) return row->GetNonEmptyValue(index, width);
+            index -= row->size;
+        }
+
+        return T();
+    }
+
+    Point Find(T* value) const
+    {
+        assert(!Empty());
+
+        Point ret = { -1, -1 };
+        for (uint i = 0; i < height; ++i)
+        {
+            Row* row = GetRow(i);
+            if (row->Empty()) continue;
+            int index = row->Find(value);
+            if (index == -1) continue;
+            ret = { index, i };
+            break;
+        }
+
+        return ret;
+    }
+
+    // Empty all cells
+    bool Clear()
+    {
+        if (Empty()) return true;
+
+        for (uint i = 0; i < height; ++i) GetRow(i)->Clear();
+        size = 0;
+
+        return true;
+    }
+
+    // Clean the structure. Return to a 0 by 0 grid
+    bool CleanUp()
+    {
+        for (uint i = 0; i < height: ++i)
+        {
+            Row* row = GetRow(i);
+            row->row->Clear();
+        }
+        grid->Clear();
+        delete grid;
+        grid = nullptr;
+
+        this->width = 0;
+        this->height = 0;
+        this->size = 0;
+
+        return true;
+    }
+
+    bool Erase(uint x, uint y)
+    {
+        assert(x < width&& y < height);
+
+        Row* row = GetRow(y);
+        row->size--;
+        T* value = row[x];
+        delete value;
+        value = nullptr;
+
+        return true;
+    }
+
+    bool Erase(Point coords)
+    {
+        assert(coords.x < width&& coords.y < height);
+
+        Row* row = GetRow(coords.y);
+        row->size--;
+        T* value = row[x];
+        delete value;
+        value = nullptr;
+
+        return true;
+    }
+
+    bool Erase(uint index)
+    {
+        assert(index < width* height);
+        Point coords = FromIndexToCoords(index);
+        Row* row = GetRow(coords.y);
+
+        row->size--;
+        T* value = row[x];
+        delete value;
+        value = nullptr;
+
+        return true;
+    }
+
+private:
+    
+    Row* GetRow(uint y) const
+    {
+        return grid->At(y);
+    }
+
+    Point FromIndexToCoords(uint index)
+    {
+        uint y = index / width;
+        uint x = index - width * y;
+
+        return { x, y };
+    }
+
+private:
+
+    Array<Row*>* grid = nullptr;
+
+    uint width = 0;
+    uint height = 0;
+    uint size = 0;
+
+};

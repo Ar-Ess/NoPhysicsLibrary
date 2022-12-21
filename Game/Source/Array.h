@@ -107,6 +107,20 @@ public:
 
         return GetNode(index)->value;
     }
+
+    int Find(T value) const
+    {
+        if (Empty()) return -1;
+
+        int i = 0;
+        for (Node* node = startNode; node != nullptr; node = node->post)
+        {
+            if (node->value == value) return i;
+            ++i;
+        }
+
+        return -1;
+    }
     
 private:
 

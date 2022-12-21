@@ -11,7 +11,7 @@ EditorScene::~EditorScene()
 
 bool EditorScene::Start()
 {
-	Grid<int> gred(32, 3);
+	Grid<int> gred(300, 300);
 
 	int i = sizeof(grid);
 	gred.Set(int(5), 1, 2);
@@ -25,7 +25,6 @@ bool EditorScene::Start()
 	// -----------------
 
 	// Iteration testing
-	{	
 	PerfTimer timer1;
 	int result1[5] = {};
 	for (int i = 0; i < gred.Size(); ++i)
@@ -33,6 +32,7 @@ bool EditorScene::Start()
 		result1[i] = gred[i];
 	}
 	double a = timer1.ReadMs();
+
 	PerfTimer timer2;
 	int result2[5] = {};
 	uint ret = 0;
@@ -48,7 +48,6 @@ bool EditorScene::Start()
 		}
 	}
 	double b = timer2.ReadMs();
-	}
 	// -----------------
 
 	Point wSize = window->GetSize();
