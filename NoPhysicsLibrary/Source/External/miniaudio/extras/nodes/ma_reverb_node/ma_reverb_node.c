@@ -76,3 +76,8 @@ MA_API void ma_reverb_node_uninit(ma_reverb_node* pReverbNode, const ma_allocati
     /* The base node is always uninitialized first. */
     ma_node_uninit(pReverbNode, pAllocationCallbacks);
 }
+
+MA_API void ma_reverb_node_set_room_size(ma_reverb_node* reverb, float roomsize)
+{
+    verblib_set_room_size(&reverb->reverb, roomsize);
+}

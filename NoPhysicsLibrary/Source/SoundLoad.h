@@ -4,8 +4,7 @@
 
 struct SoundLoad
 {
-	SoundLoad(ma_sound* sound, float length) : sound(sound), length(length) {}
+	SoundLoad(ma_sound* sound) : sound(sound) {}
 
 	ma_sound* sound = nullptr;
-	float length = 0.0f;
 };

@@ -20,8 +20,6 @@ bool InitialScene::Update(float dt)
 	if (input->GetKey(SDL_SCANCODE_Z) == KeyState::KEY_DOWN) ret = SetScene(Scenes::TEST_SCENE);
 	if (input->GetKey(SDL_SCANCODE_X) == KeyState::KEY_DOWN) ret = SetScene(Scenes::EXAM_SCENE);
 
-	if (input->GetKey(SDL_SCANCODE_1) == KeyState::KEY_DOWN) ret = SetScene(Scenes::LEVEL_1_SCENE);
-
 	return ret;
 }
 

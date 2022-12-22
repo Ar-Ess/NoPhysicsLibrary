@@ -13,7 +13,6 @@ enum class Scenes
 	INITIAL_SCENE,
 	TEST_SCENE,
 	EXAM_SCENE,
-	LEVEL_1_SCENE
 };
 
 class Scene
