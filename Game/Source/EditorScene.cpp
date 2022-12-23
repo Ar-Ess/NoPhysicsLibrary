@@ -11,14 +11,14 @@ EditorScene::~EditorScene()
 
 bool EditorScene::Start()
 {
-	Grid<int> gred(300, 300);
+	Grid<int*> gred(300, 300);
 
 	int i = sizeof(grid);
-	gred.Set(int(5), 1, 2);
-	gred.Set(int(4), 0, 2);
-	gred.Set(int(3), 2, 1);
-	gred.Set(int(1), 0, 0);
-	gred.Set(int(2), 2, 0);
+	gred.Set(new int(5), 1, 2);
+	gred.Set(new int(4), 0, 2);
+	gred.Set(new int(3), 2, 1);
+	gred.Set(new int(1), 0, 0);
+	gred.Set(new int(2), 2, 0);
 
 	// Pick Up testing
 	
@@ -29,7 +29,7 @@ bool EditorScene::Start()
 	int result1[5] = {};
 	for (int i = 0; i < gred.Size(); ++i)
 	{
-		result1[i] = gred[i];
+		result1[i] = *gred[i];
 	}
 	double a = timer1.ReadMs();
 
@@ -42,7 +42,7 @@ bool EditorScene::Start()
 		{
 			if (!gred.Empty(i, j))
 			{
-				result2[ret] = gred.At(i, j);
+				result2[ret] = *gred.At(i, j);
 				ret++;
 			}
 		}

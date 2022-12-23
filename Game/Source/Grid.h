@@ -295,18 +295,13 @@ class Grid<T*>
 {
     struct Row
     {
-        Row(uint width)
-        {
-            uint flagAmount = (uint)ceil(width / 8.0f);
-            for (uint i = 0; i < flagAmount; ++i) full.Add(new Flag());
-        }
         void SetValue(T* value, uint x)
         {
             row.Assign(value, x);
         }
         bool Empty(uint x)
         {
-            return row->At(x) == nullptr;
+            return row.At(x) == nullptr;
         }
         bool Empty()
         {
@@ -349,7 +344,7 @@ public:
         this->grid = new Array<Row*>();
         for (uint y = 0; y < height; ++y)
         {
-            grid->Add(new Row(width));
+            grid->Add(new Row());
             for (uint x = 0; x < width; ++x) grid->At(y)->row.Add(nullptr);
         }
     }
@@ -458,24 +453,6 @@ public:
         return GetRow(coords.y)->Empty(coords.x);
     }
 
-    // Returns the not empty cells sequentially
-    // Optimized to iterate
-    T operator[](uint index)
-    {
-        assert(index < size);
-        assert(size > 0);
-        const uint offset = index / width;
-
-        for (uint i = 0; i < height; ++i)
-        {
-            Row* row = GetRow(i);
-            if (i >= offset && int(index) - int(row->size) < 0) return row->GetNonEmptyValue(index, width);
-            index -= row->size;
-        }
-
-        return T();
-    }
-
     Point Find(T* value) const
     {
         assert(!Empty());
@@ -562,6 +539,24 @@ public:
         value = nullptr;
 
         return true;
+    }
+
+    // Returns the not empty cells sequentially
+    // Optimized to iterate
+    T* operator[](uint index)
+    {
+        assert(index < size);
+        assert(size > 0);
+        const uint offset = index / width;
+
+        for (uint i = 0; i < height; ++i)
+        {
+            Row* row = GetRow(i);
+            if (i >= offset && int(index) - int(row->size) < 0) return row->GetNonEmptyValue(index, width);
+            index -= row->size;
+        }
+
+        return T();
     }
 
 private:
