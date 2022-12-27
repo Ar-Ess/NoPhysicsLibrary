@@ -11,43 +11,30 @@ EditorScene::~EditorScene()
 
 bool EditorScene::Start()
 {
-	Grid<int*> gred(300, 300);
-
-	int i = sizeof(grid);
-	gred.Set(new int(5), 1, 2);
-	gred.Set(new int(4), 0, 2);
-	gred.Set(new int(3), 2, 1);
-	gred.Set(new int(1), 0, 0);
-	gred.Set(new int(2), 2, 0);
-
-	// Pick Up testing
-	
-	// -----------------
-
 	// Iteration testing
-	PerfTimer timer1;
-	int result1[5] = {};
-	for (int i = 0; i < gred.Size(); ++i)
-	{
-		result1[i] = *gred[i];
-	}
-	double a = timer1.ReadMs();
+	/*PerfTimer timer1;
+	//int result1[5] = {};
+	//for (int i = 0; i < gred.Size(); ++i)
+	//{
+	//	result1[i] = *gred[i];
+	//}
+	//double a = timer1.ReadMs();
 
-	PerfTimer timer2;
-	int result2[5] = {};
-	uint ret = 0;
-	for (int j = 0; j < gred.Heigth(); ++j)
-	{
-		for (int i = 0; i < gred.Width(); ++i)
-		{
-			if (!gred.Empty(i, j))
-			{
-				result2[ret] = *gred.At(i, j);
-				ret++;
-			}
-		}
-	}
-	double b = timer2.ReadMs();
+	//PerfTimer timer2;
+	//int result2[5] = {};
+	//uint ret = 0;
+	//for (int j = 0; j < gred.Heigth(); ++j)
+	//{
+	//	for (int i = 0; i < gred.Width(); ++i)
+	//	{
+	//		if (!gred.Empty(i, j))
+	//		{
+	//			result2[ret] = *gred.At(i, j);
+	//			ret++;
+	//		}
+	//	}
+	//}
+	//double b = timer2.ReadMs();*/
 	// -----------------
 
 	Point wSize = window->GetSize();
@@ -75,19 +62,19 @@ bool EditorScene::Start()
 
 bool EditorScene::Update(float dt)
 {
-	UpdateEditMode(dt);
-	DrawEditMode(dt);
+	if (editMode) UpdateEditMode(dt);
+	else UpdatePlayMode(dt);
 
 	physics->Update(&dt);
+
+	if (editMode) DrawEditMode(dt);
+	else DrawPlayMode(dt);
 
 	if (input->GetKey(SDL_SCANCODE_RETURN) == KeyState::KEY_DOWN)
 	{
 		editMode = !editMode;
 		physics->PausePhysics(editMode);
 	}
-
-	//Change scene
-	if (input->GetKey(SDL_SCANCODE_BACKSPACE) == KeyState::KEY_DOWN) SetScene(Scenes::INITIAL_SCENE);
 
 	return true;
 }
@@ -128,21 +115,22 @@ bool EditorScene::CleanUp()
 
 bool EditorScene::UpdateEditMode(float dt)
 {
-	if (!editMode) return true;
+	for (uint i = 0; i < grid.Size(); ++i) grid[i]->Update();
+	//Change scene
+	if (input->GetKey(SDL_SCANCODE_BACKSPACE) == KeyState::KEY_DOWN) SetScene(Scenes::INITIAL_SCENE);
 
 	return true;
 }
 
 bool EditorScene::DrawEditMode(float dt)
 {
-	if (!editMode) return true;
+	for (uint i = 0; i < grid.Size(); ++i) grid[i]->Draw();
 
 	return true;
 }
 
 bool EditorScene::UpdatePlayMode(float dt)
 {
-	if (editMode) return true;
 
 	bool ground = player->IsBodyStill(BodyState::ON_GROUND);
 	bool shift = (input->GetKey(SDL_SCANCODE_LSHIFT) == KeyState::KEY_REPEAT);
@@ -181,7 +169,6 @@ bool EditorScene::UpdatePlayMode(float dt)
 
 bool EditorScene::DrawPlayMode(float dt)
 {
-	if (editMode) return true;
 
 	return true;
 }

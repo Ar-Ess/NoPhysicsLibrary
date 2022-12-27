@@ -3,6 +3,7 @@
 #include "Scene.h"
 #include "NoPhysicsLibrary.h"
 #include "Grid.h"
+#include "Tile.h"
 
 class EditorScene : public Scene
 {
@@ -31,7 +32,7 @@ private:
 private:
 
 	// Editor
-	Grid<int> grid = Grid<int>(24, 14);
+	Grid<Tile*> grid = Grid<Tile*>(24, 14);
 	bool editMode = true;
 
 	// Physics

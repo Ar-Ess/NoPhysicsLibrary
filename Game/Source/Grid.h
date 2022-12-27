@@ -2,6 +2,7 @@
 #include "Array.h"
 #include "Flag.h"
 #include "Point.h"
+
 typedef unsigned int uint;
 template <class T>
 class Grid
