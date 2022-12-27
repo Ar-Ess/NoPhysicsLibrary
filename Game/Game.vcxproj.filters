@@ -48,6 +48,9 @@
     <ClCompile Include="Source\EditorScene.cpp">
       <Filter>Scenes</Filter>
     </ClCompile>
+    <ClCompile Include="Source\Tile.cpp">
+      <Filter>Tiles</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\App.h" />
@@ -117,6 +120,9 @@
     <ClInclude Include="Source\Grid.h">
       <Filter>Utils\Data Structures</Filter>
     </ClInclude>
+    <ClInclude Include="Source\Tile.h">
+      <Filter>Tiles</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="External">
@@ -139,6 +145,9 @@
     </Filter>
     <Filter Include="Scenes\Test">
       <UniqueIdentifier>{c8d8bca4-8cd3-4d69-aa03-02475f9cd6a9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Tiles">
+      <UniqueIdentifier>{5e5c2228-63b2-490c-94d1-75a07dddaaa4}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>
