@@ -557,7 +557,7 @@ public:
             index -= row->size;
         }
 
-        return T();
+        return nullptr;
     }
 
 private:

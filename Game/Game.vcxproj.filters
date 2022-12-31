@@ -51,6 +51,9 @@
     <ClCompile Include="Source\Tile.cpp">
       <Filter>Tiles</Filter>
     </ClCompile>
+    <ClCompile Include="Source\Camera.cpp">
+      <Filter>Utils</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\App.h" />
@@ -122,6 +125,9 @@
     </ClInclude>
     <ClInclude Include="Source\Tile.h">
       <Filter>Tiles</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Camera.h">
+      <Filter>Utils</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

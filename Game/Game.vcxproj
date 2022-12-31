@@ -92,6 +92,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Source\AssetsManager.cpp" />
+    <ClCompile Include="Source\Camera.cpp" />
     <ClCompile Include="Source\Easing.cpp" />
     <ClCompile Include="Source\EditorScene.cpp" />
     <ClCompile Include="Source\ExamScene.cpp" />
@@ -110,6 +111,7 @@
     <ClCompile Include="Source\Window.cpp" />
     <ClInclude Include="Source\Array.h" />
     <ClInclude Include="Source\AssetsManager.h" />
+    <ClInclude Include="Source\Camera.h" />
     <ClInclude Include="Source\Circle.h" />
     <ClInclude Include="Source\Easing.h" />
     <ClInclude Include="Source\EditorScene.h" />

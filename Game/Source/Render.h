@@ -4,9 +4,9 @@
 
 #include "SDL/include/SDL.h"
 #include "Circle.h"
-#include "Rect.h"
 #include "Point.h"
 #include "Window.h"
+#include "Camera.h"
 
 class Render : public Module
 {
@@ -39,6 +39,7 @@ public:
 	bool DrawLine(Point start, Point end, SDL_Color color = { 255, 255, 255, 255}, bool anchored = true) const;
 	bool DrawCircle(Circle circle, SDL_Color color, bool fill = false, bool anchored = true) const;
 	bool DrawParticle(SDL_Texture* texture, Point position, Rect* section = nullptr, Rect* rectSize = nullptr, SDL_Color color = { 0, 0, 0, 0 }, SDL_BlendMode blendMode = SDL_BLENDMODE_NONE, double angle = 0) const;
+	bool DrawGrid(Rect rect, Point divisions, bool anchored = true, bool startLine = true, bool endLine = true, SDL_Color color = { 255, 255, 255, 255 }) const;
 
 	// Set background color
 	void SetBackgroundColor(SDL_Color color);
@@ -54,7 +55,7 @@ public:
 public:
 
 	SDL_Renderer* renderer = nullptr;
-	Rect camera = {};
+	Camera camera;
 	SDL_Rect viewport = {};
 	SDL_Color background = {};
 

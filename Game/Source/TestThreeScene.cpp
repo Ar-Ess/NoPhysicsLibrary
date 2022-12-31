@@ -84,12 +84,12 @@ bool TestThreeScene::Update(float dt)
 	bool shift = (input->GetKey(SDL_SCANCODE_LSHIFT) == KeyState::KEY_REPEAT);
 
 	// Camera movement
-	if (player->GetPosition(InUnit::IN_PIXELS).x >= 625) render->camera.x = player->GetPosition(InUnit::IN_PIXELS).x - 625;
-	if (render->camera.x < 0) render->camera.x = 0;
-	if (render->camera.x > 3000) render->camera.x = 3000;
-	if (render->camera.y < 0) render->camera.y = 0;
+	if (player->GetPosition(InUnit::IN_PIXELS).x >= 625) render->camera.rect.x = player->GetPosition(InUnit::IN_PIXELS).x - 625;
+	if (render->camera.rect.x < 0) render->camera.rect.x = 0;
+	if (render->camera.rect.x > 3000) render->camera.rect.x = 3000;
+	if (render->camera.rect.y < 0) render->camera.rect.y = 0;
 
-	if (MathUtils::CheckCollision(shell->GetRect(InUnit::IN_PIXELS), render->camera)) shell->SetPhysicsUpdatability(true);
+	if (MathUtils::CheckCollision(shell->GetRect(InUnit::IN_PIXELS), render->camera.rect)) shell->SetPhysicsUpdatability(true);
 	else shell->SetPhysicsUpdatability(false);
 
 	// Inputs

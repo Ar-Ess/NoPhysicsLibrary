@@ -51,7 +51,7 @@ bool EditorScene::Start()
 		->Dynamic(80);
 
 	// Ground
-	physics->CreateBody(0, wSize.y - 20, 4000, 20)->Static();
+	physics->CreateBody(0, wSize.y * 2 - 20, 4000, 20)->Static();
 	physics->CreateBody(-20, 0, 20, 720)->Static();
 
 	physics->PausePhysics(editMode);
@@ -62,11 +62,14 @@ bool EditorScene::Start()
 
 bool EditorScene::Update(float dt)
 {
+	Point pPos = player->GetPosition(InUnit::IN_PIXELS);
+
 	if (editMode) UpdateEditMode(dt);
 	else UpdatePlayMode(dt);
 
+	render->camera.Update(pPos)->LimitFollow({0, 0, 200, 720});
 	physics->Update(&dt);
-
+	
 	if (editMode) DrawEditMode(dt);
 	else DrawPlayMode(dt);
 
@@ -126,20 +129,15 @@ bool EditorScene::DrawEditMode(float dt)
 {
 	for (uint i = 0; i < grid.Size(); ++i) grid[i]->Draw();
 
+	render->DrawGrid({ 0, 0, window->GetSize().Multiply(1.0f, 2) }, { (float)grid.Width(), (float)grid.Heigth() });
+
 	return true;
 }
 
 bool EditorScene::UpdatePlayMode(float dt)
 {
-
 	bool ground = player->IsBodyStill(BodyState::ON_GROUND);
 	bool shift = (input->GetKey(SDL_SCANCODE_LSHIFT) == KeyState::KEY_REPEAT);
-
-	// Camera movement
-	if (player->GetPosition(InUnit::IN_PIXELS).x >= 625) render->camera.x = player->GetPosition(InUnit::IN_PIXELS).x - 625;
-	if (render->camera.x < 0) render->camera.x = 0;
-	if (render->camera.x > 3000) render->camera.x = 3000;
-	if (render->camera.y < 0) render->camera.y = 0;
 
 	// Inputs
 	if (input->GetKey(SDL_SCANCODE_D) == KeyState::KEY_REPEAT)
@@ -172,3 +170,5 @@ bool EditorScene::DrawPlayMode(float dt)
 
 	return true;
 }
+
+// --------------------------------------------------
