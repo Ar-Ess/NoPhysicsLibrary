@@ -3,42 +3,41 @@
 #include "Flag.h"
 #include "Point.h"
 
-typedef unsigned int uint;
 template <class T>
 class Grid
 {
     struct Row
     {
-        Row(uint width)
+        Row(unsigned int width)
         {
-            uint flagAmount = (uint)ceil(width / 8.0f);
-            for (uint i = 0; i < flagAmount; ++i) full.Add(new Flag());
+            unsigned int flagAmount = (unsigned int)ceil(width / 8.0f);
+            for (unsigned int i = 0; i < flagAmount; ++i) full.Add(new Flag());
         }
-        void SetValue(T value, uint x)
+        void SetValue(T value, unsigned int x)
         {
             SetFullFlag(x, true);
             row.Assign(value, x);
         }
-        void SetFullFlag(uint x, bool state)
+        void SetFullFlag(unsigned int x, bool state)
         {
-            uint setIndex = x / 8;
-            uint flagIndex = x - 8 * setIndex;
+            unsigned int setIndex = x / Flag::Capacity();
+            unsigned int flagIndex = x - Flag::Capacity() * setIndex;
             full.At(setIndex)->Set(flagIndex, state);
         }
-        bool Empty(uint x)
+        bool Empty(unsigned int x)
         {
-            uint setIndex = x / 8;
-            uint flagIndex = x - 8 * setIndex;
+            unsigned int setIndex = x / Flag::Capacity();
+            unsigned int flagIndex = x - Flag::Capacity() * setIndex;
             return !full.At(setIndex)->Get(flagIndex);
         }
         bool Empty()
         {
             return size == 0;
         }
-        T GetNonEmptyValue(uint x, uint width)
+        T GetNonEmptyValue(unsigned int x, unsigned int width)
         {
-            uint fullCells = 0;
-            for (uint i = 0; i < width; ++i)
+            unsigned int fullCells = 0;
+            for (unsigned int i = 0; i < width; ++i)
             {
                 if (Empty(i)) continue;
 
@@ -51,17 +50,22 @@ class Grid
         void Clear()
         {
             size = 0;
-            for (uint i = 0; i < full.Size(); ++i) full[i]->Clear();
+            for (unsigned int i = 0; i < full.Size(); ++i) full[i]->Clear();
+        }
+        void CleanUp()
+        {
+            full.Clear();
+            row.Clear();
         }
 
         Array<T> row;
         Array<Flag*> full;
-        uint size = 0;
+        unsigned int size = 0;
     };
 
 public:
 
-    Grid(uint width, uint height)
+    Grid(unsigned int width, unsigned int height)
     {
         this->width = width;
         this->height = height;
@@ -73,7 +77,7 @@ public:
         }
     }
 
-    bool Set(T value, uint x, uint y)
+    bool Set(T value, unsigned int x, unsigned int y)
     {
         if (x >= width && y >= height) return false;
 
@@ -95,7 +99,7 @@ public:
         size++;
     }
 
-    T At(uint x, uint y) const
+    T At(unsigned int x, unsigned int y) const
     {
         assert(x < width && y < height);
 
@@ -109,7 +113,7 @@ public:
         return GetRow(coords.y)->row.At(coords.x);
     }
 
-    T At(uint index) const
+    T At(unsigned int index) const
     {
         assert(index < width * height);
         Point coords = FromIndexToCoords(index);
@@ -118,29 +122,29 @@ public:
     }
 
     // Returns the amount of not empty nodes
-    uint Size() const
+    unsigned int Size() const
     {
         return size;
     }
 
     // Returns the total amount of nodes
-    uint SizeMax() const
+    unsigned int SizeMax() const
     {
         return width * height;
     }
 
-    uint Width() const
+    unsigned int Width() const
     {
         return width;
     }
 
-    uint Heigth() const
+    unsigned int Heigth() const
     {
         return height;
     }
 
     // Returns the amount of not empty nodes in a row
-    uint SizeRow(uint row) const
+    unsigned int SizeRow(unsigned int row) const
     {
         if (row >= width) return 0;
 
@@ -152,7 +156,7 @@ public:
         return (size <= 0);
     }
 
-    bool Empty(uint x, uint y) const
+    bool Empty(unsigned int x, unsigned int y) const
     {
         assert(x < width && y < height);
         return GetRow(y)->Empty(x);
@@ -216,9 +220,7 @@ public:
     {
         for (uint i = 0; i < height: ++i)
         {
-            Row* row = GetRow(i);
-            row->full->Clear();
-            row->row->Clear();
+            GetRow(i)->CleanUp();
             size = 0;
         }
         grid->Clear();
@@ -232,7 +234,7 @@ public:
         return true;
     }
 
-    bool Erase(uint x, uint y)
+    bool Erase(unsigned int x, unsigned int y)
     {
         assert(x < width && y < height);
 
@@ -254,7 +256,7 @@ public:
         return true;
     }
 
-    bool Erase(uint index)
+    bool Erase(unsigned int index)
     {
         assert(index < width * height);
         Point coords = FromIndexToCoords(index);
@@ -268,12 +270,12 @@ public:
 
 private:
 
-    Row* GetRow(uint y) const
+    Row* GetRow(unsigned int y) const
     {
         return grid->At(y);
     }
 
-    Point FromIndexToCoords(uint index)
+    Point FromIndexToCoords(unsigned int index)
     {
         uint y = index / width;
         uint x = index - width * y;
@@ -285,9 +287,9 @@ private:
 
     Array<Row*>* grid = nullptr;
 
-    uint width = 0;
-    uint height = 0;
-    uint size = 0;
+    unsigned int width = 0;
+    unsigned int height = 0;
+    unsigned int size = 0;
 
 };
 
@@ -296,11 +298,11 @@ class Grid<T*>
 {
     struct Row
     {
-        void SetValue(T* value, uint x)
+        void SetValue(T* value, unsigned int x)
         {
             row.Assign(value, x);
         }
-        bool Empty(uint x)
+        bool Empty(unsigned int x)
         {
             return row.At(x) == nullptr;
         }
@@ -308,10 +310,10 @@ class Grid<T*>
         {
             return size == 0;
         }
-        T* GetNonEmptyValue(uint x, uint width)
+        T* GetNonEmptyValue(unsigned int x, unsigned int width)
         {
-            uint fullCells = 0;
-            for (uint i = 0; i < width; ++i)
+            unsigned int fullCells = 0;
+            for (unsigned int i = 0; i < width; ++i)
             {
                 if (Empty(i)) continue;
 
@@ -324,21 +326,25 @@ class Grid<T*>
         void Clear()
         {
             size = 0;
-            for (uint i = 0; i < row->Size(); ++i)
+            for (unsigned int i = 0; i < row->Size(); ++i)
             {
                 T* value = row[i];
                 delete value;
                 value = nullptr;
             }
         }
+        void CleanUp()
+        {
+            row.Clear();
+        }
 
         Array<T*> row;
-        uint size = 0;
+        unsigned int size = 0;
     };
 
 public:
 
-    Grid(uint width, uint height)
+    Grid(unsigned int width, unsigned int height)
     {
         this->width = width;
         this->height = height;
@@ -350,7 +356,7 @@ public:
         }
     }
 
-    bool Set(T* value, uint x, uint y)
+    bool Set(T* value, unsigned int x, unsigned int y)
     {
         if (x >= width && y >= height) return false;
 
@@ -372,7 +378,7 @@ public:
         size++;
     }
 
-    bool Set(T* value, uint index)
+    bool Set(T* value, unsigned int index)
     {
         if (index < width * height) return false;
 
@@ -385,7 +391,7 @@ public:
         size++;
     }
 
-    T* At(uint x, uint y) const
+    T* At(unsigned int x, unsigned int y) const
     {
         assert(x < width&& y < height);
 
@@ -399,7 +405,7 @@ public:
         return GetRow(coords.y)->row.At(coords.x);
     }
 
-    T* At(uint index) const
+    T* At(unsigned int index) const
     {
         assert(index < width* height);
         Point coords = FromIndexToCoords(index);
@@ -408,29 +414,29 @@ public:
     }
 
     // Returns the amount of not empty nodes
-    uint Size() const
+    unsigned int Size() const
     {
         return size;
     }
 
     // Returns the total amount of nodes
-    uint SizeMax() const
+    unsigned int SizeMax() const
     {
         return width * height;
     }
 
-    uint Width() const
+    unsigned int Width() const
     {
         return width;
     }
 
-    uint Heigth() const
+    unsigned int Heigth() const
     {
         return height;
     }
 
     // Returns the amount of not empty nodes in a row
-    uint SizeRow(uint row) const
+    unsigned int SizeRow(unsigned int row) const
     {
         if (row >= width) return 0;
 
@@ -442,7 +448,7 @@ public:
         return (size <= 0);
     }
 
-    bool Empty(uint x, uint y) const
+    bool Empty(unsigned int x, unsigned int y) const
     {
         assert(x < width&& y < height);
         return GetRow(y)->Empty(x);
@@ -459,7 +465,7 @@ public:
         assert(!Empty());
 
         Point ret = { -1, -1 };
-        for (uint i = 0; i < height; ++i)
+        for (unsigned int i = 0; i < height; ++i)
         {
             Row* row = GetRow(i);
             if (row->Empty()) continue;
@@ -477,7 +483,7 @@ public:
     {
         if (Empty()) return true;
 
-        for (uint i = 0; i < height; ++i) GetRow(i)->Clear();
+        for (unsigned int i = 0; i < height; ++i) GetRow(i)->Clear();
         size = 0;
 
         return true;
@@ -486,10 +492,9 @@ public:
     // Clean the structure. Return to a 0 by 0 grid
     bool CleanUp()
     {
-        for (uint i = 0; i < height: ++i)
+        for (unsigned int i = 0; i < height: ++i)
         {
-            Row* row = GetRow(i);
-            row->row->Clear();
+            GetRow(i)->CleanUp();
         }
         grid->Clear();
         delete grid;
@@ -502,7 +507,7 @@ public:
         return true;
     }
 
-    bool Erase(uint x, uint y)
+    bool Erase(unsigned int x, unsigned int y)
     {
         assert(x < width&& y < height);
 
@@ -528,7 +533,7 @@ public:
         return true;
     }
 
-    bool Erase(uint index)
+    bool Erase(unsigned int index)
     {
         assert(index < width* height);
         Point coords = FromIndexToCoords(index);
@@ -544,13 +549,13 @@ public:
 
     // Returns the not empty cells sequentially
     // Optimized to iterate
-    T* operator[](uint index)
+    T* operator[](unsigned int index)
     {
         assert(index < size);
         assert(size > 0);
-        const uint offset = index / width;
+        const unsigned int offset = index / width;
 
-        for (uint i = 0; i < height; ++i)
+        for (unsigned int i = 0; i < height; ++i)
         {
             Row* row = GetRow(i);
             if (i >= offset && int(index) - int(row->size) < 0) return row->GetNonEmptyValue(index, width);
@@ -562,15 +567,15 @@ public:
 
 private:
     
-    Row* GetRow(uint y) const
+    Row* GetRow(unsigned int y) const
     {
         return grid->At(y);
     }
 
-    Point FromIndexToCoords(uint index)
+    Point FromIndexToCoords(unsigned int index)
     {
-        uint y = index / width;
-        uint x = index - width * y;
+        unsigned int y = index / width;
+        unsigned int x = index - width * y;
 
         return { x, y };
     }
@@ -579,8 +584,8 @@ private:
 
     Array<Row*>* grid = nullptr;
 
-    uint width = 0;
-    uint height = 0;
-    uint size = 0;
+    unsigned int width = 0;
+    unsigned int height = 0;
+    unsigned int size = 0;
 
 };

@@ -37,9 +37,9 @@ public:
         return true;
     }
     
-    void Erase(uint index)
+    void Erase(unsigned int index)
     {
-	if (index >= size) return nullptr;
+        if (index >= size) return;
         Node* erase = GetNode(index);
         if (index == 0)
         {
@@ -57,7 +57,7 @@ public:
             --size;
             return;
         }
-        
+
         erase->prev->post = erase->post;
         erase->post->prev = erase->prev;
         delete erase;
@@ -65,12 +65,12 @@ public:
         --size;
     }
     
-    uint Size() const
+    unsigned int Size() const
     {
         return size;
     }
     
-    T At(uint index) const
+    T At(unsigned int index) const
     {
         return GetNode(index)->value;
     }
@@ -107,12 +107,13 @@ public:
         return GetNode(index)->value;
     }
 
+    // Finds the index of a value, returns -1 if not found
     int Find(T value) const
     {
         if (Empty()) return -1;
 
         int i = 0;
-        for (Node* node = startNode; node != nullptr; node = node->post)
+        for (Node* node = start; node != nullptr; node = node->post)
         {
             if (node->value == value) return i;
             ++i;
@@ -123,23 +124,23 @@ public:
     
 private:
 
-    Node* GetNode(uint index) const
+    Node* GetNode(unsigned int index) const
     {
 	    if (index >= size) return nullptr;
         if (index == 0) return start;
         if (index == size - 1) return final;
-        uint middle = size / 2 + size % 2;
+        unsigned int middle = size / 2 + size % 2;
         
         Node* ret = nullptr;
         if (index <= middle - 1)
         {
             ret = start;
-            for (uint i = 0; i < index; ++i) ret = ret->post;
+            for (unsigned int i = 0; i < index; ++i) ret = ret->post;
         }
         else
         {
             ret = final;
-            for (uint i = 0; i < size - index - 1; ++i) ret = ret->prev;
+            for (unsigned int i = 0; i < size - index - 1; ++i) ret = ret->prev;
         }
         
         return ret;
@@ -149,7 +150,7 @@ private:
 
     Node* start = nullptr;
     Node* final = nullptr;
-    uint size = 0;
+    unsigned int size = 0;
 
 };
 
@@ -196,9 +197,9 @@ public:
         return true;
     }
 
-    void Erase(uint index)
+    void Erase(unsigned int index)
     {
-        if (index >= size) return nullptr;
+        if (index >= size) return;
         Node* erase = GetNode(index);
         if (index == 0)
         {
@@ -224,12 +225,12 @@ public:
         --size;
     }
 
-    uint Size() const
+    unsigned int Size() const
     {
         return size;
     }
 
-    T* At(uint index) const
+    T* At(unsigned int index) const
     {
         return GetNode(index)->value;
     }
@@ -266,12 +267,13 @@ public:
         return GetNode(index)->value;
     }
 
+    // Finds the index of a value, returns -1 if not found
     int Find(T* value) const
     {
         if (Empty()) return -1;
 
         int i = 0;
-        for (Node* node = startNode; node != nullptr; node = node->post)
+        for (Node* node = start; node != nullptr; node = node->post)
         {
             if (*node->value == *value) return i;
             ++i;
@@ -282,7 +284,7 @@ public:
 
 private:
 
-    Node* GetNode(uint index) const
+    Node* GetNode(unsigned int index) const
     {
         assert(index < size);
         if (index == 0) return start;
@@ -308,6 +310,6 @@ private:
 
     Node* start = nullptr;
     Node* final = nullptr;
-    uint size = 0;
+    unsigned int size = 0;
 
 };

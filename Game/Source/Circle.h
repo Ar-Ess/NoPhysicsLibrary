@@ -11,12 +11,12 @@ public:
 	float x = 0.0f, y = 0.0f;
 	float radius = 0.0f;
 
-	inline float GetDiameter() const
+	float GetDiameter() const
 	{
 		return (radius * 2.0f);
 	}
 
-	inline Point GetAltLeftPosition() const
+	Point GetAltLeftPosition() const
 	{
 		return { x - radius, y - radius };
 	}

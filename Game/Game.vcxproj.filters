@@ -30,12 +30,6 @@
     <ClCompile Include="Source\SceneManager.cpp">
       <Filter>Modules</Filter>
     </ClCompile>
-    <ClCompile Include="Source\LightTimer.cpp">
-      <Filter>Utils</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\PerfTimer.cpp">
-      <Filter>Utils</Filter>
-    </ClCompile>
     <ClCompile Include="Source\InitialScene.cpp">
       <Filter>Scenes</Filter>
     </ClCompile>
@@ -53,6 +47,12 @@
     </ClCompile>
     <ClCompile Include="Source\Camera.cpp">
       <Filter>Utils</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\LightTimer.cpp">
+      <Filter>Utils\Timing</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\PerfTimer.cpp">
+      <Filter>Utils\Timing</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -93,12 +93,6 @@
     <ClInclude Include="Source\SceneManager.h">
       <Filter>Modules</Filter>
     </ClInclude>
-    <ClInclude Include="Source\LightTimer.h">
-      <Filter>Utils</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\PerfTimer.h">
-      <Filter>Utils</Filter>
-    </ClInclude>
     <ClInclude Include="Source\InitialScene.h">
       <Filter>Scenes</Filter>
     </ClInclude>
@@ -129,6 +123,15 @@
     <ClInclude Include="Source\Camera.h">
       <Filter>Utils</Filter>
     </ClInclude>
+    <ClInclude Include="Source\Actions.h">
+      <Filter>Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\LightTimer.h">
+      <Filter>Utils\Timing</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\PerfTimer.h">
+      <Filter>Utils\Timing</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="External">
@@ -154,6 +157,9 @@
     </Filter>
     <Filter Include="Tiles">
       <UniqueIdentifier>{5e5c2228-63b2-490c-94d1-75a07dddaaa4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Utils\Timing">
+      <UniqueIdentifier>{47dc9040-b617-46ec-9a0c-d7a44db0bc3e}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

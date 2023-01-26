@@ -31,6 +31,7 @@ private:
 
 private:
 
+
 	// Editor
 	Grid<Tile*> grid = Grid<Tile*>(24, 27);
 	bool editMode = true;

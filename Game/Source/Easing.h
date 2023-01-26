@@ -2,92 +2,94 @@
 #define PI 3.14159265359
 
 #include "Point.h"
+#include "Actions.h"
 
-enum class EasingType
+enum class EaseType
 {
 	LINEAR,
-	QUADRATIC_IN,
-	QUADRATIC_OUT,
-	QUADRATIC_IN_OUT,
-	CUBIC_IN,
-	CUBIC_OUT,
-	CUBIC_IN_OUT,
-	QUARTIC_IN,
-	QUARTIC_OUT,
-	QUARTIC_IN_OUT,
-	QUINTIC_IN,
-	QUINTIC_OUT,
-	QUINTIC_IN_OUT,
-	SINOIDAL_IN,
-	SINOIDAL_OUT,
-	SINOIDAL_IN_OUT,
-	EXPONENTIAL_IN,
-	EXPONENTIAL_OUT,
-	EXPONENTIAL_IN_OUT,
-	CIRCULAR_IN,
-	CIRCULAR_OUT,
-	CIRCULAR_IN_OUT,
-	BACK_IN,
-	BACK_OUT,
-	BACK_IN_OUT,
-	ELASTIC_IN,
-	ELASTIC_OUT,
-	ELASTIC_IN_OUT,
-	BOUNCE_IN,
-	BOUNCE_OUT,
-	BOUNCE_IN_OUT
+	QUADRATIC,
+	CUBIC,
+	QUARTIC,
+	QUINTIC,
+	SINOIDAL,
+	EXPONENTIAL,
+	CIRCULAR,
+	BACK,
+	ELASTIC,
+	BOUNCE
 };
 
-class EasingFunctions 
+enum class EaseMode
+{
+	IN_MODE,
+	OUT_MODE,
+	IN_OUT_MODE
+};
+
+class Easing
 {
 public:
-	void Ease(EasingType easeType, Point* easedPosition, Point positionOffset, bool repeat, int totalIterX, int totalIterY);
-	void ResetIterations();
+
+	Easing(EaseType type, EaseMode mode);
+
+	void Ease(Point* position, Point start, Point end, float duration, float dt);
+
+	void OnEaseEnd(EaseType type, EaseMode mode);
 
 private:
-	static float linearEaseNull(float t, float b, float c, float d);
 
-	static float quadEaseIn(float t, float b, float c, float d);
-	static float quadEaseOut(float t, float b, float c, float d);
-	static float quadEaseInOut(float t, float b, float c, float d);
+	// Actions
 
-	static float cubicEaseIn(float t, float b, float c, float d);
-	static float cubicEaseOut(float t, float b, float c, float d);
-	static float cubicEaseInOut(float t, float b, float c, float d);
+	void EndEase();
 
-	static float quartEaseIn(float t, float b, float c, float d);
-	static float quartEaseOut(float t, float b, float c, float d);
-	static float quartEaseInOut(float t, float b, float c, float d);
+	void OnEndTypeChange(EaseType type, EaseMode mode);
 
-	static float quintEaseIn(float t, float b, float c, float d);
-	static float quintEaseOut(float t, float b, float c, float d);
-	static float quintEaseInOut(float t, float b, float c, float d);
+	// Eases
 
-	static float sineEaseIn(float t, float b, float c, float d);
-	static float sineEaseOut(float t, float b, float c, float d);
-	static float sineEaseInOut(float t, float b, float c, float d);
-
-	static float expoEaseIn(float t, float b, float c, float d);
-	static float expoEaseOut(float t, float b, float c, float d);
-	static float expoEaseInOut(float t, float b, float c, float d);
-
-	static float circEaseIn(float t, float b, float c, float d);
-	static float circEaseOut(float t, float b, float c, float d);
-	static float circEaseInOut(float t, float b, float c, float d);
-
-	static float backEaseIn(float t, float b, float c, float d);
-	static float backEaseOut(float t, float b, float c, float d);
-	static float backEaseInOut(float t, float b, float c, float d);
-
-	static float elasticEaseIn(float t, float b, float c, float d);
-	static float elasticEaseOut(float t, float b, float c, float d);
-	static float elasticEaseInOut(float t, float b, float c, float d);
-
-	static float bounceEaseIn(float t, float b, float c, float d);
-	static float bounceEaseOut(float t, float b, float c, float d);
-	static float bounceEaseInOut(float t, float b, float c, float d);
+	double LinearEase      (double t, double d);
+	double QuadEaseIn      (double t, double d);
+	double QuadEaseOut     (double t, double d);
+	double QuadEaseInOut   (double t, double d);
+	double CubicEaseIn     (double t, double d);
+	double CubicEaseOut    (double t, double d);
+	double CubicEaseInOut  (double t, double d);
+	double QuartEaseIn     (double t, double d);
+	double QuartEaseOut    (double t, double d);
+	double QuartEaseInOut  (double t, double d);
+	double QuintEaseIn     (double t, double d);
+	double QuintEaseOut    (double t, double d);
+	double QuintEaseInOut  (double t, double d);
+	double SineEaseIn      (double t, double d);
+	double SineEaseOut     (double t, double d);
+	double SineEaseInOut   (double t, double d);
+	double ExpoEaseIn      (double t, double d);
+	double ExpoEaseOut     (double t, double d);
+	double ExpoEaseInOut   (double t, double d);
+	double CircEaseIn      (double t, double d);
+	double CircEaseOut     (double t, double d);
+	double CircEaseInOut   (double t, double d);
+	double BackEaseIn      (double t, double d);
+	double BackEaseOut     (double t, double d);
+	double BackEaseInOut   (double t, double d);
+	double ElasticEaseIn   (double t, double d);
+	double ElasticEaseOut  (double t, double d);
+	double ElasticEaseInOut(double t, double d);
+	double BounceEaseIn    (double t, double d);
+	double BounceEaseOut   (double t, double d);
+	double BounceEaseInOut (double t, double d);
 
 private:
-	float t, b, c, d;
-	int iterations = 0;
+
+	CAction<Easing, EaseType, EaseMode> onEnd;
+
+	EaseType onEndType = EaseType::LINEAR;
+	EaseMode onEndMode = EaseMode::IN_MODE;
+
+	EaseType type = EaseType::LINEAR;
+	EaseMode mode = EaseMode::IN_MODE;
+	float timer = 0;
+	bool active = true;
+	const float s = 1.70158;
+	const float r = 7.5625;
+
 };

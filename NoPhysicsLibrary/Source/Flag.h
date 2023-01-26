@@ -3,7 +3,7 @@
 #include <assert.h>
 #include <stdint.h>
 
-// 8 slots bit-wise manager
+// 64 slots bit-wise manager
 class Flag
 {
 public:
@@ -13,41 +13,41 @@ public:
 		this->flag = 0;
 	}
 
-	Flag(uint8_t flag)
+	Flag(uint64_t flag)
 	{
 		this->flag = flag;
 	}
 
 	// Returns the binary flags in a number of 8 bits
-	uint8_t Binary() const
+	uint64_t Binary() const
 	{
 		return flag;
 	}
 
-	// Set an specific flag from slot 0 to 7
-	void Set(short int index, bool state)
+	// Set an specific flag from slot 0 to 63
+	void Set(unsigned int index, bool state)
 	{
-		// Flags only have 8 slots available
-		assert(index >= 0 && index < 8);
+		// Flags only have 64 slots available
+		assert(index < capacity);
 
 		if (Get(index) == state) return;
 
-		uint8_t mod = 1;
+		uint64_t mod = 1;
 		mod = mod << index;
 
 		flag = flag ^ mod;
 	}
 
 	// Set the whole flag
-	inline void Set(uint8_t flag) { this->flag = flag; }
+	void Set(uint64_t flag) { this->flag = flag; }
 
 	// Get an specific flag
-	bool Get(short int index) const
+	bool Get(unsigned int index) const
 	{
-		// Flags only have 8 slots available
-		assert(index >= 0 && index < 8);
+		// Flags only have 64 slots available
+		assert(index < capacity);
 
-		uint8_t mod = 1;
+		uint64_t mod = 1;
 		mod = mod << index;
 
 		mod = flag & mod;
@@ -55,16 +55,35 @@ public:
 		return (mod != 0);
 	}
 
+	// Get and specific flag. If the flag is true, it sets it to false
+	bool Trigger(unsigned int index)
+	{
+		// Flags only have 64 slots available
+		assert(index < capacity);
+
+		uint64_t mod = 1;
+		mod = mod << index;
+
+		mod = flag & mod;
+
+		bool ret = (mod != 0);
+		if (ret) flag = flag ^ mod;
+
+		return ret;
+	}
+
 	// Inverts the state of all the flags
-	inline void Invert() { flag = ~flag; }
+	void Invert() { flag = ~flag; }
 
-	inline bool IsAnyTrue() const { return flag != 0; };
+	bool IsAnyTrue() const { return flag != 0; };
 
-	inline void Clear() { flag = 0; };
+	void Clear() { flag = 0; };
+
+	int Capacity() const { return capacity; }
 
 private:
 
-	uint8_t flag = 0;
-
+	uint64_t flag = 0;
+	const uint8_t capacity = 64;
 };
 
