@@ -1,152 +1,156 @@
 #include "Easing.h"
 #include <math.h>
 
-
-
-Easing::Easing(EaseType type, EaseMode mode)
+Easing::Easing(EaseType type, EaseMode mode, float duration)
 {
-	this->type = type;
-	this->mode = mode;
+	params = EasingParams(type, mode, duration, true);
+	end = params;
+	onEnd += std::bind(&Easing::OnEnd, this);
 }
 
-void Easing::Ease(Point* position, Point start, Point end, float duration, float dt)
+Point Easing::Ease(Point start, Point end, float dt)
 {
+	if (!params.active) return end;
+
 	float val = 0;
 
-	if (timer > duration) EndEase();
+	if (timer >= params.duration) timer = params.duration;
 
-	switch (type)
+	switch (params.type)
 	{
 	case EaseType::LINEAR: 
 	{
-		val = LinearEase(timer, duration); break;
+		val = LinearEase(timer, params.duration); break;
 	}
 	case EaseType::QUADRATIC:
 	{
-		switch (mode)
+		switch (params.mode)
 		{
-		case EaseMode::IN_MODE: val = QuadEaseIn(timer, duration); break;
-		case EaseMode::OUT_MODE: val = QuadEaseOut(timer, duration); break;
-		case EaseMode::IN_OUT_MODE: val = QuadEaseInOut(timer, duration); break;
+		case EaseMode::IN_MODE: val = QuadEaseIn(timer, params.duration); break;
+		case EaseMode::OUT_MODE: val = QuadEaseOut(timer, params.duration); break;
+		case EaseMode::IN_OUT_MODE: val = QuadEaseInOut(timer, params.duration); break;
 		}
 		break;
 	}
 	case EaseType::CUBIC:
 	{
-		switch (mode)
+		switch (params.mode)
 		{
-		case EaseMode::IN_MODE:     val = CubicEaseIn(timer, duration); break;
-		case EaseMode::OUT_MODE:    val = CubicEaseOut(timer, duration); break;
-		case EaseMode::IN_OUT_MODE: val = CubicEaseInOut(timer, duration); break;
+		case EaseMode::IN_MODE:     val = CubicEaseIn(timer, params.duration); break;
+		case EaseMode::OUT_MODE:    val = CubicEaseOut(timer, params.duration); break;
+		case EaseMode::IN_OUT_MODE: val = CubicEaseInOut(timer, params.duration); break;
 		}
 		break;
 	}
 	case EaseType::QUARTIC:
 	{
-		switch (mode)
+		switch (params.mode)
 		{
-		case EaseMode::IN_MODE:     val = QuartEaseIn(timer, duration); break;
-		case EaseMode::OUT_MODE:    val = QuartEaseOut(timer, duration); break;
-		case EaseMode::IN_OUT_MODE: val = QuartEaseInOut(timer, duration); break;
+		case EaseMode::IN_MODE:     val = QuartEaseIn(timer, params.duration); break;
+		case EaseMode::OUT_MODE:    val = QuartEaseOut(timer, params.duration); break;
+		case EaseMode::IN_OUT_MODE: val = QuartEaseInOut(timer, params.duration); break;
 		}
 		break;
 	}
 	case EaseType::QUINTIC:
 	{
-		switch (mode)
+		switch (params.mode)
 		{
-		case EaseMode::IN_MODE:     val = QuintEaseIn(timer, duration); break;
-		case EaseMode::OUT_MODE:    val = QuintEaseOut(timer, duration); break;
-		case EaseMode::IN_OUT_MODE: val = QuintEaseInOut(timer, duration); break;
+		case EaseMode::IN_MODE:     val = QuintEaseIn(timer, params.duration); break;
+		case EaseMode::OUT_MODE:    val = QuintEaseOut(timer, params.duration); break;
+		case EaseMode::IN_OUT_MODE: val = QuintEaseInOut(timer, params.duration); break;
 		}
 		break;
 	}
 	case EaseType::SINOIDAL:
 	{
-		switch (mode)
+		switch (params.mode)
 		{
-		case EaseMode::IN_MODE:     val = SineEaseIn(timer, duration); break;
-		case EaseMode::OUT_MODE:    val = SineEaseOut(timer, duration); break;
-		case EaseMode::IN_OUT_MODE: val = SineEaseInOut(timer, duration); break;
+		case EaseMode::IN_MODE:     val = SineEaseIn(timer, params.duration); break;
+		case EaseMode::OUT_MODE:    val = SineEaseOut(timer, params.duration); break;
+		case EaseMode::IN_OUT_MODE: val = SineEaseInOut(timer, params.duration); break;
 		}
 		break;
 	}
 	case EaseType::EXPONENTIAL:
 	{
-		switch (mode)
+		switch (params.mode)
 		{
-		case EaseMode::IN_MODE:     val = ExpoEaseIn(timer, duration); break;
-		case EaseMode::OUT_MODE:    val = ExpoEaseOut(timer, duration); break;
-		case EaseMode::IN_OUT_MODE: val = ExpoEaseInOut(timer, duration); break;
+		case EaseMode::IN_MODE:     val = ExpoEaseIn(timer, params.duration); break;
+		case EaseMode::OUT_MODE:    val = ExpoEaseOut(timer, params.duration); break;
+		case EaseMode::IN_OUT_MODE: val = ExpoEaseInOut(timer, params.duration); break;
 		}
 		break;
 	}
 	case EaseType::CIRCULAR:
 	{
-		switch (mode)
+		switch (params.mode)
 		{
-		case EaseMode::IN_MODE:     val = CircEaseIn(timer, duration); break;
-		case EaseMode::OUT_MODE:    val = CircEaseOut(timer, duration); break;
-		case EaseMode::IN_OUT_MODE: val = CircEaseInOut(timer, duration); break;
+		case EaseMode::IN_MODE:     val = CircEaseIn(timer, params.duration); break;
+		case EaseMode::OUT_MODE:    val = CircEaseOut(timer, params.duration); break;
+		case EaseMode::IN_OUT_MODE: val = CircEaseInOut(timer, params.duration); break;
 		}
 		break;
 	}
 	case EaseType::BACK:
 	{
-		switch (mode)
+		switch (params.mode)
 		{
-		case EaseMode::IN_MODE:     val = BackEaseIn(timer, duration); break;
-		case EaseMode::OUT_MODE:    val = BackEaseOut(timer, duration); break;
-		case EaseMode::IN_OUT_MODE: val = BackEaseInOut(timer, duration); break;
+		case EaseMode::IN_MODE:     val = BackEaseIn(timer, params.duration); break;
+		case EaseMode::OUT_MODE:    val = BackEaseOut(timer, params.duration); break;
+		case EaseMode::IN_OUT_MODE: val = BackEaseInOut(timer, params.duration); break;
 		}
 		break;
 	}
 	case EaseType::ELASTIC:
 	{
-		switch (mode)
+		switch (params.mode)
 		{
-		case EaseMode::IN_MODE:     val = ElasticEaseIn(timer, duration); break;
-		case EaseMode::OUT_MODE:    val = ElasticEaseOut(timer, duration); break;
-		case EaseMode::IN_OUT_MODE: val = ElasticEaseInOut(timer, duration); break;
+		case EaseMode::IN_MODE:     val = ElasticEaseIn(timer, params.duration); break;
+		case EaseMode::OUT_MODE:    val = ElasticEaseOut(timer, params.duration); break;
+		case EaseMode::IN_OUT_MODE: val = ElasticEaseInOut(timer, params.duration); break;
 		}
 		break;
 	}
 	case EaseType::BOUNCE:
 	{
-		switch (mode)
+		switch (params.mode)
 		{
-		case EaseMode::IN_MODE:     val = BounceEaseIn(timer, duration); break;
-		case EaseMode::OUT_MODE:    val = BounceEaseOut(timer, duration); break;
-		case EaseMode::IN_OUT_MODE: val = BounceEaseInOut(timer, duration); break;
+		case EaseMode::IN_MODE:     val = BounceEaseIn(timer, params.duration); break;
+		case EaseMode::OUT_MODE:    val = BounceEaseOut(timer, params.duration); break;
+		case EaseMode::IN_OUT_MODE: val = BounceEaseInOut(timer, params.duration); break;
 		}
 		break;
 	}
 	}
 
-	position->x = start.x + (end.x - start.x) * val;
-	position->y = start.y + (end.y - start.y) * val;
+	if (timer == params.duration) onEnd.Invoke();
+	else timer += dt;
 
-	timer += dt;
+	return { start.x + (end.x - start.x) * val, start.y + (end.y - start.y) * val };
 }
 
 void Easing::OnEaseEnd(EaseType type, EaseMode mode)
 {
-	onEnd += &Easing::OnEndTypeChange;
-	onEndType = type;
-	onEndMode = mode;
+	end.type = type;
+	end.mode = mode;
 }
 
-void Easing::EndEase()
+void Easing::OnEaseEnd(bool active)
 {
-	timer = 0;
-	onEnd.Invoke(onEndType, onEndMode, this);
+	if (!params.active) params.active = active;
+	end.active = active;
 }
 
-void Easing::OnEndTypeChange(EaseType type, EaseMode mode)
+void Easing::OnEaseEnd(float duration)
 {
-	this->type = type;
-	this->mode = mode;
-	onEnd -= &Easing::OnEndTypeChange;
+	end.duration = duration;
+}
+
+void Easing::OnEnd()
+{
+	params = end;
+	if (params.active) timer = 0;
 }
 
 double Easing::LinearEase      (double t, double d)

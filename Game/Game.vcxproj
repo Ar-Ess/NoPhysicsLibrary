@@ -111,7 +111,7 @@
     <ClCompile Include="Source\Textures.cpp" />
     <ClCompile Include="Source\Tile.cpp" />
     <ClCompile Include="Source\Window.cpp" />
-    <ClInclude Include="Source\Actions.h" />
+    <ClInclude Include="Source\Action.h" />
     <ClInclude Include="Source\Array.h" />
     <ClInclude Include="Source\AssetsManager.h" />
     <ClInclude Include="Source\Camera.h" />

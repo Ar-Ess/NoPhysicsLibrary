@@ -15,13 +15,14 @@ bool InitialScene::Start()
 
 bool InitialScene::Update(float dt)
 {
-	static int counter = 8;
+	static int counter = 0;
 	static int subCounter = 2;
+	static bool change = true;
+	static bool active = true;
 	bool ret = true;
 
-	Point pos = rect.GetPosition();
-	ease.Ease(&pos, {100.0f, 360}, { 1180.0f, 360}, 2, dt);
-	rect.SetPosition(pos);
+	rect.SetPosition(ease.Ease({ 100.0f, 360 }, { 1180.0f, 360 }, dt));
+
 	render->DrawRectangle(rect);
 
 	if (input->GetKey(SDL_SCANCODE_RETURN) == KeyState::KEY_DOWN)
@@ -37,6 +38,21 @@ bool InitialScene::Update(float dt)
 		ease.OnEaseEnd((EaseType)counter, (EaseMode)subCounter);
 
 		if (counter == 10 && subCounter == 2) counter = 0;
+	}
+
+	if (input->GetKey(SDL_SCANCODE_BACKSPACE) == KeyState::KEY_DOWN)
+	{
+		float d = 2;
+		if (change) d = 1;
+		change = !change;
+
+		ease.OnEaseEnd(d);
+	}
+
+	if (input->GetKey(SDL_SCANCODE_RSHIFT) == KeyState::KEY_DOWN)
+	{
+		active = !active;
+		ease.OnEaseEnd(active);
 	}
 
 	if (input->GetKey(SDL_SCANCODE_Z) == KeyState::KEY_DOWN) ret = SetScene(Scenes::TEST_SCENE);

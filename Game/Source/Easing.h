@@ -2,7 +2,7 @@
 #define PI 3.14159265359
 
 #include "Point.h"
-#include "Actions.h"
+#include "Action.h"
 
 enum class EaseType
 {
@@ -28,21 +28,41 @@ enum class EaseMode
 
 class Easing
 {
+private:
+
+	struct EasingParams
+	{
+		EasingParams() {}
+
+		EasingParams(EaseType type, EaseMode mode, float duration, bool active)
+		{
+			this->type = type;
+			this->mode = mode;
+			this->duration = duration;
+			this->active = active;
+		}
+
+		EaseType type = EaseType::LINEAR;
+		EaseMode mode = EaseMode::IN_MODE;
+		float duration = 0.0f;
+		bool active = true;
+	};
+
 public:
 
-	Easing(EaseType type, EaseMode mode);
+	Easing(EaseType type, EaseMode mode, float duration);
 
-	void Ease(Point* position, Point start, Point end, float duration, float dt);
+	// Returns the offset to the start position regarding the elapsed time
+	Point Ease(Point start, Point end, float dt);
 
 	void OnEaseEnd(EaseType type, EaseMode mode);
+	void OnEaseEnd(bool active);
+	void OnEaseEnd(float duration);
 
 private:
 
 	// Actions
-
-	void EndEase();
-
-	void OnEndTypeChange(EaseType type, EaseMode mode);
+	void OnEnd();
 
 	// Eases
 
@@ -80,15 +100,11 @@ private:
 
 private:
 
-	CAction<Easing, EaseType, EaseMode> onEnd;
+	EasingParams end;
+	Action<> onEnd;
 
-	EaseType onEndType = EaseType::LINEAR;
-	EaseMode onEndMode = EaseMode::IN_MODE;
-
-	EaseType type = EaseType::LINEAR;
-	EaseMode mode = EaseMode::IN_MODE;
+	EasingParams params;
 	float timer = 0;
-	bool active = true;
 	const float s = 1.70158;
 	const float r = 7.5625;
 

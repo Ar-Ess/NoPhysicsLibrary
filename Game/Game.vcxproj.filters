@@ -15,9 +15,6 @@
     <ClCompile Include="Source\Window.cpp">
       <Filter>Modules</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Easing.cpp">
-      <Filter>Utils</Filter>
-    </ClCompile>
     <ClCompile Include="Source\Textures.cpp">
       <Filter>Assets Manager</Filter>
     </ClCompile>
@@ -54,6 +51,9 @@
     <ClCompile Include="Source\PerfTimer.cpp">
       <Filter>Utils\Timing</Filter>
     </ClCompile>
+    <ClCompile Include="Source\Easing.cpp">
+      <Filter>Utils\Maths</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\App.h" />
@@ -74,9 +74,6 @@
     </ClInclude>
     <ClInclude Include="Source\Window.h">
       <Filter>Modules</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Easing.h">
-      <Filter>Utils</Filter>
     </ClInclude>
     <ClInclude Include="Source\Circle.h">
       <Filter>Utils</Filter>
@@ -123,14 +120,17 @@
     <ClInclude Include="Source\Camera.h">
       <Filter>Utils</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Actions.h">
-      <Filter>Utils</Filter>
-    </ClInclude>
     <ClInclude Include="Source\LightTimer.h">
       <Filter>Utils\Timing</Filter>
     </ClInclude>
     <ClInclude Include="Source\PerfTimer.h">
       <Filter>Utils\Timing</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Action.h">
+      <Filter>Utils\Callback</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Easing.h">
+      <Filter>Utils\Maths</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -160,6 +160,12 @@
     </Filter>
     <Filter Include="Utils\Timing">
       <UniqueIdentifier>{47dc9040-b617-46ec-9a0c-d7a44db0bc3e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Utils\Callback">
+      <UniqueIdentifier>{ecad7437-e065-46a1-8b8a-b35f3c668e60}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Utils\Maths">
+      <UniqueIdentifier>{c2cad38c-59e0-441d-b69d-1816eab066fa}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>
