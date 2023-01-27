@@ -49,7 +49,7 @@ namespace MathUtils
 
 	inline float Cos(float num, bool radians = true)
 	{
-		if (radians) return sin(num);
+		if (radians) return cos(num);
 
 		return cos(RadToDeg(num));
 	}
