@@ -6,13 +6,13 @@ struct Timer
 
 	void Start();
 
-	int ReadSecs() const;
+	double ReadSecs() const;
 
 private:
 
-	int GetSecs() const;
+	double GetSecs() const;
 
 private:
 
-	int startTime = -1;
+	double startTime = -1;
 };

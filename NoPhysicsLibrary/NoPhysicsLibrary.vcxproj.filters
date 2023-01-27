@@ -78,6 +78,9 @@
     <ClCompile Include="Source\Timer.cpp">
       <Filter>Utils</Filter>
     </ClCompile>
+    <ClCompile Include="Source\External\miniaudio\extras\nodes\ma_reverb_node\ma_reverb_node.c">
+      <Filter>External\Miniaudio</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\NoPhysicsLibrary.h">
@@ -193,6 +196,12 @@
     </ClInclude>
     <ClInclude Include="Source\GetDataAuxiliar.h">
       <Filter>Aux</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\External\miniaudio\extras\nodes\ma_reverb_node\ma_reverb_node.h">
+      <Filter>External\Miniaudio</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\External\miniaudio\extras\nodes\ma_reverb_node\verblib.h">
+      <Filter>External\Miniaudio</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

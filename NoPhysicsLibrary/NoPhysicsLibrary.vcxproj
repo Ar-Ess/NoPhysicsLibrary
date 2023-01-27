@@ -150,6 +150,7 @@
     <ClCompile Include="Source\Audio.cpp" />
     <ClCompile Include="Source\Body.cpp" />
     <ClCompile Include="Source\DynamicBody.cpp" />
+    <ClCompile Include="Source\External\miniaudio\extras\nodes\ma_reverb_node\ma_reverb_node.c" />
     <ClCompile Include="Source\GasBody.cpp" />
     <ClCompile Include="Source\LiquidBody.cpp" />
     <ClCompile Include="Source\Define.cpp" />
@@ -176,6 +177,8 @@
     <ClInclude Include="Source\External\dr_libs\dr_flac.h" />
     <ClInclude Include="Source\External\dr_libs\dr_mp3.h" />
     <ClInclude Include="Source\External\dr_libs\dr_wav.h" />
+    <ClInclude Include="Source\External\miniaudio\extras\nodes\ma_reverb_node\ma_reverb_node.h" />
+    <ClInclude Include="Source\External\miniaudio\extras\nodes\ma_reverb_node\verblib.h" />
     <ClInclude Include="Source\External\miniaudio\miniaudio.h" />
     <ClInclude Include="Source\External\miniaudio\miniaudiodev.h" />
     <ClInclude Include="Source\Flag.h" />

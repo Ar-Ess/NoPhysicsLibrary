@@ -1,5 +1,6 @@
 #pragma once
-#include "External/miniaudio/miniaudiodev.h"
+#include "External/miniaudio/miniaudio.h"
+#include "External/miniaudio/extras/nodes/ma_reverb_node/ma_reverb_node.h"
 #include "Timer.h"
 
 class Sound
@@ -20,9 +21,9 @@ public:
 
 	ma_delay_node* ConnectDelay(ma_engine* engine, float delayTime);
 
-	bool IsOver() const
+	bool IsDelayOver() const
 	{
-		return (timer->ReadSecs() >= timeToDelete && !played);
+		return (timer->ReadSecs() >= timeUntilPlay && !played);
 	}
 
 	bool IsPlayed() const
@@ -36,7 +37,7 @@ public:
 
 private:
 
-	float timeToDelete = 0.0f;
+	float timeUntilPlay = 0.0f;
 	Timer* timer = nullptr;
 	bool played = false;
 

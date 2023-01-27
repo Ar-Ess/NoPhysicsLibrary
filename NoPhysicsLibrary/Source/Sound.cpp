@@ -3,7 +3,7 @@
 Sound::Sound(ma_sound* source, float timeToDelete)
 {
 	this->source = source;
-	this->timeToDelete = timeToDelete;
+	this->timeUntilPlay = timeToDelete;
 	timer = new Timer();
 }
 

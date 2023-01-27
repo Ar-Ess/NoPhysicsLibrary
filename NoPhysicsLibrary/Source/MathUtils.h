@@ -2,6 +2,7 @@
 
 #include "Rect.h"
 #include "Ray.h"
+#define PI 3.14159265359
 
 namespace MathUtils
 {
@@ -20,10 +21,37 @@ namespace MathUtils
 
 	inline float Pow(float num, float power)
 	{
-		if (power == 2) return num * num;
+		if (power == 1) return num;
+		else if (power == 2) return num * num;
 		else if (power == 3) return num * num * num;
+		else if (power == 4) return num * num * num * num;
+		else if (power == 5) return num * num * num * num * num;
 
 		return (float)pow((double)num, (double)power);
+	}
+
+	inline float RadToDeg(float rad)
+	{
+		return rad * (180 / PI);
+	}
+
+	inline float DegToRad(float deg)
+	{
+		return deg * (PI / 180);
+	}
+
+	inline float Sin(float num, bool radians = true)
+	{
+		if (radians) return sin(num);
+		
+		return sin(RadToDeg(num));
+	}
+
+	inline float Cos(float num, bool radians = true)
+	{
+		if (radians) return sin(num);
+
+		return cos(RadToDeg(num));
 	}
 
 	inline float Distance(float x1, float y1, float x2, float y2)

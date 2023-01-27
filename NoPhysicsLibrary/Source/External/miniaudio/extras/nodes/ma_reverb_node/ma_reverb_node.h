@@ -3,6 +3,7 @@
 #define ma_reverb_node_h
 
 #include "verblib.h"
+#include "miniaudio.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -26,12 +27,16 @@ typedef struct
 
 MA_API ma_reverb_node_config ma_reverb_node_config_init(ma_uint32 channels, ma_uint32 sampleRate);
 
-
 typedef struct
 {
     ma_node_base baseNode;
     verblib reverb;
 } ma_reverb_node;
+
+//-TODO: Create all setters and getters
+
+// Roomsize between 0 and 1
+MA_API void ma_reverb_node_set_room_size(ma_reverb_node* reverb, float roomsize);
 
 MA_API ma_result ma_reverb_node_init(ma_node_graph* pNodeGraph, const ma_reverb_node_config* pConfig, const ma_allocation_callbacks* pAllocationCallbacks, ma_reverb_node* pReverbNode);
 MA_API void ma_reverb_node_uninit(ma_reverb_node* pReverbNode, const ma_allocation_callbacks* pAllocationCallbacks);
