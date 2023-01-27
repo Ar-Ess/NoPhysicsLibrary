@@ -229,7 +229,8 @@ double Easing::SineEaseOut     (double t, double d)
 }
 double Easing::SineEaseInOut   (double t, double d) 
 {
-	return -1 / 2 * ((double)MathUtils::Cos(PI * t / d) - 1);
+	if (t < d / 2) return SineEaseIn(t * 2, d) * .5;
+	return SineEaseOut(t * 2 - d, d) * .5 + .5;
 }
 double Easing::ExpoEaseIn      (double t, double d) 
 {
@@ -337,6 +338,5 @@ double Easing::BounceEaseOut   (double t, double d)
 double Easing::BounceEaseInOut (double t, double d) 
 {
 	if (t < d / 2) return BounceEaseIn(t * 2, d) * .5;
-
 	return BounceEaseOut(t * 2 - d, d) * .5 + .5;
 }
