@@ -1,5 +1,5 @@
 #include "Easing.h"
-#include <math.h>
+#include "MathUtils.h"
 
 Easing::Easing(EaseType type, EaseMode mode, float duration)
 {
@@ -169,9 +169,8 @@ double Easing::QuadEaseOut     (double t, double d)
 }
 double Easing::QuadEaseInOut   (double t, double d)
 {
-	if ((t /= d / 2) < 1) return ((1 / 2) * (t * t));
-
-	return 1 - (-1 / 2 * (((--t) * (t - 2)) - 1));
+	t /= d;
+	return t < 0.5 ? 2 * t * t : 1 - (double)MathUtils::Pow(-2 * t + 2, 2) / 2;
 }
 double Easing::CubicEaseIn     (double t, double d)
 {
@@ -186,10 +185,8 @@ double Easing::CubicEaseOut    (double t, double d)
 }
 double Easing::CubicEaseInOut  (double t, double d)
 {
-	t /= d / 2;
-	if (t < 1) return 1 / 2 * t * t * t;
-	t -= 2;
-	return 1 / 2 * (t * t * t + 2);
+	t /= d;
+	return t < 0.5 ? 4 * t * t * t : 1 - (double)MathUtils::Pow(-2 * t + 2, 3) / 2;
 }
 double Easing::QuartEaseIn     (double t, double d)
 {
@@ -204,87 +201,88 @@ double Easing::QuartEaseOut    (double t, double d)
 }
 double Easing::QuartEaseInOut  (double t, double d)
 {
-	t /= d / 2;
-	if (t < 1) return 1 / 2 * t * t * t * t;
-	t -= 2;
-	return -1 / 2 * (t * t * t * t - 2);
+	t /= d;
+	return t < 0.5 ? 8 * t * t * t * t : 1 - (double)MathUtils::Pow(-2 * t + 2, 4) / 2;
 }
 double Easing::QuintEaseIn     (double t, double d)
 {
 	t /= d;
-	return t * t * t * t * t;
+	return  (double)MathUtils::Pow(t, 5);
 }
 double Easing::QuintEaseOut    (double t, double d)
 {
 	t /= d;
-	t--;
-	return (t * t * t * t * t + 1);
+	return 1 - (double)MathUtils::Pow(1 - t, 5);
 }
 double Easing::QuintEaseInOut  (double t, double d)
 {
-	t /= d / 2;
-	if (t < 1) return 1 / 2 * t * t * t * t * t;
-	t -= 2;
-	return 1 / 2 * (t * t * t * t * t + 2);
+	t /= d;
+	return t < 0.5 ? 16 * t * t * t * t * t : 1 - MathUtils::Pow(-2 * t + 2, 5) / 2;
 }
 double Easing::SineEaseIn      (double t, double d) 
 {
-	return -1 * cos(t / d * (PI / 2)) + 1;
+	return -1 * (double)MathUtils::Cos(t / d * (PI / 2)) + 1;
 }
 double Easing::SineEaseOut     (double t, double d) 
 {
-	return 1 * sin(t / d * (PI / 2));
+	return 1 * (double)MathUtils::Sin(t / d * (PI / 2));
 }
 double Easing::SineEaseInOut   (double t, double d) 
 {
-	return -1 / 2 * (cos(PI * t / d) - 1);
+	return -1 / 2 * ((double)MathUtils::Cos(PI * t / d) - 1);
 }
 double Easing::ExpoEaseIn      (double t, double d) 
 {
-	return pow(2, 10 * float(t / d - 1));
+	return MathUtils::Pow(2, 10 * float(t / d - 1));
 }
 double Easing::ExpoEaseOut     (double t, double d) 
 {
-	return (-pow(2, -10 * t / d) + 1);
+	return (-MathUtils::Pow(2, -10 * t / d) + 1);
 }
 double Easing::ExpoEaseInOut   (double t, double d) 
 {
-	t /= d / 2;
-	if (t < 1) return 1 / 2 * pow(2, 10 * float(t - 1));
-	t--;
-	return 1 / 2 * (-pow(2, float(-10 * t)) + 2);
+	t /= d;
+	return t == 0
+		? 0
+		: t == 1
+		? 1
+		: t < 0.5 ? MathUtils::Pow(2, 20 * t - 10) / 2
+		: (2 - MathUtils::Pow(2, -20 * t + 10)) / 2;
 }
 double Easing::CircEaseIn      (double t, double d) 
 {
 	t /= d;
-	return -1 * (sqrt(1 - float(t * t)) - 1);
+	return -1 * ((double)MathUtils::Sqrt(1 - float(t * t)) - 1);
 }
 double Easing::CircEaseOut     (double t, double d) 
 {
 	t /= d;
 	t--;
-	return sqrt(1 - float(t * t));
+	return MathUtils::Sqrt(1 - float(t * t));
 }
 double Easing::CircEaseInOut   (double t, double d) 
 {
-	t /= d / 2;
-	if (t < 1) return -1 / 2 * (sqrt(1 - float(t * t)) - 1);
-	t -= 2;
-	return 1 / 2 * (sqrt(1 - float(t * t)) + 1);
+	t /= d;
+	return t < 0.5
+		? (1 - MathUtils::Sqrt(1 - MathUtils::Pow(2 * t, 2))) / 2
+		: (MathUtils::Sqrt(1 - MathUtils::Pow(-2 * t + 2, 2)) + 1) / 2;
 }
 double Easing::BackEaseIn      (double t, double d) 
 {
-	return (t /= d) * t * ((s + 1) * t - s);
+	t /= d;
+	return c3 * t * t * t - c1 * t * t;
 }
 double Easing::BackEaseOut     (double t, double d) 
 {
-	return ((t = t / d - 1) * t * ((s + 1) * t + s) + 1);
+	t /= d;
+	return 1 + c3 * MathUtils::Pow(t - 1, 3) + c1 * MathUtils::Pow(t - 1, 2);
 }
 double Easing::BackEaseInOut   (double t, double d) 
 {
-	float sval = s;
-	if ((t /= d / 2) < 1) return 1 / 2 * (t * t * (((sval *= (1.525)) + 1) * t - s));
-	return 1 / 2 * ((t -= 2) * t * (((sval *= (1.525)) + 1) * t + s) + 2);
+	t /= d;
+	return t < 0.5
+		? (MathUtils::Pow(2 * t, 2) * ((c2 + 1) * 2 * t - c2)) / 2
+		: (MathUtils::Pow(2 * t - 2, 2) * ((c2 + 1) * (t * 2 - 2) + c2) + 2) / 2;
 }
 double Easing::ElasticEaseIn   (double t, double d) 
 {
@@ -292,10 +290,10 @@ double Easing::ElasticEaseIn   (double t, double d)
 
 	if ((t /= d) == 1) return 1;
 
-	float p = d * .3f;
-	float a = 1;
-	float s = p / 4;
-	return -(a * pow(2, 10 * float(t -= 1)) * sin((float(t * d) - s) * (2 * PI) / p));
+	double p = d * .3f;
+	double a = 1;
+	double s = p / 4;
+	return -(a * MathUtils::Pow(2, 10 * float(t -= 1)) * MathUtils::Sin((double(t * d) - s) * (2 * PI) / p));
 }
 double Easing::ElasticEaseOut  (double t, double d) 
 {
@@ -303,10 +301,10 @@ double Easing::ElasticEaseOut  (double t, double d)
 
 	if ((t /= d) == 1) return 1;
 
-	float p = d * .3f;
-	float a = 1;
-	float s = p / 4;
-	return a * pow(2, float(-10 * t)) * sin((float(t * d) - s) * (2 * PI) / p) + 1;
+	double p = d * .3f;
+	double a = 1;
+	double s = p / 4;
+	return a * MathUtils::Pow(2, float(-10 * t)) * MathUtils::Sin((double(t * d) - s) * (2 * PI) / p) + 1;
 }
 double Easing::ElasticEaseInOut(double t, double d) 
 {
@@ -314,13 +312,13 @@ double Easing::ElasticEaseInOut(double t, double d)
 
 	if ((t /= d / 2) == 2) return 1;
 
-	float p = d * (.3f * 1.5f);
-	float a = 1;
-	float s = p / 4;
+	double p = d * (.3 * 1.5);
+	double a = 1;
+	double s = p / 4;
 
-	if (t < 1) return -.5f * (a * pow(2, 10 * float(t -= 1)) * sin((float(t * d) - s) * (2 * PI) / p));
+	if (t < 1) return -.5f * (a * MathUtils::Pow(2, 10 * float(t -= 1)) * MathUtils::Sin((double(t * d) - s) * (2 * PI) / p));
 
-	return a * pow(2, -10 * float(t -= 1)) * sin((float(t * d) - s) * (2 * PI) / p) * .5f + 1;
+	return a * MathUtils::Pow(2, -10 * float(t -= 1)) * MathUtils::Sin((double(t * d) - s) * (2 * PI) / p) * .5f + 1;
 }
 double Easing::BounceEaseIn    (double t, double d) 
 {

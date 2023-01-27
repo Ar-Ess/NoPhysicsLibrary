@@ -1,5 +1,4 @@
 #pragma once
-#define PI 3.14159265359
 
 #include "Point.h"
 #include "Action.h"
@@ -105,7 +104,9 @@ private:
 
 	EasingParams params;
 	float timer = 0;
-	const float s = 1.70158;
-	const float r = 7.5625;
+	const double c1 = 1.70158;
+	const double c2 = c1 * 1.525;
+	const  double c3 = c1 + 1;
+	const double r = 7.5625;
 
 };
