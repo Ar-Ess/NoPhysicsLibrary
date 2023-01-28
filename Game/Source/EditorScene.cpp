@@ -1,5 +1,4 @@
 #include "EditorScene.h"
-#include "PerfTimer.h"
 
 EditorScene::EditorScene()
 {
@@ -10,45 +9,19 @@ EditorScene::~EditorScene()
 }
 
 bool EditorScene::Start()
-{
-	// Iteration testing
-	/*PerfTimer timer1;
-	//int result1[5] = {};
-	//for (int i = 0; i < gred.Size(); ++i)
-	//{
-	//	result1[i] = *gred[i];
-	//}
-	//double a = timer1.ReadMs();
-
-	//PerfTimer timer2;
-	//int result2[5] = {};
-	//uint ret = 0;
-	//for (int j = 0; j < gred.Heigth(); ++j)
-	//{
-	//	for (int i = 0; i < gred.Width(); ++i)
-	//	{
-	//		if (!gred.Empty(i, j))
-	//		{
-	//			result2[ret] = *gred.At(i, j);
-	//			ret++;
-	//		}
-	//	}
-	//}
-	//double b = timer2.ReadMs();*/
-	// -----------------
-
+{	
 	Point wSize = window->GetSize();
 	physics = new NPL();
 	physics->Init(128);
+
+	player = new Player(physics->CreateBody({ 100.0f, 200.0f, 38.0f, 90.0f })->Dynamic(80), input);
+	map = new TileManager({ 24.0f, 27 }, render, window);
+
 	physics->Configure()->PanRange(10, InUnit::IN_METERS);
 	physics->Configure()->PhysicsIterations(40);
 	physics->SetPhysicsPreset(PhysicsPreset::DEFAULT_PHYSICS_PRESET);
-	physics->Configure()->Listener(player);
-	physics->LoadSound("Assets/Audio/bounce.wav");
-
-
-	player = physics->CreateBody({ 100.0f, 200.0f, 38.0f, 90.0f })
-		->Dynamic(80);
+	physics->Configure()->Listener(player->Body());
+	//physics->LoadSound("Assets/Audio/bounce.wav");
 
 	// Ground
 	physics->CreateBody(0, wSize.y * 2 - 20, 4000, 20)->Static();
@@ -62,28 +35,31 @@ bool EditorScene::Start()
 
 bool EditorScene::Update(float dt)
 {
-	Point pPos = player->GetPosition(InUnit::IN_PIXELS);
+	Point pPos = player->Position();
 
-	if (editMode) UpdateEditMode(dt);
-	else UpdatePlayMode(dt);
+	// Update
+	UpdateEditMode(dt);
+	UpdatePlayMode(dt);
 
+	// Camera
 	render->camera.Update(pPos)->LimitFollow({0, 0, 200, 720});
-	physics->Update(&dt);
-	
-	if (editMode) DrawEditMode(dt);
-	else DrawPlayMode(dt);
 
-	if (input->GetKey(SDL_SCANCODE_RETURN) == KeyState::KEY_DOWN)
-	{
-		editMode = !editMode;
-		physics->PausePhysics(editMode);
-	}
+	// Physics
+	physics->Update(&dt);
+
+	// Inputs
+	UpdateGeneralInputs();
 
 	return true;
 }
 
 bool EditorScene::Draw(float dt)
 {
+	DrawEditMode(dt);
+
+	DrawPlayMode(dt);
+
+	// Debug draw
 	unsigned int size = physics->Get()->BodiesCount();
 	for (unsigned int i = 0; i < size; ++i)
 	{
@@ -112,61 +88,59 @@ bool EditorScene::CleanUp()
 		RELEASE(physics);
 	}
 
+	delete player;
 	player = nullptr;
 	return true;
 }
 
 bool EditorScene::UpdateEditMode(float dt)
 {
-	for (uint i = 0; i < grid.Size(); ++i) grid[i]->Update();
-	//Change scene
-	if (input->GetKey(SDL_SCANCODE_BACKSPACE) == KeyState::KEY_DOWN) SetScene(Scenes::INITIAL_SCENE);
+	if (!editMode) return true;
+
+	map->Update(dt);
 
 	return true;
 }
 
 bool EditorScene::DrawEditMode(float dt)
 {
-	for (uint i = 0; i < grid.Size(); ++i) grid[i]->Draw();
+	if (!editMode) return true;
 
-	render->DrawGrid({ 0, 0, window->GetSize().Multiply(1.0f, 2) }, { (float)grid.Width(), (float)grid.Heigth() });
+	map->Draw(dt);
 
 	return true;
 }
 
 bool EditorScene::UpdatePlayMode(float dt)
 {
-	bool ground = player->IsBodyStill(BodyState::ON_GROUND);
-	bool shift = (input->GetKey(SDL_SCANCODE_LSHIFT) == KeyState::KEY_REPEAT);
+	if (editMode) return true;
 
-	// Inputs
-	if (input->GetKey(SDL_SCANCODE_D) == KeyState::KEY_REPEAT)
-	{
-		player->ApplyMomentum(20, 0);
-		if (ground && shift) player->ApplyForce(30, 0);
-	}
+	map->Update(dt);
 
-	if (input->GetKey(SDL_SCANCODE_A) == KeyState::KEY_REPEAT)
-	{
-		player->ApplyMomentum(-20, 0);
-		if (ground && shift) player->ApplyForce(-30, 0);
-	}
-
-	if (ground && input->GetKey(SDL_SCANCODE_SPACE) == KeyState::KEY_DOWN)
-	{
-		float plus = 0;
-		if (shift && player->IsBodyStill(BodyState::MOVING))
-		{
-			plus = -65;
-		}
-		player->ApplyMomentum(0, -400 + plus);
-	}
+	player->Update(dt);
 
 	return true;
 }
 
 bool EditorScene::DrawPlayMode(float dt)
 {
+	if (editMode) return true;
+
+	map->Draw(dt);
+
+	return true;
+}
+
+bool EditorScene::UpdateGeneralInputs()
+{
+	if (input->GetKey(SDL_SCANCODE_RETURN) == KeyState::KEY_DOWN)
+	{
+		editMode = !editMode;
+		physics->PausePhysics(editMode);
+	}
+
+	//Change scene
+	if (input->GetKey(SDL_SCANCODE_BACKSPACE) == KeyState::KEY_DOWN) SetScene(Scenes::INITIAL_SCENE);
 
 	return true;
 }

@@ -1,9 +1,8 @@
 #pragma once
 
 #include "Scene.h"
-#include "NoPhysicsLibrary.h"
-#include "Grid.h"
-#include "Tile.h"
+#include "Player.h"
+#include "TileManager.h"
 
 class EditorScene : public Scene
 {
@@ -29,15 +28,16 @@ private:
 	bool UpdatePlayMode(float dt);
 	bool DrawPlayMode(float dt);
 
+	bool UpdateGeneralInputs();
+
 private:
 
-
 	// Editor
-	Grid<Tile*> grid = Grid<Tile*>(24, 27);
+	TileManager* map = nullptr;
 	bool editMode = true;
 
 	// Physics
 	NPL* physics = nullptr;
-	DynamicBody* player = nullptr;
+	Player* player = nullptr;
 
 };

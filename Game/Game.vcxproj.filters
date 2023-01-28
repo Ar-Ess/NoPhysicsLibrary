@@ -3,9 +3,6 @@
   <ItemGroup>
     <ClCompile Include="Source\Main.cpp" />
     <ClCompile Include="Source\App.cpp" />
-    <ClCompile Include="Source\Log.cpp">
-      <Filter>Utils</Filter>
-    </ClCompile>
     <ClCompile Include="Source\Input.cpp">
       <Filter>Modules</Filter>
     </ClCompile>
@@ -16,9 +13,6 @@
       <Filter>Modules</Filter>
     </ClCompile>
     <ClCompile Include="Source\Textures.cpp">
-      <Filter>Assets Manager</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\AssetsManager.cpp">
       <Filter>Assets Manager</Filter>
     </ClCompile>
     <ClCompile Include="Source\Scene.cpp">
@@ -40,7 +34,7 @@
       <Filter>Scenes</Filter>
     </ClCompile>
     <ClCompile Include="Source\Tile.cpp">
-      <Filter>Tiles</Filter>
+      <Filter>Game\Tiles</Filter>
     </ClCompile>
     <ClCompile Include="Source\Camera.cpp">
       <Filter>Utils</Filter>
@@ -54,15 +48,21 @@
     <ClCompile Include="Source\Easing.cpp">
       <Filter>Utils\Maths</Filter>
     </ClCompile>
+    <ClCompile Include="Source\Log.cpp">
+      <Filter>Utils\Application</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Player.cpp">
+      <Filter>Game</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\AssetsManager.cpp">
+      <Filter>Modules</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\TileManager.cpp">
+      <Filter>Game</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\App.h" />
-    <ClInclude Include="Source\Defs.h">
-      <Filter>Utils</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Log.h">
-      <Filter>Utils</Filter>
-    </ClInclude>
     <ClInclude Include="Source\Input.h">
       <Filter>Modules</Filter>
     </ClInclude>
@@ -75,13 +75,7 @@
     <ClInclude Include="Source\Window.h">
       <Filter>Modules</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Circle.h">
-      <Filter>Utils</Filter>
-    </ClInclude>
     <ClInclude Include="Source\Textures.h">
-      <Filter>Assets Manager</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\AssetsManager.h">
       <Filter>Assets Manager</Filter>
     </ClInclude>
     <ClInclude Include="Source\Scene.h">
@@ -115,7 +109,7 @@
       <Filter>Utils\Data Structures</Filter>
     </ClInclude>
     <ClInclude Include="Source\Tile.h">
-      <Filter>Tiles</Filter>
+      <Filter>Game\Tiles</Filter>
     </ClInclude>
     <ClInclude Include="Source\Camera.h">
       <Filter>Utils</Filter>
@@ -131,6 +125,27 @@
     </ClInclude>
     <ClInclude Include="Source\Easing.h">
       <Filter>Utils\Maths</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Defs.h">
+      <Filter>Utils\Application</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Log.h">
+      <Filter>Utils\Application</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Circle.h">
+      <Filter>Utils\Maths</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Player.h">
+      <Filter>Game</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\AssetsManager.h">
+      <Filter>Modules</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\TileManager.h">
+      <Filter>Game</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\TileHeader.h">
+      <Filter>Game\Tiles</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -155,9 +170,6 @@
     <Filter Include="Scenes\Test">
       <UniqueIdentifier>{c8d8bca4-8cd3-4d69-aa03-02475f9cd6a9}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Tiles">
-      <UniqueIdentifier>{5e5c2228-63b2-490c-94d1-75a07dddaaa4}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Utils\Timing">
       <UniqueIdentifier>{47dc9040-b617-46ec-9a0c-d7a44db0bc3e}</UniqueIdentifier>
     </Filter>
@@ -166,6 +178,15 @@
     </Filter>
     <Filter Include="Utils\Maths">
       <UniqueIdentifier>{c2cad38c-59e0-441d-b69d-1816eab066fa}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Utils\Application">
+      <UniqueIdentifier>{5a7c6e3e-6673-4715-a6b5-3a338bd947cc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game">
+      <UniqueIdentifier>{f4645045-81b5-462f-9983-3e4371be95c1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game\Tiles">
+      <UniqueIdentifier>{5e5c2228-63b2-490c-94d1-75a07dddaaa4}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

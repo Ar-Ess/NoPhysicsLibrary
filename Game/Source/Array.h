@@ -1,5 +1,7 @@
 #pragma once
 
+#include <assert.h>
+
 template<class T>
 class Array
 {

@@ -51,7 +51,7 @@ public:
 
 	Easing(EaseType type, EaseMode mode, float duration);
 
-	// Returns the offset to the start position regarding the elapsed time
+	// Returns the current position regarding the elapsed time
 	Point Ease(Point start, Point end, float dt);
 
 	void OnEaseEnd(EaseType type, EaseMode mode);

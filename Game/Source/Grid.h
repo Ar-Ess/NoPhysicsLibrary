@@ -70,10 +70,22 @@ public:
         this->width = width;
         this->height = height;
         this->grid = new Array<Row*>();
-        for (uint y = 0; y < height; ++y)
+        for (unsigned int y = 0; y < height; ++y)
         {
             grid->Add(new Row(width));
-            for (uint x = 0; x < width; ++x) grid->At(y)->row.Add(T());
+            for (unsigned int x = 0; x < width; ++x) grid->At(y)->row.Add(T());
+        }
+    }
+
+    Grid(Point size)
+    {
+        this->width = size.x;
+        this->height = size.y;
+        this->grid = new Array<Row*>();
+        for (unsigned int y = 0; y < height; ++y)
+        {
+            grid->Add(new Row(width));
+            for (unsigned int x = 0; x < width; ++x) grid->At(y)->row.Add(T());
         }
     }
 
@@ -170,13 +182,13 @@ public:
 
     // Returns the not empty cells sequentially
     // Optimized to iterate
-    T operator[](uint index)
+    T operator[](unsigned int index)
     {
         assert(index < size);
         assert(size > 0);
-        const uint offset = index / width;
+        const unsigned int offset = index / width;
 
-        for (uint i = 0; i < height; ++i)
+        for (unsigned int i = 0; i < height; ++i)
         {
             Row* row = GetRow(i);
             if (i >= offset && int(index) - int(row->size) < 0) return row->GetNonEmptyValue(index, width);
@@ -191,7 +203,7 @@ public:
         assert(!Empty());
 
         Point ret = {-1, -1};
-        for (uint i = 0; i < height; ++i)
+        for (unsigned int i = 0; i < height; ++i)
         {
             Row* row = GetRow(i);
             if (row->Empty()) continue;
@@ -209,7 +221,7 @@ public:
     {
         if (Empty()) return true;
 
-        for (uint i = 0; i < height; ++i) GetRow(i)->Clear();
+        for (unsigned int i = 0; i < height; ++i) GetRow(i)->Clear();
         size = 0;
 
         return true;
@@ -218,7 +230,7 @@ public:
     // Clean the structure. Return to a 0 by 0 grid
     bool CleanUp()
     {
-        for (uint i = 0; i < height: ++i)
+        for (unsigned int i = 0; i < height: ++i)
         {
             GetRow(i)->CleanUp();
             size = 0;
@@ -277,8 +289,8 @@ private:
 
     Point FromIndexToCoords(unsigned int index)
     {
-        uint y = index / width;
-        uint x = index - width * y;
+        unsigned int y = index / width;
+        unsigned int x = index - width * y;
 
         return {x, y};
     }
@@ -349,10 +361,22 @@ public:
         this->width = width;
         this->height = height;
         this->grid = new Array<Row*>();
-        for (uint y = 0; y < height; ++y)
+        for (unsigned int width y = 0; y < height; ++y)
         {
             grid->Add(new Row());
-            for (uint x = 0; x < width; ++x) grid->At(y)->row.Add(nullptr);
+            for (unsigned int width x = 0; x < width; ++x) grid->At(y)->row.Add(nullptr);
+        }
+    }
+
+    Grid(Point size)
+    {
+        this->width = size.x;
+        this->height = size.y;
+        this->grid = new Array<Row*>();
+        for (unsigned int y = 0; y < height; ++y)
+        {
+            grid->Add(new Row());
+            for (unsigned int x = 0; x < width; ++x) grid->At(y)->row.Add(nullptr);
         }
     }
 
