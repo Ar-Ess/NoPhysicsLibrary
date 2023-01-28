@@ -15,8 +15,11 @@ public:
 
 	bool Draw(float dt);
 
+	void SetTile(TileType type);
+
 private:
 
+	TileType currentType = TileType::NO_TYLE;
 	Grid<Tile*>* grid = nullptr;
 
 	const Render* render = nullptr;

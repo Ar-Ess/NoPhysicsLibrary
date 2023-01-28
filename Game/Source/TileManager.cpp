@@ -11,6 +11,8 @@ bool TileManager::Update(float dt)
 {
 	for (unsigned int i = 0; i < grid->Size(); ++i) (*grid)[i]->Update();
 
+
+
 	return true;
 }
 
@@ -21,4 +23,9 @@ bool TileManager::Draw(float dt)
 	render->DrawGrid({ 0, 0, window->GetSize().Multiply(1.0f, 2) }, { (float)grid->Width(), (float)grid->Heigth() });
 
 	return true;
+}
+
+void TileManager::SetTile(TileType type)
+{
+	currentType = type;
 }
