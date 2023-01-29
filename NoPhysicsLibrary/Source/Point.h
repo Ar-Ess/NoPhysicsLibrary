@@ -71,6 +71,14 @@ struct Point
 		return Point(this->x * -1,  this->y * -1);
 	}
 
+	// Returns is one or the other is negative. Set both to true to check if both are negative
+	bool IsNegative(bool both = false)
+	{
+		if (both) return x < 0 && y < 0;
+
+		return x < 0 || y < 0;
+	}
+
 	void Set(float x, float y)
 	{
 		this->x = x;
