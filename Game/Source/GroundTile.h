@@ -8,6 +8,8 @@ public:
 
 	GroundTile(StaticBody* body);
 
+	~GroundTile() override;
+
 	void Update() override;
 
 	void Draw() override;

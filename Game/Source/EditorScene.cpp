@@ -29,6 +29,7 @@ bool EditorScene::Start()
 
 	physics->PausePhysics(editMode);
 	render->ResetCamera({0.f, 720});
+	editMode = true;
 
 	return true;
 }
@@ -83,8 +84,9 @@ bool EditorScene::UpdateEditMode(float dt)
 
 	if (input->GetKey(SDL_SCANCODE_0) == KeyState::KEY_DOWN) map->SetTile(TileType::NO_TILE);
 	else if (input->GetKey(SDL_SCANCODE_1) == KeyState::KEY_DOWN) map->SetTile(TileType::GROUND_TILE);
+	else if (input->GetKey(SDL_SCANCODE_RSHIFT) == KeyState::KEY_DOWN) map->SetTile(TileType::ERASE_TILE);
 
-	if (input->GetMouseButtonDown(1) == KeyState::KEY_DOWN) map->PlaceTile(input->GetMousePosition() + render->camera.rect.GetPosition());
+	if (input->GetMouseButtonDown(1) == KeyState::KEY_REPEAT) map->UpdateTile(input->GetMousePosition() + render->camera.rect.GetPosition());
 
 	return true;
 }

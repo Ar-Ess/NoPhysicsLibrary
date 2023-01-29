@@ -33,15 +33,20 @@ void TileManager::SetTile(TileType type)
 	currentType = type;
 }
 
-void TileManager::PlaceTile(Point position)
+bool TileManager::UpdateTile(Point position)
 {
-	if (currentType == TileType::NO_TILE) return;
-	if (position.IsNegative()) return;
+	if (currentType == TileType::NO_TILE) return false;
+	if (position.IsNegative()) return false;
 
 	int x = MathUtils::Floor(position.x / tileSize);
 	int y = MathUtils::Floor(position.y / tileSize);
 
-	if (!grid->Empty(x, y)) return;
+	if (x > grid->Width() - 1|| y > grid->Heigth() - 1) return false;
+
+	if (currentType == TileType::ERASE_TILE) return EraseTile(x, y);
+
+	if (!grid->Empty(x, y)) return false;
+
 	
 	Rect rect = {x * tileSize, y * tileSize, tileSize, tileSize };
 	Tile* tile = nullptr;
@@ -57,6 +62,8 @@ void TileManager::PlaceTile(Point position)
 	}
 
 	grid->Set(tile, x, y);
+
+	return true;
 }
 
 void TileManager::DrawDebug(bool debug)
@@ -81,4 +88,12 @@ void TileManager::DrawDebug(bool debug)
 		//render->DrawRectangle(Rect{ b->GetEmissionPoint(InUnit::IN_PIXELS).Apply({-3.0f, -3}), 6, 6 }, { 155, 255, 155, 255 });
 	}
 
+}
+
+bool TileManager::EraseTile(int x, int y)
+{
+	Tile* tile = grid->At(x, y);
+	if (!tile) return false;
+
+	return tile->Delete(physics) && grid->Erase(x, y);
 }

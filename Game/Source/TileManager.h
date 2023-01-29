@@ -17,11 +17,13 @@ public:
 
 	void SetTile(TileType type);
 
-	void PlaceTile(Point position);
+	bool UpdateTile(Point position);
 
 private:
 
 	void DrawDebug(bool debug);
+
+	bool EraseTile(int x, int y);
 
 private:
 

@@ -153,6 +153,9 @@
     <ClInclude Include="Source\GroundTile.h">
       <Filter>Game\Tiles</Filter>
     </ClInclude>
+    <ClInclude Include="Source\TileTypeEnum.h">
+      <Filter>Game\Tiles</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="External">

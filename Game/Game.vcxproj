@@ -140,6 +140,7 @@
     <ClInclude Include="Source\Tile.h" />
     <ClInclude Include="Source\TileHeader.h" />
     <ClInclude Include="Source\TileManager.h" />
+    <ClInclude Include="Source\TileTypeEnum.h" />
     <ClInclude Include="Source\Vector.h" />
     <ClInclude Include="Source\Window.h" />
     <ClInclude Include="Source\Defs.h" />

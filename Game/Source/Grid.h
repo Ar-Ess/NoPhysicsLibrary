@@ -248,34 +248,50 @@ public:
 
     bool Erase(unsigned int x, unsigned int y)
     {
+        if (size <= 0) return false;
+
         assert(x < width && y < height);
 
         Row* row = GetRow(y);
-        row->size--;
+        if (row->size <= 0) return false;
+
         row->SetFullFlag(x, false);
+        
+        row->size--;
+        size--;
 
         return true;
     }
     
     bool Erase(Point coords)
     {
+        if (size <= 0) return false;
         assert(coords.x < width && coords.y < height);
 
         Row* row = GetRow(coords.y);
-        row->size--;
+        if (row->size <= 0) return false;
+
         row->SetFullFlag(coords.x, false);
+
+        row->size--;
+        size--;
 
         return true;
     }
 
     bool Erase(unsigned int index)
     {
+        if (size <= 0) return false;
         assert(index < width * height);
+
         Point coords = FromIndexToCoords(index);
         Row* row = GetRow(coords.y);
+        if (row->size <= 0) return false;
 
-        row->size--;
         row->SetFullFlag(coords.x, false);
+        
+        row->size--;
+        size--;
 
         return true;
     }
@@ -533,40 +549,58 @@ public:
 
     bool Erase(unsigned int x, unsigned int y)
     {
-        assert(x < width&& y < height);
+        if (size <= 0) return false;
+        assert(x < width && y < height);
 
         Row* row = GetRow(y);
-        row->size--;
-        T* value = row[x];
+        if (row->size <= 0) return false;
+
+        // No "row.Erase()" it would erase the node too
+        T* value = row->row[x];
         delete value;
         value = nullptr;
+
+        row->size--;
+        size--;
 
         return true;
     }
 
     bool Erase(Point coords)
     {
+        if (size <= 0) return false;
         assert(coords.x < width&& coords.y < height);
 
-        Row* row = GetRow(coords.y);
-        row->size--;
-        T* value = row[x];
+        Row* row = GetRow(y);
+        if (row->size <= 0) return false;
+
+        // No "row.Erase()" it would erase the node too
+        T* value = row->row[x];
         delete value;
         value = nullptr;
+
+        row->size--;
+        size--;
 
         return true;
     }
 
     bool Erase(unsigned int index)
     {
+        if (size <= 0) return false;
         assert(index < width* height);
+
         Point coords = FromIndexToCoords(index);
         Row* row = GetRow(coords.y);
+        if (row->size <= 0) return false;
 
-        row->size--;
-        T* value = row[x];
+        // No "row.Erase()" it would erase the node too
+        T* value = row->row[x];
         delete value;
         value = nullptr;
+
+        row->size--;
+        size--;
 
         return true;
     }
