@@ -41,6 +41,7 @@ public:
 	bool DrawCircle(Circle circle, SDL_Color color, bool fill = false, bool anchored = true) const;
 	bool DrawParticle(SDL_Texture* texture, Point position, Rect* section = nullptr, Rect* rectSize = nullptr, SDL_Color color = { 0, 0, 0, 0 }, SDL_BlendMode blendMode = SDL_BLENDMODE_NONE, double angle = 0) const;
 	bool DrawGrid(Rect rect, Point divisions, bool anchored = true, bool startLine = true, bool endLine = true, SDL_Color color = { 255, 255, 255, 255 }) const;
+	bool DrawGrid(Rect rect, Point divisions, SDL_Color color, bool anchored = true, bool startLine = true, bool endLine = true) const;
 
 	// Set background color
 	void SetBackgroundColor(SDL_Color color);

@@ -17,11 +17,13 @@ bool TileManager::Update(float dt)
 	return true;
 }
 
-bool TileManager::Draw(float dt)
+bool TileManager::Draw(float dt, bool lines, bool debug)
 {
 	for (unsigned int i = 0; i < grid->Size(); ++i) (*grid)[i]->Draw();
 
-	render->DrawGrid({ 0, 0, window->GetSize().Multiply(1.f, 2) }, { (float)grid->Width(), (float)grid->Heigth() });
+	if (lines) render->DrawGrid({ 0, 0, window->GetSize().Multiply(1.f, 2) }, { (float)grid->Width(), (float)grid->Heigth() }, {255, 255, 255, 70});
+
+	DrawDebug(debug);
 
 	return true;
 }
@@ -55,4 +57,28 @@ void TileManager::PlaceTile(Point position)
 	}
 
 	grid->Set(tile, x, y);
+}
+
+void TileManager::DrawDebug(bool debug)
+{
+	if (!debug) return;
+
+	// Debug draw
+	unsigned int size = physics->Get()->BodiesCount();
+	for (unsigned int i = 0; i < size; ++i)
+	{
+		const Body* b = physics->Get()->Bodies(i);
+		SDL_Color color = { 0, 0, 0, 100 };
+
+		switch (b->GetClass())
+		{
+		case BodyClass::STATIC_BODY:  color = { 255,   0,   0, color.a }; break;
+		case BodyClass::DYNAMIC_BODY: color = { 0, 255,   0, color.a }; break;
+		case BodyClass::LIQUID_BODY:  color = { 100, 100, 255, color.a }; break;
+		case BodyClass::GAS_BODY:     color = { 255, 255, 255, (Uint8)(color.a - 20) }; break;
+		}
+		render->DrawRectangle(b->GetRect(InUnit::IN_PIXELS), color);
+		//render->DrawRectangle(Rect{ b->GetEmissionPoint(InUnit::IN_PIXELS).Apply({-3.0f, -3}), 6, 6 }, { 155, 255, 155, 255 });
+	}
+
 }

@@ -13,11 +13,15 @@ public:
 
 	bool Update(float dt);
 
-	bool Draw(float dt);
+	bool Draw(float dt, bool lines, bool debug);
 
 	void SetTile(TileType type);
 
 	void PlaceTile(Point position);
+
+private:
+
+	void DrawDebug(bool debug);
 
 private:
 

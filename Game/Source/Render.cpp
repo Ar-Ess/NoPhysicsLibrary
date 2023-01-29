@@ -338,3 +338,24 @@ bool Render::DrawGrid(Rect rect, Point divisions, bool anchored, bool startLine,
 
 	return true;
 }
+
+bool Render::DrawGrid(Rect rect, Point divisions, SDL_Color color, bool anchored, bool startLine, bool endLine) const
+{
+	Point offset = { rect.w / divisions.x, rect.h / divisions.y };
+
+	for (uint i = 0; i < (divisions.x + divisions.y); ++i)
+	{
+		if (!startLine && (i == 0 || i == divisions.x)) continue;
+
+		if (i < divisions.x) DrawLine(rect.GetPosition().Apply(offset.x * i, 0), rect.GetPosition().Apply(offset.x * i, rect.h), color, anchored);
+		else DrawLine(rect.GetPosition().Apply(0, offset.y * (i - divisions.x)), rect.GetPosition().Apply(rect.w, offset.y * (i - divisions.x)), color, anchored);
+	}
+
+	if (endLine)
+	{
+		DrawLine(rect.GetPosition().Apply(offset.x * divisions.x, 0), rect.GetPosition().Apply(offset.x * divisions.x, rect.h), color, anchored);
+		DrawLine(rect.GetPosition().Apply(0, offset.y * divisions.y), rect.GetPosition().Apply(rect.w, offset.y * divisions.y), color, anchored);
+	}
+
+	return true;
+}
