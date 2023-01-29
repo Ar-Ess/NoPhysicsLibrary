@@ -142,7 +142,19 @@ const GetData* NPL::Get()
 
 bool NPL::DestroyBody(Body* body)
 {
-	if (EraseBody(body))
+	if (EraseBody(body->GetId()))
+	{
+		RELEASE(body);
+		return true;
+	}
+
+	return false;
+}
+
+bool NPL::DestroyBody(int id)
+{
+	Body* body = nullptr;
+	if (EraseBody(id, body))
 	{
 		RELEASE(body);
 		return true;
@@ -564,15 +576,15 @@ void NPL::StepAudio(float* dt)
 	soundDataList.clear();
 }
 
-bool NPL::EraseBody(Body* body)
+bool NPL::EraseBody(int id, Body* outBody)
 {
 	std::vector<Body*>::const_iterator it;
 	for (it = bodies.begin(); it != bodies.end(); ++it)
 	{
-		if (body->GetId() == (*it)->GetId())
+		if (id == (*it)->GetId())
 		{
+			outBody = (*it);
 			bodies.erase(it);
-			bodies.shrink_to_fit();
 			return true;
 		}
 	}

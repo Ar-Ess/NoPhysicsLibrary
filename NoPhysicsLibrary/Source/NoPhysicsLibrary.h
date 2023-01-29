@@ -44,6 +44,8 @@ public:
 
 	// Destroy a body, returns true if the body has been successfully deleted
 	bool DestroyBody(Body* body);
+	// Destroy a body, returns true if the body has been successfully deleted
+	bool DestroyBody(int id);
 	// Destroy all bodies of the inputted class, returns true if all bodies has been successfully deleted
 	bool DestroyBody(BodyClass clas);
 
@@ -74,7 +76,7 @@ private: // Methods
 
 	void StepAudio(float* dt);
 
-	bool EraseBody(Body* body);
+	bool EraseBody(int id, Body* outBody = nullptr);
 
 	inline bool IsVoid() const { return gasIndex.empty(); }
 	inline bool IsDry() const { return liquidIndex.empty(); }
