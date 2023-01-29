@@ -40,6 +40,16 @@ namespace MathUtils
 		return deg * (PI / 180);
 	}
 
+	inline int Ceil(float num)
+	{
+		return (int)ceilf(num);
+	}
+
+	inline int Floor(float num)
+	{
+		return (int)floorf(num);
+	}
+
 	inline float Sin(float num, bool radians = true)
 	{
 		if (radians) return sin(num);
