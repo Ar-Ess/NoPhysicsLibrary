@@ -103,6 +103,14 @@ void Render::ResetCamera()
 	camera.rect.y = 0;
 }
 
+void Render::ResetCamera(Point position)
+{
+	camera.rect.w = (float)win->screenSurface->w;
+	camera.rect.h = (float)win->screenSurface->h;
+	camera.rect.x = position.x;
+	camera.rect.y = position.y;
+}
+
 bool Render::DrawTexture(SDL_Texture* texture, Point position, Point size, bool anchored, Rect* section, double angle, SDL_RendererFlip flip) const
 {
 	if (!texture) return false;

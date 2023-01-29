@@ -9,7 +9,7 @@ class TileManager
 {
 public:
 
-	TileManager(Point size, Render* render, Window* window);
+	TileManager(Point size, Render* render, Window* window, NPL* physics);
 
 	bool Update(float dt);
 
@@ -17,12 +17,16 @@ public:
 
 	void SetTile(TileType type);
 
+	void PlaceTile(Point position);
+
 private:
 
-	TileType currentType = TileType::NO_TYLE;
+	TileType currentType = TileType::NO_TILE;
+	float tileSize = 0;
 	Grid<Tile*>* grid = nullptr;
 
 	const Render* render = nullptr;
 	const Window* window = nullptr;
+	NPL* physics = nullptr;
 
 };

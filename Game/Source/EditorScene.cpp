@@ -15,7 +15,7 @@ bool EditorScene::Start()
 	physics->Init(128);
 
 	player = new Player(physics->CreateBody({ 100.0f, 200.0f, 38.0f, 90.0f })->Dynamic(80), input);
-	map = new TileManager({ 24.0f, 27 }, render, window);
+	map = new TileManager({ 24.0f, 27 }, render, window, physics);
 
 	physics->Configure()->PanRange(10, InUnit::IN_METERS);
 	physics->Configure()->PhysicsIterations(40);
@@ -28,7 +28,7 @@ bool EditorScene::Start()
 	physics->CreateBody(-20, 0, 20, 720)->Static();
 
 	physics->PausePhysics(editMode);
-	render->ResetCamera();
+	render->ResetCamera({0.f, 720});
 
 	return true;
 }
@@ -98,6 +98,11 @@ bool EditorScene::UpdateEditMode(float dt)
 	if (!editMode) return true;
 
 	map->Update(dt);
+
+	if (input->GetKey(SDL_SCANCODE_0) == KeyState::KEY_DOWN) map->SetTile(TileType::NO_TILE);
+	else if (input->GetKey(SDL_SCANCODE_1) == KeyState::KEY_DOWN) map->SetTile(TileType::GROUND_TILE);
+
+	if (input->GetMouseButtonDown(1) == KeyState::KEY_DOWN) map->PlaceTile(input->GetMousePosition());
 
 	return true;
 }

@@ -1,9 +1,10 @@
 #pragma once
 
 #include "Tile.h"
+#include "GroundTile.h"
 
 enum class TileType
 {
-	NO_TYLE,
-	GROUND_TYLE
+	NO_TILE,
+	GROUND_TILE
 };

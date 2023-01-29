@@ -98,6 +98,7 @@
     <ClCompile Include="Source\Easing.cpp" />
     <ClCompile Include="Source\EditorScene.cpp" />
     <ClCompile Include="Source\ExamScene.cpp" />
+    <ClCompile Include="Source\GroundTile.cpp" />
     <ClCompile Include="Source\LightTimer.cpp" />
     <ClCompile Include="Source\InitialScene.cpp" />
     <ClCompile Include="Source\Main.cpp" />
@@ -122,6 +123,7 @@
     <ClInclude Include="Source\EditorScene.h" />
     <ClInclude Include="Source\ExamScene.h" />
     <ClInclude Include="Source\Grid.h" />
+    <ClInclude Include="Source\GroundTile.h" />
     <ClInclude Include="Source\LightTimer.h" />
     <ClInclude Include="Source\InitialScene.h" />
     <ClInclude Include="Source\Input.h" />

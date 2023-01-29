@@ -60,6 +60,9 @@
     <ClCompile Include="Source\TileManager.cpp">
       <Filter>Game</Filter>
     </ClCompile>
+    <ClCompile Include="Source\GroundTile.cpp">
+      <Filter>Game\Tiles</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\App.h" />
@@ -145,6 +148,9 @@
       <Filter>Game</Filter>
     </ClInclude>
     <ClInclude Include="Source\TileHeader.h">
+      <Filter>Game\Tiles</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\GroundTile.h">
       <Filter>Game\Tiles</Filter>
     </ClInclude>
   </ItemGroup>
