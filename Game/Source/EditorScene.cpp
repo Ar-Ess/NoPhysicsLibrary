@@ -9,7 +9,7 @@ EditorScene::~EditorScene()
 }
 
 bool EditorScene::Start()
-{	
+{
 	Point wSize = window->GetSize();
 	physics = new NPL();
 	physics->Init(128);
