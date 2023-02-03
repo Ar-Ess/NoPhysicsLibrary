@@ -39,9 +39,10 @@ public:
         return true;
     }
     
-    void Erase(unsigned int index)
+    bool Erase(unsigned int index)
     {
-        if (index >= size) return;
+        if (index >= size) return false;
+
         Node* erase = GetNode(index);
         if (index == 0)
         {
@@ -49,7 +50,7 @@ public:
             delete erase;
             erase = nullptr;
             --size;
-            return;
+            return true;
         }
         if (index == size - 1)
         {
@@ -57,14 +58,17 @@ public:
             delete erase;
             erase = nullptr;
             --size;
-            return;
+            return true;
         }
 
         erase->prev->post = erase->post;
         erase->post->prev = erase->prev;
+
         delete erase;
         erase = nullptr;
         --size;
+
+        return true;
     }
     
     unsigned int Size() const
@@ -322,9 +326,10 @@ public:
         return true;
     }
 
-    void Erase(unsigned int index)
+    bool Erase(unsigned int index)
     {
-        if (index >= size) return;
+        if (index >= size) return false;
+
         Node* erase = GetNode(index);
         if (index == 0)
         {
@@ -332,7 +337,7 @@ public:
             delete erase;
             erase = nullptr;
             --size;
-            return;
+            return true;
         }
         if (index == size - 1)
         {
@@ -340,14 +345,17 @@ public:
             delete erase;
             erase = nullptr;
             --size;
-            return;
+            return true;
         }
 
         erase->prev->post = erase->post;
         erase->post->prev = erase->prev;
+
         delete erase;
         erase = nullptr;
         --size;
+
+        return true;
     }
 
     unsigned int Size() const
@@ -357,13 +365,16 @@ public:
 
     T* At(unsigned int index) const
     {
-        return GetNode(index)->value;
+        Node* node = GetNode(index);
+        return !node ? nullptr : node->value;
     }
 
     void Clear()
     {
+        if (Empty()) return true;
+
         Node* node = final;
-        for (int i = 0; i < size; ++i)
+        for (unsigned int i = 0; i < size; ++i)
         {
             if (node->post)
             {
@@ -387,9 +398,8 @@ public:
 
     T* operator[](unsigned int index) const
     {
-        assert(index < size);
-
-        return GetNode(index)->value;
+        Node* node = GetNode(index);
+        return !node ? nullptr : node->value;
     }
 
     // Finds the index of a value, returns -1 if not found
@@ -397,7 +407,7 @@ public:
     {
         if (Empty()) return -1;
 
-        int i = 0;
+        unsigned int i = 0;
         for (Node* node = start; node != nullptr; node = node->post)
         {
             if (*node->value == *value) return i;
@@ -447,21 +457,21 @@ private:
 
     Node* GetNode(unsigned int index) const
     {
-        assert(index < size);
+        if (index >= size) return nullptr;
         if (index == 0) return start;
         if (index == size - 1) return final;
-        uint middle = size / 2 + size % 2;
+        unsigned int middle = size / 2 + size % 2;
 
         Node* ret = nullptr;
         if (index <= middle - 1)
         {
             ret = start;
-            for (uint i = 0; i < index; ++i) ret = ret->post;
+            for (unsigned int i = 0; i < index; ++i) ret = ret->post;
         }
         else
         {
             ret = final;
-            for (uint i = 0; i < size - index - 1; ++i) ret = ret->prev;
+            for (unsigned int i = 0; i < size - index - 1; ++i) ret = ret->prev;
         }
 
         return ret;

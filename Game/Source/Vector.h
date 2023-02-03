@@ -379,16 +379,16 @@ public:
         finalNode = node;
         ++size;
 
-        if (size <= 1) startNode = node;
+        if (size <= 1) start = node;
 
         return true;
     }
 
     bool PushFront(T* value)
     {
-        Node* node = new Node(value, nullptr, startNode);
-        if (startNode != nullptr) startNode->prev = node;
-        startNode = node;
+        Node* node = new Node(value, nullptr, start);
+        if (start != nullptr) start->prev = node;
+        start = node;
         ++size;
 
         if (size <= 1) finalNode = node;
@@ -412,9 +412,8 @@ public:
 
     T* At(unsigned int index) const
     {
-        if (index >= size) return 0;
-
-        return GetNode(index)->value;
+        Node* node = GetNode(index);
+        return !node ? nullptr : node->value;
     }
 
     bool Assign(T* value, unsigned int index)
@@ -433,7 +432,7 @@ public:
         if (Empty()) return -1;
 
         unsigned int i = 0;
-        for (Node* node = startNode; node != nullptr; node = node->post)
+        for (Node* node = start; node != nullptr; node = node->post)
         {
             if (*node->value == *value) return i;
             ++i;
@@ -446,7 +445,7 @@ public:
     {
         if (Empty()) return false;
 
-        for (Node* node = startNode; node != nullptr; node = node->post)
+        for (Node* node = start; node != nullptr; node = node->post)
         {
             if (node->value == value) return true;
         }
@@ -462,7 +461,7 @@ public:
     bool Clear()
     {
         Node* node = finalNode;
-        for (int i = 0; i < size; ++i)
+        for (unsigned int i = 0; i < size; ++i)
         {
             if (node->post)
             {
@@ -475,7 +474,7 @@ public:
         node = nullptr;
 
         finalNode = nullptr;
-        startNode = nullptr;
+        start = nullptr;
         size = 0;
 
         return true;
@@ -483,7 +482,7 @@ public:
 
     T* Front() const
     {
-        return startNode->value;
+        return start->value;
     }
 
     T* Back() const
@@ -517,9 +516,9 @@ public:
         if (size <= 1) return Clear();
 
         --size;
-        Node* post = startNode->post;
-        delete startNode;
-        startNode = post;
+        Node* post = start->post;
+        delete start;
+        start = post;
         post->prev = nullptr;
 
         return true;
@@ -544,24 +543,23 @@ public:
 
     T* operator[](unsigned int index) const
     {
-        if (index >= size) return 0;
-
-        return GetNode(index)->value;
+        Node* node = GetNode(index);
+        return !node ? nullptr : node->value;
     }
 
     void Reverse()
     {
         if (Size() <= 1) return;
 
-        for (Node* node = startNode; node != nullptr; node = node->prev)
+        for (Node* node = start; node != nullptr; node = node->prev)
         {
             Node* prev = node->prev;
             node->prev = node->post;
             node->post = prev;
         }
 
-        Node* start = startNode;
-        startNode = finalNode;
+        Node* start = start;
+        start = finalNode;
         finalNode = start;
     }
 
@@ -698,7 +696,7 @@ private:
 
 private:
 
-    Node* startNode = nullptr;
+    Node* start = nullptr;
     Node* finalNode = nullptr;
     unsigned int size = 0;
 
