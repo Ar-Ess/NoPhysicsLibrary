@@ -6,7 +6,7 @@
 #include "Flag.h"
 #include "AcusticData.h"
 #include "Define.h"
-#include "Rect.h"
+#include "PhysRect.h"
 #include <vector>
 
 class Body
@@ -19,34 +19,26 @@ public: // Methods
 	//-TOCHECK: Debug emission point
 	void Play(int index, float decibels = 80);
 
-	// Sets the body emission point, where the body sound will emit from.
-	// Values out of body bounds will be set to the closest point inside it
-	// X increments from left to right. Y increments from top to bottom
-	void SetEmissionPoint(Point point, InUnit pointUnit = InUnit::IN_PIXELS);
+	// Sets the emission point of the body. Offsetting from the center of the body.
+	// The emission point is from where the body will emmit sound.
+	void EmissionPoint(PhysVec offset, InUnit offsetUnit = InUnit::IN_PIXELS);
+	// Returns the emission point of the body
+	// The emission point is from where the body will emmit sound.
+	PhysVec EmissionPoint(InUnit unit) const;
 
-	// Sets the body emission point, where the body sound will emit from.
-	// Values out of body bounds will be set to the closest point inside it
-	void SetEmissionPoint(Align align, Point offset, InUnit offsetUnit);
-
-	// Sets the body emission point, where the body sound will emit from.
-	void SetEmissionPoint(Align align);
-
-	// Returns the x & y coordinates of the body
-	Point GetPosition(InUnit unit, Align align = Align::TOP_LEFT) const;
+	// Returns the top-left x & y coordinates of the body
+	PhysVec Position(InUnit unit) const;
+	// Sets the top-left x & y coordinates of the body
+	PhysVec Position(float x, float y, InUnit unit) const;
+	// Sets the top-left x & y coordinates of the body
+	PhysVec Position(float x, float y, InUnit unit) const;
 
 	// Returns the width & height of the body
-	Point GetSize(InUnit unit) const;
+	PhysVec Size(InUnit unit) const;
 
 	// Returns the pointer to the rectangle of the body
-	Rect GetRect(InUnit unit) const { return { GetPosition(unit), GetSize(unit) }; }
+	PhysRect Rect(InUnit unit) const;
 
-	// Returns the emission point of the body
-	Point GetEmissionPoint(InUnit unit) const 
-	{ 
-		float conversion = 1;
-		if (unit == InUnit::IN_METERS) conversion = *pixelsToMeters;
-		return GetPosition(unit).Apply(GetEmissionPointOffset(unit));
-	}
 	
 	// Returns the body class enum
 	BodyClass GetClass() const { return clas; }
@@ -74,11 +66,18 @@ public: // Methods
 
 protected: // Methods
 
-	Body(BodyClass clas, Rect rect, float mass, const float* pixelsToMeters);
+	Body(BodyClass clas, PhysRect rect, float mass, const float* pixelsToMeters);
+
+	const float Conversion(InUnit unit, bool isSetter, int times = 1) const
+	{
+		if (unit == InUnit::IN_METERS) return 1.0f;
+
+		return PhysMath::Pow(isSetter ? *pixelsToMeters : 1 / *pixelsToMeters, times);
+	}
 
 private: // Methods
 
-	Point GetEmissionPointOffset(InUnit unit) const
+	PhysVec GetEmissionPointOffset(InUnit unit) const
 	{
 		float conversion = 1.0f;
 		if (unit == InUnit::IN_PIXELS) conversion /= *pixelsToMeters;
@@ -89,8 +88,8 @@ protected: // Variables
 
 	friend class NPL;
 
-	Point emissionPoint = { 0.0f, 0.0f };
-	Rect rect = {};
+	PhysVec emissionPoint = { 0.0f, 0.0f };
+	PhysRect rect = {};
 	BodyClass clas = BodyClass::EMPTY_BODY;
 	float mass = 1.0f;
 	intptr_t id = 0;

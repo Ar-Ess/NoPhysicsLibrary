@@ -1,6 +1,6 @@
 #include "GasBody.h"
 
-GasBody::GasBody(Rect rect, float mass, float heatRatio, float pressure, Point dragCoefficient, const float* pixelsToMeters) : Body(BodyClass::GAS_BODY, rect, mass, pixelsToMeters)
+GasBody::GasBody(PhysRect rect, float mass, float heatRatio, float pressure, PhysVec dragCoefficient, const float* pixelsToMeters) : Body(BodyClass::GAS_BODY, rect, mass, pixelsToMeters)
 {
 	this->heatRatio = heatRatio;
 	this->pressure = pressure;

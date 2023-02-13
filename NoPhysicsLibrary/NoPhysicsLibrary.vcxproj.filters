@@ -81,13 +81,13 @@
     <ClCompile Include="Source\External\miniaudio\extras\nodes\ma_reverb_node\ma_reverb_node.c">
       <Filter>External\Miniaudio</Filter>
     </ClCompile>
+    <ClCompile Include="Source\PhysVec.cpp">
+      <Filter>Core\Physics\Units</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\NoPhysicsLibrary.h">
       <Filter>Core</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Point.h">
-      <Filter>Utils</Filter>
     </ClInclude>
     <ClInclude Include="Source\BodyClassEnum.h">
       <Filter>Enums</Filter>
@@ -104,17 +104,11 @@
     <ClInclude Include="Source\Flag.h">
       <Filter>Utils</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Rect.h">
-      <Filter>Utils</Filter>
-    </ClInclude>
     <ClInclude Include="Source\BodyCreationAux.h">
       <Filter>Aux</Filter>
     </ClInclude>
     <ClInclude Include="Source\DirectionEnum.h">
       <Filter>Enums</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\MathUtils.h">
-      <Filter>Utils</Filter>
     </ClInclude>
     <ClInclude Include="Source\PhysicsPresetEnum.h">
       <Filter>Enums</Filter>
@@ -185,9 +179,6 @@
     <ClInclude Include="Source\InUnitsEnum.h">
       <Filter>Enums</Filter>
     </ClInclude>
-    <ClInclude Include="Source\AuxiliarsHeader.h">
-      <Filter>Aux</Filter>
-    </ClInclude>
     <ClInclude Include="Source\LibraryConfigAux.h">
       <Filter>Aux</Filter>
     </ClInclude>
@@ -202,6 +193,18 @@
     </ClInclude>
     <ClInclude Include="Source\External\miniaudio\extras\nodes\ma_reverb_node\verblib.h">
       <Filter>External\Miniaudio</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\PhysRect.h">
+      <Filter>Core\Physics\Units</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\PhysMath.h">
+      <Filter>Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\LibraryEnums.h">
+      <Filter>Enums</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\LibraryAuxiliars.h">
+      <Filter>Aux</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

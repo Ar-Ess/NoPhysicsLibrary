@@ -129,9 +129,12 @@
     <ClInclude Include="Source\Input.h" />
     <ClInclude Include="Source\App.h" />
     <ClInclude Include="Source\Map.h" />
+    <ClInclude Include="Source\MathUtils.h" />
     <ClInclude Include="Source\Module.h" />
     <ClInclude Include="Source\PerfTimer.h" />
     <ClInclude Include="Source\Player.h" />
+    <ClInclude Include="Source\Point.h" />
+    <ClInclude Include="Source\Rect.h" />
     <ClInclude Include="Source\Render.h" />
     <ClInclude Include="Source\Scene.h" />
     <ClInclude Include="Source\SceneManager.h" />

@@ -1,8 +1,5 @@
 #pragma once
 
-#include "Point.h"
-#include "AcusticData.h"
-
 struct SoundData
 {
 public:

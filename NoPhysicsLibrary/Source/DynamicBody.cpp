@@ -1,7 +1,7 @@
 #include "DynamicBody.h"
 #include "MathUtils.h"
 
-DynamicBody::DynamicBody(Rect rect, Point gravityOffset, float mass, Flag* globals, const float* pixelsToMeters) : Body(BodyClass::DYNAMIC_BODY, rect, mass, pixelsToMeters)
+DynamicBody::DynamicBody(PhysRect rect, PhysVec gravityOffset, float mass, Flag* globals, const float* pixelsToMeters) : Body(BodyClass::DYNAMIC_BODY, rect, mass, pixelsToMeters)
 {
 	this->gravityOffset = gravityOffset;
 	this->globals = globals;
@@ -76,14 +76,14 @@ bool DynamicBody::IncludeForCollision(const Body* b)
 void DynamicBody::ApplyForce(float newtonsX, float newtonsY, InUnit unit)
 {
 	if (globals->Get(0)) return; // Physics are paused
-	Point newtons = { newtonsX, newtonsY };
+	PhysVec newtons = { newtonsX, newtonsY };
 
 	if (newtons.IsZero()) return; // If newtons is null
 
 	forces.emplace_back(new Force(newtons, unit));
 }
 
-void DynamicBody::ApplyForce(Point newtons, InUnit unit)
+void DynamicBody::ApplyForce(PhysVec newtons, InUnit unit)
 {
 	if (globals->Get(0)) return; // Physics are paused
 	if (newtons.IsZero()) return; // If newtons is null
@@ -94,14 +94,14 @@ void DynamicBody::ApplyForce(Point newtons, InUnit unit)
 void DynamicBody::ApplyMomentum(float momentumX, float momentumY, InUnit unit)
 {
 	if (globals->Get(0)) return; // Physics are paused
-	Point momentum = { momentumX, momentumY };
+	PhysVec momentum = { momentumX, momentumY };
 
 	if (momentum.IsZero()) return; // If momentum is null
 
 	momentums.emplace_back(new Momentum(momentum, unit));
 }
 
-void DynamicBody::ApplyMomentum(Point momentum, InUnit unit)
+void DynamicBody::ApplyMomentum(PhysVec momentum, InUnit unit)
 {
 	if (globals->Get(0)) return; // Physics are paused
 
@@ -110,13 +110,13 @@ void DynamicBody::ApplyMomentum(Point momentum, InUnit unit)
 	momentums.emplace_back(new Momentum(momentum, unit));
 }
 
-void DynamicBody::SetGravityOffset(Point gravityOffset, InUnit unit)
+void DynamicBody::SetGravityOffset(PhysVec gravityOffset, InUnit unit)
 {
 	if (unit == InUnit::IN_PIXELS) gravityOffset *= *pixelsToMeters;
 	this->gravityOffset = gravityOffset;
 }
 
-Point DynamicBody::GetGravityOffset(InUnit unit) const
+PhysVec DynamicBody::GetGravityOffset(InUnit unit) const
 {
 	float conversion = 1;
 	if (unit == InUnit::IN_PIXELS) conversion = (1 / *pixelsToMeters);
@@ -130,7 +130,7 @@ void DynamicBody::SecondNewton()
 
 	for (Force* f : forces)
 	{
-		Point vector = f->vector;
+		PhysVec vector = f->vector;
 		if (f->unit == InUnit::IN_PIXELS) vector *= *pixelsToMeters;
 
 		totalForces.vector += vector;
@@ -151,7 +151,7 @@ void DynamicBody::FirstBuxeda()
 
 	for (Momentum* m : momentums)
 	{
-		Point vector = m->vector;
+		PhysVec vector = m->vector;
 		if (m->unit == InUnit::IN_PIXELS) vector *= *pixelsToMeters;
 
 		totalMomentum.vector += vector;
@@ -174,14 +174,14 @@ void DynamicBody::ResetForces()
 	momentums.clear();
 }
 
-void DynamicBody::SetFrictionOffset(Point offset)
+void DynamicBody::SetFrictionOffset(PhysVec offset)
 {
 	if (offset.x < 0 && offset.x > 1) offset.x = 1;
 	if (offset.y < 0 && offset.y > 1) offset.y = 1;
 	this->frictionOffset = offset;
 }
 
-void DynamicBody::SetRestitutionOffset(Point offset)
+void DynamicBody::SetRestitutionOffset(PhysVec offset)
 {
 	this->restitutionOffset = offset;
 }

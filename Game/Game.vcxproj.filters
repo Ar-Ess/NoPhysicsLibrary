@@ -153,6 +153,15 @@
     <ClInclude Include="Source\GroundTile.h">
       <Filter>Game\Tiles</Filter>
     </ClInclude>
+    <ClInclude Include="Source\Point.h">
+      <Filter>Utils\Maths</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Rect.h">
+      <Filter>Utils\Maths</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\MathUtils.h">
+      <Filter>Utils\Maths</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="External">

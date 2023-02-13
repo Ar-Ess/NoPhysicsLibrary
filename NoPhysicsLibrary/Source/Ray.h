@@ -1,14 +1,10 @@
 #pragma once
 
-#include "Point.h"
+#include "PhysVec.h"
 
-struct Ray
+struct PhysRay
 {
-public:
+	PhysRay(PhysVec start, PhysVec end) : start(start), end(end) {}
 
-	Ray(Point origin, Point end) : origin(origin), end(end) {}
-
-public:
-
-	Point origin = {}, end = {};
+	PhysVec start = {}, end = {};
 };

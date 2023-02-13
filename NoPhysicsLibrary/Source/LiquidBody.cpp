@@ -1,6 +1,6 @@
 #include "LiquidBody.h"
 
-LiquidBody::LiquidBody(Rect rect, float mass, float buoyancy, const float* pixelsToMeters) : Body(BodyClass::LIQUID_BODY, rect, mass, pixelsToMeters)
+LiquidBody::LiquidBody(PhysRect rect, float mass, float buoyancy, const float* pixelsToMeters) : Body(BodyClass::LIQUID_BODY, rect, mass, pixelsToMeters)
 {
 	buoyancy < 0 ? this->buoyancy = 0 : buoyancy > 1 ? this->buoyancy = 1 : this->buoyancy = buoyancy;
 }

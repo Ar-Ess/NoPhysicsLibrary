@@ -1,7 +1,7 @@
 #include "NoPhysicsLibrary.h"
 #include <stdint.h>
 #include "Define.h"
-#include "MathUtils.h"
+#include "PhysMath.h"
 #include "External/miniaudio/miniaudiodev.h"
 
 NPL::NPL()
@@ -15,7 +15,7 @@ NPL::~NPL()
 void NPL::Init(float pixelsPerMeter)
 {
 	// You've alreay initialized the library once
-	assert(physics == nullptr && audio == nullptr);
+	assert(physics == nullptr && audio == nullptr, "ERROR: NPL variable initialized twice. Call CleanUp() first before initializing the variable again.");
 
 	physics = new Physics(&bodies, &physicsConfig, &gasIndex, &liquidIndex, &pixelsToMeters, &physIterations);
 	audio = new Audio();
@@ -57,6 +57,8 @@ void NPL::Init(float pixelsPerMeter)
 
 void NPL::Update(float* dt)
 {
+	assert(physics != nullptr && audio != nullptr, "ERROR: NPL variable not initialized. Call Init() first.");
+
 	if (IsGlobalPause()) return;
 
 	//INFO: Uniform forces independent from space use InUnit::IN_PIXELS, otherwise InUnit::IN_METERS
@@ -71,6 +73,8 @@ void NPL::Update(float* dt)
 
 void NPL::CleanUp()
 {
+	assert(physics != nullptr && audio != nullptr, "ERROR: NPL variable not initialized. Call Init() first.");
+
 	// AUDIO
 	audio->CleanUp();
 
@@ -109,10 +113,10 @@ void NPL::CleanUp()
 
 }
 
-const BodyCreation* NPL::CreateBody(Rect rectangle)
+const BodyCreation* NPL::CreateBody(PhysRect rectangle)
 {
 	//Library not initialized. Call NPL::Init() first
-	assert(physics != nullptr);
+	assert(physics != nullptr, "ERROR: NPL variable not initialized. Call Init() first.");
 
 	rectangle = { rectangle.GetPosition() * pixelsToMeters, rectangle.GetSize() * pixelsToMeters };
 
@@ -122,9 +126,9 @@ const BodyCreation* NPL::CreateBody(Rect rectangle)
 const BodyCreation* NPL::CreateBody(float x, float y, float width, float height)
 {
 	//Library not initialized. Call NPL::Init() first
-	assert(physics != nullptr);
+	assert(physics != nullptr, "ERROR: NPL variable not initialized. Call Init() first.");
 
-	Rect rectangle = { x, y, width, height };
+	PhysRect rectangle = { x, y, width, height };
 	rectangle = { rectangle.GetPosition() * pixelsToMeters, rectangle.GetSize() * pixelsToMeters };
 
 	return bodyCreation->Access(rectangle);
@@ -132,16 +136,19 @@ const BodyCreation* NPL::CreateBody(float x, float y, float width, float height)
 
 const LibraryConfig* NPL::Configure()
 {
+	assert(physics != nullptr && audio != nullptr, "ERROR: NPL variable not initialized. Call Init() first.");
 	return libraryConfig->Access();
 }
 
 const GetData* NPL::Get()
 {
+	assert(physics != nullptr && audio != nullptr, "ERROR: NPL variable not initialized. Call Init() first.");
 	return getData->Access();
 }
 
 bool NPL::DestroyBody(Body* body)
 {
+	assert(physics != nullptr && audio != nullptr, "ERROR: NPL variable not initialized. Call Init() first.");
 	if (EraseBody(body->GetId()))
 	{
 		RELEASE(body);
@@ -153,6 +160,8 @@ bool NPL::DestroyBody(Body* body)
 
 bool NPL::DestroyBody(int id)
 {
+	assert(physics != nullptr && audio != nullptr, "ERROR: NPL variable not initialized. Call Init() first.");
+
 	Body* body = nullptr;
 	if (EraseBody(id, body))
 	{
@@ -165,6 +174,8 @@ bool NPL::DestroyBody(int id)
 
 bool NPL::DestroyBody(BodyClass clas)
 {
+	assert(physics != nullptr && audio != nullptr, "ERROR: NPL variable not initialized. Call Init() first.");
+
 	bool ret = true;
 	for (Body* b : bodies)
 	{
@@ -180,6 +191,8 @@ bool NPL::DestroyBody(BodyClass clas)
 
 void NPL::LoadSound(const char* path)
 {
+	assert(audio != nullptr, "ERROR: NPL variable not initialized. Call Init() first.");
+
 	audio->LoadSound(path);
 }
 
@@ -188,26 +201,30 @@ void NPL::PausePhysics(bool pause)
 	physics->globals.Set(0, pause);
 }
 
-const Rect NPL::ReturnScenarioRect() const
+const PhysRect NPL::ReturnScenarioRect() const
 {
-	Rect first = bodies.front()->GetRect(InUnit::IN_PIXELS);
-	Point minP = { first.x, first.y };
-	Point maxP = { first.x + first.w, first.y + first.h };
+	if (bodies.empty()) return PhysRect();
+
+	PhysRect first = bodies.front()->GetRect(InUnit::IN_PIXELS);
+	PhysVec minP = { first.x, first.y };
+	PhysVec maxP = { first.x + first.w, first.y + first.h };
 
 	for (Body* body : bodies)
 	{
-		Rect bodyRect = body->GetRect(InUnit::IN_PIXELS);
+		PhysRect bodyRect = body->GetRect(InUnit::IN_PIXELS);
 		if (bodyRect.x + bodyRect.w > maxP.x) maxP.x = bodyRect.x + bodyRect.w;
 		if (bodyRect.y + bodyRect.h > maxP.y) maxP.y = bodyRect.y + bodyRect.h;
 		if (bodyRect.x < minP.x) minP.x = bodyRect.x;
 		if (bodyRect.y < minP.y) minP.y = bodyRect.y;
 	}
 
-	return Rect{ minP.x, minP.y, maxP.x - minP.x, maxP.y - minP.y };
+	return PhysRect{ minP.x, minP.y, maxP.x - minP.x, maxP.y - minP.y };
 }
 
-void NPL::SetScenarioPreset(ScenarioPreset preset, Point windowSize, std::vector<StaticBody*>* scenarioBodies)
+void NPL::SetScenarioPreset(ScenarioPreset preset, PhysVec windowSize, std::vector<StaticBody*>* scenarioBodies)
 {
+	assert(physics != nullptr && audio != nullptr, "ERROR: NPL variable not initialized. Call Init() first.");
+
 	switch (preset)
 	{
 	case ScenarioPreset::LIMITS_SCENARIO_PRESET:
@@ -296,9 +313,11 @@ void NPL::SetScenarioPreset(ScenarioPreset preset, Point windowSize, std::vector
 
 void NPL::SetPhysicsPreset(PhysicsPreset preset)
 {
-	Point friction = {};
-	Point gravity = {};
-	Point restitution = {};
+	assert(physics != nullptr, "ERROR: NPL variable not initialized. Call Init() first.");
+
+	PhysVec friction = {};
+	PhysVec gravity = {};
+	PhysVec restitution = {};
 
 	switch (preset)
 	{
@@ -337,7 +356,7 @@ void NPL::UpdateStates()
 		DynamicBody* dB = (DynamicBody*)b;
 
 		// Detect moving
-		if (MathUtils::Abs(MathUtils::Abs(dB->velocity.x)) > 0.001f || MathUtils::Abs(MathUtils::Abs(dB->velocity.y)) > 0.001f)
+		if (PhysMath::Abs(PhysMath::Abs(dB->velocity.x)) > 0.001f || PhysMath::Abs(PhysMath::Abs(dB->velocity.y)) > 0.001f)
 		{
 			if (!dB->prevBodyState.Get((int)BodyState::MOVING)) dB->bodyStateEnter.Set((int)BodyState::MOVING, true);
 			dB->bodyStateStay.Set((int)BodyState::MOVING, true);
@@ -364,12 +383,12 @@ void NPL::UpdateStates()
 		float totalArea = 0.0f;
 		for (unsigned int* i : liquidIndex)
 		{
-			if (MathUtils::CheckCollision(b->GetRect(InUnit::IN_METERS), bodies[*i]->GetRect(InUnit::IN_METERS)))
+			if (PhysMath::CheckCollision(b->GetRect(InUnit::IN_METERS), bodies[*i]->GetRect(InUnit::IN_METERS)))
 			{
 				if (!dB->prevBodyState.Get((int)BodyState::IN_LIQUID)) dB->bodyStateEnter.Set((int)BodyState::IN_LIQUID, true);
 				dB->bodyStateStay.Set((int)BodyState::IN_LIQUID, true);
-				totalArea += MathUtils::IntersectRectangle(b->GetRect(InUnit::IN_METERS), bodies[*i]->GetRect(InUnit::IN_METERS)).GetArea();
-				fullLiquidState = (0.0001f > MathUtils::Abs(b->GetRect(InUnit::IN_METERS).GetArea() - totalArea));
+				totalArea += PhysMath::IntersectRectangle(b->GetRect(InUnit::IN_METERS), bodies[*i]->GetRect(InUnit::IN_METERS)).GetArea();
+				fullLiquidState = (0.0001f > PhysMath::Abs(b->GetRect(InUnit::IN_METERS).GetArea() - totalArea));
 				if (fullLiquidState) break;
 			}
 		}
@@ -378,7 +397,7 @@ void NPL::UpdateStates()
 		{
 			for (unsigned int* i : gasIndex)
 			{
-				if (MathUtils::CheckCollision(b->GetRect(InUnit::IN_METERS), bodies[*i]->GetRect(InUnit::IN_METERS)))
+				if (PhysMath::CheckCollision(b->GetRect(InUnit::IN_METERS), bodies[*i]->GetRect(InUnit::IN_METERS)))
 				{
 					if (!dB->prevBodyState.Get((int)BodyState::IN_GAS)) dB->bodyStateEnter.Set((int)BodyState::IN_GAS, true);
 					dB->bodyStateStay.Set((int)BodyState::IN_GAS, true);
@@ -478,11 +497,11 @@ void NPL::ListenerLogic(Body* b, GasBody* environment)
 	b->acousticDataList.clear();
 }
 
-GasBody* NPL::GetEnvironmentBody(Rect body)
+GasBody* NPL::GetEnvironmentBody(PhysRect body)
 {
 	for (unsigned int* index : gasIndex)
 	{
-		if (MathUtils::CheckCollision(body, bodies[*index]->GetRect(InUnit::IN_METERS)))
+		if (PhysMath::CheckCollision(body, bodies[*index]->GetRect(InUnit::IN_METERS)))
 			return (GasBody*)bodies[*index];
 	}
 
@@ -545,10 +564,10 @@ float NPL::ComputeVolume(float distance, float spl)
 {
 	// Compute the sound attenuation over distance
 	// Final SPL = Initial SPL - 20*Log(distance / 1)
-	float fSPL = spl - 20 * MathUtils::Log(distance);
+	float fSPL = spl - 20 * PhysMath::Log(distance);
 
 	// Transform volume from db to linear [ 0, 1])
-	return MathUtils::LogToLinear(fSPL, maxSPL) / maxVolume;
+	return PhysMath::LogToLinear(fSPL, maxSPL) / maxVolume;
 }
 
 float NPL::ComputeTimeDelay(float distance, GasBody* environment)
@@ -557,7 +576,7 @@ float NPL::ComputeTimeDelay(float distance, GasBody* environment)
 	// 1. Vel = sqrt( lambda * Pa / ro )
 	// 2. Time = distance / vel
 	float timeDelay = 0;
-	float vel = MathUtils::Sqrt(environment->GetHeatRatio() * environment->GetPressure() / environment->GetDensity(InUnit::IN_METERS));
+	float vel = PhysMath::Sqrt(environment->GetHeatRatio() * environment->GetPressure() / environment->GetDensity(InUnit::IN_METERS));
 	return distance / vel;
 }
 

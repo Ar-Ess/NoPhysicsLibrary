@@ -157,6 +157,7 @@
     <ClCompile Include="Source\miniaudio_impl.c" />
     <ClCompile Include="Source\NoPhysicsLibrary.cpp" />
     <ClCompile Include="Source\Physics.cpp" />
+    <ClCompile Include="Source\PhysVec.cpp" />
     <ClCompile Include="Source\Sound.cpp" />
     <ClCompile Include="Source\StaticBody.cpp" />
     <ClCompile Include="Source\Timer.cpp" />
@@ -165,7 +166,7 @@
     <ClInclude Include="Source\AcusticData.h" />
     <ClInclude Include="Source\Alignment.h" />
     <ClInclude Include="Source\Audio.h" />
-    <ClInclude Include="Source\AuxiliarsHeader.h" />
+    <ClInclude Include="Source\LibraryAuxiliars.h" />
     <ClInclude Include="Source\Body.h" />
     <ClInclude Include="Source\BodyBackup.h" />
     <ClInclude Include="Source\BodyClassEnum.h" />
@@ -185,17 +186,17 @@
     <ClInclude Include="Source\GetDataAuxiliar.h" />
     <ClInclude Include="Source\InUnitsEnum.h" />
     <ClInclude Include="Source\LibraryConfigAux.h" />
+    <ClInclude Include="Source\LibraryEnums.h" />
     <ClInclude Include="Source\PhysVec.h" />
     <ClInclude Include="Source\GasBody.h" />
     <ClInclude Include="Source\LiquidBody.h" />
     <ClInclude Include="Source\Define.h" />
-    <ClInclude Include="Source\MathUtils.h" />
+    <ClInclude Include="Source\PhysMath.h" />
     <ClInclude Include="Source\NoPhysicsLibrary.h" />
     <ClInclude Include="Source\Physics.h" />
     <ClInclude Include="Source\PhysicsPresetEnum.h" />
-    <ClInclude Include="Source\Point.h" />
     <ClInclude Include="Source\Ray.h" />
-    <ClInclude Include="Source\Rect.h" />
+    <ClInclude Include="Source\PhysRect.h" />
     <ClInclude Include="Source\ScenarioPresetEnum.h" />
     <ClInclude Include="Source\Sound.h" />
     <ClInclude Include="Source\SoundData.h" />

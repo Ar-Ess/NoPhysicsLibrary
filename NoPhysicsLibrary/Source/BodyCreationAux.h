@@ -6,7 +6,7 @@
 #include "DynamicBody.h"
 #include "LiquidBody.h"
 #include "GasBody.h"
-#include "MathUtils.h"
+#include "PhysMath.h"
 
 struct BodyCreation
 {
@@ -20,7 +20,7 @@ private:
 		pixelsToMeters(pixelsToMeters)
 	{}
 
-	const BodyCreation* Access(Rect rect)
+	const BodyCreation* Access(PhysRect rect)
 	{
 		this->rect = rect;
 		return this;
@@ -36,7 +36,7 @@ public:
 		return (StaticBody*)bodies->back();
 	}
 
-	DynamicBody* Dynamic(float mass, Point gravityOffset = { 0.0f, 0.0f }, InUnit unit = InUnit::IN_METERS) const
+	DynamicBody* Dynamic(float mass, PhysVec gravityOffset = { 0.0f, 0.0f }, InUnit unit = InUnit::IN_METERS) const
 	{
 		if (!gravityOffset.IsZero() && unit == InUnit::IN_PIXELS) gravityOffset *= *pixelsToMeters;
 
@@ -54,7 +54,7 @@ public:
 
 	LiquidBody* Liquid(float density, float buoyancy, InUnit unit) const
 	{
-		if (unit == InUnit::IN_PIXELS) density *= MathUtils::Pow((1 / *pixelsToMeters),2);
+		if (unit == InUnit::IN_PIXELS) density *= PhysMath::Pow((1 / *pixelsToMeters),2);
 
 		bodies->emplace_back(new LiquidBody(rect, density * rect.GetArea(), buoyancy, pixelsToMeters));
 		liquidIndex->emplace_back(new unsigned int(bodies->size() - 1));
@@ -62,11 +62,11 @@ public:
 	}
 
 	// Aerodrag Coefficient is a value from 0 to 1.5. Out-of-bounds values will be clamped.
-	GasBody* Gas(float density, float heatRatio, float pressure, Point aerodragCoefficient, InUnit unit) const
+	GasBody* Gas(float density, float heatRatio, float pressure, PhysVec aerodragCoefficient, InUnit unit) const
 	{
 		if (unit == InUnit::IN_PIXELS)
 		{
-			float pixToMetSquared = MathUtils::Pow((1 / *pixelsToMeters), 2);
+			float pixToMetSquared = PhysMath::Pow((1 / *pixelsToMeters), 2);
 			density *= pixToMetSquared;
 			pressure *= pixToMetSquared;
 		}
@@ -77,7 +77,7 @@ public:
 
 private:
 
-	Rect rect = {};
+	PhysRect rect = {};
 	std::vector<Body*>* bodies = nullptr;
 	std::vector<unsigned int*>* gasIndex = nullptr;
 	std::vector<unsigned int*>* liquidIndex = nullptr;

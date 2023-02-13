@@ -1,11 +1,7 @@
 #pragma once
 
-#include "AuxiliarsHeader.h"
-// Includes: Body.h, Audio.h 
-
-#include "ScenarioPresetEnum.h"
-#include "PhysicsPresetEnum.h"
-#include "InUnitsEnum.h"
+#include "LibraryAuxiliars.h"
+#include "LibraryEnums.h"
 
 #include "SoundData.h"
 #include "Collision.h"
@@ -27,7 +23,7 @@ public:
 	// Create a new body
 	//  - Follow this function with a "." to choose the body type
 	//  - Rect must be on pixels (Multiply meters by "metersToPixels" variable on npl->Get() function)
-	const BodyCreation* CreateBody(Rect rectangle);
+	const BodyCreation* CreateBody(PhysRect rectangle);
 	const BodyCreation* CreateBody(float x, float y, float width, float height);
 
 	// Configure certain aspects of this library operation
@@ -53,11 +49,11 @@ public:
 	void LoadSound(const char* path);
 
 	// Calculates & returns a rectsngle that englobes all the existent bodies
-	const Rect ReturnScenarioRect() const;
+	const PhysRect ReturnScenarioRect() const;
 
 	// Sets a scenario preset. WindowSize variable must be in pixels.
 	// Provide a std::vector pointer to get the scenario bodies
-	void SetScenarioPreset(ScenarioPreset preset, Point windowSize, std::vector<StaticBody*>* scenarioBodies = nullptr);
+	void SetScenarioPreset(ScenarioPreset preset, PhysVec windowSize, std::vector<StaticBody*>* scenarioBodies = nullptr);
 
 	void SetPhysicsPreset(PhysicsPreset preset);
 
@@ -81,7 +77,7 @@ private: // Methods
 	inline bool IsVoid() const { return gasIndex.empty(); }
 	inline bool IsDry() const { return liquidIndex.empty(); }
 
-	GasBody* GetEnvironmentBody(Rect body);
+	GasBody* GetEnvironmentBody(PhysRect body);
 
 	void UpdateNotifier();
 		void UpdatePixelsToMeters();
@@ -102,7 +98,7 @@ private:
 	//INFO: Fet aixi perquè amb unic ids s'hauria de fer moltes iteracions + protegir el vector de bodies
 	std::vector<unsigned int*> gasIndex;
 	std::vector<unsigned int*> liquidIndex;
-	Rect scenarioRects[4] = {};
+	PhysRect scenarioRects[4] = {};
 
 	const float maxSPL = 120.0f;
 	const float maxVolume = 10.0f;

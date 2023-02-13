@@ -1,15 +1,21 @@
 #pragma once
 
-#include "Rect.h"
+#include "PhysRect.h"
 #include "Ray.h"
+#include <math.h>
 #define PI 3.14159265359
 
-namespace MathUtils
+namespace PhysMath
 {
 	// This function does not consider a collision if rects touches their bounds
-	inline bool CheckCollision(Rect r1, Rect r2)
+	inline bool CheckCollision(PhysRect r1, PhysRect r2)
 	{
 		return !((r1.x >= r2.x + r2.w) || (r1.x + r1.w < r2.x) || (r1.y >= r2.y + r2.h) || (r1.y + r1.h < r2.y));
+	}
+
+	inline float Module(float x, float y)
+	{
+		return (float)sqrt(x * x + y * y);
 	}
 
 	inline float Sqrt(float num)
@@ -117,7 +123,7 @@ namespace MathUtils
 		else if (value > max) value = max;
 	}
 
-	inline Rect IntersectRectangle(Rect r1, Rect r2)
+	inline PhysRect IntersectRectangle(PhysRect r1, PhysRect r2)
 	{
 		float x = Max(r1.x, r2.x);
 		float y = Max(r1.y, r2.y);
@@ -129,9 +135,9 @@ namespace MathUtils
 		return { x, y, w, h };
 	}
 	
-	inline Point ClosestRectIntersectionFromOutsidePoint(Point point, Rect rect)
+	inline PhysVec ClosestRectIntersectionFromOutsidePoint(PhysVec point, PhysRect rect)
 	{
-		Point ret = { 0.0f, 0.0f };
+		PhysVec ret = { 0.0f, 0.0f };
 
 		ret.x = Max(rect.x, Min(point.x, rect.x + rect.w));
 		ret.y = Min(rect.y + rect.h, Max(point.y, rect.y));
@@ -139,12 +145,12 @@ namespace MathUtils
 		return ret;
 	}
 
-	inline Point ClosestRectIntersectionFromInsidePoint(Point point, Rect rect)
+	inline PhysVec ClosestRectIntersectionFromInsidePoint(PhysVec point, PhysRect rect)
 	{
-		Point ret = { 0.0f, 0.0f };
+		PhysVec ret = { 0.0f, 0.0f };
 
-		Point distanceToPositiveBounds = rect.GetPosition(Align::TOP_RIGHT) - point;
-		Point distanceToNegativeBounds = rect.GetPosition(Align::BOTTOM_LEFT) - point;
+		PhysVec distanceToPositiveBounds = rect.GetPosition(Align::TOP_RIGHT) - point;
+		PhysVec distanceToNegativeBounds = rect.GetPosition(Align::BOTTOM_LEFT) - point;
 
 		float smallestX = Min(distanceToPositiveBounds.x, distanceToNegativeBounds.x);
 		float smallestY = Min(distanceToPositiveBounds.y, distanceToNegativeBounds.y);
@@ -158,26 +164,26 @@ namespace MathUtils
 		return ret;
 	}
 
-	inline Point ClosestRectIntersectionFromPoint(Point point, Rect rect)
+	inline PhysVec ClosestRectIntersectionFromPoint(PhysVec point, PhysRect rect)
 	{
-		bool inside = MathUtils::CheckCollision({ point.Apply(-1.0f, -1.0f), 2, 2 }, rect);
-		Point ret = { 0.0f, 0.0f };
+		bool inside = PhysMath::CheckCollision({ point.Apply(-1.0f, -1.0f), 2, 2 }, rect);
+		PhysVec ret = { 0.0f, 0.0f };
 
-		inside ? ret = MathUtils::ClosestRectIntersectionFromInsidePoint(point, rect) : ret = MathUtils::ClosestRectIntersectionFromOutsidePoint(point, rect);
+		inside ? ret = PhysMath::ClosestRectIntersectionFromInsidePoint(point, rect) : ret = PhysMath::ClosestRectIntersectionFromOutsidePoint(point, rect);
 
 		return ret;
 	}
 
-	inline bool RayCast(Ray r1, Ray r2, Point& ret)
+	inline bool RayCast(PhysRay r1, PhysRay r2, PhysVec& ret)
 	{
-		Point a = r1.origin;
-		Point b = r1.end;
+		PhysVec a = r1.origin;
+		PhysVec b = r1.end;
 
-		Point c = r2.origin;
-		Point d = r2.end;
+		PhysVec c = r2.origin;
+		PhysVec d = r2.end;
 
-		Point r = (b - a);
-		Point s = (d - c);
+		PhysVec r = (b - a);
+		PhysVec s = (d - c);
 
 		float div = (r.x * s.y) - (r.y * s.x);
 		float u = ((c.x - a.x) * r.y - (c.y - a.y) * r.x) / div;
@@ -190,16 +196,16 @@ namespace MathUtils
 	// Returns normal vec of the first intersecting plane (returned value is final pos of the vector, init is 0,0)
 	// The variable "planeExtension" extends the rectangle planes in both directions by its respective coordinates
 	// Works only for non-rotative rectangles
-	inline bool RayCast(Ray ray, Rect rect, Point& ret)
+	inline bool RayCast(PhysRay ray, PhysRect rect, PhysVec& ret)
 	{
-		Ray rectPlanes[4] = { 
+		PhysRay rectPlanes[4] = { 
 			{rect.GetPosition(Align::TOP_LEFT    ), rect.GetPosition(Align::TOP_RIGHT   ) },
 			{rect.GetPosition(Align::TOP_RIGHT   ), rect.GetPosition(Align::BOTTOM_RIGHT) },
 			{rect.GetPosition(Align::BOTTOM_RIGHT), rect.GetPosition(Align::BOTTOM_LEFT ) },
 			{rect.GetPosition(Align::BOTTOM_LEFT ), rect.GetPosition(Align::TOP_LEFT    ) }
 		};
 
-		Point intr;
+		PhysVec intr;
 		bool exist = false;
 
 		for (unsigned short int i = 0; i < 4; ++i)

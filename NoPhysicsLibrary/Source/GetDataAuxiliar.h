@@ -7,7 +7,7 @@ class GetData
 {
 private:
 	
-	GetData(std::vector<Body*>* bodies, std::vector<Collision*>* collisions, Flag* physicsConfig, Point* globalGravity, Point* globalFriction, Point* globalRestitution, Flag* physicsGlobals, float* pixelsToMeters) :
+	GetData(std::vector<Body*>* bodies, std::vector<Collision*>* collisions, Flag* physicsConfig, PhysVec* globalGravity, PhysVec* globalFriction, PhysVec* globalRestitution, Flag* physicsGlobals, float* pixelsToMeters) :
 		bodies(bodies),
 		collisions(collisions),
 		physicsConfig(physicsConfig),
@@ -48,13 +48,13 @@ public:
 	}
 
 	// Returns the global gravity vector
-	Point GlobalGravity() const { return *globalGravity; }
+	PhysVec GlobalGravity() const { return *globalGravity; }
 
 	// Returns the global friction vector
-	Point GlobalFriction() const { return *globalFriction; }
+	PhysVec GlobalFriction() const { return *globalFriction; }
 
 	// Returns the global restitution vector
-	Point GlobalRestitution() const { return *globalRestitution; }
+	PhysVec GlobalRestitution() const { return *globalRestitution; }
 
 	// Returns wether the physics are paused
 	bool GlobalPause() const { return physicsGlobals->Get(0); }
@@ -69,9 +69,9 @@ private:
 	std::vector<Collision*>* collisions = nullptr;
 	Flag* physicsConfig = nullptr;
 	Flag* physicsGlobals = nullptr;
-	Point* globalGravity = nullptr;
-	Point* globalFriction = nullptr;
-	Point* globalRestitution = nullptr;
+	PhysVec* globalGravity = nullptr;
+	PhysVec* globalFriction = nullptr;
+	PhysVec* globalRestitution = nullptr;
 	float* pixelsToMeters = nullptr;
 
 };

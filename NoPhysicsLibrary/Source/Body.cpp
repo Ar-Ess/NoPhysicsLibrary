@@ -2,16 +2,17 @@
 #include "DirectionEnum.h"
 #include "DynamicBody.h"
 #include "Define.h"
-#include "MathUtils.h"
+#include "PhysMath.h"
 
-Body::Body(BodyClass clas, Rect rect, float mass, const float* pixelsToMeters)
+Body::Body(BodyClass clas, PhysRect rect, float mass, const float* pixelsToMeters)
 {
 	this->clas = clas;
 	this->rect = rect;
-	this->emissionPoint = rect.GetPosition(Align::CENTER) - rect.GetPosition(Align::TOP_LEFT);
+	this->emissionPoint = {};
 	this->pixelsToMeters = pixelsToMeters;
 
 	// You idiot, mass can not be zero :}
+	//-Todo: This must be enabled
 	assert(mass != 0);
 
 	this->mass = mass;
@@ -31,40 +32,34 @@ void Body::Play(int index, float decibels)
 	acousticDataList.emplace_back(new AcousticData(index, rect.GetPosition().Apply(emissionPoint), decibels));
 }
 
-void Body::SetEmissionPoint(Point point, InUnit unit)
+void Body::EmissionPoint(PhysVec offset, InUnit unit)
 {
-	if (unit == InUnit::IN_PIXELS) point *= *pixelsToMeters;
-
-	Rect emissionRect = { emissionPoint.Apply(-1.0f, -1.0f) * *pixelsToMeters, Point(2.0f, 2.0f) * *pixelsToMeters };
-	emissionPoint = rect.GetPosition().Apply(point.Negative());
+	emissionPoint = rect.Position() + (offset * Conversion(unit, true));
 }
 
-void Body::SetEmissionPoint(Align alignment, Point offset, InUnit unit)
+PhysVec Body::EmissionPoint(InUnit unit) const
 {
-	if (unit == InUnit::IN_PIXELS) offset *= *pixelsToMeters;
-
-	emissionPoint = rect.GetPosition().Apply(rect.GetPosition(alignment).Negative());
-	if (offset.IsZero()) return;
-
-	emissionPoint += offset;
-	Rect emissionRect = { emissionPoint.Apply(-1.0f, -1.0f) * *pixelsToMeters, Point(2.0f, 2.0f) * *pixelsToMeters };
+	return (rect.Position() + emissionPoint) * Conversion(unit, false);
 }
 
-void Body::SetEmissionPoint(Align alignment)
+PhysVec Body::Position(InUnit unit) const
 {
-	emissionPoint = rect.GetPosition().Apply(rect.GetPosition(alignment).Negative());
+	return rect.Position() * Conversion(unit, false);
 }
 
-Point Body::GetPosition(InUnit unit, Align align) const
+PhysVec Body::Position(float x, float y, InUnit unit) const
+{
+	rect.Position(PhysVec(x, y) * Conversion(unit, true));
+}
+
+PhysVec Body::Size(InUnit unit) const
 {
 	float conversion = 1;
 	if (unit == InUnit::IN_PIXELS) conversion = (1 / *pixelsToMeters);
-	return rect.GetPosition(align) * conversion;
+	return rect.Size() * conversion;
 }
 
-Point Body::GetSize(InUnit unit) const
+PhysRect Body::Rect(InUnit unit) const
 {
-	float conversion = 1;
-	if (unit == InUnit::IN_PIXELS) conversion = (1 / *pixelsToMeters);
-	return rect.GetSize() * conversion;
+	return { Position(unit), Size(unit) };
 }

@@ -1,6 +1,6 @@
 #pragma once
 
-#include "MathUtils.h"
+#include "PhysMath.h"
 #include "Body.h"
 #include "ScenarioPresetEnum.h"
 #include "PhysicsPresetEnum.h"
@@ -9,7 +9,7 @@ struct LibraryConfig
 {
 private:
 
-	LibraryConfig(float* panRange, Flag* physicsConfig, Point* globalGravity, Point* globalRestitution, Point* globalFriction, Body** listener, float* pixelsToMeters, float* ptmRatio, unsigned int* physIterations, Flag* notifier) :
+	LibraryConfig(float* panRange, Flag* physicsConfig, PhysVec* globalGravity, PhysVec* globalRestitution, PhysVec* globalFriction, Body** listener, float* pixelsToMeters, float* ptmRatio, unsigned int* physIterations, Flag* notifier) :
 		panRange(panRange),
 		physicsConfig(physicsConfig),
 		globalGravity(globalGravity),
@@ -42,7 +42,7 @@ public:
 	// Then draw the rectangle inside it. Enabling this might slightly slow the code iteration
 	void CollisionsDebugging(bool enable) const { this->physicsConfig->Set(0, enable); }
 
-	void GlobalGravity(Point gravity, InUnit unit) const
+	void GlobalGravity(PhysVec gravity, InUnit unit) const
 	{
 		if (unit == InUnit::IN_PIXELS) gravity *= *pixelsToMeters;
 		*globalGravity = gravity;
@@ -56,7 +56,7 @@ public:
 	// Restitution is a coefficient that can not be negative.
 	// More than 1 stablishes a higher kinematic energy after collision
 	// Invalid values are setted to 0
-	void GlobalRestitution(Point restitution) const
+	void GlobalRestitution(PhysVec restitution) const
 	{
 		if (restitution.x < 0) restitution.x = 0;
 		if (restitution.y < 0) restitution.y = 0;
@@ -70,7 +70,7 @@ public:
 
 	// Friction is a coefficient that lies between 0 and 1
 	// Invalid values are setted to 1
-	void GlobalFriction(Point friction) const
+	void GlobalFriction(PhysVec friction) const
 	{
 		if (friction.x < 0 && friction.x > 1) friction.x = 1;
 		if (friction.y < 0 && friction.y > 1) friction.y = 1;
@@ -107,9 +107,9 @@ private:
 	Flag* bodiesConfig = nullptr;
 	float* pixelsToMeters = nullptr;
 	float* ptmRatio = nullptr;
-	Point* globalGravity = nullptr;
-	Point* globalRestitution = nullptr;
-	Point* globalFriction = nullptr;
+	PhysVec* globalGravity = nullptr;
+	PhysVec* globalRestitution = nullptr;
+	PhysVec* globalFriction = nullptr;
 	Body** listener = nullptr;
 	unsigned int* physIterations = nullptr;
 

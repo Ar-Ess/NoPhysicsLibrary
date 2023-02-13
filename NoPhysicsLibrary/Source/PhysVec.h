@@ -1,42 +1,24 @@
-#include "Point.h"
-#include "InUnitsEnum.h"
+#pragma once
 
 struct PhysVec
 {
-	PhysVec()
-	{
-		vector = { 0.0f, 0.0f };
-		module = 0.0f;
-	}
+	PhysVec();
+	PhysVec(float x, float y);
+	PhysVec(int x, int y);
 
-	PhysVec(Point vector, InUnit unit)
-	{
-		this->vector = vector;
-		this->module = vector.Module();
-		this->unit = unit;
-	}
+	~PhysVec() {}
 
-	PhysVec(float x, float y, InUnit unit)
-	{
-		this->vector = Point{x, y};
-		this->module = vector.Module();
-		this->unit = unit;
-	}
+	PhysVec operator*(PhysVec value);
+	PhysVec operator*(float value);
+	PhysVec operator*(int value);
+	PhysVec operator+(PhysVec value);
+	PhysVec operator+(float value);
+	PhysVec operator+(int value);
 
-	~PhysVec()
-	{
+	void Clear();
 
-	}
-
-	void Clear()
-	{
-		vector.Zero();
-		module = 0.0f;
-	}
-
-	Point vector = { 0.0f, 0.0f };
+	float x = 0, y = 0;
 	float module = 0.0f;
-	InUnit unit = InUnit::IN_METERS;
 
 };
 

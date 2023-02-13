@@ -1,14 +1,14 @@
 #pragma once
 
-#include "Point.h"
+#include "PhysVec.h"
 
 struct AcousticData
 {
 public:
 
-	AcousticData(int index, Point emissionPosition, float spl) : index(index), emissionPosition(emissionPosition), spl(spl) {}
+	AcousticData(int index, PhysVec emissionPosition, float spl) : index(index), emissionPosition(emissionPosition), spl(spl) {}
 
 	int index = -1;
-	Point emissionPosition = {};
+	PhysVec emissionPosition = {};
 	float spl = 0;
 };

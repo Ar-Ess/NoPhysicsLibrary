@@ -5,11 +5,11 @@
 
 struct Collision
 {
-	Collision(DynamicBody* dynamicBody, Body* body, Rect intersecRect, const float* pixelsToMeters) : dynamicBody(dynamicBody), body(body), intersecRect(intersecRect), pixelsToMeters(pixelsToMeters) {}
+	Collision(DynamicBody* dynamicBody, Body* body, PhysRect intersecRect, const float* pixelsToMeters) : dynamicBody(dynamicBody), body(body), intersecRect(intersecRect), pixelsToMeters(pixelsToMeters) {}
 	
-	const Rect GetCollisionRectangle(InUnit unit) const
+	const PhysRect GetCollisionRectangle(InUnit unit) const
 	{
-		Rect inter = intersecRect;
+		PhysRect inter = intersecRect;
 
 		if (unit == InUnit::IN_PIXELS)
 		{
@@ -32,7 +32,7 @@ private:
 
 	DynamicBody* dynamicBody = nullptr;
 	Body* body = nullptr;
-	Rect intersecRect = {};
+	PhysRect intersecRect = {};
 	const float* pixelsToMeters = nullptr;
 
 };
