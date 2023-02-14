@@ -77,6 +77,13 @@ namespace PhysMath
 		return float(sqrt((double)Pow((float)dx, 2) + (double)Pow((float)dy, 2)));
 	}
 
+	inline float Distance(PhysVec p1, PhysVec p2)
+	{
+		double dx = double(p2.x) - double(p1.x);
+		double dy = double(p2.y) - double(p1.y);
+		return float(sqrt((double)Pow((float)dx, 2) + (double)Pow((float)dy, 2)));
+	}
+
 	inline float Ln(float num)
 	{
 		return (float)log((double)num);
@@ -123,6 +130,14 @@ namespace PhysMath
 		else if (value > max) value = max;
 	}
 
+	inline void Clamp(PhysVec& value, float min, float max)
+	{
+		if (value.x < min) value.x = min;
+		else if (value.x > max) value.x = max;
+		if (value.y < min) value.y = min;
+		else if (value.y > max) value.y = max;
+	}
+
 	inline PhysRect IntersectRectangle(PhysRect r1, PhysRect r2)
 	{
 		float x = Max(r1.x, r2.x);
@@ -166,7 +181,7 @@ namespace PhysMath
 
 	inline PhysVec ClosestRectIntersectionFromPoint(PhysVec point, PhysRect rect)
 	{
-		bool inside = PhysMath::CheckCollision({ point.Apply(-1.0f, -1.0f), 2, 2 }, rect);
+		bool inside = PhysMath::CheckCollision({ point + PhysVec(-1.0f, -1.0f), 2, 2 }, rect);
 		PhysVec ret = { 0.0f, 0.0f };
 
 		inside ? ret = PhysMath::ClosestRectIntersectionFromInsidePoint(point, rect) : ret = PhysMath::ClosestRectIntersectionFromOutsidePoint(point, rect);
@@ -176,10 +191,10 @@ namespace PhysMath
 
 	inline bool RayCast(PhysRay r1, PhysRay r2, PhysVec& ret)
 	{
-		PhysVec a = r1.origin;
+		PhysVec a = r1.start;
 		PhysVec b = r1.end;
 
-		PhysVec c = r2.origin;
+		PhysVec c = r2.start;
 		PhysVec d = r2.end;
 
 		PhysVec r = (b - a);
@@ -199,10 +214,10 @@ namespace PhysMath
 	inline bool RayCast(PhysRay ray, PhysRect rect, PhysVec& ret)
 	{
 		PhysRay rectPlanes[4] = { 
-			{rect.GetPosition(Align::TOP_LEFT    ), rect.GetPosition(Align::TOP_RIGHT   ) },
-			{rect.GetPosition(Align::TOP_RIGHT   ), rect.GetPosition(Align::BOTTOM_RIGHT) },
-			{rect.GetPosition(Align::BOTTOM_RIGHT), rect.GetPosition(Align::BOTTOM_LEFT ) },
-			{rect.GetPosition(Align::BOTTOM_LEFT ), rect.GetPosition(Align::TOP_LEFT    ) }
+			{rect.Position(), rect.Position() + PhysVec(rect.w, 0) },
+			{rect.Position() + PhysVec(rect.w, 0), rect.Position() + rect.Size() },
+			{rect.Position() + rect.Size(), rect.Position() + PhysVec(0, rect.h) },
+			{rect.Position() + PhysVec(0, rect.h), rect.Position() }
 		};
 
 		PhysVec intr;
@@ -219,8 +234,8 @@ namespace PhysMath
 
 		if (!exist) return false;
 
-		if (intr.x == rect.GetPosition().x || intr.x == rect.GetPosition(Align::BOTTOM_RIGHT).x) ret = {1.0f, 0.0f };
-		else if (intr.y == rect.GetPosition().y || intr.y == rect.GetPosition(Align::BOTTOM_RIGHT).y) ret = { 0.0f, 1.0f };
+		if (intr.x == rect.x || intr.x == rect.x + rect.w) ret = {1.0f, 0.0f };
+		else if (intr.y == rect.y || intr.y == rect.y + rect.h) ret = { 0.0f, 1.0f };
 
 		return true;
 

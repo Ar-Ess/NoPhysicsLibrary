@@ -4,7 +4,7 @@
 #include "DynamicBody.h"
 #include "StaticBody.h"
 
-#include "MathUtils.h"
+#include "PhysMath.h"
 #include "Ray.h"
 
 Physics::Physics(const std::vector<Body*>* bodies, const Flag* physicsConfig, const std::vector<unsigned int*>* gasIndex, const std::vector<unsigned int*>* liquidIndex, const float* pixelsToMeters, const unsigned int* physIterations)
@@ -90,7 +90,7 @@ void Physics::ApplyHydroForces(DynamicBody* body)
 {
 	if (!body->IsBodyStill(BodyState::IN_LIQUID)) return;
 
-	const float fullArea = body->GetRect(InUnit::IN_METERS).GetArea();
+	const float fullArea = body->Rect(InUnit::IN_METERS).Area();
 	float areaCovered = 0;
 	for (unsigned int* i : *liquidIndex)
 	{
@@ -98,8 +98,8 @@ void Physics::ApplyHydroForces(DynamicBody* body)
 
 		if (body->IsIdExcludedFromCollision(liquid->GetId())) continue;
 
-		if (!MathUtils::CheckCollision(liquid->GetRect(InUnit::IN_METERS), body->GetRect(InUnit::IN_METERS))) continue;
-		float area = MathUtils::IntersectRectangle(bodies->at(*i)->GetRect(InUnit::IN_METERS), body->GetRect(InUnit::IN_METERS)).GetArea();
+		if (!PhysMath::CheckCollision(liquid->Rect(InUnit::IN_METERS), body->Rect(InUnit::IN_METERS))) continue;
+		float area = PhysMath::IntersectRectangle(bodies->at(*i)->Rect(InUnit::IN_METERS), body->Rect(InUnit::IN_METERS)).Area();
 		areaCovered += area;
 
 		ApplyHydroDrag(body, liquid);
@@ -118,8 +118,8 @@ void Physics::ApplyHydroDrag(DynamicBody* body, Body* env)
 	int negy = -1;
 	if (body->velocity.x < 0) negx *= -1;
 	if (body->velocity.y < 0) negy *= -1;
-	float hydrodragY = negy * 0.5 * liquid->GetDensity(InUnit::IN_METERS) * MathUtils::Pow(body->velocity.y, 2) * body->GetRect(InUnit::IN_METERS).h /* * liquid->GetDragCoefficient().y*/;
-	float hydrodragX = negx * 0.5 * liquid->GetDensity(InUnit::IN_METERS) * MathUtils::Pow(body->velocity.x, 2) * body->GetRect(InUnit::IN_METERS).w /* * liquid->GetDragCoefficient().x*/;
+	float hydrodragY = negy * 0.5 * liquid->GetDensity(InUnit::IN_METERS) * PhysMath::Pow(body->velocity.y, 2) * body->Rect(InUnit::IN_METERS).h /* * liquid->GetDragCoefficient().y*/;
+	float hydrodragX = negx * 0.5 * liquid->GetDensity(InUnit::IN_METERS) * PhysMath::Pow(body->velocity.x, 2) * body->Rect(InUnit::IN_METERS).w /* * liquid->GetDragCoefficient().x*/;
 	// negx *= -1;
 	// negy *= -1;
 	// float hydrodragY = negy * MathUtils::Abs(1 - liquid->GetDragCoefficient().y) * body->velocity.y;
@@ -137,8 +137,8 @@ void Physics::ApplyHydroLift(DynamicBody* body, Body* env)
 	int negy = 1;
 	if (body->velocity.x < 0) negx = 1;
 	if (body->velocity.y < 0) negy = -1;
-	float hydroliftY = negx * 0.5 * liquid->GetDensity(InUnit::IN_METERS) * MathUtils::Pow(body->velocity.x, 2) * body->GetRect(InUnit::IN_METERS).h * liquid->GetLiftCoefficient().x;
-	float hydroliftX = negy * 0.5 * liquid->GetDensity(InUnit::IN_METERS) * MathUtils::Pow(body->velocity.y, 2) * body->GetRect(InUnit::IN_METERS).w * liquid->GetLiftCoefficient().y;
+	float hydroliftY = negx * 0.5 * liquid->GetDensity(InUnit::IN_METERS) * PhysMath::Pow(body->velocity.x, 2) * body->Rect(InUnit::IN_METERS).h * liquid->LiftCoefficient().x;
+	float hydroliftX = negy * 0.5 * liquid->GetDensity(InUnit::IN_METERS) * PhysMath::Pow(body->velocity.y, 2) * body->Rect(InUnit::IN_METERS).w * liquid->LiftCoefficient().y;
 	// La atrocitat probocada aquí constitueix la rotació de 90º en forma de x = -y i y = x (El lift sempre va a 90 graus respecte el drag)
 	if (hydroliftY > 0) hydroliftY *= -1; // Maintain y axis lift always looking up :D
 	body->ApplyForce(hydroliftX, hydroliftY, InUnit::IN_METERS);
@@ -148,8 +148,8 @@ void Physics::ApplyBuoyancy(DynamicBody* body, Body* env, float area)
 {
 	LiquidBody* liquid = (LiquidBody*)env;
 	// Density * Area * gravity force (+ buoyancy coeficcient)
-	float forcex = liquid->GetDensity(InUnit::IN_METERS) * area * (globalGravity.x + body->GetGravityOffset(InUnit::IN_METERS).x) * liquid->GetBuoyancy();
-	float forcey = liquid->GetDensity(InUnit::IN_METERS) * area * (globalGravity.y + body->GetGravityOffset(InUnit::IN_METERS).y) * liquid->GetBuoyancy();
+	float forcex = liquid->GetDensity(InUnit::IN_METERS) * area * (globalGravity.x + body->GravityOffset(InUnit::IN_METERS).x) * liquid->GetBuoyancy();
+	float forcey = liquid->GetDensity(InUnit::IN_METERS) * area * (globalGravity.y + body->GravityOffset(InUnit::IN_METERS).y) * liquid->GetBuoyancy();
 	body->ApplyForce(-forcex, -forcey , InUnit::IN_METERS);
 }
 
@@ -157,7 +157,7 @@ void Physics::ApplyAeroForces(DynamicBody* body)
 {
 	if (!body->IsBodyStill(BodyState::IN_GAS)) return;
 
-	const float fullArea = body->GetRect(InUnit::IN_METERS).GetArea();
+	const float fullArea = body->Rect(InUnit::IN_METERS).Area();
 	float areaCovered = 0;
 	for (unsigned int* i : *gasIndex)
 	{
@@ -165,8 +165,8 @@ void Physics::ApplyAeroForces(DynamicBody* body)
 
 		if (body->IsIdExcludedFromCollision(gas->GetId())) continue;
 
-		if (!MathUtils::CheckCollision(gas->GetRect(InUnit::IN_METERS), body->GetRect(InUnit::IN_METERS))) continue;
-		float area = MathUtils::IntersectRectangle(bodies->at(*i)->GetRect(InUnit::IN_METERS), body->GetRect(InUnit::IN_METERS)).GetArea();
+		if (!PhysMath::CheckCollision(gas->Rect(InUnit::IN_METERS), body->Rect(InUnit::IN_METERS))) continue;
+		float area = PhysMath::IntersectRectangle(bodies->at(*i)->Rect(InUnit::IN_METERS), body->Rect(InUnit::IN_METERS)).Area();
 		areaCovered += area;
 
 		ApplyAeroDrag(body, gas, area);
@@ -183,8 +183,8 @@ void Physics::ApplyAeroDrag(DynamicBody* body, Body* env, float area)
 	int negy = -1;
 	if (body->velocity.x < 0) negx = 1;
 	if (body->velocity.y < 0) negy = 1;
-	float aerodragX = negx * 0.5 * gas->GetDensity(InUnit::IN_METERS) * MathUtils::Pow(body->velocity.x, 2) * area * gas->GetDragCoefficient().x;
-	float aerodragY = negy * 0.5 * gas->GetDensity(InUnit::IN_METERS) * MathUtils::Pow(body->velocity.y, 2) * area * gas->GetDragCoefficient().y;
+	float aerodragX = negx * 0.5 * gas->GetDensity(InUnit::IN_METERS) * PhysMath::Pow(body->velocity.x, 2) * area * gas->DragCoefficient().x;
+	float aerodragY = negy * 0.5 * gas->GetDensity(InUnit::IN_METERS) * PhysMath::Pow(body->velocity.y, 2) * area * gas->DragCoefficient().y;
 	body->ApplyForce(aerodragX, aerodragY, InUnit::IN_METERS);
 }
 
@@ -195,8 +195,8 @@ void Physics::ApplyAeroLift(DynamicBody* body, Body* env, float area)
 	int negy = 1;
 	if (body->velocity.x < 0) negx = 1;
 	if (body->velocity.y < 0) negy = -1;
-	float aeroliftY = negx * 0.5 * gas->GetDensity(InUnit::IN_METERS) * MathUtils::Pow(body->velocity.x, 2) * body->GetRect(InUnit::IN_METERS).h * gas->GetLiftCoefficient().x;
-	float aeroliftX = negy * 0.5 * gas->GetDensity(InUnit::IN_METERS) * MathUtils::Pow(body->velocity.y, 2) * body->GetRect(InUnit::IN_METERS).w * gas->GetLiftCoefficient().y;
+	float aeroliftY = negx * 0.5 * gas->GetDensity(InUnit::IN_METERS) * PhysMath::Pow(body->velocity.x, 2) * body->Rect(InUnit::IN_METERS).h * gas->LiftCoefficient().x;
+	float aeroliftX = negy * 0.5 * gas->GetDensity(InUnit::IN_METERS) * PhysMath::Pow(body->velocity.y, 2) * body->Rect(InUnit::IN_METERS).w * gas->LiftCoefficient().y;
 	// La atrocitat probocada aquí constitueix la rotació de 90º en forma de x = -y i y = x (El lift sempre va a 90 graus respecte el drag)
 	if (aeroliftY > 0) aeroliftY *= -1; // Maintain y axis lift always looking up :D
 	body->ApplyForce(aeroliftX, aeroliftY, InUnit::IN_METERS);
@@ -235,17 +235,17 @@ void Physics::DetectCollisions(std::vector<Body*>* bodies)
 			if (b2->GetClass() == BodyClass::DYNAMIC_BODY && a < i) continue;
 			if (b1->IsIdExcludedFromCollision(b2->GetId())) continue;
 
-			PhysRect intersect = MathUtils::IntersectRectangle(b1->GetRect(InUnit::IN_METERS), b2->GetRect(InUnit::IN_METERS));
+			PhysRect intersect = PhysMath::IntersectRectangle(b1->Rect(InUnit::IN_METERS), b2->Rect(InUnit::IN_METERS));
 			PhysVec intersectionPoint = {};
 			// Try to check a collision
-			if (!MathUtils::CheckCollision(b1->GetRect(InUnit::IN_METERS), b2->GetRect(InUnit::IN_METERS)))
+			if (!PhysMath::CheckCollision(b1->Rect(InUnit::IN_METERS), b2->Rect(InUnit::IN_METERS)))
 			{
 				continue;
 				// In Process
 				// Try to check if tunneling
-				if (!MathUtils::RayCast(
-					PhysRay(b1->GetPosition(InUnit::IN_METERS, Align::CENTER), b1->backup.rectangle.GetPosition(Align::CENTER)),
-					b2->GetRect(InUnit::IN_METERS),
+				if (!PhysMath::RayCast(
+					PhysRay(b1->Position(InUnit::IN_METERS) + (b1->Size(InUnit::IN_METERS) / 2), b1->backup.rectangle.Position() + (b1->backup.rectangle.Size() / 2)),
+					b2->Rect(InUnit::IN_METERS),
 					intersectionPoint
 				)) continue;
 			}
@@ -276,7 +276,7 @@ void Physics::Declip()
 		Body* b = (Body*)c->GetBody();
 
 		PhysRect intersect = c->GetCollisionRectangle(InUnit::IN_METERS);
-		PhysVec directionVec = dynBody->GetPosition(InUnit::IN_METERS) - dynBody->backup.rectangle.GetPosition();
+		PhysVec directionVec = dynBody->Position(InUnit::IN_METERS) - dynBody->backup.rectangle.Position();
 
 		switch (b->GetClass())
 		{
@@ -284,12 +284,13 @@ void Physics::Declip()
 		case BodyClass::DYNAMIC_BODY:
 		{
 			DynamicBody* body = (DynamicBody*)b;
-			PhysVec directionVecAlter = body->GetPosition(InUnit::IN_METERS) - body->backup.rectangle.GetPosition();
+			PhysVec directionVecAlter = body->Position(InUnit::IN_METERS) - body->backup.rectangle.Position();
 			PhysVec normal = {};
 
-			PhysVec centerOfIntersecion = c->GetCollisionRectangle(InUnit::IN_METERS).GetPosition(Align::CENTER);
-			PhysRay ray(centerOfIntersecion.Apply(directionVec.Multiply(-1.0f)), centerOfIntersecion);
-			if (!MathUtils::RayCast(ray, body->GetRect(InUnit::IN_METERS), normal)) break;
+			PhysRect cRect = c->GetCollisionRectangle(InUnit::IN_METERS);
+			PhysVec centerOfIntersecion = cRect.Position() + (cRect.Size() / 2);
+			PhysRay ray(centerOfIntersecion + (directionVec * -1.0f), centerOfIntersecion);
+			if (!PhysMath::RayCast(ray, body->Rect(InUnit::IN_METERS), normal)) break;
 
 			if (normal.x == 0) // Vertical collision with horizontal surface
 			{
@@ -315,7 +316,7 @@ void Physics::Declip()
 
 				// Loss of energy
 				dynBody->velocity.y *= globalRestitution.y;
-				dynBody->velocity.x *= MathUtils::Abs(1 - globalFriction.x);
+				dynBody->velocity.x *= PhysMath::Abs(1 - globalFriction.x);
 
 			}
 			else if (normal.y == 0) // Horizontal collision with vertical surface
@@ -342,13 +343,13 @@ void Physics::Declip()
 
 				// Loss of energy
 				dynBody->velocity.x *= globalRestitution.x;
-				dynBody->velocity.y *= MathUtils::Abs(1 - globalFriction.y);
+				dynBody->velocity.y *= PhysMath::Abs(1 - globalFriction.y);
 
 			}
 			else
 			{
-				PhysRect wtfRect = c->GetBody()->GetRect(InUnit::IN_METERS);
-				PhysVec wtfOrgn = dynBody->backup.rectangle.GetPosition();
+				PhysRect wtfRect = c->GetBody()->Rect(InUnit::IN_METERS);
+				PhysVec wtfOrgn = dynBody->backup.rectangle.Position();
 				PhysVec wtfDir = directionVec;
 				LOG("Weird Rectangle: X = %.f, Y = %.f, Width = %.f, Heigth = %.f\nWeird Ray: X = %.f, Y = %.f, Dir X = %.f, Dir Y = %.f", wtfRect.x, wtfRect.y, wtfRect.w, wtfRect.h, wtfOrgn.x, wtfOrgn.y, wtfDir.x, wtfDir.y);
 				assert("This is impossible, how could this happen???? :O Quick, check the log!!!!");
@@ -362,23 +363,24 @@ void Physics::Declip()
 			StaticBody* body = (StaticBody*)b;
 			PhysVec normal = {};
 
-			PhysVec centerOfIntersecion = c->GetCollisionRectangle(InUnit::IN_METERS).GetPosition(Align::CENTER);
-			PhysRay ray(centerOfIntersecion.Apply(directionVec.Multiply(-1.0f)), centerOfIntersecion);
-			if (!MathUtils::RayCast(ray, body->GetRect(InUnit::IN_METERS), normal)) break;
+			PhysRect cRect = c->GetCollisionRectangle(InUnit::IN_METERS);
+			PhysVec centerOfIntersecion = cRect.Position() + (cRect.Size() / 2);
+			PhysRay ray(centerOfIntersecion + (directionVec * -1.0f), centerOfIntersecion);
+			if (!PhysMath::RayCast(ray, body->Rect(InUnit::IN_METERS), normal)) break;
 
 			if (normal.x == 0) // Vertical collision with horizontal surface
 			{
 				// Top -> Bottom
 				if (directionVec.y > 0)
 				{
-					dynBody->rect.y = body->GetPosition(InUnit::IN_METERS).y - dynBody->rect.h;
+					dynBody->rect.y = body->Position(InUnit::IN_METERS).y - dynBody->rect.h;
 					if (!dynBody->prevBodyState.Get((int)BodyState::ON_GROUND)) dynBody->bodyStateEnter.Set((int)BodyState::ON_GROUND, true);
 					dynBody->bodyStateStay.Set((int)BodyState::ON_GROUND, true);
 				}
 				// Bottom -> Top
 				if (directionVec.y < 0)
 				{
-					dynBody->rect.y = body->GetRect(InUnit::IN_METERS).GetPosition(Align::BOTTOM_CENTER).y;
+					dynBody->rect.y = body->Rect(InUnit::IN_METERS).y + body->Rect(InUnit::IN_METERS).h;
 					if (!dynBody->prevBodyState.Get((int)BodyState::ON_ROOF)) dynBody->bodyStateEnter.Set((int)BodyState::ON_ROOF, true);
 					dynBody->bodyStateStay.Set((int)BodyState::ON_ROOF, true);
 				}
@@ -387,7 +389,7 @@ void Physics::Declip()
 				dynBody->velocity.y *= -1;
 
 				// Loss of energy
-				dynBody->velocity.y *= (globalRestitution.y + body->GetRestitutionOffset().y + dynBody->GetRestitutionOffset().y);
+				dynBody->velocity.y *= (globalRestitution.y + body->RestitutionOffset().y + dynBody->RestitutionOffset().y);
 				dynBody->velocity.x *= CalculateFriction(dynBody).x;
 			}
 			else if (normal.y == 0) // Horizontal collision with vertical surface
@@ -395,14 +397,14 @@ void Physics::Declip()
 				// Left -> Right
 				if (directionVec.x > 0)
 				{
-					dynBody->rect.x = body->GetPosition(InUnit::IN_METERS).x - dynBody->rect.w;
+					dynBody->rect.x = body->Position(InUnit::IN_METERS).x - dynBody->rect.w;
 					if (!dynBody->prevBodyState.Get((int)BodyState::ON_RIGHT)) dynBody->bodyStateEnter.Set((int)BodyState::ON_RIGHT, true);
 					dynBody->bodyStateStay.Set((int)BodyState::ON_RIGHT, true);
 				}
 				// Right -> Left
 				if (directionVec.x < 0)
 				{
-					dynBody->rect.x = body->GetRect(InUnit::IN_METERS).GetPosition(Align::CENTER_RIGHT).x;
+					dynBody->rect.x = body->Rect(InUnit::IN_METERS).x + body->Rect(InUnit::IN_METERS).w;
 					if (!dynBody->prevBodyState.Get((int)BodyState::ON_LEFT)) dynBody->bodyStateEnter.Set((int)BodyState::ON_LEFT, true);
 					dynBody->bodyStateStay.Set((int)BodyState::ON_LEFT, true);
 				}
@@ -411,13 +413,13 @@ void Physics::Declip()
 				dynBody->velocity.x *= -1;
 
 				// Loss of energy
-				dynBody->velocity.x *= (globalRestitution.x + body->GetRestitutionOffset().x + dynBody->GetRestitutionOffset().x);
+				dynBody->velocity.x *= (globalRestitution.x + body->RestitutionOffset().x + dynBody->RestitutionOffset().x);
 				dynBody->velocity.y *= CalculateFriction(dynBody).y;
 			}
 			else
 			{
-				PhysRect wtfRect = c->GetBody()->GetRect(InUnit::IN_METERS);
-				PhysVec wtfOrgn = dynBody->backup.rectangle.GetPosition();
+				PhysRect wtfRect = c->GetBody()->Rect(InUnit::IN_METERS);
+				PhysVec wtfOrgn = dynBody->backup.rectangle.Position();
 				PhysVec wtfDir = directionVec;
 				LOG("Weird Rectangle: X = %.f, Y = %.f, Width = %.f, Heigth = %.f\nWeird Ray: X = %.f, Y = %.f, Dir X = %.f, Dir Y = %.f", wtfRect.x, wtfRect.y, wtfRect.w, wtfRect.h, wtfOrgn.x, wtfOrgn.y, wtfDir.x, wtfDir.y);
 				assert("This is impossible, how could this happen???? :O Quick, check the log!!!!");
@@ -440,11 +442,11 @@ void Physics::Declip()
 
 PhysVec Physics::CalculateFriction(DynamicBody* body)
 {
-	PhysVec gF = { MathUtils::Abs(1 - globalFriction.x), MathUtils::Abs(1 - globalFriction.y) };
+	PhysVec gF = { PhysMath::Abs(1 - globalFriction.x), PhysMath::Abs(1 - globalFriction.y) };
 	PhysVec outFriction = {gF.x - body->frictionOffset.x, gF.y - body->frictionOffset.y};
 
-	MathUtils::Clamp(outFriction.x, 0, 1);
-	MathUtils::Clamp(outFriction.y, 0, 1);
+	PhysMath::Clamp(outFriction.x, 0, 1);
+	PhysMath::Clamp(outFriction.y, 0, 1);
 
 	return outFriction;
 }

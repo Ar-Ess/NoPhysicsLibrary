@@ -6,11 +6,11 @@ struct BodyBackup
 {
 	BodyBackup()
 	{
-		this->rectangle = {};
-		this->velocity = {};
-		this->acceleration = {};
-		this->momentum = {};
-		this->force = {};
+		this->rectangle = {0, 0, 0, 0};
+		this->velocity = 0;
+		this->acceleration = 0;
+		this->momentum = 0;
+		this->force = 0;
 	}
 
 	BodyBackup(PhysRect rectangle, PhysVec velocity, PhysVec acceleration, Momentum momentum, Force force)

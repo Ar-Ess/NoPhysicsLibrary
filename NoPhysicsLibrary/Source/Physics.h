@@ -41,13 +41,13 @@ private: // Methods
 	void Declip();
 
 	// Internal
-	Point CalculateFriction(DynamicBody* body);
+	PhysVec CalculateFriction(DynamicBody* body);
 
 public: // Variables
 
-	Point globalGravity = {0.0f, 0.0f };
-	Point globalRestitution = {1.0f, 1.0f };
-	Point globalFriction = {1.0f, 1.0f };
+	PhysVec globalGravity = {0.0f, 0.0f };
+	PhysVec globalRestitution = {1.0f, 1.0f };
+	PhysVec globalFriction = {1.0f, 1.0f };
 
 	// Pause 0
 	Flag globals = {};

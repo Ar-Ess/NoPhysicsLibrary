@@ -6,7 +6,7 @@ class GasBody : public Body
 {
 public:
 
-	GasBody(Rect rect, float mass, float heatRatio, float pressure, Point dragCoefficient, const float* pixelsToMeters);
+	GasBody(PhysRect rect, float mass, float heatRatio, float pressure, PhysVec dragCoefficient, const float* pixelsToMeters);
 
 	~GasBody() override;
 
@@ -22,12 +22,12 @@ public:
 
 	void SetHeatRatio(float heatRatio);
 
-	Point GetDragCoefficient() const
+	PhysVec DragCoefficient() const
 	{
 		return dragCoefficient;
 	}
 
-	Point GetLiftCoefficient() const
+	PhysVec LiftCoefficient() const
 	{
 		return liftCoefficient;
 	}
@@ -36,6 +36,6 @@ private:
 
 	float heatRatio = 0;
 	float pressure = 0;
-	Point dragCoefficient = {1.0f, 1.0f};
-	Point liftCoefficient = {0.0f, 0.0f};
+	PhysVec dragCoefficient = {1.0f, 1.0f};
+	PhysVec liftCoefficient = {0.0f, 0.0f};
 };

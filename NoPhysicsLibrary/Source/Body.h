@@ -8,6 +8,7 @@
 #include "Define.h"
 #include "PhysMath.h"
 #include <vector>
+#include "PhysArray.h"
 
 class Body
 {

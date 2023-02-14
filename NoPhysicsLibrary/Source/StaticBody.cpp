@@ -8,7 +8,7 @@ StaticBody::~StaticBody()
 {
 }
 
-void StaticBody::SetRestitutionOffset(PhysVec offset)
+void StaticBody::RestitutionOffset(PhysVec offset)
 {
 	this->restitutionOffset = offset;
 }

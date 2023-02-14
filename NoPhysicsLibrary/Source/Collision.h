@@ -1,5 +1,5 @@
 #pragma once
-#include "Rect.h"
+#include "PhysRect.h"
 #include "InUnitsEnum.h"
 #include "DynamicBody.h"
 
@@ -13,7 +13,7 @@ struct Collision
 
 		if (unit == InUnit::IN_PIXELS)
 		{
-			inter = {inter.GetPosition() * (1 / *pixelsToMeters), inter.GetSize() * (1 / *pixelsToMeters) };
+			inter = {inter.Position() * (1 / *pixelsToMeters), inter.Size() * (1 / *pixelsToMeters) };
 		}
 
 		return inter;

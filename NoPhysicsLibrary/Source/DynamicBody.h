@@ -28,54 +28,52 @@ public: // Methods
 	bool IncludeForCollision(const Body* b);
 	
 	// Applies an specific force to this body
-	void ApplyForce(float newtonsX, float newtonsY, InUnit unit = InUnit::IN_METERS);
+	void ApplyForce(float x, float y, InUnit unit = InUnit::IN_METERS);
 	// Applies an specific force to this body
-	void ApplyForce(Point newtons, InUnit unit = InUnit::IN_METERS);
+	void ApplyForce(PhysVec force, InUnit unit = InUnit::IN_METERS);
 
 	// Applies an specific force to this body
-	void ApplyMomentum(float momentumX, float momentumY, InUnit unit = InUnit::IN_METERS);
+	void ApplyMomentum(float x, float y, InUnit unit = InUnit::IN_METERS);
 	// Applies an specific force to this body
-	void ApplyMomentum(Point momentum, InUnit unit = InUnit::IN_METERS);
+	void ApplyMomentum(PhysVec momentum, InUnit unit = InUnit::IN_METERS);
 
 	// Sets a local gravity to the body
-	void SetGravityOffset(Point gravityOffset, InUnit unit = InUnit::IN_METERS);
+	void GravityOffset(PhysVec offset, InUnit unit = InUnit::IN_METERS);
 	// Returns the local gravity vector of the body
-	Point GetGravityOffset(InUnit unit = InUnit::IN_METERS) const;
+	PhysVec GravityOffset(InUnit unit = InUnit::IN_METERS) const;
 
-	void ResetForces();
+	// Sets a friction offset to the body
+	// Value between 0 and 1. Out of bounds values will be clamped to 0 / 1.
+	void FrictionOffset(PhysVec offset);
+	// Returns the local gravity vector of the body
+	// Value between 0 and 1
+	PhysVec FrictionOffset() { return frictionOffset; }
 
-	Point GetFrictionOffset() { return frictionOffset; }
-
-	// Vaulue between 0 and 1. Out of bounds values will be clamped to 1.
-	void SetFrictionOffset(Point offset);
+	// Sets a restitution offset to the body
+	void RestitutionOffset(PhysVec offset);
+	// Returns the friction offset to the body
+	PhysVec RestitutionOffset() { return restitutionOffset; }
 	
-	Point GetRestitutionOffset() { return restitutionOffset; }
-
-	void SetRestitutionOffset(Point offset);
+	void ResetForces();
 
 private: // Methods
 
 	void SecondNewton();
 	void FirstBuxeda();
-
 	void Backup();
-
 	bool IsIdExcludedFromCollision(intptr_t id);
-
 	void SetPreviousBodyState();
-
-public: // Variables
 
 private: // Variables
 
 	friend class Physics; // Necessary for accessing SecondNewton/FirstBuxeda
 	friend class NPL; // Necessary to update states
 
-	Point velocity = {};
-	Point gravityOffset = {};
-	Point frictionOffset = {};
-	Point restitutionOffset = {};
-	Point acceleration = {};
+	PhysVec acceleration = {};
+	PhysVec velocity = {};
+	PhysVec gravityOffset = {};
+	PhysVec frictionOffset = {};
+	PhysVec restitutionOffset = {};
 
 	std::vector<Force*> forces;
 	std::vector<Momentum*> momentums;

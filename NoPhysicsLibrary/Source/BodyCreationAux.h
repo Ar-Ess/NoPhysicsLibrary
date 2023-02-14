@@ -56,7 +56,7 @@ public:
 	{
 		if (unit == InUnit::IN_PIXELS) density *= PhysMath::Pow((1 / *pixelsToMeters),2);
 
-		bodies->emplace_back(new LiquidBody(rect, density * rect.GetArea(), buoyancy, pixelsToMeters));
+		bodies->emplace_back(new LiquidBody(rect, density * rect.Area(), buoyancy, pixelsToMeters));
 		liquidIndex->emplace_back(new unsigned int(bodies->size() - 1));
 		return (LiquidBody*)bodies->back();
 	}
@@ -70,7 +70,7 @@ public:
 			density *= pixToMetSquared;
 			pressure *= pixToMetSquared;
 		}
-		bodies->emplace_back(new GasBody(rect, density * rect.GetArea(), heatRatio, pressure, aerodragCoefficient, pixelsToMeters));
+		bodies->emplace_back(new GasBody(rect, density * rect.Area(), heatRatio, pressure, aerodragCoefficient, pixelsToMeters));
 		gasIndex->emplace_back(new unsigned int(bodies->size() - 1));
 		return (GasBody*)bodies->back();
 	}

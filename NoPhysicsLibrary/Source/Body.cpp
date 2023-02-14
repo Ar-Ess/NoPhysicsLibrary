@@ -8,7 +8,7 @@ Body::Body(BodyClass clas, PhysRect rect, float mass, const float* pixelsToMeter
 {
 	this->clas = clas;
 	this->rect = rect;
-	this->emissionPoint = {};
+	this->emissionPoint = 0;
 	this->pixelsToMeters = pixelsToMeters;
 
 	// You idiot, mass can not be zero :}

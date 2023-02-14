@@ -59,6 +59,7 @@ void DynamicBody::ExcludeForCollision(const Body* b)
 	excludeCollisionIds.emplace_back(b->GetId());
 }
 
+//-TODO: Change the parameter to ID class
 bool DynamicBody::IncludeForCollision(const Body* b)
 {
 	size_t size = excludeCollisionIds.size();
@@ -84,12 +85,15 @@ void DynamicBody::ApplyForce(float x, float y, InUnit unit)
 	forces.emplace_back(new Force(force));
 }
 
-void DynamicBody::ApplyForce(PhysVec newtons, InUnit unit)
+void DynamicBody::ApplyForce(PhysVec force, InUnit unit)
 {
 	if (globals->Get(0)) return; // Physics are paused
-	if (newtons.IsZero()) return; // If newtons is null
+	if (force.IsZero()) return; // If newtons is null
 
-	forces.emplace_back(new Force(newtons, unit));
+	//-TODO: Check if it has to be times = 2 because of m^2
+	force *= Conversion(unit, true);
+
+	forces.emplace_back(new Force(force));
 }
 
 void DynamicBody::ApplyMomentum(float momentumX, float momentumY, InUnit unit)
@@ -98,8 +102,9 @@ void DynamicBody::ApplyMomentum(float momentumX, float momentumY, InUnit unit)
 	PhysVec momentum = { momentumX, momentumY };
 
 	if (momentum.IsZero()) return; // If momentum is null
+	momentum *= Conversion(unit, true);
 
-	momentums.emplace_back(new Momentum(momentum, unit));
+	momentums.emplace_back(new Momentum(momentum));
 }
 
 void DynamicBody::ApplyMomentum(PhysVec momentum, InUnit unit)
@@ -107,82 +112,67 @@ void DynamicBody::ApplyMomentum(PhysVec momentum, InUnit unit)
 	if (globals->Get(0)) return; // Physics are paused
 
 	if (momentum.IsZero()) return; // If momentum is null
+	momentum *= Conversion(unit, true);
 
-	momentums.emplace_back(new Momentum(momentum, unit));
+	momentums.emplace_back(new Momentum(momentum));
 }
 
-void DynamicBody::SetGravityOffset(PhysVec gravityOffset, InUnit unit)
+void DynamicBody::GravityOffset(PhysVec offset, InUnit unit)
 {
-	if (unit == InUnit::IN_PIXELS) gravityOffset *= *pixelsToMeters;
-	this->gravityOffset = gravityOffset;
+	offset *= Conversion(unit, true);
+	this->gravityOffset = offset;
 }
 
-PhysVec DynamicBody::GetGravityOffset(InUnit unit) const
+PhysVec DynamicBody::GravityOffset(InUnit unit) const
 {
-	float conversion = 1;
-	if (unit == InUnit::IN_PIXELS) conversion = (1 / *pixelsToMeters);
-
-	return gravityOffset.Multiply(conversion);
+	return gravityOffset * Conversion(unit, false);
 }
 
 void DynamicBody::SecondNewton()
 {
 	totalForces.Clear();
 
-	for (Force* f : forces)
-	{
-		PhysVec vector = f->vector;
-		if (f->unit == InUnit::IN_PIXELS) vector *= *pixelsToMeters;
-
-		totalForces.vector += vector;
-	}
+	for (Force* f : forces) totalForces += *f;
 	forces.clear();
 
 	// You idiot, mass can not be zero :}
-	assert(mass != 0);
+	if (mass == 0) return acceleration.Clear();
 
 	// SUM Forces = massa * acceleració
-	acceleration.x = totalForces.vector.x / mass;
-	acceleration.y = totalForces.vector.y / mass;
+	acceleration.x = totalForces.x / mass;
+	acceleration.y = totalForces.y / mass;
 }
 
 void DynamicBody::FirstBuxeda()
 {
 	totalMomentum.Clear();
 
-	for (Momentum* m : momentums)
-	{
-		PhysVec vector = m->vector;
-		if (m->unit == InUnit::IN_PIXELS) vector *= *pixelsToMeters;
-
-		totalMomentum.vector += vector;
-	}
+	for (Momentum* m : momentums) totalMomentum += *m;
 	momentums.clear();
 
 	// You idiot, mass can not be zero :}
-	assert(mass != 0);
+	if (mass == 0) return;
 
 	// SUM Forces = massa * acceleració
-	velocity.x += totalMomentum.vector.x / mass;
-	velocity.y += totalMomentum.vector.y / mass;
+	velocity.x += totalMomentum.x / mass;
+	velocity.y += totalMomentum.y / mass;
 }
 
 void DynamicBody::ResetForces()
 {
-	acceleration.Zero();
-	velocity.Zero();
+	acceleration.Clear();
+	velocity.Clear();
 	forces.clear();
 	momentums.clear();
 }
 
-void DynamicBody::SetFrictionOffset(PhysVec offset)
+void DynamicBody::FrictionOffset(PhysVec offset)
 {
-	if (offset.x < 0 && offset.x > 1) offset.x = 1;
-	if (offset.y < 0 && offset.y > 1) offset.y = 1;
+	PhysMath::Clamp(offset, 0, 1);
 	this->frictionOffset = offset;
 }
 
-void DynamicBody::SetRestitutionOffset(PhysVec offset)
+void DynamicBody::RestitutionOffset(PhysVec offset)
 {
 	this->restitutionOffset = offset;
 }

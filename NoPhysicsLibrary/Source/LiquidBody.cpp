@@ -14,7 +14,7 @@ float LiquidBody::GetVolume(InUnit unit)
 	float inPixels = 1;
 	if (unit == InUnit::IN_PIXELS) inPixels /= (*pixelsToMeters * *pixelsToMeters);
 
-	return  rect.GetArea() * inPixels;
+	return  rect.Area() * inPixels;
 }
 
 // kg / m^2
@@ -32,7 +32,7 @@ void LiquidBody::SetDensity(float density, InUnit unit)
 {
 	if (unit == InUnit::IN_PIXELS) density *= ((1 / *pixelsToMeters) * (1 / *pixelsToMeters));
 
-	this->mass = density * rect.GetArea();
+	this->mass = density * rect.Area();
 }
 
 void LiquidBody::SetBuoyancy(float buoyancy)

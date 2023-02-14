@@ -7,16 +7,16 @@ class StaticBody : public Body
 {
 public: // Methods
 
-	StaticBody(Rect rect, float mass, const float* pixelsToMeters);
+	StaticBody(PhysRect rect, float mass, const float* pixelsToMeters);
 
 	~StaticBody() override;
 
-	Point GetRestitutionOffset() const { return restitutionOffset; }
+	PhysVec RestitutionOffset() const { return restitutionOffset; }
 
-	void SetRestitutionOffset(Point offset);
+	void RestitutionOffset(PhysVec offset);
 
 private:
 
-	Point restitutionOffset = {0.0f, 0.0f};
+	PhysVec restitutionOffset = {0.0f, 0.0f};
 
 };

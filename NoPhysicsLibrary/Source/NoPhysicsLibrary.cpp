@@ -118,7 +118,7 @@ const BodyCreation* NPL::CreateBody(PhysRect rectangle)
 	//Library not initialized. Call NPL::Init() first
 	assert(physics != nullptr, "ERROR: NPL variable not initialized. Call Init() first.");
 
-	rectangle = { rectangle.GetPosition() * pixelsToMeters, rectangle.GetSize() * pixelsToMeters };
+	rectangle *= pixelsToMeters;
 
 	return bodyCreation->Access(rectangle);
 }
@@ -128,8 +128,7 @@ const BodyCreation* NPL::CreateBody(float x, float y, float width, float height)
 	//Library not initialized. Call NPL::Init() first
 	assert(physics != nullptr, "ERROR: NPL variable not initialized. Call Init() first.");
 
-	PhysRect rectangle = { x, y, width, height };
-	rectangle = { rectangle.GetPosition() * pixelsToMeters, rectangle.GetSize() * pixelsToMeters };
+	PhysRect rectangle = PhysRect( x, y, width, height ) * pixelsToMeters;
 
 	return bodyCreation->Access(rectangle);
 }
@@ -205,13 +204,13 @@ const PhysRect NPL::ReturnScenarioRect() const
 {
 	if (bodies.empty()) return PhysRect();
 
-	PhysRect first = bodies.front()->GetRect(InUnit::IN_PIXELS);
+	PhysRect first = bodies.front()->Rect(InUnit::IN_PIXELS);
 	PhysVec minP = { first.x, first.y };
 	PhysVec maxP = { first.x + first.w, first.y + first.h };
 
 	for (Body* body : bodies)
 	{
-		PhysRect bodyRect = body->GetRect(InUnit::IN_PIXELS);
+		PhysRect bodyRect = body->Rect(InUnit::IN_PIXELS);
 		if (bodyRect.x + bodyRect.w > maxP.x) maxP.x = bodyRect.x + bodyRect.w;
 		if (bodyRect.y + bodyRect.h > maxP.y) maxP.y = bodyRect.y + bodyRect.h;
 		if (bodyRect.x < minP.x) minP.x = bodyRect.x;
@@ -235,10 +234,10 @@ void NPL::SetScenarioPreset(ScenarioPreset preset, PhysVec windowSize, std::vect
 		const unsigned int maxStatic = 4;
 		StaticBody* scenario[maxStatic] = { nullptr, nullptr, nullptr, nullptr };
 		//Limits
-		scenario[0] = CreateBody({ 0,          0,               windowSize.x, windowSize.y - downLimitY })->Static();
-		scenario[1] = CreateBody({ 0,          0, windowSize.x - rightLimitX,              windowSize.y })->Static();
-		scenario[2] = CreateBody({ 0, downLimitY,               windowSize.x, windowSize.y - downLimitY })->Static();
-		scenario[3] = CreateBody({ rightLimitX,          0, windowSize.x - rightLimitX,              windowSize.y })->Static();
+		scenario[0] = CreateBody({ 0.f,          0.f,               windowSize.x, windowSize.y - downLimitY })->Static();
+		scenario[1] = CreateBody({ 0.f,          0.f, windowSize.x - rightLimitX,              windowSize.y })->Static();
+		scenario[2] = CreateBody({ 0.f, downLimitY,               windowSize.x, windowSize.y - downLimitY })->Static();
+		scenario[3] = CreateBody({ rightLimitX,          0.f, windowSize.x - rightLimitX,              windowSize.y })->Static();
 
 		if (scenarioBodies != nullptr) for (unsigned int i = 0; i < maxStatic; ++i) scenarioBodies->emplace_back(scenario[i]);
 
@@ -254,10 +253,10 @@ void NPL::SetScenarioPreset(ScenarioPreset preset, PhysVec windowSize, std::vect
 		StaticBody* scenario[maxStatic] = { nullptr, nullptr, nullptr, nullptr };
 
 		//Limits
-		CreateBody({ 0,          0,                       4280, windowSize.y - downLimitY })->Static();
-		CreateBody({ 0,          0, windowSize.x - rightLimitX,              windowSize.y })->Static();
-		CreateBody({ 0, downLimitY,                       4280, windowSize.y - downLimitY })->Static();
-		CreateBody({ 3000 + rightLimitX,          0, windowSize.x - rightLimitX,              windowSize.x })->Static();
+		CreateBody({ 0.f,          0.f,                       4280.f, windowSize.y - downLimitY })->Static();
+		CreateBody({ 0.f,          0.f, windowSize.x - rightLimitX,              windowSize.y })->Static();
+		CreateBody({ 0.f, downLimitY,                       4280.f, windowSize.y - downLimitY })->Static();
+		CreateBody({ 3000 + rightLimitX,          0.f, windowSize.x - rightLimitX,              windowSize.x })->Static();
 
 		if (scenarioBodies != nullptr) for (unsigned int i = 0; i < maxStatic; ++i) scenarioBodies->emplace_back(scenario[i]);
 
@@ -273,10 +272,10 @@ void NPL::SetScenarioPreset(ScenarioPreset preset, PhysVec windowSize, std::vect
 		StaticBody* scenario[maxStatic] = { nullptr, nullptr, nullptr, nullptr, nullptr, nullptr };
 
 		//Limits
-		scenario[0] = CreateBody({ 0,          0,               windowSize.x, windowSize.y - downLimitY })->Static();
-		scenario[1] = CreateBody({ 0,          0, windowSize.x - rightLimitX,              windowSize.y })->Static();
-		scenario[2] = CreateBody({ 0, downLimitY,               windowSize.x, windowSize.y - downLimitY })->Static();
-		scenario[3] = CreateBody({ rightLimitX,          0, windowSize.x - rightLimitX,              windowSize.y })->Static();
+		scenario[0] = CreateBody({ 0.f,          0.f,               windowSize.x, windowSize.y - downLimitY })->Static();
+		scenario[1] = CreateBody({ 0.f,          0.f, windowSize.x - rightLimitX,              windowSize.y })->Static();
+		scenario[2] = CreateBody({ 0.f, downLimitY,               windowSize.x, windowSize.y - downLimitY })->Static();
+		scenario[3] = CreateBody({ rightLimitX,          0.f, windowSize.x - rightLimitX,              windowSize.y })->Static();
 
 		//Obstacles
 		scenario[4] = CreateBody({ windowSize.x * 0.26f, windowSize.y * 0.62f, windowSize.x * 0.46f, windowSize.y * 0.034f })->Static();
@@ -296,10 +295,10 @@ void NPL::SetScenarioPreset(ScenarioPreset preset, PhysVec windowSize, std::vect
 		StaticBody* scenario[maxStatic] = { nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr };
 
 		//Limits
-		scenario[0] = CreateBody({ 0,          0,               windowSize.x, windowSize.y - downLimitY })->Static();
-		scenario[1] = CreateBody({ 0,          0, windowSize.x - rightLimitX,              windowSize.y })->Static();
-		scenario[2] = CreateBody({ 0, downLimitY,               windowSize.x, windowSize.y - downLimitY })->Static();
-		scenario[3] = CreateBody({ rightLimitX,          0, windowSize.x - rightLimitX,    windowSize.y })->Static();
+		scenario[0] = CreateBody({ 0.f,          0.f,               windowSize.x, windowSize.y - downLimitY })->Static();
+		scenario[1] = CreateBody({ 0.f,          0.f, windowSize.x - rightLimitX,              windowSize.y })->Static();
+		scenario[2] = CreateBody({ 0.f, downLimitY,               windowSize.x, windowSize.y - downLimitY })->Static();
+		scenario[3] = CreateBody({ rightLimitX,          0.f, windowSize.x - rightLimitX,    windowSize.y })->Static();
 
 		//Obstacles
 		CreateBody({ windowSize.x * 0.23f, windowSize.y * 0.27f, windowSize.x * 0.02f, windowSize.y * 0.55f })->Static();
@@ -383,12 +382,12 @@ void NPL::UpdateStates()
 		float totalArea = 0.0f;
 		for (unsigned int* i : liquidIndex)
 		{
-			if (PhysMath::CheckCollision(b->GetRect(InUnit::IN_METERS), bodies[*i]->GetRect(InUnit::IN_METERS)))
+			if (PhysMath::CheckCollision(b->Rect(InUnit::IN_METERS), bodies[*i]->Rect(InUnit::IN_METERS)))
 			{
 				if (!dB->prevBodyState.Get((int)BodyState::IN_LIQUID)) dB->bodyStateEnter.Set((int)BodyState::IN_LIQUID, true);
 				dB->bodyStateStay.Set((int)BodyState::IN_LIQUID, true);
-				totalArea += PhysMath::IntersectRectangle(b->GetRect(InUnit::IN_METERS), bodies[*i]->GetRect(InUnit::IN_METERS)).GetArea();
-				fullLiquidState = (0.0001f > PhysMath::Abs(b->GetRect(InUnit::IN_METERS).GetArea() - totalArea));
+				totalArea += PhysMath::IntersectRectangle(b->Rect(InUnit::IN_METERS), bodies[*i]->Rect(InUnit::IN_METERS)).Area();
+				fullLiquidState = (0.0001f > PhysMath::Abs(b->Rect(InUnit::IN_METERS).Area() - totalArea));
 				if (fullLiquidState) break;
 			}
 		}
@@ -397,7 +396,7 @@ void NPL::UpdateStates()
 		{
 			for (unsigned int* i : gasIndex)
 			{
-				if (PhysMath::CheckCollision(b->GetRect(InUnit::IN_METERS), bodies[*i]->GetRect(InUnit::IN_METERS)))
+				if (PhysMath::CheckCollision(b->Rect(InUnit::IN_METERS), bodies[*i]->Rect(InUnit::IN_METERS)))
 				{
 					if (!dB->prevBodyState.Get((int)BodyState::IN_GAS)) dB->bodyStateEnter.Set((int)BodyState::IN_GAS, true);
 					dB->bodyStateStay.Set((int)BodyState::IN_GAS, true);
@@ -436,7 +435,7 @@ void NPL::StepAcoustics()
 			continue;
 		}
 
-		GasBody* environment = GetEnvironmentBody(b->GetRect(InUnit::IN_METERS));
+		GasBody* environment = GetEnvironmentBody(b->Rect(InUnit::IN_METERS));
 
 		if (!environment)
 		{
@@ -483,7 +482,7 @@ void NPL::ListenerLogic(Body* b, GasBody* environment)
 		}
 
 		// Get the distance between Body & Listener
-		float distance = listener->GetPosition(InUnit::IN_METERS).Apply(listener->emissionPoint).Distance(data->emissionPosition);
+		float distance = PhysMath::Distance((listener->Position(InUnit::IN_METERS) + listener->emissionPoint), data->emissionPosition);
 
 		float pan = ComputePanning(distance, data->emissionPosition.x);
 
@@ -501,7 +500,7 @@ GasBody* NPL::GetEnvironmentBody(PhysRect body)
 {
 	for (unsigned int* index : gasIndex)
 	{
-		if (PhysMath::CheckCollision(body, bodies[*index]->GetRect(InUnit::IN_METERS)))
+		if (PhysMath::CheckCollision(body, bodies[*index]->Rect(InUnit::IN_METERS)))
 			return (GasBody*)bodies[*index];
 	}
 
@@ -526,7 +525,7 @@ void NPL::UpdatePixelsToMeters()
 		case BodyClass::DYNAMIC_BODY:
 		{
 			DynamicBody* dB = (DynamicBody*)b;
-			dB->SetGravityOffset(dB->GetGravityOffset() * ptmRatio);
+			dB->GravityOffset(dB->GravityOffset() * ptmRatio);
 			break; 
 		}
 		case BodyClass::LIQUID_BODY:
@@ -550,7 +549,7 @@ float NPL::ComputePanning(float distance, float bodyX)
 {
 	// Check direction for audio panning (50L(neg) or 50R(pos))
 	float direction = 1;
-	if (listener->GetPosition(InUnit::IN_METERS).Apply(listener->emissionPoint).x < bodyX) direction *= -1;
+	if ((listener->Position(InUnit::IN_METERS) + listener->emissionPoint).x < bodyX) direction *= -1;
 
 	// Narrow down distance over Range for panning operations
 	if (distance > panRange) distance = panRange;

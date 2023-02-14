@@ -19,7 +19,7 @@ public:
 
 	Point Position() const
 	{
-		return body->GetPosition(InUnit::IN_PIXELS);
+		return Point(body->Position(InUnit::IN_PIXELS).x, body->Position(InUnit::IN_PIXELS).y);
 	}
 
 private:

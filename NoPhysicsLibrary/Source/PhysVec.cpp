@@ -19,49 +19,144 @@ PhysVec::PhysVec(int x, int y)
 	this->module = PhysMath::Module(x, y);
 }
 
-PhysVec PhysVec::operator*(PhysVec value)
+PhysVec::PhysVec(int x, float y)
+{
+	this->x = x;
+	this->y = y;
+	this->module = PhysMath::Module(x, y);
+}
+
+PhysVec::PhysVec(float x, int y)
+{
+	this->x = x;
+	this->y = y;
+	this->module = PhysMath::Module(x, y);
+}
+
+PhysVec PhysVec::operator*(PhysVec value) const
 {
 	return PhysVec(x * value.x, y * value.y);
 }
 
-PhysVec PhysVec::operator*(float value)
+PhysVec PhysVec::operator*(float value) const
 {
 	return PhysVec(x * value, y * value);
 }
 
-PhysVec PhysVec::operator*(int value)
+PhysVec PhysVec::operator*(int value) const
 {
 	return PhysVec(x * value, y * value);
 }
 
-PhysVec PhysVec::operator+(PhysVec value)
+PhysVec PhysVec::operator+(PhysVec value) const
 {
 	return PhysVec(x + value.x, y + value.y);
 }
 
-PhysVec PhysVec::operator+(float value)
+PhysVec PhysVec::operator+(float value) const
 {
 	return PhysVec(x + value, y + value);
 }
 
-PhysVec PhysVec::operator+(int value)
+PhysVec PhysVec::operator+(int value) const
 {
 	return PhysVec(x + value, y + value);
 }
 
-PhysVec PhysVec::operator-(PhysVec value)
+PhysVec PhysVec::operator-(PhysVec value) const
 {
 	return PhysVec(x - value.x, y - value.y);
 }
 
-PhysVec PhysVec::operator-(float value)
+PhysVec PhysVec::operator-(float value) const
 {
 	return PhysVec(x - value, y - value);
 }
 
-PhysVec PhysVec::operator-(int value)
+PhysVec PhysVec::operator-(int value) const
 {
 	return PhysVec(x - value, y - value);
+}
+
+PhysVec PhysVec::operator/(PhysVec value) const
+{
+	return PhysVec(x / value.x, y / value.y);
+}
+
+PhysVec PhysVec::operator/(float value) const
+{
+	return PhysVec(x / value, y / value);
+}
+
+PhysVec PhysVec::operator/(int value) const
+{
+	return PhysVec(x / value, y / value);
+}
+
+void PhysVec::operator=(float value)
+{
+	this->x = value;
+	this->y = value;
+}
+
+void PhysVec::operator=(int value)
+{
+	this->x = value;
+	this->y = value;
+}
+
+void PhysVec::operator*=(PhysVec value)
+{
+	this->x *= value.x;
+	this->y *= value.y;
+}
+
+void PhysVec::operator*=(float value)
+{
+	this->x *= value;
+	this->y *= value;
+}
+
+void PhysVec::operator*=(int value)
+{
+	this->x *= value;
+	this->y *= value;
+}
+
+void PhysVec::operator+=(PhysVec value)
+{
+	this->x += value.x;
+	this->y += value.y;
+}
+
+void PhysVec::operator+=(float value)
+{
+	this->x += value;
+	this->y += value;
+}
+
+void PhysVec::operator+=(int value)
+{
+	this->x += value;
+	this->y += value;
+}
+
+void PhysVec::operator-=(PhysVec value)
+{
+	this->x -= value.x;
+	this->y -= value.y;
+}
+
+void PhysVec::operator-=(float value)
+{
+	this->x -= value;
+	this->y -= value;
+}
+
+void PhysVec::operator-=(int value)
+{
+	this->x -= value;
+	this->y -= value;
 }
 
 void PhysVec::Clear()

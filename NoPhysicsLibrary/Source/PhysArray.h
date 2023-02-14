@@ -1,6 +1,8 @@
 #pragma once
 #include <assert.h>
 
+typedef unsigned int uint;
+
 template<class T>
 class PhysArray
 {

@@ -13,6 +13,11 @@ struct PhysRect
 	PhysRect(PhysVec position, int   w, int   h) : x(position.x), y(position.y), w(w), h(h) {}
 	PhysRect(PhysVec position, PhysVec size) : x(position.x), y(position.y), w(size.x), h(size.y) {}
 
+	void operator*=(float value);
+	void operator*=(int value);
+	PhysRect operator*(float value) const;
+	PhysRect operator*(int value) const;
+
 	PhysVec Position() const;
 	void Position(float x, float y);
 	void Position(PhysVec position);
@@ -20,6 +25,8 @@ struct PhysRect
 	PhysVec Size() const;
 	void Size(float w, float h);
 	void Size(PhysVec size);
+
+	float Area() const;
 
 	float x = 0, y = 0, w = 0, h = 0;
 };
