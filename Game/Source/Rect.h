@@ -2,10 +2,20 @@
 
 #include "Point.h"
 #include "Alignment.h"
+#include "PhysRect.h"
 
 class Rect
 {
 public:
+
+	Rect(PhysRect rect)
+	{
+		this->x = rect.x;
+		this->y = rect.y;
+		this->w = rect.w;
+		this->h = rect.h;
+	}
+
 	Rect()
 	{
 		this->x = 0;

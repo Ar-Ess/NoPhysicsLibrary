@@ -1,4 +1,5 @@
 #include "TestThreeScene.h"
+#include "MathUtils.h"
 
 TestThreeScene::TestThreeScene()
 {
@@ -28,11 +29,11 @@ bool TestThreeScene::Start()
 	// Create bodies
 
 	// Dynamic
-	player = npl->CreateBody({ 100.0f, 200.0f, Point(metersToPixels * 0.3f, metersToPixels * 0.75f) })
+	player = npl->CreateBody(PhysRect( 100.0f, 200.0f, PhysVec(metersToPixels * 0.3f, metersToPixels * 0.75f) ))
 		->Dynamic(80);
-	player->EmissionPoint(Align::TOP_LEFT, Point(-5.0f, 30), InUnit::IN_PIXELS);
+	player->EmissionPoint(PhysVec(-5.0f, 0), InUnit::IN_PIXELS);
 
-	npl->CreateBody({ 150.0f, 400.0f, Point(metersToPixels * 0.3f, metersToPixels * 0.75f) })->Dynamic(80);
+	npl->CreateBody(PhysRect( 150.0f, 400.0f, PhysVec(metersToPixels * 0.3f, metersToPixels * 0.75f) ))->Dynamic(80);
 
 	// Static
 	npl->CreateBody({ 600, 520, 50, 10 })
@@ -41,7 +42,7 @@ bool TestThreeScene::Start()
 		->Static();
 	StaticBody* bouncyBoy = npl->CreateBody({ 200, 600, 50, 50 })
 		->Static();
-	bouncyBoy->SetRestitutionOffset({0.0f, 1.2f});
+	bouncyBoy->RestitutionOffset({0.0f, 1.2f});
 	
 	// Shell Obstacles
 	npl->CreateBody({ 1300, 600, 30, 60 })
@@ -50,7 +51,7 @@ bool TestThreeScene::Start()
 		->Static();
 
 	// Liquid
-	npl->CreateBody({ 900, 400, Point(metersToPixels * 2.6f, metersToPixels * 2.1f) })
+	npl->CreateBody(PhysRect{ 900, 400, PhysVec(metersToPixels * 2.6f, metersToPixels * 2.1f) })
 		->Liquid(997, 1.0f, InUnit::IN_METERS);
 	
 	//npl->CreateBody({ 1600, 550, 90, 120 })
@@ -64,8 +65,8 @@ bool TestThreeScene::Start()
 	shell = npl->CreateBody({ 1900, 500, 50, 50 })
 		->Dynamic(40);
 	shell->ApplyMomentum({ -200.0f, 0 });
-	shell->SetFrictionOffset({ -0.5f, 0.0f });
-	shell->SetRestitutionOffset({ 1.0f, 0.0f });
+	shell->FrictionOffset({ -0.5f, 0.0f });
+	shell->RestitutionOffset({ 1.0f, 0.0f });
 	shell->ExcludeForCollision(gas);
 	shell->SetPhysicsUpdatability(false);
 
@@ -84,12 +85,12 @@ bool TestThreeScene::Update(float dt)
 	bool shift = (input->GetKey(SDL_SCANCODE_LSHIFT) == KeyState::KEY_REPEAT);
 
 	// Camera movement
-	if (player->GetPosition(InUnit::IN_PIXELS).x >= 625) render->camera.rect.x = player->GetPosition(InUnit::IN_PIXELS).x - 625;
+	if (player->Position(InUnit::IN_PIXELS).x >= 625) render->camera.rect.x = player->Position(InUnit::IN_PIXELS).x - 625;
 	if (render->camera.rect.x < 0) render->camera.rect.x = 0;
 	if (render->camera.rect.x > 3000) render->camera.rect.x = 3000;
 	if (render->camera.rect.y < 0) render->camera.rect.y = 0;
 
-	if (MathUtils::CheckCollision(shell->GetRect(InUnit::IN_PIXELS), render->camera.rect)) shell->SetPhysicsUpdatability(true);
+	if (MathUtils::CheckCollision(shell->Rect(InUnit::IN_PIXELS), render->camera.rect)) shell->SetPhysicsUpdatability(true);
 	else shell->SetPhysicsUpdatability(false);
 
 	// Inputs
@@ -144,8 +145,9 @@ bool TestThreeScene::Update(float dt)
 		case BodyClass::LIQUID_BODY:  color = { 100, 100, 255, color.a }; break;
 		case BodyClass::GAS_BODY:     color = { 255, 255, 255, (Uint8)(color.a - 20) }; break;
 		}
-		render->DrawRectangle(b->GetRect(InUnit::IN_PIXELS), color);
-		render->DrawRectangle(Rect{ b->GetEmissionPoint(InUnit::IN_PIXELS).Apply({-3.0f, -3}), 6, 6 }, { 155, 255, 155, 255 });
+		render->DrawRectangle(b->Rect(InUnit::IN_PIXELS), color);
+		PhysVec v = b->EmissionPoint(InUnit::IN_PIXELS) + (-3.0f, -3);
+		render->DrawRectangle(Rect( v.x, v.y, 6, 6 ), { 155, 255, 155, 255 });
 	}
 
 	// Draw the collisions

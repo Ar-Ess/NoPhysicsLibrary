@@ -50,7 +50,7 @@ void TileManager::PlaceTile(Point position)
 	{
 	case TileType::GROUND_TILE:
 	{
-		StaticBody* body = physics->CreateBody(rect)->Static();
+		StaticBody* body = physics->CreateBody(rect.x, rect.y, rect.w, rect.h)->Static();
 		tile = new GroundTile(body);
 		break;
 	}
@@ -77,7 +77,7 @@ void TileManager::DrawDebug(bool debug)
 		case BodyClass::LIQUID_BODY:  color = { 100, 100, 255, color.a }; break;
 		case BodyClass::GAS_BODY:     color = { 255, 255, 255, (Uint8)(color.a - 20) }; break;
 		}
-		render->DrawRectangle(b->GetRect(InUnit::IN_PIXELS), color);
+		render->DrawRectangle(b->Rect(InUnit::IN_PIXELS), color);
 		//render->DrawRectangle(Rect{ b->GetEmissionPoint(InUnit::IN_PIXELS).Apply({-3.0f, -3}), 6, 6 }, { 155, 255, 155, 255 });
 	}
 
