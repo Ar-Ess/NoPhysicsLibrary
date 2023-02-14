@@ -1,22 +1,19 @@
 #pragma once
 
-#include "Physics.h"
-#include "Audio.h"
 #include "StaticBody.h"
 #include "DynamicBody.h"
 #include "LiquidBody.h"
 #include "GasBody.h"
-#include "PhysMath.h"
 
 struct BodyCreation
 {
 private:
 
-	BodyCreation(std::vector<Body*>* bodies, std::vector<unsigned int*>* gasLocation, std::vector<unsigned int*>* liquidIndex, Physics* physics, const float* pixelsToMeters) :
+	BodyCreation(PhysArray<Body*>* bodies, PhysArray<unsigned int*>* gasLocation, PhysArray<unsigned int*>* liquidIndex, Flag* globals, const float* pixelsToMeters) :
 		bodies(bodies),
 		gasIndex(gasLocation),
 		liquidIndex(liquidIndex),
-		physics(physics),
+		globals(globals),
 		pixelsToMeters(pixelsToMeters)
 	{}
 
@@ -32,56 +29,61 @@ public:
 
 	StaticBody* Static() const
 	{
-		bodies->emplace_back(new StaticBody(rect, 1.0f, pixelsToMeters));
-		return (StaticBody*)bodies->back();
+		StaticBody* b = new StaticBody(rect, 1.0f, pixelsToMeters);
+		bodies->Add(b);
+		return b;
 	}
 
-	DynamicBody* Dynamic(float mass, PhysVec gravityOffset = { 0.0f, 0.0f }, InUnit unit = InUnit::IN_METERS) const
+	// mass is a value that tipically must not be 0 or negative ;)
+	DynamicBody* Dynamic(float mass, PhysVec gravityOffset = { 0.0f, 0.0f }, InUnit gravityUnit = InUnit::IN_METERS) const
 	{
-		if (!gravityOffset.IsZero() && unit == InUnit::IN_PIXELS) gravityOffset *= *pixelsToMeters;
+		// pxl^2/s --> m^2/s
+		if (gravityUnit == InUnit::IN_PIXELS) gravityOffset *= PhysMath::Pow(*pixelsToMeters, 2);
 
-		bodies->emplace_back(new DynamicBody(rect, gravityOffset, mass, &physics->globals, pixelsToMeters));
-		return (DynamicBody*)bodies->back();
+		DynamicBody* b = new DynamicBody(rect, gravityOffset, mass, globals, pixelsToMeters);
+		bodies->Add(b);
+		return b;
 	}
 
-	// Buoyancy is a coefficient, goes in between 0 and 1
+	// Buoyancy is a value ranged tipically from 0 to 1 ;)
 	LiquidBody* Liquid(float mass, float buoyancy) const
 	{
-		bodies->emplace_back(new LiquidBody(rect, mass, buoyancy, pixelsToMeters));
-		liquidIndex->emplace_back(new unsigned int(bodies->size() - 1));
-		return (LiquidBody*)bodies->back();
+		LiquidBody* b = new LiquidBody(rect, mass, buoyancy, pixelsToMeters);
+		bodies->Add(b);
+		liquidIndex->Add(new unsigned int(bodies->Size() - 1));
+		return b;
+	}
+	// Buoyancy is a value ranged tipically from 0 to 1 ;)
+	LiquidBody* Liquid(float density, float buoyancy, InUnit densityUnit) const
+	{
+		if (densityUnit == InUnit::IN_PIXELS) density *= PhysMath::Pow((1 / *pixelsToMeters), 2);
+
+		LiquidBody* b = new LiquidBody(rect, density * rect.Area(), buoyancy, pixelsToMeters);
+		bodies->Add(b);
+		liquidIndex->Add(new unsigned int(bodies->Size() - 1));
+		return b;
 	}
 
-	LiquidBody* Liquid(float density, float buoyancy, InUnit unit) const
+	// Aerodrag Coefficient is a value tipically ranged from 0 to 1.5 ;)
+	GasBody* Gas(float density, float heatRatio, float pressure, PhysVec aerodragCoefficient, InUnit densityUnit, InUnit pressureUnit) const
 	{
-		if (unit == InUnit::IN_PIXELS) density *= PhysMath::Pow((1 / *pixelsToMeters),2);
+		float pixToMetSquared = PhysMath::Pow((1 / *pixelsToMeters), 2);
+		if (densityUnit == InUnit::IN_PIXELS) density *= pixToMetSquared;
+		if (pressureUnit == InUnit::IN_PIXELS) pressure *= pixToMetSquared;
 
-		bodies->emplace_back(new LiquidBody(rect, density * rect.Area(), buoyancy, pixelsToMeters));
-		liquidIndex->emplace_back(new unsigned int(bodies->size() - 1));
-		return (LiquidBody*)bodies->back();
-	}
-
-	// Aerodrag Coefficient is a value from 0 to 1.5. Out-of-bounds values will be clamped.
-	GasBody* Gas(float density, float heatRatio, float pressure, PhysVec aerodragCoefficient, InUnit unit) const
-	{
-		if (unit == InUnit::IN_PIXELS)
-		{
-			float pixToMetSquared = PhysMath::Pow((1 / *pixelsToMeters), 2);
-			density *= pixToMetSquared;
-			pressure *= pixToMetSquared;
-		}
-		bodies->emplace_back(new GasBody(rect, density * rect.Area(), heatRatio, pressure, aerodragCoefficient, pixelsToMeters));
-		gasIndex->emplace_back(new unsigned int(bodies->size() - 1));
-		return (GasBody*)bodies->back();
+		GasBody* b = new GasBody(rect, density * rect.Area(), heatRatio, pressure, aerodragCoefficient, pixelsToMeters);
+		bodies->Add(b);
+		gasIndex->Add(new unsigned int(bodies->Size() - 1));
+		return b;
 	}
 
 private:
 
 	PhysRect rect = {};
-	std::vector<Body*>* bodies = nullptr;
-	std::vector<unsigned int*>* gasIndex = nullptr;
-	std::vector<unsigned int*>* liquidIndex = nullptr;
-	Physics* physics = nullptr;
+	PhysArray<Body*>* bodies = nullptr;
+	PhysArray<unsigned int*>* gasIndex = nullptr;
+	PhysArray<unsigned int*>* liquidIndex = nullptr;
 	const float* pixelsToMeters = nullptr;
+	Flag* globals = nullptr;
 	Flag* bodiesConfig = nullptr;
 };

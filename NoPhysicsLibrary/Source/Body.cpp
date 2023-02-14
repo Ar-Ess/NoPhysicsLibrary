@@ -19,7 +19,7 @@ Body::Body(BodyClass clas, PhysRect rect, float mass, const float* pixelsToMeter
 
 	this->properties.Set(true, 0);
 
-	id = reinterpret_cast<int>(this);
+	id = PhysID();
 
 	properties.Set(0b00000111);
 }

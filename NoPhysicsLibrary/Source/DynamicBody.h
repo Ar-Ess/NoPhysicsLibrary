@@ -3,6 +3,7 @@
 #include "Body.h"
 #include "BodyStateEnum.h"
 #include "BodyBackup.h"
+#include "PhysID.h"
 
 class DynamicBody : public Body
 {
@@ -61,7 +62,7 @@ private: // Methods
 	void SecondNewton();
 	void FirstBuxeda();
 	void Backup();
-	bool IsIdExcludedFromCollision(intptr_t id);
+	bool IsIdExcludedFromCollision(PhysID id);
 	void SetPreviousBodyState();
 
 private: // Variables
@@ -75,8 +76,8 @@ private: // Variables
 	PhysVec frictionOffset = {};
 	PhysVec restitutionOffset = {};
 
-	std::vector<Force*> forces;
-	std::vector<Momentum*> momentums;
+	PhysArray<Force*> forces;
+	PhysArray<Momentum*> momentums;
 	Force totalForces = {};
 	Momentum totalMomentum = {};
 
@@ -91,5 +92,5 @@ private: // Variables
 
 	BodyBackup backup = {};
 
-	std::vector<intptr_t> excludeCollisionIds;
+	PhysArray<PhysID> excludeCollisionIds;
 };

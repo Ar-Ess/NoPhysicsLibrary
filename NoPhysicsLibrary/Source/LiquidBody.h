@@ -10,15 +10,13 @@ public:
 
 	~LiquidBody() override;
 
-	float GetVolume(InUnit unit);
+	float Volume(InUnit unit) const;
 
-	float GetDensity(InUnit unit);
+	float Density(InUnit unit) const;
+	void Density(float density, InUnit unit);
 
-	float GetBuoyancy();
-
-	void SetDensity(float density, InUnit unit);
-
-	void SetBuoyancy(float buoyancy);
+	float Buoyancy() const;
+	void Buoyancy(float buoyancy);
 
 	PhysVec LiftCoefficient() const
 	{

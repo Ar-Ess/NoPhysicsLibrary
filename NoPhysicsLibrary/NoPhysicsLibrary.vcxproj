@@ -189,6 +189,7 @@
     <ClInclude Include="Source\LibraryConfigAux.h" />
     <ClInclude Include="Source\LibraryEnums.h" />
     <ClInclude Include="Source\PhysArray.h" />
+    <ClInclude Include="Source\PhysID.h" />
     <ClInclude Include="Source\PhysVec.h" />
     <ClInclude Include="Source\GasBody.h" />
     <ClInclude Include="Source\LiquidBody.h" />

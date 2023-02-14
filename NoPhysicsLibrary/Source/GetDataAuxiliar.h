@@ -1,13 +1,13 @@
 #pragma once
 
-#include "NoPhysicsLibrary.h"
-#include "PhysRect.h"
+#include "PhysVec.h"
+#include "Collision.h"
 
 class GetData
 {
 private:
 	
-	GetData(std::vector<Body*>* bodies, std::vector<Collision*>* collisions, Flag* physicsConfig, PhysVec* globalGravity, PhysVec* globalFriction, PhysVec* globalRestitution, Flag* physicsGlobals, float* pixelsToMeters) :
+	GetData(PhysArray<Body*>* bodies, PhysArray<Collision*>* collisions, Flag* physicsConfig, PhysVec* globalGravity, PhysVec* globalFriction, PhysVec* globalRestitution, Flag* physicsGlobals, float* pixelsToMeters) :
 		bodies(bodies),
 		collisions(collisions),
 		physicsConfig(physicsConfig),
@@ -27,24 +27,24 @@ private:
 
 public:
 
-	unsigned int BodiesCount() const { return bodies->size(); }
+	unsigned int BodiesCount() const { return bodies->Size(); }
 
 	const Body* Bodies(unsigned int index) const 
 	{
-		if (unsigned(index) > BodiesCount() - 1) return nullptr;
+		if (unsigned(index) > bodies->Size() - 1) return nullptr;
 
-		return bodies->at(index);
+		return bodies->At(index);
 	}
 
-	unsigned int CollisionsCount() const { return collisions->size(); }
+	unsigned int CollisionsCount() const { return collisions->Size(); }
 
 	const Collision* Collisions(unsigned int index) const 
 	{
 		if (!physicsConfig->Get(0)) return nullptr;
 
-		if (index > CollisionsCount() - 1) return nullptr;
+		if (index > collisions->Size() - 1) return nullptr;
 
-		return collisions->at(index);
+		return collisions->At(index);
 	}
 
 	// Returns the global gravity vector
@@ -65,13 +65,12 @@ public:
 
 private:
 
-	std::vector<Body*>* bodies = nullptr;
-	std::vector<Collision*>* collisions = nullptr;
+	PhysArray<Body*>* bodies = nullptr;
+	PhysArray<Collision*>* collisions = nullptr;
 	Flag* physicsConfig = nullptr;
 	Flag* physicsGlobals = nullptr;
 	PhysVec* globalGravity = nullptr;
 	PhysVec* globalFriction = nullptr;
 	PhysVec* globalRestitution = nullptr;
-	float* pixelsToMeters = nullptr;
-
+	const float* pixelsToMeters = nullptr;
 };

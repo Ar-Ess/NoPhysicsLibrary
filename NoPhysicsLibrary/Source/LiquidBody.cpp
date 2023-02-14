@@ -1,41 +1,42 @@
 #include "LiquidBody.h"
+#include "PhysMath.h"
 
-LiquidBody::LiquidBody(PhysRect rect, float mass, float buoyancy, const float* pixelsToMeters) : Body(BodyClass::LIQUID_BODY, rect, mass, pixelsToMeters)
+LiquidBody::LiquidBody(PhysRect rect, float mass, float buoyancy, const float* pixelsToMeters) : 
+	Body(BodyClass::LIQUID_BODY, rect, mass, pixelsToMeters)
 {
-	buoyancy < 0 ? this->buoyancy = 0 : buoyancy > 1 ? this->buoyancy = 1 : this->buoyancy = buoyancy;
+	this->buoyancy = buoyancy;
 }
 
 LiquidBody::~LiquidBody()
 {
 }
 
-float LiquidBody::GetVolume(InUnit unit)
+float LiquidBody::Volume(InUnit unit) const
 {
 	float inPixels = 1;
-	if (unit == InUnit::IN_PIXELS) inPixels /= (*pixelsToMeters * *pixelsToMeters);
+	if (unit == InUnit::IN_PIXELS) inPixels *= PhysMath::Pow(1 / *pixelsToMeters, 2);
 
 	return  rect.Area() * inPixels;
 }
 
-// kg / m^2
-float LiquidBody::GetDensity(InUnit unit)
+float LiquidBody::Density(InUnit unit) const
 {
-	return  mass / GetVolume(unit);
+	return  mass / Volume(unit);
 }
 
-float LiquidBody::GetBuoyancy()
+float LiquidBody::Buoyancy() const
 {
 	return buoyancy;
 }
 
-void LiquidBody::SetDensity(float density, InUnit unit)
+void LiquidBody::Density(float density, InUnit unit)
 {
-	if (unit == InUnit::IN_PIXELS) density *= ((1 / *pixelsToMeters) * (1 / *pixelsToMeters));
+	if (unit == InUnit::IN_PIXELS) density *= PhysMath::Pow( 1 / *pixelsToMeters, 2);
 
 	this->mass = density * rect.Area();
 }
 
-void LiquidBody::SetBuoyancy(float buoyancy)
+void LiquidBody::Buoyancy(float buoyancy)
 {
-	buoyancy < 0 ? this->buoyancy = 0 : buoyancy > 1 ? this->buoyancy = 1 : this->buoyancy = buoyancy;
+	this->buoyancy = buoyancy;
 }

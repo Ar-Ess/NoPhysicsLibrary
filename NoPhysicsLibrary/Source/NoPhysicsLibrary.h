@@ -6,6 +6,9 @@
 #include "SoundData.h"
 #include "Collision.h"
 
+#include "Physics.h"
+#include "Audio.h"
+
 class NPL
 {
 public:
@@ -29,6 +32,7 @@ public:
 	// Configure certain aspects of this library operation
 	const LibraryConfig* Configure();
 
+	// Get information from the library
 	const GetData* Get();
 
 	// Iterates the library
@@ -41,7 +45,7 @@ public:
 	// Destroy a body, returns true if the body has been successfully deleted
 	bool DestroyBody(Body* body);
 	// Destroy a body, returns true if the body has been successfully deleted
-	bool DestroyBody(int id);
+	bool DestroyBody(PhysID id);
 	// Destroy all bodies of the inputted class, returns true if all bodies has been successfully deleted
 	bool DestroyBody(BodyClass clas);
 
@@ -55,6 +59,7 @@ public:
 	// Provide a std::vector pointer to get the scenario bodies
 	void SetScenarioPreset(ScenarioPreset preset, PhysVec windowSize, std::vector<StaticBody*>* scenarioBodies = nullptr);
 
+	// Sets a physics preset.
 	void SetPhysicsPreset(PhysicsPreset preset);
 
 private: // Methods
@@ -74,8 +79,8 @@ private: // Methods
 
 	bool EraseBody(int id, Body* outBody = nullptr);
 
-	inline bool IsVoid() const { return gasIndex.empty(); }
-	inline bool IsDry() const { return liquidIndex.empty(); }
+	inline bool IsVoid() const { return gasIndex.Empty(); }
+	inline bool IsDry() const { return liquidIndex.Empty(); }
 
 	GasBody* GetEnvironmentBody(PhysRect body);
 
@@ -93,11 +98,11 @@ private:
 	Physics* physics = nullptr;
 	Audio* audio = nullptr;
 
-	std::vector<Body*> bodies;
-	std::vector<SoundData*> soundDataList;
+	PhysArray<Body*> bodies;
+	PhysArray<SoundData*> soundDataList;
 	//INFO: Fet aixi perquè amb unic ids s'hauria de fer moltes iteracions + protegir el vector de bodies
-	std::vector<unsigned int*> gasIndex;
-	std::vector<unsigned int*> liquidIndex;
+	PhysArray<unsigned int*> gasIndex;
+	PhysArray<unsigned int*> liquidIndex;
 	PhysRect scenarioRects[4] = {};
 
 	const float maxSPL = 120.0f;

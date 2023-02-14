@@ -7,8 +7,8 @@
 #include "AcusticData.h"
 #include "Define.h"
 #include "PhysMath.h"
-#include <vector>
 #include "PhysArray.h"
+#include "PhysID.h"
 
 class Body
 {
@@ -40,18 +40,16 @@ public: // Methods
 	// Returns the pointer to the rectangle of the body
 	PhysRect Rect(InUnit unit) const;
 
-	
 	// Returns the body class enum
-	BodyClass GetClass() const { return clas; }
+	BodyClass Class() const { return clas; }
 
 	// Returns the mass of the body
-	float GetMass() const { return mass; }
+	float Mass() const { return mass; }
+	//  Set the object's mass
+	void Mass(float mass) { mass <= 0 ? this->mass = 0.1f : this->mass = mass; }
 
 	// Returns the body id
-	intptr_t GetId() const { return id; }
-
-	//  Set the object's mass
-	void SetMass(float mass) { mass <= 0 ? this->mass = 0.1f : this->mass = mass; }
+	intptr_t Id() const { return id; }
 
 	// Returns wether the body is collidable
 	bool IsCollidable() const { return properties.Get(0); }
@@ -64,6 +62,11 @@ public: // Methods
 	
 	// Sets the acoustic updatability property of the body
 	void SetAcousticsUpdatability(bool set) { properties.Set(2, set); }
+
+	bool operator==(Body* b)
+	{
+		return id == b->id;
+	}
 
 protected: // Methods
 
@@ -91,9 +94,10 @@ protected: // Variables
 	PhysRect rect = {};
 	BodyClass clas = BodyClass::EMPTY_BODY;
 	float mass = 1.0f;
-	intptr_t id = 0;
+	PhysID id;
+	// Units: m/pxl
 	const float* pixelsToMeters = nullptr;
-	std::vector<AcousticData*> acousticDataList;
+	PhysArray<AcousticData*> acousticDataList;
 
 	// Collidable | UpdatePhysics | UpdateAcoustics
 	Flag properties = {};

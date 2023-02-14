@@ -124,6 +124,7 @@
     <ClInclude Include="Source\ExamScene.h" />
     <ClInclude Include="Source\Grid.h" />
     <ClInclude Include="Source\GroundTile.h" />
+    <ClInclude Include="Source\ID.h" />
     <ClInclude Include="Source\LightTimer.h" />
     <ClInclude Include="Source\InitialScene.h" />
     <ClInclude Include="Source\Input.h" />

@@ -212,5 +212,8 @@
     <ClInclude Include="Source\PhysArray.h">
       <Filter>Utils</Filter>
     </ClInclude>
+    <ClInclude Include="Source\PhysID.h">
+      <Filter>Utils</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

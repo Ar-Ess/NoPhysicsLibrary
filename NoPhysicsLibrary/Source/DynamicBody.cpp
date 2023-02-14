@@ -1,7 +1,8 @@
 #include "DynamicBody.h"
 #include "PhysMath.h"
 
-DynamicBody::DynamicBody(PhysRect rect, PhysVec gravityOffset, float mass, Flag* globals, const float* pixelsToMeters) : Body(BodyClass::DYNAMIC_BODY, rect, mass, pixelsToMeters)
+DynamicBody::DynamicBody(PhysRect rect, PhysVec gravityOffset, float mass, Flag* globals, const float* pixelsToMeters) : 
+	Body(BodyClass::DYNAMIC_BODY, rect, mass, pixelsToMeters)
 {
 	this->gravityOffset = gravityOffset;
 	this->globals = globals;
@@ -9,14 +10,10 @@ DynamicBody::DynamicBody(PhysRect rect, PhysVec gravityOffset, float mass, Flag*
 
 DynamicBody::~DynamicBody()
 {
-	if (!acousticDataList.empty())
-	{
-		for (AcousticData* data : acousticDataList) RELEASE(data);
-	}
-	acousticDataList.clear();
-	forces.clear();
-	momentums.clear();
-	excludeCollisionIds.clear();
+	acousticDataList.Clear();
+	forces.Clear();
+	momentums.Clear();
+	excludeCollisionIds.Clear();
 }
 
 void DynamicBody::Backup()
@@ -24,14 +21,9 @@ void DynamicBody::Backup()
 	backup = BodyBackup(rect, velocity, acceleration, totalMomentum, totalForces);
 }
 
-bool DynamicBody::IsIdExcludedFromCollision(intptr_t id)
+bool DynamicBody::IsIdExcludedFromCollision(PhysID id)
 {
-	for (intptr_t i : excludeCollisionIds)
-	{
-		if (i == id) return true;
-	}
-
-	return false;
+	return excludeCollisionIds.Contains(id);
 }
 
 void DynamicBody::SetPreviousBodyState()
@@ -56,21 +48,16 @@ bool DynamicBody::IsBodyExit(BodyState collision)
 
 void DynamicBody::ExcludeForCollision(const Body* b)
 {
-	excludeCollisionIds.emplace_back(b->GetId());
+	excludeCollisionIds.Add(b->Id());
 }
 
-//-TODO: Change the parameter to ID class
 bool DynamicBody::IncludeForCollision(const Body* b)
 {
-	size_t size = excludeCollisionIds.size();
-	for (unsigned int i = 0; i < size; ++i)
-	{
-		if (excludeCollisionIds.at(i) == b->GetId())
-		{
-			excludeCollisionIds.erase(excludeCollisionIds.begin() + i);
-			return true;
-		}
-	}
+	int index = excludeCollisionIds.Find(b->Id());
+	if (index == -1) return false;
+
+	excludeCollisionIds.Erase(index);
+
 	return false;
 }
 
@@ -79,21 +66,21 @@ void DynamicBody::ApplyForce(float x, float y, InUnit unit)
 	if (globals->Get(0)) return; // Physics are paused
 	PhysVec force = { x, y };
 
-	if (force.IsZero()) return; // If newtons is null
+	if (force.IsZero()) return; // If forces is null
 	force *= Conversion(unit, true);
 
-	forces.emplace_back(new Force(force));
+	forces.Add(new Force(force));
 }
 
 void DynamicBody::ApplyForce(PhysVec force, InUnit unit)
 {
 	if (globals->Get(0)) return; // Physics are paused
-	if (force.IsZero()) return; // If newtons is null
+	if (force.IsZero()) return; // If forces is null
 
 	//-TODO: Check if it has to be times = 2 because of m^2
 	force *= Conversion(unit, true);
 
-	forces.emplace_back(new Force(force));
+	forces.Add(new Force(force));
 }
 
 void DynamicBody::ApplyMomentum(float momentumX, float momentumY, InUnit unit)
@@ -104,7 +91,7 @@ void DynamicBody::ApplyMomentum(float momentumX, float momentumY, InUnit unit)
 	if (momentum.IsZero()) return; // If momentum is null
 	momentum *= Conversion(unit, true);
 
-	momentums.emplace_back(new Momentum(momentum));
+	momentums.Add(new Momentum(momentum));
 }
 
 void DynamicBody::ApplyMomentum(PhysVec momentum, InUnit unit)
@@ -114,7 +101,7 @@ void DynamicBody::ApplyMomentum(PhysVec momentum, InUnit unit)
 	if (momentum.IsZero()) return; // If momentum is null
 	momentum *= Conversion(unit, true);
 
-	momentums.emplace_back(new Momentum(momentum));
+	momentums.Add(new Momentum(momentum));
 }
 
 void DynamicBody::GravityOffset(PhysVec offset, InUnit unit)
@@ -132,8 +119,10 @@ void DynamicBody::SecondNewton()
 {
 	totalForces.Clear();
 
-	for (Force* f : forces) totalForces += *f;
-	forces.clear();
+	for (unsigned int i = 0; i < forces.Size(); ++i) 
+		totalForces += *forces[i];
+
+	forces.Clear();
 
 	// You idiot, mass can not be zero :}
 	if (mass == 0) return acceleration.Clear();
@@ -147,8 +136,10 @@ void DynamicBody::FirstBuxeda()
 {
 	totalMomentum.Clear();
 
-	for (Momentum* m : momentums) totalMomentum += *m;
-	momentums.clear();
+	for (unsigned int i = 0; i < momentums.Size(); ++i) 
+		totalMomentum += *momentums[i];
+	
+	momentums.Clear();
 
 	// You idiot, mass can not be zero :}
 	if (mass == 0) return;
@@ -162,8 +153,8 @@ void DynamicBody::ResetForces()
 {
 	acceleration.Clear();
 	velocity.Clear();
-	forces.clear();
-	momentums.clear();
+	forces.Clear();
+	momentums.Clear();
 }
 
 void DynamicBody::FrictionOffset(PhysVec offset)

@@ -10,17 +10,17 @@ public:
 
 	~GasBody() override;
 
-	float GetVolume(InUnit unit);
+	float Volume(InUnit unit) const;
 
-	float GetDensity(InUnit unit);
+	float Density(InUnit unit) const;
 
-	float GetHeatRatio() const;
+	void Density(float density, InUnit unit);
+	
+	float HeatRatio() const;
 
-	float GetPressure() const;
-
-	void SetDensity(float density, InUnit unit);
-
-	void SetHeatRatio(float heatRatio);
+	void HeatRatio(float heatRatio);
+	
+	float Pressure() const;
 
 	PhysVec DragCoefficient() const
 	{

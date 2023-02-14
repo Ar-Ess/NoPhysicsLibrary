@@ -1,6 +1,5 @@
 #pragma once
 
-#include <vector>
 #include "Body.h"
 #include "Flag.h"
 #include "Collision.h"
@@ -12,36 +11,36 @@ class Physics
 {
 public: // Methods
 
-	Physics(const std::vector<Body*>* bodies, const Flag* physicsConfig, const std::vector<unsigned int*>* gasIndex, const std::vector<unsigned int*>* liquidIndex, const float* pixelsToMeters, const unsigned int* physIterations);
+	Physics(const PhysArray<Body*>* bodies, const Flag* physicsConfig, const PhysArray<unsigned int*>* gasIndex, const PhysArray<unsigned int*>* liquidIndex, const float* pixelsToMeters, const unsigned int* physIterations);
 
 	virtual ~Physics();
 
 	void Step(Body* b, float dt);
 
-	void SolveCollisions(std::vector<Body*>* bodies);
+	void SolveCollisions(PhysArray<Body*>* bodies);
 
 	void CleanUp();
 
 private: // Methods
 
-	void ApplyNaturalForces(DynamicBody* body);
-		void ApplyHydroForces(DynamicBody* body);
-			void ApplyHydroDrag(DynamicBody* body, Body* env);
-			void ApplyHydroLift(DynamicBody* body, Body* env);
-			void  ApplyBuoyancy(DynamicBody* body, Body* env, float area);
-		void ApplyAeroForces(DynamicBody* body);
-			void ApplyAeroDrag(DynamicBody* body, Body* env, float area);
-			void ApplyAeroLift(DynamicBody* body, Body* env, float area);
+	void ApplyNaturalForces(Body* dynBody);
+		void ApplyHydroForces(Body* dynBody);
+			void ApplyHydroDrag(Body* dynBody, Body* env);
+			void ApplyHydroLift(Body* dynBody, Body* env);
+			void  ApplyBuoyancy(Body* dynBody, Body* env, float area);
+		void ApplyAeroForces(Body* dynBody);
+			void ApplyAeroDrag(Body* dynBody, Body* env, float area);
+			void ApplyAeroLift(Body* dynBody, Body* env, float area);
 
 	void Integrate(float dt, Body* body);
 
 	// Declip
-	void DetectCollisions(std::vector<Body*>* bodies);
-	void ResetFlags(std::vector<Body*>* bodies);
+	void DetectCollisions(PhysArray<Body*>* bodies);
+	void ResetFlags(PhysArray<Body*>* bodies);
 	void Declip();
 
 	// Internal
-	PhysVec CalculateFriction(DynamicBody* body);
+	PhysVec CalculateFriction(Body* body);
 
 public: // Variables
 
@@ -52,10 +51,10 @@ public: // Variables
 	// Pause 0
 	Flag globals = {};
 
-	std::vector<Collision*> collisions;
-	const std::vector<unsigned int*>* gasIndex;
-	const std::vector<unsigned int*>* liquidIndex;
-	const std::vector<Body*>* bodies;
+	PhysArray<Collision*> collisions;
+	const PhysArray<unsigned int*>* gasIndex;
+	const PhysArray<unsigned int*>* liquidIndex;
+	const PhysArray<Body*>* bodies;
 
 	// Config
 	const Flag* physicsConfig = nullptr;

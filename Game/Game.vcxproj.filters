@@ -162,6 +162,9 @@
     <ClInclude Include="Source\MathUtils.h">
       <Filter>Utils\Maths</Filter>
     </ClInclude>
+    <ClInclude Include="Source\ID.h">
+      <Filter>Utils\Application</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="External">
