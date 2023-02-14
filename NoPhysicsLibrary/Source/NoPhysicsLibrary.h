@@ -22,7 +22,7 @@ public:
 
 	// Create a new body
 	//  - Follow this function with a "." to choose the body type
-	//  - Rect must be on pixels (Multiply meters by "metersToPixels" variable on npl->Get() function)
+	//  - PhysRect must be on pixels (Multiply meters by "metersToPixels" variable on npl->Get() function)
 	const BodyCreation* CreateBody(PhysRect rectangle);
 	const BodyCreation* CreateBody(float x, float y, float width, float height);
 

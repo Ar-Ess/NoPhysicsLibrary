@@ -13,7 +13,7 @@ struct BodyBackup
 		this->force = {};
 	}
 
-	BodyBackup(Rect rectangle, Point velocity, Point acceleration, Momentum momentum, Force force)
+	BodyBackup(PhysRect rectangle, PhysVec velocity, PhysVec acceleration, Momentum momentum, Force force)
 	{
 		this->rectangle = rectangle;
 		this->velocity = velocity;
@@ -22,9 +22,9 @@ struct BodyBackup
 		this->force = force;
 	}
 
-	Rect rectangle = {};
-	Point velocity = { 0.0f, 0.0f };
-	Point acceleration = { 0.0f, 0.0f };
+	PhysRect rectangle = {};
+	PhysVec velocity = { 0.0f, 0.0f };
+	PhysVec acceleration = { 0.0f, 0.0f };
 	Momentum momentum = {};
 	Force force = {};
 };

@@ -49,9 +49,29 @@ PhysVec PhysVec::operator+(int value)
 	return PhysVec(x + value, y + value);
 }
 
+PhysVec PhysVec::operator-(PhysVec value)
+{
+	return PhysVec(x - value.x, y - value.y);
+}
+
+PhysVec PhysVec::operator-(float value)
+{
+	return PhysVec(x - value, y - value);
+}
+
+PhysVec PhysVec::operator-(int value)
+{
+	return PhysVec(x - value, y - value);
+}
+
 void PhysVec::Clear()
 {
 	x = 0;
 	y = 0;
 	module = 0.0f;
+}
+
+const bool PhysVec::IsZero() const
+{
+	return module == 0;
 }

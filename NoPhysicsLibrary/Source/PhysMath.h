@@ -149,8 +149,8 @@ namespace PhysMath
 	{
 		PhysVec ret = { 0.0f, 0.0f };
 
-		PhysVec distanceToPositiveBounds = rect.GetPosition(Align::TOP_RIGHT) - point;
-		PhysVec distanceToNegativeBounds = rect.GetPosition(Align::BOTTOM_LEFT) - point;
+		PhysVec distanceToPositiveBounds = rect.Position() + PhysVec(rect.Size().x, 0.f) - point;
+		PhysVec distanceToNegativeBounds = rect.Position() + PhysVec(0.f, rect.Size().y) - point;
 
 		float smallestX = Min(distanceToPositiveBounds.x, distanceToNegativeBounds.x);
 		float smallestY = Min(distanceToPositiveBounds.y, distanceToNegativeBounds.y);

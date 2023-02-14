@@ -84,6 +84,9 @@
     <ClCompile Include="Source\PhysVec.cpp">
       <Filter>Core\Physics\Units</Filter>
     </ClCompile>
+    <ClCompile Include="Source\PhysRect.cpp">
+      <Filter>Core\Physics\Units</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\NoPhysicsLibrary.h">
@@ -205,6 +208,9 @@
     </ClInclude>
     <ClInclude Include="Source\LibraryAuxiliars.h">
       <Filter>Aux</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\PhysArray.h">
+      <Filter>Utils</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

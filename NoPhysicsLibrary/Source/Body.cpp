@@ -29,7 +29,7 @@ void Body::Play(int index, float decibels)
 	if (decibels > 120) decibels = 120;
 	if (decibels < 0) decibels = 0;
 
-	acousticDataList.emplace_back(new AcousticData(index, rect.GetPosition().Apply(emissionPoint), decibels));
+	acousticDataList.emplace_back(new AcousticData(index, rect.Position() + emissionPoint, decibels));
 }
 
 void Body::EmissionPoint(PhysVec offset, InUnit unit)
@@ -47,9 +47,14 @@ PhysVec Body::Position(InUnit unit) const
 	return rect.Position() * Conversion(unit, false);
 }
 
-PhysVec Body::Position(float x, float y, InUnit unit) const
+void Body::Position(float x, float y, InUnit unit)
 {
 	rect.Position(PhysVec(x, y) * Conversion(unit, true));
+}
+
+void Body::Position(PhysVec position, InUnit unit)
+{
+	rect.Position(position * Conversion(unit, true));
 }
 
 PhysVec Body::Size(InUnit unit) const

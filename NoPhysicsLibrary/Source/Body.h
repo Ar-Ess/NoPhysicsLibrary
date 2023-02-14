@@ -6,7 +6,7 @@
 #include "Flag.h"
 #include "AcusticData.h"
 #include "Define.h"
-#include "PhysRect.h"
+#include "PhysMath.h"
 #include <vector>
 
 class Body
@@ -29,9 +29,9 @@ public: // Methods
 	// Returns the top-left x & y coordinates of the body
 	PhysVec Position(InUnit unit) const;
 	// Sets the top-left x & y coordinates of the body
-	PhysVec Position(float x, float y, InUnit unit) const;
+	void Position(float x, float y, InUnit unit);
 	// Sets the top-left x & y coordinates of the body
-	PhysVec Position(float x, float y, InUnit unit) const;
+	void Position(PhysVec position, InUnit unit);
 
 	// Returns the width & height of the body
 	PhysVec Size(InUnit unit) const;
@@ -77,11 +77,9 @@ protected: // Methods
 
 private: // Methods
 
-	PhysVec GetEmissionPointOffset(InUnit unit) const
+	PhysVec GetEmissionPointOffset(InUnit unit)
 	{
-		float conversion = 1.0f;
-		if (unit == InUnit::IN_PIXELS) conversion /= *pixelsToMeters;
-		return emissionPoint.Multiply(conversion);
+		return (emissionPoint * Conversion(unit, false));
 	}
 
 protected: // Variables

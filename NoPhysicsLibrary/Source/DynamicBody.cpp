@@ -1,5 +1,5 @@
 #include "DynamicBody.h"
-#include "MathUtils.h"
+#include "PhysMath.h"
 
 DynamicBody::DynamicBody(PhysRect rect, PhysVec gravityOffset, float mass, Flag* globals, const float* pixelsToMeters) : Body(BodyClass::DYNAMIC_BODY, rect, mass, pixelsToMeters)
 {
@@ -73,14 +73,15 @@ bool DynamicBody::IncludeForCollision(const Body* b)
 	return false;
 }
 
-void DynamicBody::ApplyForce(float newtonsX, float newtonsY, InUnit unit)
+void DynamicBody::ApplyForce(float x, float y, InUnit unit)
 {
 	if (globals->Get(0)) return; // Physics are paused
-	PhysVec newtons = { newtonsX, newtonsY };
+	PhysVec force = { x, y };
 
-	if (newtons.IsZero()) return; // If newtons is null
+	if (force.IsZero()) return; // If newtons is null
+	force *= Conversion(unit, true);
 
-	forces.emplace_back(new Force(newtons, unit));
+	forces.emplace_back(new Force(force));
 }
 
 void DynamicBody::ApplyForce(PhysVec newtons, InUnit unit)

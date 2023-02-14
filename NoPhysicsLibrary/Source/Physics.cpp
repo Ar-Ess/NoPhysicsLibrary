@@ -235,8 +235,8 @@ void Physics::DetectCollisions(std::vector<Body*>* bodies)
 			if (b2->GetClass() == BodyClass::DYNAMIC_BODY && a < i) continue;
 			if (b1->IsIdExcludedFromCollision(b2->GetId())) continue;
 
-			Rect intersect = MathUtils::IntersectRectangle(b1->GetRect(InUnit::IN_METERS), b2->GetRect(InUnit::IN_METERS));
-			Point intersectionPoint = {};
+			PhysRect intersect = MathUtils::IntersectRectangle(b1->GetRect(InUnit::IN_METERS), b2->GetRect(InUnit::IN_METERS));
+			PhysVec intersectionPoint = {};
 			// Try to check a collision
 			if (!MathUtils::CheckCollision(b1->GetRect(InUnit::IN_METERS), b2->GetRect(InUnit::IN_METERS)))
 			{
@@ -244,7 +244,7 @@ void Physics::DetectCollisions(std::vector<Body*>* bodies)
 				// In Process
 				// Try to check if tunneling
 				if (!MathUtils::RayCast(
-					Ray(b1->GetPosition(InUnit::IN_METERS, Align::CENTER), b1->backup.rectangle.GetPosition(Align::CENTER)),
+					PhysRay(b1->GetPosition(InUnit::IN_METERS, Align::CENTER), b1->backup.rectangle.GetPosition(Align::CENTER)),
 					b2->GetRect(InUnit::IN_METERS),
 					intersectionPoint
 				)) continue;
@@ -275,8 +275,8 @@ void Physics::Declip()
 		DynamicBody* dynBody = (DynamicBody*)c->GetDynBody();
 		Body* b = (Body*)c->GetBody();
 
-		Rect intersect = c->GetCollisionRectangle(InUnit::IN_METERS);
-		Point directionVec = dynBody->GetPosition(InUnit::IN_METERS) - dynBody->backup.rectangle.GetPosition();
+		PhysRect intersect = c->GetCollisionRectangle(InUnit::IN_METERS);
+		PhysVec directionVec = dynBody->GetPosition(InUnit::IN_METERS) - dynBody->backup.rectangle.GetPosition();
 
 		switch (b->GetClass())
 		{
@@ -284,11 +284,11 @@ void Physics::Declip()
 		case BodyClass::DYNAMIC_BODY:
 		{
 			DynamicBody* body = (DynamicBody*)b;
-			Point directionVecAlter = body->GetPosition(InUnit::IN_METERS) - body->backup.rectangle.GetPosition();
-			Point normal = {};
+			PhysVec directionVecAlter = body->GetPosition(InUnit::IN_METERS) - body->backup.rectangle.GetPosition();
+			PhysVec normal = {};
 
-			Point centerOfIntersecion = c->GetCollisionRectangle(InUnit::IN_METERS).GetPosition(Align::CENTER);
-			Ray ray(centerOfIntersecion.Apply(directionVec.Multiply(-1.0f)), centerOfIntersecion);
+			PhysVec centerOfIntersecion = c->GetCollisionRectangle(InUnit::IN_METERS).GetPosition(Align::CENTER);
+			PhysRay ray(centerOfIntersecion.Apply(directionVec.Multiply(-1.0f)), centerOfIntersecion);
 			if (!MathUtils::RayCast(ray, body->GetRect(InUnit::IN_METERS), normal)) break;
 
 			if (normal.x == 0) // Vertical collision with horizontal surface
@@ -347,9 +347,9 @@ void Physics::Declip()
 			}
 			else
 			{
-				Rect wtfRect = c->GetBody()->GetRect(InUnit::IN_METERS);
-				Point wtfOrgn = dynBody->backup.rectangle.GetPosition();
-				Point wtfDir = directionVec;
+				PhysRect wtfRect = c->GetBody()->GetRect(InUnit::IN_METERS);
+				PhysVec wtfOrgn = dynBody->backup.rectangle.GetPosition();
+				PhysVec wtfDir = directionVec;
 				LOG("Weird Rectangle: X = %.f, Y = %.f, Width = %.f, Heigth = %.f\nWeird Ray: X = %.f, Y = %.f, Dir X = %.f, Dir Y = %.f", wtfRect.x, wtfRect.y, wtfRect.w, wtfRect.h, wtfOrgn.x, wtfOrgn.y, wtfDir.x, wtfDir.y);
 				assert("This is impossible, how could this happen???? :O Quick, check the log!!!!");
 			}
@@ -360,10 +360,10 @@ void Physics::Declip()
 		case BodyClass::STATIC_BODY:
 		{
 			StaticBody* body = (StaticBody*)b;
-			Point normal = {};
+			PhysVec normal = {};
 
-			Point centerOfIntersecion = c->GetCollisionRectangle(InUnit::IN_METERS).GetPosition(Align::CENTER);
-			Ray ray(centerOfIntersecion.Apply(directionVec.Multiply(-1.0f)), centerOfIntersecion);
+			PhysVec centerOfIntersecion = c->GetCollisionRectangle(InUnit::IN_METERS).GetPosition(Align::CENTER);
+			PhysRay ray(centerOfIntersecion.Apply(directionVec.Multiply(-1.0f)), centerOfIntersecion);
 			if (!MathUtils::RayCast(ray, body->GetRect(InUnit::IN_METERS), normal)) break;
 
 			if (normal.x == 0) // Vertical collision with horizontal surface
@@ -416,9 +416,9 @@ void Physics::Declip()
 			}
 			else
 			{
-				Rect wtfRect = c->GetBody()->GetRect(InUnit::IN_METERS);
-				Point wtfOrgn = dynBody->backup.rectangle.GetPosition();
-				Point wtfDir = directionVec;
+				PhysRect wtfRect = c->GetBody()->GetRect(InUnit::IN_METERS);
+				PhysVec wtfOrgn = dynBody->backup.rectangle.GetPosition();
+				PhysVec wtfDir = directionVec;
 				LOG("Weird Rectangle: X = %.f, Y = %.f, Width = %.f, Heigth = %.f\nWeird Ray: X = %.f, Y = %.f, Dir X = %.f, Dir Y = %.f", wtfRect.x, wtfRect.y, wtfRect.w, wtfRect.h, wtfOrgn.x, wtfOrgn.y, wtfDir.x, wtfDir.y);
 				assert("This is impossible, how could this happen???? :O Quick, check the log!!!!");
 			}
@@ -438,10 +438,10 @@ void Physics::Declip()
 	if (!physicsConfig->Get(0)) collisions.clear();
 }
 
-Point Physics::CalculateFriction(DynamicBody* body)
+PhysVec Physics::CalculateFriction(DynamicBody* body)
 {
-	Point gF = { MathUtils::Abs(1 - globalFriction.x), MathUtils::Abs(1 - globalFriction.y) };
-	Point outFriction = {gF.x - body->frictionOffset.x, gF.y - body->frictionOffset.y};
+	PhysVec gF = { MathUtils::Abs(1 - globalFriction.x), MathUtils::Abs(1 - globalFriction.y) };
+	PhysVec outFriction = {gF.x - body->frictionOffset.x, gF.y - body->frictionOffset.y};
 
 	MathUtils::Clamp(outFriction.x, 0, 1);
 	MathUtils::Clamp(outFriction.y, 0, 1);

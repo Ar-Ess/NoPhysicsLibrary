@@ -157,6 +157,7 @@
     <ClCompile Include="Source\miniaudio_impl.c" />
     <ClCompile Include="Source\NoPhysicsLibrary.cpp" />
     <ClCompile Include="Source\Physics.cpp" />
+    <ClCompile Include="Source\PhysRect.cpp" />
     <ClCompile Include="Source\PhysVec.cpp" />
     <ClCompile Include="Source\Sound.cpp" />
     <ClCompile Include="Source\StaticBody.cpp" />
@@ -187,6 +188,7 @@
     <ClInclude Include="Source\InUnitsEnum.h" />
     <ClInclude Include="Source\LibraryConfigAux.h" />
     <ClInclude Include="Source\LibraryEnums.h" />
+    <ClInclude Include="Source\PhysArray.h" />
     <ClInclude Include="Source\PhysVec.h" />
     <ClInclude Include="Source\GasBody.h" />
     <ClInclude Include="Source\LiquidBody.h" />
