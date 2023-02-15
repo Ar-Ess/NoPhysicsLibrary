@@ -127,7 +127,7 @@ void DynamicBody::SecondNewton()
 		},
 		totalForces
 	);
-	/*for (unsigned int i = 0; i < forces.Size(); ++i) 
+	/*for(unsigned int i = 0; i < forces.Size(); ++i) 
 		totalForces += *forces[i];*/
 
 	forces.Clear();
@@ -152,7 +152,7 @@ void DynamicBody::FirstBuxeda()
 		},
 		totalMomentum
 	);
-	/*for (unsigned int i = 0; i < momentums.Size(); ++i) 
+	/*for(unsigned int i = 0; i < momentums.Size(); ++i) 
 		totalMomentum += *momentums[i];*/
 	
 	momentums.Clear();

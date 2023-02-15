@@ -2,7 +2,6 @@
 
 #include "Body.h"
 
-
 class StaticBody : public Body
 {
 public: // Methods

@@ -1,6 +1,5 @@
 #pragma once
 
-#include "PhysVec.h"
 #include "Collision.h"
 
 class GetData

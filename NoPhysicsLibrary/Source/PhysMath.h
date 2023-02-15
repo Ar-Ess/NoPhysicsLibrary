@@ -3,7 +3,10 @@
 #include "PhysRect.h"
 #include "Ray.h"
 #include <math.h>
+
 #define PI 3.14159265359
+#define DEGREES_TO_RADIANS(angleDegrees) ((angleDegrees) * M_PI / 180.0)
+#define RADIANS_TO_DEGREES(angleRadians) ((angleRadians) * 180.0 / M_PI)
 
 namespace PhysMath
 {

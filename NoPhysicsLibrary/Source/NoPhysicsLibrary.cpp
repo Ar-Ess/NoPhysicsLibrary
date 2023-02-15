@@ -171,7 +171,7 @@ void NPL::PausePhysics(bool pause)
 	physics->globals.Set(0, pause);
 }
 
-const PhysRect NPL::ReturnScenarioRect() const
+const PhysRect NPL::ReturnScenarioRect()
 {
 	if (bodies.Empty()) return PhysRect();
 
@@ -179,7 +179,20 @@ const PhysRect NPL::ReturnScenarioRect() const
 	PhysVec minP = { first.x, first.y };
 	PhysVec maxP = { first.x + first.w, first.y + first.h };
 
-	for (unsigned int i = 0; i < bodies.Size(); ++i)
+	bodies.Iterate<PhysVec&, PhysVec&>
+	(
+		[](Body* b, PhysVec& maxP, PhysVec& minP)
+		{
+			PhysRect bodyRect = b->Rect(InUnit::IN_PIXELS);
+			if (bodyRect.x + bodyRect.w > maxP.x) maxP.x = bodyRect.x + bodyRect.w;
+			if (bodyRect.y + bodyRect.h > maxP.y) maxP.y = bodyRect.y + bodyRect.h;
+			if (bodyRect.x < minP.x) minP.x = bodyRect.x;
+			if (bodyRect.y < minP.y) minP.y = bodyRect.y;
+		},
+		maxP, minP
+	);
+
+	/*for(unsigned int i = 0; i < bodies.Size(); ++i)
 	{
 		Body* body = bodies[i];
 		PhysRect bodyRect = body->Rect(InUnit::IN_PIXELS);
@@ -187,7 +200,7 @@ const PhysRect NPL::ReturnScenarioRect() const
 		if (bodyRect.y + bodyRect.h > maxP.y) maxP.y = bodyRect.y + bodyRect.h;
 		if (bodyRect.x < minP.x) minP.x = bodyRect.x;
 		if (bodyRect.y < minP.y) minP.y = bodyRect.y;
-	}
+	}*/
 
 	return PhysRect{ minP.x, minP.y, maxP.x - minP.x, maxP.y - minP.y };
 }
@@ -314,7 +327,15 @@ void NPL::SetPhysicsPreset(PhysicsPreset preset)
 
 void NPL::StepPhysics(float dt)
 {
-	for (unsigned int i = 0; i < bodies.Size(); ++i) physics->Step(bodies[i], dt);
+	bodies.Iterate<Physics*, float>
+	(
+		[](Body* b, Physics* p, float dt) 
+		{ 
+			p->Step(b, dt); 
+		},
+		physics, dt
+	);
+	//for(unsigned int i = 0; i < bodies.Size(); ++i) physics->Step(bodies[i], dt);
 
 	physics->SolveCollisions(&bodies);
 }
@@ -336,6 +357,7 @@ void NPL::UpdateStates()
 
 		// Detect floating (no collision with solids)
 		bool floating = true;
+
 		for (unsigned int i = 1; i < 5; ++i)
 		{
 			if (dB->IsBodyStill((BodyState)i))
@@ -423,12 +445,21 @@ void NPL::NoListenerLogic(Body* b)
 {
 	if (b->acousticDataList.Empty()) return;
 
-	for (unsigned int i = 0; i < b->acousticDataList.Size(); ++i)
+	b->acousticDataList.Iterate<Audio*, PhysArray<SoundData*>&, const float>
+	(
+		[](AcousticData* data, Audio* audio, PhysArray<SoundData*>& soundDataList, const float maxSPL)
+		{
+			if (data->index >= audio->SoundSize()) return;
+			soundDataList.Add(new SoundData(data->index, 0, data->spl / maxSPL, 0));
+		},
+		audio, soundDataList, maxSPL
+	);
+	/*for(unsigned int i = 0; i < b->acousticDataList.Size(); ++i)
 	{
 		AcousticData* data = b->acousticDataList[i];
 		if (data->index >= audio->SoundSize()) continue;
 		soundDataList.Add(new SoundData(data->index, 0, data->spl / maxSPL, 0));
-	}
+	}*/
 	b->acousticDataList.Clear();
 }
 

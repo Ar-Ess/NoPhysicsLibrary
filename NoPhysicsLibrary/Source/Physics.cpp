@@ -257,7 +257,7 @@ void Physics::DetectCollisions(PhysArray<Body*>* bodies)
 
 void Physics::ResetFlags(PhysArray<Body*>* bodies)
 {
-	for (unsigned int i = 0; i < bodies->Size(); ++i)
+	/*for(unsigned int i = 0; i < bodies->Size(); ++i)
 	{
 		Body* b = bodies->At(i);
 		if (b->Class() != BodyClass::DYNAMIC_BODY) continue;
@@ -265,7 +265,19 @@ void Physics::ResetFlags(PhysArray<Body*>* bodies)
 		body->bodyStateEnter.Clear();
 		body->bodyStateStay.Clear();
 		body->bodyStateExit.Clear();
-	}
+	}*/
+
+	bodies->Iterate
+	(
+		[](Body* b)
+		{
+			if (b->Class() != BodyClass::DYNAMIC_BODY) return;
+			DynamicBody* body = (DynamicBody*)b;
+			body->bodyStateEnter.Clear();
+			body->bodyStateStay.Clear();
+			body->bodyStateExit.Clear();
+		}
+	);
 }
 
 void Physics::Declip()

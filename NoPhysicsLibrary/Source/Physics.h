@@ -1,11 +1,7 @@
 #pragma once
 
-#include "Body.h"
 #include "Flag.h"
 #include "Collision.h"
-
-#define DEGREES_TO_RADIANS(angleDegrees) ((angleDegrees) * M_PI / 180.0)
-#define RADIANS_TO_DEGREES(angleRadians) ((angleRadians) * 180.0 / M_PI)
 
 class Physics
 {

@@ -54,7 +54,7 @@ public:
 	void LoadSound(const char* path);
 
 	// Calculates & returns a rectsngle that englobes all the existent bodies
-	const PhysRect ReturnScenarioRect() const;
+	const PhysRect ReturnScenarioRect();
 
 	// Sets a scenario preset. WindowSize variable must be in pixels.
 	// Provide a std::vector pointer to get the scenario bodies
