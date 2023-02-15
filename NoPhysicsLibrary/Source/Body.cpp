@@ -13,7 +13,7 @@ Body::Body(BodyClass clas, PhysRect rect, float mass, const float* pixelsToMeter
 
 	// You idiot, mass can not be zero :}
 	//-Todo: This must be enabled
-	assert(mass != 0);
+	//assert(mass != 0);
 
 	this->mass = mass;
 
@@ -24,12 +24,10 @@ Body::Body(BodyClass clas, PhysRect rect, float mass, const float* pixelsToMeter
 	properties.Set(0b00000111);
 }
 
-void Body::Play(int index, float decibels)
+void Body::Play(unsigned int index, float decibels)
 {
-	if (decibels > 120) decibels = 120;
-	if (decibels < 0) decibels = 0;
-
-	acousticDataList.emplace_back(new AcousticData(index, rect.Position() + emissionPoint, decibels));
+	PhysMath::Clamp(decibels, 0, 120);
+	acousticDataList.Add(new AcousticData(index, rect.Position() + emissionPoint, decibels));
 }
 
 void Body::EmissionPoint(PhysVec offset, InUnit unit)

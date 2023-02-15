@@ -18,7 +18,7 @@ public: // Methods
 
 	// Plays a sound, volume range [0, 120]
 	//-TOCHECK: Debug emission point
-	void Play(int index, float decibels = 80);
+	void Play(unsigned int index, float decibels = 80);
 
 	// Sets the emission point of the body. Offsetting from the center of the body.
 	// The emission point is from where the body will emmit sound.
@@ -49,7 +49,7 @@ public: // Methods
 	void Mass(float mass) { mass <= 0 ? this->mass = 0.1f : this->mass = mass; }
 
 	// Returns the body id
-	intptr_t Id() const { return id; }
+	PhysID Id() const { return id; }
 
 	// Returns wether the body is collidable
 	bool IsCollidable() const { return properties.Get(0); }

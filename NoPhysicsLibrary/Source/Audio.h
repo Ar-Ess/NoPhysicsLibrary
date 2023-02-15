@@ -6,7 +6,7 @@
 #include "SoundData.h"
 #include "SoundLoad.h"
 #include "Define.h"
-#include <vector>
+#include "PhysArray.h"
 #include "PhysVec.h"
 
 class Audio
@@ -25,15 +25,15 @@ public:
 
 	void CleanUp();
 
-	const size_t GetSoundSize() const
+	const unsigned int SoundSize() const
 	{
-		return sounds.size();
+		return sounds.Size();
 	}
 
 private:
 
 	ma_engine engine;
-	std::vector<SoundLoad*> sounds;
-	std::vector<Sound*> playback;
+	PhysArray<SoundLoad*> sounds;
+	PhysArray<Sound*> playback;
 
 };

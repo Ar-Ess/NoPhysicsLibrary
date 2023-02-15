@@ -428,7 +428,7 @@ public:
         for (Node* node = start; node != nullptr; node = node->post)
         {
             // Error? Maybe missing == operand for "ptr variables" or "non-ptr variables"
-            if (*node->value == *value) return i;
+            if (*node->value == value) return i;
             ++i;
         }
 
@@ -485,6 +485,30 @@ public:
             for (Node* iter = final; iter != nullptr; iter = iter->prev)
                 function(iter->value);
         }
+    }
+    template<class T1>
+    void Iterate(void(*function)(T*, T1), T1 t1)
+    {
+        if (Empty()) return;
+
+        for (Node* iter = start; iter != nullptr; iter = iter->post)
+            function(iter->value, t1);
+    }
+    template<class T1, class T2>
+    void Iterate(void(*function)(T*, T1, T2), T1 t1, T2 t2)
+    {
+        if (Empty()) return;
+
+        for (Node* iter = start; iter != nullptr; iter = iter->post)
+            function(iter->value, t1, t2);
+    }
+    template<class T1, class T2, class T3>
+    void Iterate(void(*function)(T*, T1, T2, T3), T1 t1, T2 t2, T3 t3)
+    {
+        if (Empty()) return;
+
+        for (Node* iter = start; iter != nullptr; iter = iter->post)
+            function(iter->value, t1, t2, t3);
     }
 
 private:

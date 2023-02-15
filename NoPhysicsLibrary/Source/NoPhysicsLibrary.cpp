@@ -3,7 +3,6 @@
 #include "Define.h"
 #include "PhysMath.h"
 #include "External/miniaudio/miniaudiodev.h"
-#include <vector>
 
 NPL::NPL()
 {
@@ -28,7 +27,7 @@ void NPL::Init(float pixelsPerMeter)
 		&bodies, 
 		&gasIndex, 
 		&liquidIndex, 
-		physics, 
+		&physics->globals, 
 		&pixelsToMeters);
 
 	libraryConfig = new LibraryConfig(
@@ -322,8 +321,9 @@ void NPL::StepPhysics(float dt)
 
 void NPL::UpdateStates()
 {
-	for (Body* b : bodies)
+	for (unsigned int i = 0; i < bodies.Size(); ++i)
 	{
+		Body* b = bodies[i];
 		if (b->clas != BodyClass::DYNAMIC_BODY) continue;
 		DynamicBody* dB = (DynamicBody*)b;
 
@@ -353,8 +353,9 @@ void NPL::UpdateStates()
 		// Detect liquid & Gas
 		bool fullLiquidState = false;
 		float totalArea = 0.0f;
-		for (unsigned int* i : liquidIndex)
+		for (unsigned int index = 0; index < liquidIndex.Size(); ++index)
 		{
+			unsigned int* i = liquidIndex[index];
 			if (PhysMath::CheckCollision(b->Rect(InUnit::IN_METERS), bodies[*i]->Rect(InUnit::IN_METERS)))
 			{
 				if (!dB->prevBodyState.Get((int)BodyState::IN_LIQUID)) dB->bodyStateEnter.Set((int)BodyState::IN_LIQUID, true);
@@ -367,8 +368,9 @@ void NPL::UpdateStates()
 
 		if (!fullLiquidState)
 		{
-			for (unsigned int* i : gasIndex)
+			for (unsigned int index = 0; index < gasIndex.Size(); ++index)
 			{
+				unsigned int* i = gasIndex[index];
 				if (PhysMath::CheckCollision(b->Rect(InUnit::IN_METERS), bodies[*i]->Rect(InUnit::IN_METERS)))
 				{
 					if (!dB->prevBodyState.Get((int)BodyState::IN_GAS)) dB->bodyStateEnter.Set((int)BodyState::IN_GAS, true);
@@ -419,36 +421,26 @@ void NPL::StepAcoustics()
 
 void NPL::NoListenerLogic(Body* b)
 {
-	for (AcousticData* data : b->acousticDataList)
+	if (b->acousticDataList.Empty()) return;
+
+	for (unsigned int i = 0; i < b->acousticDataList.Size(); ++i)
 	{
-		if (data->index < 0 || data->index >= audio->GetSoundSize())
-		{
-			RELEASE(data);
-			continue;
-		}
-		float volume = data->spl / maxSPL;
-		soundDataList.emplace_back(new SoundData(data->index, 0, volume, 0));
-		RELEASE(data);
+		AcousticData* data = b->acousticDataList[i];
+		if (data->index >= audio->SoundSize()) continue;
+		soundDataList.Add(new SoundData(data->index, 0, data->spl / maxSPL, 0));
 	}
-	b->acousticDataList.clear();
+	b->acousticDataList.Clear();
 }
 
 void NPL::ListenerLogic(Body* b, GasBody* environment)
 {
 	// If listener emit sound
-	if (b->GetId() == listener->id)
-	{
-		NoListenerLogic(b);
-		return;
-	}
+	if (b->Id() == listener->id) return NoListenerLogic(b);
+	if (b->acousticDataList.Empty()) return;
 
-	for (AcousticData* data : b->acousticDataList)
+	for (unsigned int i = 0; i < b->acousticDataList.Size(); ++i)
 	{
-		if (data->index < 0 || data->index >= audio->GetSoundSize())
-		{
-			RELEASE(data);
-			continue;
-		}
+		AcousticData* data = b->acousticDataList[i];
 
 		// Get the distance between Body & Listener
 		float distance = PhysMath::Distance((listener->Position(InUnit::IN_METERS) + listener->emissionPoint), data->emissionPosition);
@@ -459,18 +451,18 @@ void NPL::ListenerLogic(Body* b, GasBody* environment)
 
 		float timeDelay = ComputeTimeDelay(distance, environment);
 
-		soundDataList.emplace_back(new SoundData(data->index, pan, volume, timeDelay));
-		RELEASE(data);
+		soundDataList.Add(new SoundData(data->index, pan, volume, timeDelay));
 	}
-	b->acousticDataList.clear();
+	b->acousticDataList.Clear();
 }
 
 GasBody* NPL::GetEnvironmentBody(PhysRect body)
 {
-	for (unsigned int* index : gasIndex)
+	for (unsigned int i = 0; i < gasIndex.Size(); ++i)
 	{
-		if (PhysMath::CheckCollision(body, bodies[*index]->Rect(InUnit::IN_METERS)))
-			return (GasBody*)bodies[*index];
+		Body* b = bodies[*gasIndex[i]];
+		if (PhysMath::CheckCollision(body, b->Rect(InUnit::IN_METERS)))
+			return (GasBody*)b;
 	}
 
 	return nullptr;
@@ -487,28 +479,32 @@ void NPL::UpdateNotifier()
 
 void NPL::UpdatePixelsToMeters()
 {
-	for (Body* b : bodies)
-	{
-		switch (b->clas)
+	bodies.Iterate<float>
+	(
+		[](Body* b, float ptmRatio)
 		{
-		case BodyClass::DYNAMIC_BODY:
-		{
-			DynamicBody* dB = (DynamicBody*)b;
-			dB->GravityOffset(dB->GravityOffset() * ptmRatio);
-			break; 
-		}
-		case BodyClass::LIQUID_BODY:
-			break;
-		default:
-			break;
-		}
+			switch (b->Class())
+			{
+			case BodyClass::DYNAMIC_BODY:
+			{
+				DynamicBody* dB = (DynamicBody*)b;
+				dB->GravityOffset(dB->GravityOffset() * ptmRatio);
+				break;
+			}
+			case BodyClass::LIQUID_BODY:
+				break;
+			default:
+				break;
+			}
 
-		b->emissionPoint *= ptmRatio;
-		b->rect.x *= ptmRatio;
-		b->rect.y *= ptmRatio;
-		b->rect.h *= ptmRatio;
-		b->rect.w *= ptmRatio;
-	}
+			b->emissionPoint *= ptmRatio;
+			b->rect.x *= ptmRatio;
+			b->rect.y *= ptmRatio;
+			b->rect.h *= ptmRatio;
+			b->rect.w *= ptmRatio;
+		},
+		ptmRatio
+	);
 
 	panRange *= ptmRatio;
 	physics->globalGravity *= ptmRatio;
@@ -544,7 +540,7 @@ float NPL::ComputeTimeDelay(float distance, GasBody* environment)
 	// 1. Vel = sqrt( lambda * Pa / ro )
 	// 2. Time = distance / vel
 	float timeDelay = 0;
-	float vel = PhysMath::Sqrt(environment->GetHeatRatio() * environment->GetPressure() / environment->GetDensity(InUnit::IN_METERS));
+	float vel = PhysMath::Sqrt(environment->HeatRatio() * environment->Pressure() / environment->Density(InUnit::IN_METERS));
 	return distance / vel;
 }
 
@@ -552,29 +548,16 @@ void NPL::StepAudio(float* dt)
 {
 	audio->Update();
 
-	if (soundDataList.empty()) return;
+	if (soundDataList.Empty()) return;
 
-	for (SoundData* data : soundDataList)
-	{
-		audio->Playback(data, dt);
-		RELEASE(data);
-	}
+	soundDataList.Iterate<Audio*, float*>
+		(
+			[](SoundData* data, Audio* audio, float* dt)
+			{
+				audio->Playback(data, dt);
+			},
+			audio, dt
+		);
 
-	soundDataList.clear();
-}
-
-bool NPL::EraseBody(int id, Body* outBody)
-{
-	std::vector<Body*>::const_iterator it;
-	for (it = bodies.begin(); it != bodies.end(); ++it)
-	{
-		if (id == (*it)->GetId())
-		{
-			outBody = (*it);
-			bodies.erase(it);
-			return true;
-		}
-	}
-
-	return false;
+	soundDataList.Clear();
 }

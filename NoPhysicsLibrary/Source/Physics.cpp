@@ -190,8 +190,8 @@ void Physics::ApplyAeroDrag(Body* dynBody, Body* env, float area)
 	int negy = -1;
 	if (body->velocity.x < 0) negx = 1;
 	if (body->velocity.y < 0) negy = 1;
-	float aerodragX = negx * 0.5 * gas->GetDensity(InUnit::IN_METERS) * PhysMath::Pow(body->velocity.x, 2) * area * gas->DragCoefficient().x;
-	float aerodragY = negy * 0.5 * gas->GetDensity(InUnit::IN_METERS) * PhysMath::Pow(body->velocity.y, 2) * area * gas->DragCoefficient().y;
+	float aerodragX = negx * 0.5 * gas->Density(InUnit::IN_METERS) * PhysMath::Pow(body->velocity.x, 2) * area * gas->DragCoefficient().x;
+	float aerodragY = negy * 0.5 * gas->Density(InUnit::IN_METERS) * PhysMath::Pow(body->velocity.y, 2) * area * gas->DragCoefficient().y;
 	body->ApplyForce(aerodragX, aerodragY, InUnit::IN_METERS);
 }
 

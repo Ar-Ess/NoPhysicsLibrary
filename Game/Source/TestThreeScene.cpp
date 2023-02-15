@@ -59,7 +59,7 @@ bool TestThreeScene::Start()
 
 	// Gas
 	const GasBody* gas = npl->CreateBody(npl->ReturnScenarioRect())
-		->Gas(10, 1.414f, 1000, { 3.0f, 0.1f }, InUnit::IN_METERS);
+		->Gas(10, 1.414f, 1000, { 3.0f, 0.1f }, InUnit::IN_METERS, InUnit::IN_METERS);
 
 	// Shell
 	shell = npl->CreateBody({ 1900, 500, 50, 50 })
@@ -138,7 +138,7 @@ bool TestThreeScene::Update(float dt)
 		const Body* b = npl->Get()->Bodies(i);
 		SDL_Color color = { 0, 0, 0, 50 };
 
-		switch (b->GetClass())
+		switch (b->Class())
 		{
 		case BodyClass::STATIC_BODY:  color = { 255,   0,   0, color.a }; break;
 		case BodyClass::DYNAMIC_BODY: color = { 0, 255,   0, color.a }; break;

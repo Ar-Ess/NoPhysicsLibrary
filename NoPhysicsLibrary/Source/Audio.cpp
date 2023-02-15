@@ -85,14 +85,13 @@ void Audio::Playback(SoundData* data, float* dt)
     else
         sound->Play(); // Play sound directly
 
-    playback.emplace_back(sound); // Save sound reference
+    playback.Add(sound); // Save sound reference
 }
 
 void Audio::Update()
 {
-    if (playback.empty()) return;
-    size_t size = playback.size();
-    for (unsigned int i = 0; i < size; ++i)
+    if (playback.Empty()) return;
+    for (unsigned int i = 0; i < playback.Size(); ++i)
     {
         Sound* s = playback[i];
 
@@ -102,9 +101,7 @@ void Audio::Update()
         // If the sound is being played but it is at the end, delete it
         if (s->IsPlayed() && ma_sound_at_end(s->source))
         {
-            playback.erase(playback.begin() + i);
-            RELEASE(s);
-            --size;
+            playback.Erase(i);
             --i;
         }
     }
@@ -115,31 +112,24 @@ void Audio::LoadSound(const char* path)
     ma_sound* sound = new ma_sound();
     ma_sound_init_from_file(&engine, path, 0, NULL, NULL, sound);
 
-    sounds.emplace_back(new SoundLoad(sound));
+    sounds.Add(new SoundLoad(sound));
 
     sound = nullptr;
 }
 
 void Audio::CleanUp()
 {
-    if (!playback.empty())
-    {
-        for (Sound* s : playback) RELEASE(s);
-    }
-    playback.clear();
-    playback.shrink_to_fit();
+    playback.Clear();
 
-    if (!sounds.empty())
-    {
-        for (SoundLoad* sL : sounds)
+    sounds.Iterate
+    (
+        [](SoundLoad* s)
         {
-            ma_sound_stop(sL->sound);
-            ma_sound_uninit(sL->sound);
-            RELEASE(sL);
+            ma_sound_stop(s->sound);
+            ma_sound_uninit(s->sound);
         }
-    }
-    sounds.clear();
-    sounds.shrink_to_fit();
+    );
+    sounds.Clear();
 
     ma_engine_uninit(&engine);
 }

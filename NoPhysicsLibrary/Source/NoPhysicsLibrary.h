@@ -8,6 +8,7 @@
 
 #include "Physics.h"
 #include "Audio.h"
+#include <vector>
 
 class NPL
 {
@@ -76,8 +77,6 @@ private: // Methods
 	void UpdateStates();
 
 	void StepAudio(float* dt);
-
-	bool EraseBody(int id, Body* outBody = nullptr);
 
 	inline bool IsVoid() const { return gasIndex.Empty(); }
 	inline bool IsDry() const { return liquidIndex.Empty(); }

@@ -70,7 +70,7 @@ void TileManager::DrawDebug(bool debug)
 		const Body* b = physics->Get()->Bodies(i);
 		SDL_Color color = { 0, 0, 0, 100 };
 
-		switch (b->GetClass())
+		switch (b->Class())
 		{
 		case BodyClass::STATIC_BODY:  color = { 255,   0,   0, color.a }; break;
 		case BodyClass::DYNAMIC_BODY: color = { 0, 255,   0, color.a }; break;
