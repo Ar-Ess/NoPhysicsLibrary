@@ -165,6 +165,9 @@
     <ClInclude Include="Source\ID.h">
       <Filter>Utils\Application</Filter>
     </ClInclude>
+    <ClInclude Include="Source\Alignment.h">
+      <Filter>Utils\Maths</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="External">

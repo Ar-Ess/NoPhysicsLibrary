@@ -115,6 +115,7 @@
     <ClCompile Include="Source\TileManager.cpp" />
     <ClCompile Include="Source\Window.cpp" />
     <ClInclude Include="Source\Action.h" />
+    <ClInclude Include="Source\Alignment.h" />
     <ClInclude Include="Source\Array.h" />
     <ClInclude Include="Source\AssetsManager.h" />
     <ClInclude Include="Source\Camera.h" />

@@ -164,9 +164,6 @@
     <ClInclude Include="Source\Collision.h">
       <Filter>Core\Physics\Units</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Alignment.h">
-      <Filter>Utils</Filter>
-    </ClInclude>
     <ClInclude Include="Source\Timer.h">
       <Filter>Utils</Filter>
     </ClInclude>
