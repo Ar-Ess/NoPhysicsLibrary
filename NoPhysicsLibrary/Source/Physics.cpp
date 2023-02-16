@@ -52,7 +52,7 @@ void Physics::SolveCollisions(PhysArray<Body*>* bodies)
 {
 	ResetFlags(bodies);
 
-	for (int i = 0; i < *physIterations; ++i)
+	for (unsigned int i = 0; i < *physIterations; ++i)
 	{
 		DetectCollisions(bodies);
 
@@ -120,8 +120,8 @@ void Physics::ApplyHydroDrag(Body* dynBody, Body* env)
 	int negy = -1;
 	if (body->velocity.x < 0) negx *= -1;
 	if (body->velocity.y < 0) negy *= -1;
-	float hydrodragY = negy * 0.5 * liquid->Density(InUnit::IN_METERS) * PhysMath::Pow(body->velocity.y, 2) * body->Rect(InUnit::IN_METERS).h /* * liquid->GetDragCoefficient().y*/;
-	float hydrodragX = negx * 0.5 * liquid->Density(InUnit::IN_METERS) * PhysMath::Pow(body->velocity.x, 2) * body->Rect(InUnit::IN_METERS).w /* * liquid->GetDragCoefficient().x*/;
+	float hydrodragY = negy * 0.5f * liquid->Density(InUnit::IN_METERS) * PhysMath::Pow(body->velocity.y, 2) * body->Rect(InUnit::IN_METERS).h /* * liquid->GetDragCoefficient().y*/;
+	float hydrodragX = negx * 0.5f * liquid->Density(InUnit::IN_METERS) * PhysMath::Pow(body->velocity.x, 2) * body->Rect(InUnit::IN_METERS).w /* * liquid->GetDragCoefficient().x*/;
 	// negx *= -1;
 	// negy *= -1;
 	// float hydrodragY = negy * MathUtils::Abs(1 - liquid->GetDragCoefficient().y) * body->velocity.y;
@@ -140,8 +140,8 @@ void Physics::ApplyHydroLift(Body* dynBody, Body* env)
 	int negy = 1;
 	if (body->velocity.x < 0) negx = 1;
 	if (body->velocity.y < 0) negy = -1;
-	float hydroliftY = negx * 0.5 * liquid->Density(InUnit::IN_METERS) * PhysMath::Pow(body->velocity.x, 2) * body->Rect(InUnit::IN_METERS).h * liquid->LiftCoefficient().x;
-	float hydroliftX = negy * 0.5 * liquid->Density(InUnit::IN_METERS) * PhysMath::Pow(body->velocity.y, 2) * body->Rect(InUnit::IN_METERS).w * liquid->LiftCoefficient().y;
+	float hydroliftY = negx * 0.5f * liquid->Density(InUnit::IN_METERS) * PhysMath::Pow(body->velocity.x, 2) * body->Rect(InUnit::IN_METERS).h * liquid->LiftCoefficient().x;
+	float hydroliftX = negy * 0.5f * liquid->Density(InUnit::IN_METERS) * PhysMath::Pow(body->velocity.y, 2) * body->Rect(InUnit::IN_METERS).w * liquid->LiftCoefficient().y;
 	// La atrocitat probocada aquí constitueix la rotació de 90º en forma de x = -y i y = x (El lift sempre va a 90 graus respecte el drag)
 	if (hydroliftY > 0) hydroliftY *= -1; // Maintain y axis lift always looking up :D
 	body->ApplyForce(hydroliftX, hydroliftY, InUnit::IN_METERS);
@@ -190,8 +190,8 @@ void Physics::ApplyAeroDrag(Body* dynBody, Body* env, float area)
 	int negy = -1;
 	if (body->velocity.x < 0) negx = 1;
 	if (body->velocity.y < 0) negy = 1;
-	float aerodragX = negx * 0.5 * gas->Density(InUnit::IN_METERS) * PhysMath::Pow(body->velocity.x, 2) * area * gas->DragCoefficient().x;
-	float aerodragY = negy * 0.5 * gas->Density(InUnit::IN_METERS) * PhysMath::Pow(body->velocity.y, 2) * area * gas->DragCoefficient().y;
+	float aerodragX = negx * 0.5f * gas->Density(InUnit::IN_METERS) * PhysMath::Pow(body->velocity.x, 2) * area * gas->DragCoefficient().x;
+	float aerodragY = negy * 0.5f * gas->Density(InUnit::IN_METERS) * PhysMath::Pow(body->velocity.y, 2) * area * gas->DragCoefficient().y;
 	body->ApplyForce(aerodragX, aerodragY, InUnit::IN_METERS);
 }
 
@@ -204,8 +204,8 @@ void Physics::ApplyAeroLift(Body* dynBody, Body* env, float area)
 	int negy = 1;
 	if (body->velocity.x < 0) negx = 1;
 	if (body->velocity.y < 0) negy = -1;
-	float aeroliftY = negx * 0.5 * gas->Density(InUnit::IN_METERS) * PhysMath::Pow(body->velocity.x, 2) * body->Rect(InUnit::IN_METERS).h * gas->LiftCoefficient().x;
-	float aeroliftX = negy * 0.5 * gas->Density(InUnit::IN_METERS) * PhysMath::Pow(body->velocity.y, 2) * body->Rect(InUnit::IN_METERS).w * gas->LiftCoefficient().y;
+	float aeroliftY = negx * 0.5f * gas->Density(InUnit::IN_METERS) * PhysMath::Pow(body->velocity.x, 2) * body->Rect(InUnit::IN_METERS).h * gas->LiftCoefficient().x;
+	float aeroliftX = negy * 0.5f * gas->Density(InUnit::IN_METERS) * PhysMath::Pow(body->velocity.y, 2) * body->Rect(InUnit::IN_METERS).w * gas->LiftCoefficient().y;
 	// La atrocitat probocada aquí constitueix la rotació de 90º en forma de x = -y i y = x (El lift sempre va a 90 graus respecte el drag)
 	if (aeroliftY > 0) aeroliftY *= -1; // Maintain y axis lift always looking up :D
 	body->ApplyForce(aeroliftX, aeroliftY, InUnit::IN_METERS);

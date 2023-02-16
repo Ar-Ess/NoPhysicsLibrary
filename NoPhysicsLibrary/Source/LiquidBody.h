@@ -6,8 +6,6 @@ class LiquidBody : public Body
 {
 public:
 
-	LiquidBody(PhysRect rect, float mass, float buoyancy, const float* pixelsToMeters);
-
 	~LiquidBody() override;
 
 	float Volume(InUnit unit) const;
@@ -29,6 +27,12 @@ public:
 	}
 
 private:
+
+	LiquidBody(PhysRect rect, float mass, float buoyancy, const float* pixelsToMeters);
+
+private:
+
+	friend struct BodyCreation;
 
 	float buoyancy = 0.0f;
 	PhysVec liftCoefficient = {0.1f, 0.0f};

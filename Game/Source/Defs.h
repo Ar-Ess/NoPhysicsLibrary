@@ -50,8 +50,3 @@ bool SameString(std::string a, std::string b);
 // Performance macros
 #define PERF_START(timer) timer.Start()
 #define PERF_PEEK(timer) LOG("%s took %f ms", __FUNCTION__, timer.ReadMs())
-
-// Maths calculations
-#define PI 3.14159265359f
-#define DEG_2_RAD(a) a * PI / 180.0f
-#define RAD_2_DEG(a) a * 180.0f / PI

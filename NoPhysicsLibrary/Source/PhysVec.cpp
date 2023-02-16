@@ -14,23 +14,23 @@ PhysVec::PhysVec(float x, float y)
 
 PhysVec::PhysVec(int x, int y)
 {
-	this->x = x;
-	this->y = y;
-	this->module = PhysMath::Module(x, y);
+	this->x = (float)x;
+	this->y = (float)y;
+	this->module = PhysMath::Module((float)x, (float)y);
 }
 
 PhysVec::PhysVec(int x, float y)
 {
-	this->x = x;
+	this->x = (float)x;
 	this->y = y;
-	this->module = PhysMath::Module(x, y);
+	this->module = PhysMath::Module((float)x, y);
 }
 
 PhysVec::PhysVec(float x, int y)
 {
 	this->x = x;
-	this->y = y;
-	this->module = PhysMath::Module(x, y);
+	this->y = (float)y;
+	this->module = PhysMath::Module(x, (float)y);
 }
 
 PhysVec PhysVec::operator*(PhysVec value) const
@@ -101,8 +101,8 @@ void PhysVec::operator=(float value)
 
 void PhysVec::operator=(int value)
 {
-	this->x = value;
-	this->y = value;
+	this->x = (float)value;
+	this->y = (float)value;
 }
 
 void PhysVec::operator*=(PhysVec value)

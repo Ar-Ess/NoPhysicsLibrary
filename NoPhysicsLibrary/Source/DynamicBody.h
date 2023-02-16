@@ -9,8 +9,6 @@ class DynamicBody : public Body
 {
 public: // Methods
 
-	DynamicBody(PhysRect rect, PhysVec gravityOffset, float mass, Flag* globals, const float* pixelsToMeters);
-
 	~DynamicBody() override;
 
 	// Returns if this body is colliding with any other body in the specified situation
@@ -58,6 +56,8 @@ public: // Methods
 	void ResetForces();
 
 private: // Methods
+	
+	DynamicBody(PhysRect rect, PhysVec gravityOffset, float mass, Flag* globals, const float* pixelsToMeters);
 
 	void SecondNewton();
 	void FirstBuxeda();
@@ -69,6 +69,7 @@ private: // Variables
 
 	friend class Physics; // Necessary for accessing SecondNewton/FirstBuxeda
 	friend class NPL; // Necessary to update states
+	friend struct BodyCreation;
 
 	PhysVec acceleration = {};
 	PhysVec velocity = {};

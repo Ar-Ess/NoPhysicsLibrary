@@ -76,7 +76,7 @@ protected: // Methods
 	{
 		if (unit == InUnit::IN_METERS) return 1.0f;
 
-		return PhysMath::Pow(isSetter ? *pixelsToMeters : 1 / *pixelsToMeters, times);
+		return PhysMath::Pow(isSetter ? *pixelsToMeters : 1 / *pixelsToMeters, (float)times);
 	}
 
 private: // Methods

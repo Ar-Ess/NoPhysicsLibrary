@@ -39,7 +39,7 @@ public:
 
     bool Erase(int index)
     {
-        if (index < 0 || index >= size) return false;
+        if (index < 0 || unsigned(index) >= size) return false;
 
         Node* erase = GetNode(index);
         if (index == 0)
@@ -186,21 +186,21 @@ private:
 
     Node* GetNode(int index) const
     {
-        if (index < 0 || index >= size) return nullptr;
+        if (index < 0 || unsigned(index) >= size) return nullptr;
         if (index == 0) return start;
         if (index == size - 1) return final;
         unsigned int middle = size / 2 + size % 2;
 
         Node* ret = nullptr;
-        if (index <= middle - 1)
+        if (unsigned(index) <= middle - 1)
         {
             ret = start;
-            for (unsigned int i = 0; i < index; ++i) ret = ret->post;
+            for (unsigned int i = 0; i < unsigned(index); ++i) ret = ret->post;
         }
         else
         {
             ret = final;
-            for (unsigned int i = 0; i < size - index - 1; ++i) ret = ret->prev;
+            for (unsigned int i = 0; i < size - unsigned(index) - 1; ++i) ret = ret->prev;
         }
 
         return ret;
@@ -342,7 +342,7 @@ public:
 
     bool Erase(int index)
     {
-        if (index < 0 || index >= size) return false;
+        if (index < 0 || unsigned(index) >= size) return false;
 
         Node* erase = GetNode(index);
         if (index == 0)
@@ -515,21 +515,21 @@ private:
 
     Node* GetNode(int index) const
     {
-        if (index < 0 || index >= size) return nullptr;
+        if (index < 0 || unsigned(index) >= size) return nullptr;
         if (index == 0) return start;
         if (index == size - 1) return final;
         unsigned int middle = size / 2 + size % 2;
 
         Node* ret = nullptr;
-        if (index <= middle - 1)
+        if (unsigned(index) <= middle - 1)
         {
             ret = start;
-            for (unsigned int i = 0; i < index; ++i) ret = ret->post;
+            for (unsigned int i = 0; i < unsigned(index); ++i) ret = ret->post;
         }
         else
         {
             ret = final;
-            for (unsigned int i = 0; i < size - index - 1; ++i) ret = ret->prev;
+            for (unsigned int i = 0; i < size - unsigned(index) - 1; ++i) ret = ret->prev;
         }
 
         return ret;

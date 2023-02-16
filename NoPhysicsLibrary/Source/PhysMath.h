@@ -18,7 +18,7 @@ namespace PhysMath
 
 	inline float Module(float x, float y)
 	{
-		return (float)sqrt(x * x + y * y);
+		return (float)sqrt(double(x) * double(x) + double(y) * double(y));
 	}
 
 	inline float Sqrt(float num)
@@ -41,12 +41,12 @@ namespace PhysMath
 
 	inline float RadToDeg(float rad)
 	{
-		return rad * (180 / PI);
+		return rad * float(180 / PI);
 	}
 
 	inline float DegToRad(float deg)
 	{
-		return deg * (PI / 180);
+		return deg * float(PI / 180);
 	}
 
 	inline int Ceil(float num)
@@ -61,16 +61,16 @@ namespace PhysMath
 
 	inline float Sin(float num, bool radians = true)
 	{
-		if (radians) return sin(num);
+		if (radians) return (float)sin(num);
 		
-		return sin(RadToDeg(num));
+		return (float)sin(RadToDeg(num));
 	}
 
 	inline float Cos(float num, bool radians = true)
 	{
-		if (radians) return cos(num);
+		if (radians) return (float)cos(num);
 
-		return cos(RadToDeg(num));
+		return (float)cos(RadToDeg(num));
 	}
 
 	inline float Distance(float x1, float y1, float x2, float y2)

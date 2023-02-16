@@ -1,6 +1,7 @@
 #pragma once
 
-#include "External\dr_libs\dr_mp3.h"
+#include "External/miniaudio/miniaudiodev.h" // Always first miniaudiodev
+#include "External\dr_libs\dr_mp3.h" // Always second dr_mp3.h
 #include "Sound.h"
 #include "SoundData.h"
 #include "SoundLoad.h"

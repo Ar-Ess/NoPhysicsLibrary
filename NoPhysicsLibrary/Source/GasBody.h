@@ -6,8 +6,6 @@ class GasBody : public Body
 {
 public:
 
-	GasBody(PhysRect rect, float mass, float heatRatio, float pressure, PhysVec dragCoefficient, const float* pixelsToMeters);
-
 	~GasBody() override;
 
 	float Volume(InUnit unit) const;
@@ -33,6 +31,12 @@ public:
 	}
 
 private:
+	
+	GasBody(PhysRect rect, float mass, float heatRatio, float pressure, PhysVec dragCoefficient, const float* pixelsToMeters);
+
+private:
+
+	friend struct BodyCreation;
 
 	float heatRatio = 0;
 	float pressure = 0;

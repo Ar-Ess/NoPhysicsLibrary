@@ -2,7 +2,6 @@
 #include <stdint.h>
 #include "Define.h"
 #include "PhysMath.h"
-#include "External/miniaudio/miniaudiodev.h"
 
 NPL::NPL()
 {
@@ -15,7 +14,7 @@ NPL::~NPL()
 void NPL::Init(float pixelsPerMeter)
 {
 	// You've alreay initialized the library once
-	assert(physics == nullptr && audio == nullptr, "ERROR: NPL variable initialized twice. Call CleanUp() first before initializing the variable again.");
+	assert(physics == nullptr && audio == nullptr && "ERROR: NPL variable initialized twice. Call CleanUp() first before initializing the variable again.");
 
 	physics = new Physics(&bodies, &physicsConfig, &gasIndex, &liquidIndex, &pixelsToMeters, &physIterations);
 	audio = new Audio();
@@ -57,7 +56,7 @@ void NPL::Init(float pixelsPerMeter)
 
 void NPL::Update(float* dt)
 {
-	assert(physics != nullptr && audio != nullptr, "ERROR: NPL variable not initialized. Call Init() first.");
+	assert(physics != nullptr && audio != nullptr && "ERROR: NPL variable not initialized. Call Init() first.");
 
 	if (IsGlobalPause()) return;
 
@@ -73,7 +72,7 @@ void NPL::Update(float* dt)
 
 void NPL::CleanUp()
 {
-	assert(physics != nullptr && audio != nullptr, "ERROR: NPL variable not initialized. Call Init() first.");
+	assert(physics != nullptr && audio != nullptr && "ERROR: NPL variable not initialized. Call Init() first.");
 
 	// AUDIO
 	audio->CleanUp();
@@ -98,7 +97,7 @@ void NPL::CleanUp()
 const BodyCreation* NPL::CreateBody(PhysRect rectangle)
 {
 	//Library not initialized. Call NPL::Init() first
-	assert(physics != nullptr, "ERROR: NPL variable not initialized. Call Init() first.");
+	assert(physics != nullptr && "ERROR: NPL variable not initialized. Call Init() first.");
 
 	rectangle *= pixelsToMeters;
 
@@ -108,7 +107,7 @@ const BodyCreation* NPL::CreateBody(PhysRect rectangle)
 const BodyCreation* NPL::CreateBody(float x, float y, float width, float height)
 {
 	//Library not initialized. Call NPL::Init() first
-	assert(physics != nullptr, "ERROR: NPL variable not initialized. Call Init() first.");
+	assert(physics != nullptr && "ERROR: NPL variable not initialized. Call Init() first.");
 
 	PhysRect rectangle = PhysRect( x, y, width, height ) * pixelsToMeters;
 
@@ -117,25 +116,25 @@ const BodyCreation* NPL::CreateBody(float x, float y, float width, float height)
 
 const LibraryConfig* NPL::Configure()
 {
-	assert(physics != nullptr && audio != nullptr, "ERROR: NPL variable not initialized. Call Init() first.");
+	assert(physics != nullptr && audio != nullptr && "ERROR: NPL variable not initialized. Call Init() first.");
 	return libraryConfig->Access();
 }
 
 const GetData* NPL::Get()
 {
-	assert(physics != nullptr && audio != nullptr, "ERROR: NPL variable not initialized. Call Init() first.");
+	assert(physics != nullptr && audio != nullptr && "ERROR: NPL variable not initialized. Call Init() first.");
 	return getData->Access();
 }
 
 bool NPL::DestroyBody(Body* body)
 {
-	assert(physics != nullptr && audio != nullptr, "ERROR: NPL variable not initialized. Call Init() first.");
+	assert(physics != nullptr && audio != nullptr && "ERROR: NPL variable not initialized. Call Init() first.");
 	return bodies.Erase(bodies.Find(body));
 }
 
 bool NPL::DestroyBody(PhysID id)
 {
-	assert(physics != nullptr && audio != nullptr, "ERROR: NPL variable not initialized. Call Init() first.");
+	assert(physics != nullptr && audio != nullptr && "ERROR: NPL variable not initialized. Call Init() first.");
 	Body find(BodyClass::EMPTY_BODY, {}, 0, nullptr);
 	find.id = id;
 	return bodies.Erase(bodies.Find(&find));
@@ -143,10 +142,10 @@ bool NPL::DestroyBody(PhysID id)
 
 bool NPL::DestroyBody(BodyClass clas)
 {
-	assert(physics != nullptr && audio != nullptr, "ERROR: NPL variable not initialized. Call Init() first.");
+	assert(physics != nullptr && audio != nullptr && "ERROR: NPL variable not initialized. Call Init() first.");
 
 	bool ret = true;
-	for (int i = bodies.Size(); i >= 0; ++i) // i must be int
+	for (int i = bodies.Size(); i >= 0; --i) // i must be int
 	{
 		Body* b = bodies[i];
 		if (b->Class() == clas)
@@ -161,7 +160,7 @@ bool NPL::DestroyBody(BodyClass clas)
 
 void NPL::LoadSound(const char* path)
 {
-	assert(audio != nullptr, "ERROR: NPL variable not initialized. Call Init() first.");
+	assert(audio != nullptr && "ERROR: NPL variable not initialized. Call Init() first.");
 
 	audio->LoadSound(path);
 }
@@ -207,7 +206,7 @@ const PhysRect NPL::ReturnScenarioRect()
 
 void NPL::SetScenarioPreset(ScenarioPreset preset, PhysVec windowSize, std::vector<StaticBody*>* scenarioBodies)
 {
-	assert(physics != nullptr && audio != nullptr, "ERROR: NPL variable not initialized. Call Init() first.");
+	assert(physics != nullptr && audio != nullptr && "ERROR: NPL variable not initialized. Call Init() first.");
 
 	switch (preset)
 	{
@@ -297,7 +296,7 @@ void NPL::SetScenarioPreset(ScenarioPreset preset, PhysVec windowSize, std::vect
 
 void NPL::SetPhysicsPreset(PhysicsPreset preset)
 {
-	assert(physics != nullptr, "ERROR: NPL variable not initialized. Call Init() first.");
+	assert(physics != nullptr && "ERROR: NPL variable not initialized. Call Init() first.");
 
 	PhysVec friction = {};
 	PhysVec gravity = {};
@@ -449,7 +448,7 @@ void NPL::NoListenerLogic(Body* b)
 	(
 		[](AcousticData* data, Audio* audio, PhysArray<SoundData*>& soundDataList, const float maxSPL)
 		{
-			if (data->index >= audio->SoundSize()) return;
+			if (unsigned(data->index) >= audio->SoundSize()) return;
 			soundDataList.Add(new SoundData(data->index, 0, data->spl / maxSPL, 0));
 		},
 		audio, soundDataList, maxSPL
