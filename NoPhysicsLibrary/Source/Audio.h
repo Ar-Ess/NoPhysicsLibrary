@@ -12,8 +12,6 @@ class Audio
 {
 public:
 
-	Audio();
-
 	~Audio();
 
 	void Playback(SoundData* data, float* dt);
@@ -30,6 +28,12 @@ public:
 	}
 
 private:
+
+	Audio();
+
+private:
+
+	friend class NPL;
 
 	ma_engine engine;
 	PhysArray<SoundLoad*> sounds;

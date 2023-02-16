@@ -86,11 +86,12 @@ private: // Methods
 		return (emissionPoint * Conversion(unit, false));
 	}
 
+	PhysVec emissionPoint = { 0.0f, 0.0f };
+
 protected: // Variables
 
 	friend class NPL;
 
-	PhysVec emissionPoint = { 0.0f, 0.0f };
 	PhysRect rect = {};
 	BodyClass clas = BodyClass::EMPTY_BODY;
 	float mass = 1.0f;

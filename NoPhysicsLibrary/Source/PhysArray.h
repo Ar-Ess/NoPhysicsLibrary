@@ -16,6 +16,11 @@ class PhysArray
         Node* post = nullptr;
     };
 
+    PhysArray() {}
+    friend class NPL;
+    friend class Audio;
+    friend class DynamicBody;
+
 public:
 
     void Add(T value)
@@ -347,17 +352,21 @@ public:
         Node* erase = GetNode(index);
         if (index == 0)
         {
-            start = erase->post;
+            if (erase->post) start = erase->post; //-Change
+            else start = nullptr; //-Change
             delete erase;
             erase = nullptr;
+            if (start) start->prev = nullptr; //-Change
             --size;
             return true;
         }
         if (index == size - 1)
         {
-            final = erase->prev;
+            if (erase->prev) final = erase->prev; //-Change
+            else final = nullptr; //-Change
             delete erase;
             erase = nullptr;
+            if (final) final->post = nullptr; //-CHANGE
             --size;
             return true;
         }

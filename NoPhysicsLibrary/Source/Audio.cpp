@@ -43,6 +43,8 @@ Audio::~Audio()
 
 void Audio::Playback(SoundData* data, float* dt)
 {
+    if (SoundSize() == 0 || data->index < 0 || data->index >= SoundSize()) return;
+
     // This index does not exist
     ma_node* lastNode = nullptr;
 
@@ -91,9 +93,14 @@ void Audio::Playback(SoundData* data, float* dt)
 void Audio::Update()
 {
     if (playback.Empty()) return;
-    for (unsigned int i = 0; i < playback.Size(); ++i)
+    for (int i = playback.Size() - 1; i >= 0; --i)
     {
         Sound* s = playback[i];
+        if (!s)
+        {
+            RELEASE(s);
+            break; 
+        }
 
         // If the delay of the sound has ended, play the sound
         if (s->IsDelayOver()) s->Play();
@@ -102,7 +109,6 @@ void Audio::Update()
         if (s->IsPlayed() && ma_sound_at_end(s->source))
         {
             playback.Erase(i);
-            --i;
         }
     }
 }

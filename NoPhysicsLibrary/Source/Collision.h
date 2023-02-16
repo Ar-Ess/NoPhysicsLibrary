@@ -4,8 +4,7 @@
 
 struct Collision
 {
-	Collision(Body* dynamicBody, Body* body, PhysRect intersecRect, const float* pixelsToMeters) : dynamicBody(dynamicBody), body(body), intersecRect(intersecRect), pixelsToMeters(pixelsToMeters) {}
-	
+
 	const PhysRect GetCollisionRectangle(InUnit unit) const
 	{
 		PhysRect inter = intersecRect;
@@ -29,6 +28,12 @@ struct Collision
 	}
 
 private:
+
+	Collision(Body* dynamicBody, Body* body, PhysRect intersecRect, const float* pixelsToMeters) : dynamicBody(dynamicBody), body(body), intersecRect(intersecRect), pixelsToMeters(pixelsToMeters) {}
+
+private:
+
+	friend class Physics;
 
 	Body* dynamicBody = nullptr;
 	Body* body = nullptr;

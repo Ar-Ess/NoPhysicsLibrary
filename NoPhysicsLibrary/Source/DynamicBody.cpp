@@ -118,6 +118,7 @@ PhysVec DynamicBody::GravityOffset(InUnit unit) const
 void DynamicBody::SecondNewton()
 {
 	totalForces.Clear();
+	if (forces.Empty()) return;
 
 	forces.Iterate<Force&>
 	(
@@ -143,8 +144,9 @@ void DynamicBody::SecondNewton()
 void DynamicBody::FirstBuxeda()
 {
 	totalMomentum.Clear();
+	if (momentums.Empty()) return;
 
-	forces.Iterate<Momentum&>
+	momentums.Iterate<Momentum&>
 	(
 		[](Momentum* m, Momentum& total)
 		{

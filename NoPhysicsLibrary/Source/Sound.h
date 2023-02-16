@@ -7,8 +7,6 @@ class Sound
 {
 public:
 
-	Sound(ma_sound* source, float timeToDelete);
-
 	~Sound();
 
 	void Play();
@@ -21,8 +19,13 @@ public:
 
 	ma_delay_node* ConnectDelay(ma_engine* engine, float delayTime);
 
-	bool IsDelayOver() const
+	bool IsDelayOver()
 	{
+		if (!timer)
+		{
+			timer = new Timer();
+			timer->Start();
+		}
 		return (timer->ReadSecs() >= timeUntilPlay && !played);
 	}
 
@@ -31,12 +34,18 @@ public:
 		return played;
 	}
 
+private:
+
+	Sound(ma_sound* source, float timeToDelete);
+
 public:
 
 	ma_sound* source = nullptr;
 	ma_delay_node* delay = nullptr;
 
 private:
+
+	friend class Audio;
 
 	float timeUntilPlay = 0.0f;
 	Timer* timer = nullptr;

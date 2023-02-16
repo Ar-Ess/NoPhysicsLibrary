@@ -7,8 +7,6 @@ class Physics
 {
 public: // Methods
 
-	Physics(const PhysArray<Body*>* bodies, const Flag* physicsConfig, const PhysArray<unsigned int*>* gasIndex, const PhysArray<unsigned int*>* liquidIndex, const float* pixelsToMeters, const unsigned int* physIterations);
-
 	virtual ~Physics();
 
 	void Step(Body* b, float dt);
@@ -18,6 +16,8 @@ public: // Methods
 	void CleanUp();
 
 private: // Methods
+
+	Physics(const PhysArray<Body*>* bodies, const Flag* physicsConfig, const PhysArray<unsigned int*>* gasIndex, const PhysArray<unsigned int*>* liquidIndex, const float* pixelsToMeters, const unsigned int* physIterations);
 
 	void ApplyNaturalForces(Body* dynBody);
 		void ApplyHydroForces(Body* dynBody);
@@ -56,5 +56,9 @@ public: // Variables
 	const Flag* physicsConfig = nullptr;
 	const float* pixelsToMeters = nullptr;
 	const unsigned int* physIterations = nullptr;
+
+private:
+
+	friend class NPL;
 
 };

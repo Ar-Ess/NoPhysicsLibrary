@@ -4,6 +4,8 @@
 
 struct BodyBackup
 {
+private:
+
 	BodyBackup()
 	{
 		this->rectangle = {0, 0, 0, 0};
@@ -22,9 +24,16 @@ struct BodyBackup
 		this->force = force;
 	}
 
+public:
+
 	PhysRect rectangle = {};
 	PhysVec velocity = { 0.0f, 0.0f };
 	PhysVec acceleration = { 0.0f, 0.0f };
 	Momentum momentum = {};
 	Force force = {};
+
+private:
+
+	friend class DynamicBody;
+
 };

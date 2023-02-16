@@ -2,7 +2,7 @@
 
 struct SoundLoad
 {
-	SoundLoad(ma_sound* sound) : sound(sound) {}
-
-	ma_sound* sound = nullptr;
+private: SoundLoad(ma_sound* sound) : sound(sound) {}
+public: ma_sound* sound = nullptr;
+private: friend class Audio;
 };

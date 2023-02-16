@@ -11,7 +11,6 @@ TestThreeScene::~TestThreeScene()
 
 bool TestThreeScene::Start()
 {
-	//-TODO: Users can't "new" any body class
 	// Initialize Variables
 	npl = new NPL();
 	npl->Init(128);
@@ -33,7 +32,7 @@ bool TestThreeScene::Start()
 		->Dynamic(80);
 	player->EmissionPoint(PhysVec(-5.0f, 0), InUnit::IN_PIXELS);
 
-	npl->CreateBody(PhysRect( 150.0f, 400.0f, PhysVec(metersToPixels * 0.3f, metersToPixels * 0.75f) ))->Dynamic(80);
+	npl->Configure()->Listener(npl->CreateBody(PhysRect( 150.0f, 400.0f, PhysVec(metersToPixels * 0.3f, metersToPixels * 0.75f) ))->Dynamic(80));
 
 	// Static
 	npl->CreateBody({ 600, 520, 50, 10 })
@@ -119,6 +118,8 @@ bool TestThreeScene::Update(float dt)
 	// Functionalities
 	// Reset forces
 	if (input->GetKey(SDL_SCANCODE_C) == KeyState::KEY_DOWN) player->ResetForces();
+
+	if (input->GetKey(SDL_SCANCODE_RETURN) == KeyState::KEY_DOWN) player->Play(0);
 
 	// Pauses the physics
 	if (input->GetKey(SDL_SCANCODE_ESCAPE) == KeyState::KEY_DOWN)

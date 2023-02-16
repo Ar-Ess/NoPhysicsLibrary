@@ -32,12 +32,12 @@ void Body::Play(unsigned int index, float decibels)
 
 void Body::EmissionPoint(PhysVec offset, InUnit unit)
 {
-	emissionPoint = rect.Position() + (offset * Conversion(unit, true));
+	emissionPoint = offset * Conversion(unit, true);
 }
 
 PhysVec Body::EmissionPoint(InUnit unit) const
 {
-	return (rect.Position() + emissionPoint) * Conversion(unit, false);
+	return (rect.Position() + (rect.Size() / 2) + emissionPoint) * Conversion(unit, false);
 }
 
 PhysVec Body::Position(InUnit unit) const
