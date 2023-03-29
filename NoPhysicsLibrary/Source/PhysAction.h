@@ -1,15 +1,14 @@
 #pragma once
-#include "Array.h"
+#include "PhysArray.h"
 #include <functional>
 
 template<class ...Ts>
-class Action
+class PhysAction
 {
+
+    friend class NPL;
+
 public:
-
-    Action() {}
-
-    ~Action() { listeners.Clear(); }
 
     void Invoke(Ts... value)
     {
@@ -18,6 +17,12 @@ public:
         for (int i = 0; i < listeners.Size(); ++i)
             listeners[i](value...);
     }
+
+private:
+
+    PhysAction() {}
+
+    ~PhysAction() { listeners.Clear(); }
 
     // For global functions:
     //      operator+= std::bind(Func, args);
@@ -48,30 +53,8 @@ public:
         }
     }
 
-    bool Exists(std::function<void(Ts...)> func)
-    {
-        if (listeners.Empty()) return false;
-
-        for (int i = 0; i < listeners.Size(); ++i)
-        {
-            if (listeners[i].target_type() == func.target_type()) return true;
-        }
-
-        return false;
-    }
-
-    void Count()
-    {
-        return listeners.Size();
-    }
-
-    void Empty()
-    {
-        return listeners.Empty();
-    }
-
 private:
 
-    Array<std::function<void(Ts...)>> listeners;
+    PhysArray<std::function<void(Ts...)>> listeners;
 
 };

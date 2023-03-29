@@ -9,6 +9,7 @@
 #include "Physics.h"
 #include "Audio.h"
 #include <vector>
+#include "PhysAction.h"
 
 class NPL
 {
@@ -65,6 +66,9 @@ public:
 
 private: // Methods
 
+	void UpdateNotifier(unsigned int notify);
+		void UpdatePixelsToMeters();
+
 	void StepPhysics(float dt);
 
 	void StepAcoustics();
@@ -78,15 +82,11 @@ private: // Methods
 
 	void StepAudio(float* dt);
 
-	inline bool IsVoid() const { return gasIndex.Empty(); }
-	inline bool IsDry() const { return liquidIndex.Empty(); }
+	bool IsVoid() const { return gasIndex.Empty(); }
+	bool IsDry() const { return liquidIndex.Empty(); }
+	bool IsGlobalPause() { return physics->globals.Get(0); }
 
 	GasBody* GetEnvironmentBody(PhysRect body);
-
-	void UpdateNotifier();
-		void UpdatePixelsToMeters();
-
-	bool IsGlobalPause() { return physics->globals.Get(0); }
 
 private:
 
@@ -125,6 +125,6 @@ private:
 	Body* listener = nullptr;
 
 	//______Config Notifier______
-	Flag notifier = {}; // PixelsToMeters (0)
+	PhysAction<unsigned int> notifier;
 
 };

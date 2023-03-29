@@ -1,6 +1,6 @@
 #pragma once
 
-enum class BodyState
+enum BodyState
 {
 	IN_GAS = 0,
 	ON_GROUND,

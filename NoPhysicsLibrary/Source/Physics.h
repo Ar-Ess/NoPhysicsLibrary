@@ -7,6 +7,11 @@ class Physics
 {
 public: // Methods
 
+	enum PhysicsGlobals
+	{
+		P_GLOBAL_PAUSE
+	};
+
 	virtual ~Physics();
 
 	void Step(Body* b, float dt);
@@ -37,6 +42,7 @@ private: // Methods
 
 	// Internal
 	PhysVec CalculateFriction(Body* body);
+	bool IsCollisionDebuggingEnabled() const { return physicsConfig->Get(0); }
 
 public: // Variables
 

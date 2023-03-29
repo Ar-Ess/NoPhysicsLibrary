@@ -65,6 +65,14 @@ private: // Methods
 	bool IsIdExcludedFromCollision(PhysID id);
 	void SetPreviousBodyState();
 
+	bool ArePhysicsPaused() { return globals->Get(0); }
+
+	void IsBodyEnter(BodyState collision, bool set);
+	void IsBodyStill(BodyState collision, bool set);
+	void IsBodyExit(BodyState collision, bool set);
+	bool IsBodyPreviously(BodyState collision);
+	void IsBodyPreviously(BodyState collision, bool set);
+
 private: // Variables
 
 	friend class Physics; // Necessary for accessing SecondNewton/FirstBuxeda

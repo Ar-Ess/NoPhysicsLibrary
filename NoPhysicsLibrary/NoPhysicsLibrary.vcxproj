@@ -187,6 +187,7 @@
     <ClInclude Include="Source\InUnitsEnum.h" />
     <ClInclude Include="Source\LibraryConfigAux.h" />
     <ClInclude Include="Source\LibraryEnums.h" />
+    <ClInclude Include="Source\PhysAction.h" />
     <ClInclude Include="Source\PhysArray.h" />
     <ClInclude Include="Source\PhysID.h" />
     <ClInclude Include="Source\PhysVec.h" />

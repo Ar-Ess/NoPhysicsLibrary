@@ -19,6 +19,8 @@ void NPL::Init(float pixelsPerMeter)
 	physics = new Physics(&bodies, &physicsConfig, &gasIndex, &liquidIndex, &pixelsToMeters, &physIterations);
 	audio = new Audio();
 
+	notifier += std::bind(&NPL::UpdateNotifier, this, std::placeholders::_1);
+
 	// Pixels To Meters = [ m / pxl ]
 	pixelsToMeters = pixelsPerMeter > 0 ? 1 / pixelsPerMeter : 1;
 
@@ -61,8 +63,6 @@ void NPL::Update(float* dt)
 	if (IsGlobalPause()) return;
 
 	//INFO: Uniform forces independent from space use InUnit::IN_PIXELS, otherwise InUnit::IN_METERS
-	UpdateNotifier();
-
 	StepPhysics(*dt);
 	StepAcoustics();
 	StepAudio(dt);
@@ -324,6 +324,48 @@ void NPL::SetPhysicsPreset(PhysicsPreset preset)
 
 //- Private --------------------------------------------------------------------------------
 
+void NPL::UpdateNotifier(unsigned int notify)
+{
+	switch (notify)
+	{
+	case 0: UpdatePixelsToMeters(); break; // Pixels To Meters
+	default: assert(false && "Notified an invalid change out of bounds"); break;
+	}
+}
+
+void NPL::UpdatePixelsToMeters()
+{
+	bodies.Iterate<float>
+	(
+		[](Body* b, float ptmRatio)
+		{
+			switch (b->Class())
+			{
+			case BodyClass::DYNAMIC_BODY:
+			{
+				DynamicBody* dB = (DynamicBody*)b;
+				dB->GravityOffset(dB->GravityOffset() * ptmRatio);
+				break;
+			}
+			case BodyClass::LIQUID_BODY:
+				break;
+			default:
+				break;
+			}
+
+			b->emissionPoint *= ptmRatio;
+			b->rect.x *= ptmRatio;
+			b->rect.y *= ptmRatio;
+			b->rect.h *= ptmRatio;
+			b->rect.w *= ptmRatio;
+		},
+		ptmRatio
+	);
+
+	panRange *= ptmRatio;
+	physics->globalGravity *= ptmRatio;
+}
+
 void NPL::StepPhysics(float dt)
 {
 	bodies.Iterate<Physics*, float>
@@ -408,19 +450,12 @@ void NPL::UpdateStates()
 void NPL::StepAcoustics()
 {
 	// If no listener & environment is void
-	if (!listener && IsVoid())
-	{
-		return bodies.Iterate([](Body* b)
-			{
-				b->acousticDataList.Clear();
-			}
-		);
-	}
+	if (!listener && IsVoid()) return bodies.Iterate([](Body* b) { b->acousticDataList.Clear(); });
 
 	for (unsigned int i = 0; i < bodies.Size(); ++i)
 	{
 		Body* b = bodies[i];
-		if (b->acousticDataList.Empty() || !b->properties.Get(2)) continue;
+		if (b->acousticDataList.Empty() || !b->HasAcousticsUpdatability()) continue;
 
 		if (!listener)
 		{
@@ -496,48 +531,6 @@ GasBody* NPL::GetEnvironmentBody(PhysRect body)
 	}
 
 	return nullptr;
-}
-
-void NPL::UpdateNotifier()
-{
-	if (!notifier.IsAnyTrue()) return;
-
-	if (notifier.Get(0)) UpdatePixelsToMeters();
-
-	notifier.Clear();
-}
-
-void NPL::UpdatePixelsToMeters()
-{
-	bodies.Iterate<float>
-	(
-		[](Body* b, float ptmRatio)
-		{
-			switch (b->Class())
-			{
-			case BodyClass::DYNAMIC_BODY:
-			{
-				DynamicBody* dB = (DynamicBody*)b;
-				dB->GravityOffset(dB->GravityOffset() * ptmRatio);
-				break;
-			}
-			case BodyClass::LIQUID_BODY:
-				break;
-			default:
-				break;
-			}
-
-			b->emissionPoint *= ptmRatio;
-			b->rect.x *= ptmRatio;
-			b->rect.y *= ptmRatio;
-			b->rect.h *= ptmRatio;
-			b->rect.w *= ptmRatio;
-		},
-		ptmRatio
-	);
-
-	panRange *= ptmRatio;
-	physics->globalGravity *= ptmRatio;
 }
 
 float NPL::ComputePanning(float distance, float bodyX)

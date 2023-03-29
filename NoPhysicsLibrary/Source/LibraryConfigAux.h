@@ -3,12 +3,13 @@
 #include "Body.h"
 #include "ScenarioPresetEnum.h"
 #include "PhysicsPresetEnum.h"
+#include "PhysAction.h"
 
 struct LibraryConfig
 {
 private:
 
-	LibraryConfig(float* panRange, Flag* physicsConfig, PhysVec* globalGravity, PhysVec* globalRestitution, PhysVec* globalFriction, Body** listener, float* pixelsToMeters, float* ptmRatio, unsigned int* physIterations, Flag* notifier) :
+	LibraryConfig(float* panRange, Flag* physicsConfig, PhysVec* globalGravity, PhysVec* globalRestitution, PhysVec* globalFriction, Body** listener, float* pixelsToMeters, float* ptmRatio, unsigned int* physIterations, PhysAction<unsigned int>* notifier) :
 		panRange(panRange),
 		physicsConfig(physicsConfig),
 		globalGravity(globalGravity),
@@ -88,7 +89,7 @@ public:
 		float old = *this->pixelsToMeters;
 		*this->pixelsToMeters = ratio > 0 ? 1 / ratio : 1;
 		*this->ptmRatio = *this->pixelsToMeters / old;
-		notifier->Set(0, true);
+		notifier->Invoke(0); // Pixels To Meters
 	}
 
 	// Define the amount of collision detection and declipping iterations per frame
@@ -112,5 +113,5 @@ private:
 	Body** listener = nullptr;
 	unsigned int* physIterations = nullptr;
 
-	Flag* notifier = nullptr;
+	PhysAction<unsigned int>* notifier = nullptr;
 };

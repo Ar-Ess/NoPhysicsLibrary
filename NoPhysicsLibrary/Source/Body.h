@@ -14,6 +14,13 @@ class Body
 {
 public: // Methods
 
+	enum BodyPropierty
+	{
+		BP_COLLIDABLE,
+		BP_PHYSICS_UPDATE,
+		BP_ACOUSTICS_UPDATE
+	};
+
 	virtual ~Body() {}
 
 	// Plays a sound, volume range [0, 120]
@@ -52,16 +59,19 @@ public: // Methods
 	PhysID Id() const { return id; }
 
 	// Returns wether the body is collidable
-	bool IsCollidable() const { return properties.Get(0); }
-
+	bool IsCollidable() const { return properties.Get(BP_COLLIDABLE); }
 	// Sets the collidable property of the body
-	void SetCollidability(bool set) { properties.Set(0, set); }
+	void IsCollidable(bool set) { properties.Set(BP_COLLIDABLE, set); }
 	
+	// Returns wether the physics updatability property of the body is setted or not
+	bool HasPhysicsUpdatability() const { return properties.Get(BP_PHYSICS_UPDATE); }
 	// Sets the physics updatability property of the body
-	void SetPhysicsUpdatability(bool set) { properties.Set(1, set); }
+	void HasPhysicsUpdatability(bool set) { properties.Set(BP_PHYSICS_UPDATE, set); }
 	
+	// Returns wether the acoustics updatability property of the body is setted or not
+	bool HasAcousticsUpdatability() const { return properties.Get(BP_ACOUSTICS_UPDATE); }
 	// Sets the acoustic updatability property of the body
-	void SetAcousticsUpdatability(bool set) { properties.Set(2, set); }
+	void HasAcousticsUpdatability(bool set) { properties.Set(BP_ACOUSTICS_UPDATE, set); }
 
 	bool operator==(Body* b)
 	{
@@ -86,8 +96,6 @@ private: // Methods
 		return (emissionPoint * Conversion(unit, false));
 	}
 
-	PhysVec emissionPoint = { 0.0f, 0.0f };
-
 protected: // Variables
 
 	friend class NPL;
@@ -100,7 +108,11 @@ protected: // Variables
 	const float* pixelsToMeters = nullptr;
 	PhysArray<AcousticData*> acousticDataList;
 
-	// Collidable | UpdatePhysics | UpdateAcoustics
+private:
+
+	PhysVec emissionPoint = { 0.0f, 0.0f };
+
+	// Collidable(0) | UpdatePhysics(1) | UpdateAcoustics(2)
 	Flag properties = {};
 
 };

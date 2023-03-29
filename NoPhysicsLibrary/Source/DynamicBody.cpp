@@ -31,6 +31,31 @@ void DynamicBody::SetPreviousBodyState()
 	prevBodyState.Set(bodyStateStay.Binary());
 }
 
+void DynamicBody::IsBodyEnter(BodyState collision, bool set)
+{
+	bodyStateEnter.Set((int)collision, set);
+}
+
+void DynamicBody::IsBodyStill(BodyState collision, bool set)
+{
+	bodyStateStay.Set((int)collision, set);
+}
+
+void DynamicBody::IsBodyExit(BodyState collision, bool set)
+{
+	bodyStateExit.Set((int)collision, set);
+}
+
+bool DynamicBody::IsBodyPreviously(BodyState collision)
+{
+	return prevBodyState.Get((int)collision);
+}
+
+void DynamicBody::IsBodyPreviously(BodyState collision, bool set)
+{
+	prevBodyState.Set((int)collision, set);
+}
+
 bool DynamicBody::IsBodyEnter(BodyState collision)
 {
 	return bodyStateEnter.Get((int)collision);
@@ -63,7 +88,7 @@ bool DynamicBody::IncludeForCollision(const Body* b)
 
 void DynamicBody::ApplyForce(float x, float y, InUnit unit)
 {
-	if (globals->Get(0)) return; // Physics are paused
+	if (ArePhysicsPaused()) return;
 	PhysVec force = { x, y };
 
 	if (force.IsZero()) return; // If forces is null
@@ -74,7 +99,7 @@ void DynamicBody::ApplyForce(float x, float y, InUnit unit)
 
 void DynamicBody::ApplyForce(PhysVec force, InUnit unit)
 {
-	if (globals->Get(0)) return; // Physics are paused
+	if (ArePhysicsPaused()) return;
 	if (force.IsZero()) return; // If forces is null
 
 	//-TODO: Check if it has to be times = 2 because of m^2
@@ -85,7 +110,7 @@ void DynamicBody::ApplyForce(PhysVec force, InUnit unit)
 
 void DynamicBody::ApplyMomentum(float momentumX, float momentumY, InUnit unit)
 {
-	if (globals->Get(0)) return; // Physics are paused
+	if (ArePhysicsPaused()) return;
 	PhysVec momentum = { momentumX, momentumY };
 
 	if (momentum.IsZero()) return; // If momentum is null
@@ -96,9 +121,9 @@ void DynamicBody::ApplyMomentum(float momentumX, float momentumY, InUnit unit)
 
 void DynamicBody::ApplyMomentum(PhysVec momentum, InUnit unit)
 {
-	if (globals->Get(0)) return; // Physics are paused
-
+	if (ArePhysicsPaused()) return;
 	if (momentum.IsZero()) return; // If momentum is null
+
 	momentum *= Conversion(unit, true);
 
 	momentums.Add(new Momentum(momentum));

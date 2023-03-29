@@ -24,7 +24,7 @@ void Physics::Step(Body* b, float dt)
 	if (b->Class() != BodyClass::DYNAMIC_BODY) return;
 	DynamicBody* body = (DynamicBody*)b;
 
-	if (!body->properties.Get(1)) return;
+	if (!body->HasPhysicsUpdatability()) return;
 
 	// Apply gas and liquid forces
 	ApplyNaturalForces(body);
@@ -92,14 +92,14 @@ void Physics::ApplyHydroForces(Body* dynBody)
 
 	const float fullArea = body->Rect(InUnit::IN_METERS).Area();
 	float areaCovered = 0;
+
 	for (unsigned int index = 0; index < liquidIndex->Size(); ++index)
 	{
-		unsigned int i = *liquidIndex->At(index);
-		Body* liquid = bodies->At(i);
+		Body* liquid = bodies->At(*liquidIndex->At(index));
 
 		if (body->IsIdExcludedFromCollision(liquid->Id())) continue;
-
 		if (!PhysMath::CheckCollision(liquid->Rect(InUnit::IN_METERS), body->Rect(InUnit::IN_METERS))) continue;
+
 		float area = PhysMath::IntersectRectangle(liquid->Rect(InUnit::IN_METERS), body->Rect(InUnit::IN_METERS)).Area();
 		areaCovered += area;
 
@@ -108,7 +108,7 @@ void Physics::ApplyHydroForces(Body* dynBody)
 		ApplyHydroLift(body, liquid);
 		ApplyBuoyancy(body, liquid, area);
 
-		if (areaCovered - fullArea < 0.0001f) break;
+		if (areaCovered - fullArea < 0.001f) break;
 	}
 }
 
@@ -116,10 +116,10 @@ void Physics::ApplyHydroDrag(Body* dynBody, Body* env)
 {
 	LiquidBody* liquid = (LiquidBody*)env;
 	DynamicBody* body = (DynamicBody*)dynBody;
-	int negx = -1;
-	int negy = -1;
-	if (body->velocity.x < 0) negx *= -1;
-	if (body->velocity.y < 0) negy *= -1;
+
+	int negx = (body->velocity.x < 0) ? 1 : -1;
+	int negy = (body->velocity.y < 0) ? 1 : -1;
+
 	float hydrodragY = negy * 0.5f * liquid->Density(InUnit::IN_METERS) * PhysMath::Pow(body->velocity.y, 2) * body->Rect(InUnit::IN_METERS).h /* * liquid->GetDragCoefficient().y*/;
 	float hydrodragX = negx * 0.5f * liquid->Density(InUnit::IN_METERS) * PhysMath::Pow(body->velocity.x, 2) * body->Rect(InUnit::IN_METERS).w /* * liquid->GetDragCoefficient().x*/;
 	// negx *= -1;
@@ -136,10 +136,10 @@ void Physics::ApplyHydroLift(Body* dynBody, Body* env)
 {
 	LiquidBody* liquid = (LiquidBody*)env;
 	DynamicBody* body = (DynamicBody*)dynBody;
-	int negx = -1;
-	int negy = 1;
-	if (body->velocity.x < 0) negx = 1;
-	if (body->velocity.y < 0) negy = -1;
+
+	int negx = (body->velocity.x < 0) ? 1 : -1;
+	int negy = (body->velocity.y < 0) ? -1 : 1;
+
 	float hydroliftY = negx * 0.5f * liquid->Density(InUnit::IN_METERS) * PhysMath::Pow(body->velocity.x, 2) * body->Rect(InUnit::IN_METERS).h * liquid->LiftCoefficient().x;
 	float hydroliftX = negy * 0.5f * liquid->Density(InUnit::IN_METERS) * PhysMath::Pow(body->velocity.y, 2) * body->Rect(InUnit::IN_METERS).w * liquid->LiftCoefficient().y;
 	// La atrocitat probocada aquí constitueix la rotació de 90º en forma de x = -y i y = x (El lift sempre va a 90 graus respecte el drag)
@@ -151,6 +151,7 @@ void Physics::ApplyBuoyancy(Body* dynBody, Body* env, float area)
 {
 	LiquidBody* liquid = (LiquidBody*)env;
 	DynamicBody* body = (DynamicBody*)dynBody;
+
 	// Density * Area * gravity force (+ buoyancy coeficcient)
 	float forcex = liquid->Density(InUnit::IN_METERS) * area * (globalGravity.x + body->GravityOffset(InUnit::IN_METERS).x) * liquid->Buoyancy();
 	float forcey = liquid->Density(InUnit::IN_METERS) * area * (globalGravity.y + body->GravityOffset(InUnit::IN_METERS).y) * liquid->Buoyancy();
@@ -160,25 +161,26 @@ void Physics::ApplyBuoyancy(Body* dynBody, Body* env, float area)
 void Physics::ApplyAeroForces(Body* dynBody)
 {
 	DynamicBody* body = (DynamicBody*)dynBody;
+
 	if (!body->IsBodyStill(BodyState::IN_GAS)) return;
 
 	const float fullArea = body->Rect(InUnit::IN_METERS).Area();
 	float areaCovered = 0;
+
 	for (unsigned int index = 0; index < gasIndex->Size(); ++index)
 	{
-		unsigned int i = *gasIndex->At(index);
-		Body* gas = bodies->At(i);
+		Body* gas = bodies->At(*gasIndex->At(index));
 
 		if (body->IsIdExcludedFromCollision(gas->Id())) continue;
-
 		if (!PhysMath::CheckCollision(gas->Rect(InUnit::IN_METERS), body->Rect(InUnit::IN_METERS))) continue;
+
 		float area = PhysMath::IntersectRectangle(gas->Rect(InUnit::IN_METERS), body->Rect(InUnit::IN_METERS)).Area();
 		areaCovered += area;
 
 		ApplyAeroDrag(body, gas, area);
 		ApplyAeroLift(body, gas, area);
 
-		if (areaCovered - fullArea < 0.0001f) break;
+		if (areaCovered - fullArea < 0.001f) break;
 	}
 }
 
@@ -186,12 +188,13 @@ void Physics::ApplyAeroDrag(Body* dynBody, Body* env, float area)
 {
 	DynamicBody* body = (DynamicBody*)dynBody;
 	GasBody* gas = (GasBody*)env;
-	int negx = -1;
-	int negy = -1;
-	if (body->velocity.x < 0) negx = 1;
-	if (body->velocity.y < 0) negy = 1;
+
+	int negx = (body->velocity.x < 0) ? 1 : -1;
+	int negy = (body->velocity.y < 0) ? 1 : -1;
+
 	float aerodragX = negx * 0.5f * gas->Density(InUnit::IN_METERS) * PhysMath::Pow(body->velocity.x, 2) * area * gas->DragCoefficient().x;
 	float aerodragY = negy * 0.5f * gas->Density(InUnit::IN_METERS) * PhysMath::Pow(body->velocity.y, 2) * area * gas->DragCoefficient().y;
+
 	body->ApplyForce(aerodragX, aerodragY, InUnit::IN_METERS);
 }
 
@@ -200,10 +203,9 @@ void Physics::ApplyAeroLift(Body* dynBody, Body* env, float area)
 	DynamicBody* body = (DynamicBody*)dynBody;
 	GasBody* gas = (GasBody*)env;
 
-	int negx = -1;
-	int negy = 1;
-	if (body->velocity.x < 0) negx = 1;
-	if (body->velocity.y < 0) negy = -1;
+	int negx = (body->velocity.x < 0) ? 1 : -1;
+	int negy = (body->velocity.y < 0) ? -1 : 1;
+
 	float aeroliftY = negx * 0.5f * gas->Density(InUnit::IN_METERS) * PhysMath::Pow(body->velocity.x, 2) * body->Rect(InUnit::IN_METERS).h * gas->LiftCoefficient().x;
 	float aeroliftX = negy * 0.5f * gas->Density(InUnit::IN_METERS) * PhysMath::Pow(body->velocity.y, 2) * body->Rect(InUnit::IN_METERS).w * gas->LiftCoefficient().y;
 	// La atrocitat probocada aquí constitueix la rotació de 90º en forma de x = -y i y = x (El lift sempre va a 90 graus respecte el drag)
@@ -214,18 +216,16 @@ void Physics::ApplyAeroLift(Body* dynBody, Body* env, float area)
 void Physics::DetectCollisions(PhysArray<Body*>* bodies)
 {
 	// If collisions debugging is enabled
-	if (physicsConfig->Get(0)) collisions.Clear();
+	if (IsCollisionDebuggingEnabled()) collisions.Clear();
 
 	// New (iterate dynamic bodies with all)
 	for (unsigned int i = 0; i < bodies->Size(); ++i)
 	{
 		Body* b = bodies->At(i);
-		if (b->Class() != BodyClass::DYNAMIC_BODY) continue;
-		if (!b->IsCollidable()) continue;
+		if (b->Class() != BodyClass::DYNAMIC_BODY || !b->IsCollidable()) continue;
 
 		DynamicBody* b1 = (DynamicBody*)b;
-
-		if (!b1->properties.Get(1)) continue;
+		if (!b1->HasPhysicsUpdatability()) continue;
 
 		for (unsigned int a = 0; a < bodies->Size(); ++a)
 		{
@@ -234,21 +234,9 @@ void Physics::DetectCollisions(PhysArray<Body*>* bodies)
 			if (b2->Class() == BodyClass::GAS_BODY || b2->Class() == BodyClass::LIQUID_BODY || !b2->IsCollidable()) continue;
 			if (b2->Class() == BodyClass::DYNAMIC_BODY && a < i) continue;
 			if (b1->IsIdExcludedFromCollision(b2->Id())) continue;
+			if (!PhysMath::CheckCollision(b1->Rect(InUnit::IN_METERS), b2->Rect(InUnit::IN_METERS))) continue;
 
 			PhysRect intersect = PhysMath::IntersectRectangle(b1->Rect(InUnit::IN_METERS), b2->Rect(InUnit::IN_METERS));
-			PhysVec intersectionPoint = {};
-			// Try to check a collision
-			if (!PhysMath::CheckCollision(b1->Rect(InUnit::IN_METERS), b2->Rect(InUnit::IN_METERS)))
-			{
-				continue;
-				// In Process
-				// Try to check if tunneling
-				if (!PhysMath::RayCast(
-					PhysRay(b1->Position(InUnit::IN_METERS) + (b1->Size(InUnit::IN_METERS) / 2), b1->backup.rectangle.Position() + (b1->backup.rectangle.Size() / 2)),
-					b2->Rect(InUnit::IN_METERS),
-					intersectionPoint
-				)) continue;
-			}
 
 			collisions.Add(new Collision(b1, b2, intersect, pixelsToMeters));
 		}
@@ -293,7 +281,6 @@ void Physics::Declip()
 
 		switch (b->Class())
 		{
-
 		case BodyClass::DYNAMIC_BODY:
 		{
 			DynamicBody* body = (DynamicBody*)b;
@@ -312,16 +299,18 @@ void Physics::Declip()
 				{
 					dynBody->rect.y -= intersect.h / 2;
 					body->rect.y += intersect.h / 2;
-					if (!dynBody->prevBodyState.Get((int)BodyState::ON_GROUND)) dynBody->bodyStateEnter.Set((int)BodyState::ON_GROUND, true);
-					dynBody->bodyStateStay.Set((int)BodyState::ON_GROUND, true);
+
+					if (!dynBody->IsBodyPreviously(ON_GROUND)) dynBody->IsBodyEnter(ON_GROUND, true);
+					dynBody->IsBodyStill(ON_GROUND, true);
 				}
 				// Bottom -> Top
 				if (directionVec.y < 0)
 				{
 					dynBody->rect.y += intersect.h / 2;
 					body->rect.y -= intersect.h / 2;
-					if (!dynBody->prevBodyState.Get((int)BodyState::ON_ROOF)) dynBody->bodyStateEnter.Set((int)BodyState::ON_ROOF, true);
-					dynBody->bodyStateStay.Set((int)BodyState::ON_ROOF, true);
+
+					if (!dynBody->IsBodyPreviously(ON_ROOF)) dynBody->IsBodyEnter(ON_ROOF, true);
+					dynBody->IsBodyStill(ON_ROOF, true);
 				}
 
 				// Perfectly elastic collision
@@ -339,16 +328,18 @@ void Physics::Declip()
 				{
 					dynBody->rect.x -= intersect.w / 2;
 					body->rect.x += intersect.w / 2;
-					if (!dynBody->prevBodyState.Get((int)BodyState::ON_RIGHT)) dynBody->bodyStateEnter.Set((int)BodyState::ON_RIGHT, true);
-					dynBody->bodyStateStay.Set((int)BodyState::ON_RIGHT, true);
+
+					if (!dynBody->IsBodyPreviously(ON_RIGHT)) dynBody->IsBodyEnter(ON_RIGHT, true);
+					dynBody->IsBodyStill(ON_RIGHT, true);
 				}
 				// Right -> Left
 				if (directionVec.x < 0)
 				{
 					dynBody->rect.x += intersect.w / 2;
 					body->rect.x -= intersect.w / 2;
-					if (!dynBody->prevBodyState.Get((int)BodyState::ON_LEFT)) dynBody->bodyStateEnter.Set((int)BodyState::ON_LEFT, true);
-					dynBody->bodyStateStay.Set((int)BodyState::ON_LEFT, true);
+
+					if (!dynBody->IsBodyPreviously(ON_LEFT)) dynBody->IsBodyEnter(ON_LEFT, true);
+					dynBody->IsBodyStill(ON_LEFT, true);
 				}
 
 				// Perfectly elastic collision
@@ -387,15 +378,17 @@ void Physics::Declip()
 				if (directionVec.y > 0)
 				{
 					dynBody->rect.y = body->Position(InUnit::IN_METERS).y - dynBody->rect.h;
-					if (!dynBody->prevBodyState.Get((int)BodyState::ON_GROUND)) dynBody->bodyStateEnter.Set((int)BodyState::ON_GROUND, true);
-					dynBody->bodyStateStay.Set((int)BodyState::ON_GROUND, true);
+
+					if (!dynBody->IsBodyPreviously(ON_GROUND)) dynBody->IsBodyEnter(ON_GROUND, true);
+					dynBody->IsBodyStill(ON_GROUND, true);
 				}
 				// Bottom -> Top
 				if (directionVec.y < 0)
 				{
 					dynBody->rect.y = body->Rect(InUnit::IN_METERS).y + body->Rect(InUnit::IN_METERS).h;
-					if (!dynBody->prevBodyState.Get((int)BodyState::ON_ROOF)) dynBody->bodyStateEnter.Set((int)BodyState::ON_ROOF, true);
-					dynBody->bodyStateStay.Set((int)BodyState::ON_ROOF, true);
+					
+					if (!dynBody->IsBodyPreviously(ON_ROOF)) dynBody->IsBodyEnter(ON_ROOF, true);
+					dynBody->IsBodyStill(ON_ROOF, true);
 				}
 
 				// Perfectly elastic collision
@@ -411,15 +404,17 @@ void Physics::Declip()
 				if (directionVec.x > 0)
 				{
 					dynBody->rect.x = body->Position(InUnit::IN_METERS).x - dynBody->rect.w;
-					if (!dynBody->prevBodyState.Get((int)BodyState::ON_RIGHT)) dynBody->bodyStateEnter.Set((int)BodyState::ON_RIGHT, true);
-					dynBody->bodyStateStay.Set((int)BodyState::ON_RIGHT, true);
+					
+					if (!dynBody->IsBodyPreviously(ON_RIGHT)) dynBody->IsBodyEnter(ON_RIGHT, true);
+					dynBody->IsBodyStill(ON_RIGHT, true);
 				}
 				// Right -> Left
 				if (directionVec.x < 0)
 				{
 					dynBody->rect.x = body->Rect(InUnit::IN_METERS).x + body->Rect(InUnit::IN_METERS).w;
-					if (!dynBody->prevBodyState.Get((int)BodyState::ON_LEFT)) dynBody->bodyStateEnter.Set((int)BodyState::ON_LEFT, true);
-					dynBody->bodyStateStay.Set((int)BodyState::ON_LEFT, true);
+
+					if (!dynBody->IsBodyPreviously(ON_LEFT)) dynBody->IsBodyEnter(ON_LEFT, true);
+					dynBody->IsBodyStill(ON_LEFT, true);
 				}
 
 				// Perfectly elastic collision

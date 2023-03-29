@@ -17,9 +17,11 @@ class PhysArray
     };
 
     PhysArray() {}
+
     friend class NPL;
     friend class Audio;
     friend class DynamicBody;
+    template<class ...Ts> friend class PhysAction;
 
 public:
 
@@ -322,6 +324,11 @@ class PhysArray<T*>
         Node* prev = nullptr;
         Node* post = nullptr;
     };
+
+    friend class NPL;
+    friend class Audio;
+    friend class DynamicBody;
+    template<class ...Ts> friend class PhysAction;
 
 public:
 
