@@ -73,7 +73,7 @@ private: // Methods
 
 	void StepAcoustics();
 		void ListenerLogic(Body* b, GasBody* environment);
-			float ComputePanning(float distance, float bodyX);
+			float ComputePanning(float distance, int direction);
 			float ComputeVolume(float distance, float spl);
 			float ComputeTimeDelay(float distance, GasBody* environment);
 		void NoListenerLogic(Body* b);
@@ -123,6 +123,7 @@ private:
 	//_____________________
 	// - Audio
 	Body* listener = nullptr;
+	//TODO: Not working, it freezes the position and never changes
 
 	//______Config Notifier______
 	PhysAction<unsigned int> notifier;

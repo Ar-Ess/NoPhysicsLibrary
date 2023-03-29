@@ -30,7 +30,7 @@ bool TestThreeScene::Start()
 	// Dynamic
 	player = npl->CreateBody(PhysRect( 100.0f, 200.0f, PhysVec(metersToPixels * 0.3f, metersToPixels * 0.75f) ))
 		->Dynamic(80);
-	player->EmissionPoint(PhysVec(-5.0f, 0), InUnit::IN_PIXELS);
+	//player->EmissionPoint(PhysVec(-5.0f, 0), InUnit::IN_PIXELS);
 
 	npl->Configure()->Listener(npl->CreateBody(PhysRect( 150.0f, 400.0f, PhysVec(metersToPixels * 0.3f, metersToPixels * 0.75f) ))->Dynamic(80));
 
@@ -67,7 +67,7 @@ bool TestThreeScene::Start()
 	shell->FrictionOffset({ -0.5f, 0.0f });
 	shell->RestitutionOffset({ 1.0f, 0.0f });
 	shell->ExcludeForCollision(gas);
-	shell->SetPhysicsUpdatability(false);
+	shell->HasPhysicsUpdatability(false);
 
 	// Camera
 	render->ResetCamera();
@@ -89,8 +89,8 @@ bool TestThreeScene::Update(float dt)
 	if (render->camera.rect.x > 3000) render->camera.rect.x = 3000;
 	if (render->camera.rect.y < 0) render->camera.rect.y = 0;
 
-	if (MathUtils::CheckCollision(shell->Rect(InUnit::IN_PIXELS), render->camera.rect)) shell->SetPhysicsUpdatability(true);
-	else shell->SetPhysicsUpdatability(false);
+	if (MathUtils::CheckCollision(shell->Rect(InUnit::IN_PIXELS), render->camera.rect)) shell->HasPhysicsUpdatability(true);
+	else shell->HasPhysicsUpdatability(false);
 
 	// Inputs
 	if (input->GetKey(SDL_SCANCODE_D) == KeyState::KEY_REPEAT)
@@ -119,7 +119,8 @@ bool TestThreeScene::Update(float dt)
 	// Reset forces
 	if (input->GetKey(SDL_SCANCODE_C) == KeyState::KEY_DOWN) player->ResetForces();
 
-	if (input->GetKey(SDL_SCANCODE_RETURN) == KeyState::KEY_DOWN) player->Play(0);
+	if (input->GetKey(SDL_SCANCODE_RETURN) == KeyState::KEY_DOWN)
+		shell->Play(0);
 
 	// Pauses the physics
 	if (input->GetKey(SDL_SCANCODE_ESCAPE) == KeyState::KEY_DOWN)

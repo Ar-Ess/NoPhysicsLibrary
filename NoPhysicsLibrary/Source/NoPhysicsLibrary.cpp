@@ -136,7 +136,7 @@ bool NPL::DestroyBody(PhysID id)
 {
 	assert(physics != nullptr && audio != nullptr && "ERROR: NPL variable not initialized. Call Init() first.");
 	Body find(BodyClass::EMPTY_BODY, {}, 0, nullptr);
-	find.id = id;
+	find.id = &id;
 	return bodies.Erase(bodies.Find(&find));
 }
 
@@ -508,9 +508,10 @@ void NPL::ListenerLogic(Body* b, GasBody* environment)
 		AcousticData* data = b->acousticDataList[i];
 
 		// Get the distance between Body & Listener
-		float distance = PhysMath::Distance((listener->Position(InUnit::IN_METERS) + listener->emissionPoint), data->emissionPosition);
+		float distance = PhysMath::Distance(listener->EmissionPoint(InUnit::IN_METERS), data->emissionPosition);
+		bool direction = (listener->EmissionPoint(InUnit::IN_METERS).x - data->emissionPosition.x) < 0;
 
-		float pan = ComputePanning(distance, data->emissionPosition.x);
+		float pan = ComputePanning(distance, direction ? 1 : -1);
 
 		float volume = ComputeVolume(distance, data->spl);
 
@@ -533,15 +534,10 @@ GasBody* NPL::GetEnvironmentBody(PhysRect body)
 	return nullptr;
 }
 
-float NPL::ComputePanning(float distance, float bodyX)
+float NPL::ComputePanning(float distance, int direction)
 {
-	// Check direction for audio panning (50L(neg) or 50R(pos))
-	float direction = 1;
-	if ((listener->Position(InUnit::IN_METERS) + listener->emissionPoint).x < bodyX) direction *= -1;
-
 	// Narrow down distance over Range for panning operations
-	if (distance > panRange) distance = panRange;
-	if (distance < -panRange) distance = -panRange;
+	PhysMath::Clamp(distance, 0, panRange);
 
 	// Compute pan (normalized between [ 1, -1])
 	return distance / panRange * direction;
@@ -569,8 +565,6 @@ float NPL::ComputeTimeDelay(float distance, GasBody* environment)
 
 void NPL::StepAudio(float* dt)
 {
-	audio->Update();
-
 	if (soundDataList.Empty()) return;
 
 	soundDataList.Iterate<Audio*, float*>

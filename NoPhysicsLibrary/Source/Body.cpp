@@ -19,7 +19,7 @@ Body::Body(BodyClass clas, PhysRect rect, float mass, const float* pixelsToMeter
 
 	this->properties.Set(true, 0);
 
-	id = PhysID();
+	id = new PhysID();
 
 	properties.Set(0b00000111);
 }
@@ -27,7 +27,7 @@ Body::Body(BodyClass clas, PhysRect rect, float mass, const float* pixelsToMeter
 void Body::Play(unsigned int index, float decibels)
 {
 	PhysMath::Clamp(decibels, 0, 120);
-	acousticDataList.Add(new AcousticData(index, rect.Position() + emissionPoint, decibels));
+	acousticDataList.Add(new AcousticData(index, EmissionPoint(InUnit::IN_METERS), decibels));
 }
 
 void Body::EmissionPoint(PhysVec offset, InUnit unit)

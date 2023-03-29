@@ -56,7 +56,7 @@ public: // Methods
 	void Mass(float mass) { mass <= 0 ? this->mass = 0.1f : this->mass = mass; }
 
 	// Returns the body id
-	PhysID Id() const { return id; }
+	PhysID Id() const { return *id; }
 
 	// Returns wether the body is collidable
 	bool IsCollidable() const { return properties.Get(BP_COLLIDABLE); }
@@ -103,7 +103,7 @@ protected: // Variables
 	PhysRect rect = {};
 	BodyClass clas = BodyClass::EMPTY_BODY;
 	float mass = 1.0f;
-	PhysID id;
+	PhysID* id = nullptr;
 	// Units: m/pxl
 	const float* pixelsToMeters = nullptr;
 	PhysArray<AcousticData*> acousticDataList;

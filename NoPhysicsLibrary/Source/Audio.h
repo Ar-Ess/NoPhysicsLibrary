@@ -1,12 +1,10 @@
 #pragma once
 
-#include "External/miniaudio/miniaudiodev.h" // Always first miniaudiodev
-#include "External\dr_libs\dr_mp3.h" // Always second dr_mp3.h
+#include "External/SoLoud/include/soloud.h"
 #include "Sound.h"
-#include "SoundData.h"
-#include "SoundLoad.h"
-#include "Define.h"
 #include "PhysArray.h"
+
+class SoundData;
 
 class Audio
 {
@@ -16,13 +14,11 @@ public:
 
 	void Playback(SoundData* data, float* dt);
 
-	void Update();
-
 	void LoadSound(const char* path);
 
 	void CleanUp();
 
-	const unsigned int SoundSize() const
+	int SoundSize() const
 	{
 		return sounds.Size();
 	}
@@ -35,8 +31,7 @@ private:
 
 	friend class NPL;
 
-	ma_engine engine;
-	PhysArray<SoundLoad*> sounds;
-	PhysArray<Sound*> playback;
+	SoLoud::Soloud* audio = nullptr;
+	PhysArray<Sound*> sounds;
 
 };

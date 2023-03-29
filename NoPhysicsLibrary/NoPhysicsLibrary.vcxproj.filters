@@ -16,12 +16,6 @@
     <Filter Include="External">
       <UniqueIdentifier>{292119d1-7b68-49d5-aaa0-08328ae34158}</UniqueIdentifier>
     </Filter>
-    <Filter Include="External\Miniaudio">
-      <UniqueIdentifier>{e428adcf-6f37-4d08-aa09-cac9567e7295}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="External\Dr Libs">
-      <UniqueIdentifier>{7e503b62-bf71-4e87-8152-701f27df4b70}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Core\Audio">
       <UniqueIdentifier>{eaebb9be-db7b-43cf-8eec-19b1910553e4}</UniqueIdentifier>
     </Filter>
@@ -39,6 +33,9 @@
     </Filter>
     <Filter Include="Core\Bodies\Units">
       <UniqueIdentifier>{7e5b62f1-a575-470f-bd65-bbaadb17c891}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="External\SoLoud">
+      <UniqueIdentifier>{b7ffab4b-69cb-4c8b-8a44-246cce313c7a}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -60,9 +57,6 @@
     <ClCompile Include="Source\GasBody.cpp">
       <Filter>Core\Bodies</Filter>
     </ClCompile>
-    <ClCompile Include="Source\miniaudio_impl.c">
-      <Filter>External\Miniaudio</Filter>
-    </ClCompile>
     <ClCompile Include="Source\Audio.cpp">
       <Filter>Core\Audio</Filter>
     </ClCompile>
@@ -78,14 +72,161 @@
     <ClCompile Include="Source\Timer.cpp">
       <Filter>Utils</Filter>
     </ClCompile>
-    <ClCompile Include="Source\External\miniaudio\extras\nodes\ma_reverb_node\ma_reverb_node.c">
-      <Filter>External\Miniaudio</Filter>
-    </ClCompile>
     <ClCompile Include="Source\PhysVec.cpp">
       <Filter>Core\Physics\Units</Filter>
     </ClCompile>
     <ClCompile Include="Source\PhysRect.cpp">
       <Filter>Core\Physics\Units</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\External\SoLoud\src\audiosource\monotone\soloud_monotone.cpp">
+      <Filter>External\SoLoud</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\External\SoLoud\src\audiosource\noise\soloud_noise.cpp">
+      <Filter>External\SoLoud</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\External\SoLoud\src\audiosource\openmpt\soloud_openmpt.cpp">
+      <Filter>External\SoLoud</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\External\SoLoud\src\audiosource\openmpt\soloud_openmpt_dll.c">
+      <Filter>External\SoLoud</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\External\SoLoud\src\audiosource\sfxr\soloud_sfxr.cpp">
+      <Filter>External\SoLoud</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\External\SoLoud\src\audiosource\speech\darray.cpp">
+      <Filter>External\SoLoud</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\External\SoLoud\src\audiosource\speech\klatt.cpp">
+      <Filter>External\SoLoud</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\External\SoLoud\src\audiosource\speech\resonator.cpp">
+      <Filter>External\SoLoud</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\External\SoLoud\src\audiosource\speech\soloud_speech.cpp">
+      <Filter>External\SoLoud</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\External\SoLoud\src\audiosource\speech\tts.cpp">
+      <Filter>External\SoLoud</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\External\SoLoud\src\audiosource\tedsid\sid.cpp">
+      <Filter>External\SoLoud</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\External\SoLoud\src\audiosource\tedsid\soloud_tedsid.cpp">
+      <Filter>External\SoLoud</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\External\SoLoud\src\audiosource\tedsid\ted.cpp">
+      <Filter>External\SoLoud</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\External\SoLoud\src\audiosource\vic\soloud_vic.cpp">
+      <Filter>External\SoLoud</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\External\SoLoud\src\audiosource\vizsn\soloud_vizsn.cpp">
+      <Filter>External\SoLoud</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\External\SoLoud\src\audiosource\wav\dr_impl.cpp">
+      <Filter>External\SoLoud</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\External\SoLoud\src\audiosource\wav\soloud_wav.cpp">
+      <Filter>External\SoLoud</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\External\SoLoud\src\audiosource\wav\soloud_wavstream.cpp">
+      <Filter>External\SoLoud</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\External\SoLoud\src\audiosource\wav\stb_vorbis.c">
+      <Filter>External\SoLoud</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\External\SoLoud\src\backend\miniaudio\soloud_miniaudio.cpp">
+      <Filter>External\SoLoud</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\External\SoLoud\src\c_api\soloud_c.cpp">
+      <Filter>External\SoLoud</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\External\SoLoud\src\core\soloud_thread.cpp">
+      <Filter>External\SoLoud</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\External\SoLoud\src\core\soloud.cpp">
+      <Filter>External\SoLoud</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\External\SoLoud\src\core\soloud_audiosource.cpp">
+      <Filter>External\SoLoud</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\External\SoLoud\src\core\soloud_bus.cpp">
+      <Filter>External\SoLoud</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\External\SoLoud\src\core\soloud_core_3d.cpp">
+      <Filter>External\SoLoud</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\External\SoLoud\src\core\soloud_core_basicops.cpp">
+      <Filter>External\SoLoud</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\External\SoLoud\src\core\soloud_core_faderops.cpp">
+      <Filter>External\SoLoud</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\External\SoLoud\src\core\soloud_core_filterops.cpp">
+      <Filter>External\SoLoud</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\External\SoLoud\src\core\soloud_core_getters.cpp">
+      <Filter>External\SoLoud</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\External\SoLoud\src\core\soloud_core_setters.cpp">
+      <Filter>External\SoLoud</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\External\SoLoud\src\core\soloud_core_voicegroup.cpp">
+      <Filter>External\SoLoud</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\External\SoLoud\src\core\soloud_core_voiceops.cpp">
+      <Filter>External\SoLoud</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\External\SoLoud\src\core\soloud_fader.cpp">
+      <Filter>External\SoLoud</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\External\SoLoud\src\core\soloud_fft.cpp">
+      <Filter>External\SoLoud</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\External\SoLoud\src\core\soloud_fft_lut.cpp">
+      <Filter>External\SoLoud</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\External\SoLoud\src\core\soloud_file.cpp">
+      <Filter>External\SoLoud</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\External\SoLoud\src\core\soloud_filter.cpp">
+      <Filter>External\SoLoud</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\External\SoLoud\src\core\soloud_misc.cpp">
+      <Filter>External\SoLoud</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\External\SoLoud\src\core\soloud_queue.cpp">
+      <Filter>External\SoLoud</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\External\SoLoud\src\filter\soloud_waveshaperfilter.cpp">
+      <Filter>External\SoLoud</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\External\SoLoud\src\filter\soloud_bassboostfilter.cpp">
+      <Filter>External\SoLoud</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\External\SoLoud\src\filter\soloud_biquadresonantfilter.cpp">
+      <Filter>External\SoLoud</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\External\SoLoud\src\filter\soloud_dcremovalfilter.cpp">
+      <Filter>External\SoLoud</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\External\SoLoud\src\filter\soloud_echofilter.cpp">
+      <Filter>External\SoLoud</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\External\SoLoud\src\filter\soloud_fftfilter.cpp">
+      <Filter>External\SoLoud</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\External\SoLoud\src\filter\soloud_flangerfilter.cpp">
+      <Filter>External\SoLoud</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\External\SoLoud\src\filter\soloud_freeverbfilter.cpp">
+      <Filter>External\SoLoud</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\External\SoLoud\src\filter\soloud_lofifilter.cpp">
+      <Filter>External\SoLoud</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\External\SoLoud\src\filter\soloud_robotizefilter.cpp">
+      <Filter>External\SoLoud</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -125,18 +266,6 @@
     <ClInclude Include="Source\GasBody.h">
       <Filter>Core\Bodies</Filter>
     </ClInclude>
-    <ClInclude Include="Source\External\miniaudio\miniaudio.h">
-      <Filter>External\Miniaudio</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\External\dr_libs\dr_flac.h">
-      <Filter>External\Dr Libs</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\External\dr_libs\dr_mp3.h">
-      <Filter>External\Dr Libs</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\External\dr_libs\dr_wav.h">
-      <Filter>External\Dr Libs</Filter>
-    </ClInclude>
     <ClInclude Include="Source\Audio.h">
       <Filter>Core\Audio</Filter>
     </ClInclude>
@@ -167,14 +296,8 @@
     <ClInclude Include="Source\Timer.h">
       <Filter>Utils</Filter>
     </ClInclude>
-    <ClInclude Include="Source\SoundLoad.h">
-      <Filter>Core\Audio\Units</Filter>
-    </ClInclude>
     <ClInclude Include="Source\Ray.h">
       <Filter>Utils</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\External\miniaudio\miniaudiodev.h">
-      <Filter>External\Miniaudio</Filter>
     </ClInclude>
     <ClInclude Include="Source\InUnitsEnum.h">
       <Filter>Enums</Filter>
@@ -187,12 +310,6 @@
     </ClInclude>
     <ClInclude Include="Source\GetDataAuxiliar.h">
       <Filter>Aux</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\External\miniaudio\extras\nodes\ma_reverb_node\ma_reverb_node.h">
-      <Filter>External\Miniaudio</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\External\miniaudio\extras\nodes\ma_reverb_node\verblib.h">
-      <Filter>External\Miniaudio</Filter>
     </ClInclude>
     <ClInclude Include="Source\PhysRect.h">
       <Filter>Core\Physics\Units</Filter>
@@ -214,6 +331,144 @@
     </ClInclude>
     <ClInclude Include="Source\PhysAction.h">
       <Filter>Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\External\SoLoud\include\soloud_noise.h">
+      <Filter>External\SoLoud</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\External\SoLoud\include\soloud_openmpt.h">
+      <Filter>External\SoLoud</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\External\SoLoud\include\soloud_queue.h">
+      <Filter>External\SoLoud</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\External\SoLoud\include\soloud_robotizefilter.h">
+      <Filter>External\SoLoud</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\External\SoLoud\include\soloud_sfxr.h">
+      <Filter>External\SoLoud</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\External\SoLoud\include\soloud_speech.h">
+      <Filter>External\SoLoud</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\External\SoLoud\include\soloud_tedsid.h">
+      <Filter>External\SoLoud</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\External\SoLoud\include\soloud_thread.h">
+      <Filter>External\SoLoud</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\External\SoLoud\include\soloud_vic.h">
+      <Filter>External\SoLoud</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\External\SoLoud\include\soloud_vizsn.h">
+      <Filter>External\SoLoud</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\External\SoLoud\include\soloud_wav.h">
+      <Filter>External\SoLoud</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\External\SoLoud\include\soloud_waveshaperfilter.h">
+      <Filter>External\SoLoud</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\External\SoLoud\include\soloud_wavstream.h">
+      <Filter>External\SoLoud</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\External\SoLoud\include\soloud.h">
+      <Filter>External\SoLoud</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\External\SoLoud\include\soloud_audiosource.h">
+      <Filter>External\SoLoud</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\External\SoLoud\include\soloud_bassboostfilter.h">
+      <Filter>External\SoLoud</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\External\SoLoud\include\soloud_biquadresonantfilter.h">
+      <Filter>External\SoLoud</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\External\SoLoud\include\soloud_bus.h">
+      <Filter>External\SoLoud</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\External\SoLoud\include\soloud_c.h">
+      <Filter>External\SoLoud</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\External\SoLoud\include\soloud_dcremovalfilter.h">
+      <Filter>External\SoLoud</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\External\SoLoud\include\soloud_echofilter.h">
+      <Filter>External\SoLoud</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\External\SoLoud\include\soloud_error.h">
+      <Filter>External\SoLoud</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\External\SoLoud\include\soloud_fader.h">
+      <Filter>External\SoLoud</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\External\SoLoud\include\soloud_fft.h">
+      <Filter>External\SoLoud</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\External\SoLoud\include\soloud_fftfilter.h">
+      <Filter>External\SoLoud</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\External\SoLoud\include\soloud_file.h">
+      <Filter>External\SoLoud</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\External\SoLoud\include\soloud_file_hack_off.h">
+      <Filter>External\SoLoud</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\External\SoLoud\include\soloud_file_hack_on.h">
+      <Filter>External\SoLoud</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\External\SoLoud\include\soloud_filter.h">
+      <Filter>External\SoLoud</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\External\SoLoud\include\soloud_flangerfilter.h">
+      <Filter>External\SoLoud</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\External\SoLoud\include\soloud_freeverbfilter.h">
+      <Filter>External\SoLoud</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\External\SoLoud\include\soloud_internal.h">
+      <Filter>External\SoLoud</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\External\SoLoud\include\soloud_lofifilter.h">
+      <Filter>External\SoLoud</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\External\SoLoud\include\soloud_misc.h">
+      <Filter>External\SoLoud</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\External\SoLoud\include\soloud_monotone.h">
+      <Filter>External\SoLoud</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\External\SoLoud\src\audiosource\speech\darray.h">
+      <Filter>External\SoLoud</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\External\SoLoud\src\audiosource\speech\klatt.h">
+      <Filter>External\SoLoud</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\External\SoLoud\src\audiosource\speech\resonator.h">
+      <Filter>External\SoLoud</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\External\SoLoud\src\audiosource\speech\tts.h">
+      <Filter>External\SoLoud</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\External\SoLoud\src\audiosource\tedsid\sid.h">
+      <Filter>External\SoLoud</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\External\SoLoud\src\audiosource\tedsid\ted.h">
+      <Filter>External\SoLoud</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\External\SoLoud\src\audiosource\wav\dr_flac.h">
+      <Filter>External\SoLoud</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\External\SoLoud\src\audiosource\wav\dr_mp3.h">
+      <Filter>External\SoLoud</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\External\SoLoud\src\audiosource\wav\dr_wav.h">
+      <Filter>External\SoLoud</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\External\SoLoud\src\audiosource\wav\stb_vorbis.h">
+      <Filter>External\SoLoud</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\External\SoLoud\src\backend\miniaudio\miniaudio.h">
+      <Filter>External\SoLoud</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
