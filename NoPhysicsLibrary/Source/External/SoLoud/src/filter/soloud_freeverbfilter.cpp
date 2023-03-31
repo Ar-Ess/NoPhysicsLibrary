@@ -238,6 +238,7 @@ namespace SoLoud
 
 			output = mBuffer[mBufidx];
 
+			// NEXT CLASS
 			mFilterstore = (output * mDamp2) + (mFilterstore * mDamp1);
 
 			mBuffer[mBufidx] = aInput + (mFilterstore * mFeedback);
@@ -332,6 +333,22 @@ namespace SoLoud
 			mute();
 		}
 
+		// SOLOUD CHANGE
+		
+		int GetCombTunning(int x, bool left = true)
+		{
+			int spread = left ? 0 : gStereospread;
+			return (int)floor((2650.5 + (1050.164 - 2650.5) / (1. + pow((x / 13.03415), 1.237097))) + spread);
+		}
+
+		int GetAllpassTunning(int x, bool left = true)
+		{
+			int spread = left ? 0 : gStereospread;
+			return (int)floor((-476485900 + (664.7832 - -476485900) / pow(1 + (x / 4565876),0.9965671)) + spread);
+		}
+
+		// SOLOUD CHANGE
+
 		void Revmodel::mute()
 		{			
 			if (mMode >= gFreezemode)
@@ -391,6 +408,7 @@ namespace SoLoud
 
 		void Revmodel::update()
 		{
+			// UPDATE REVERB
 			// Recalculate internal values after parameter change
 
 			int i;
@@ -398,19 +416,21 @@ namespace SoLoud
 			mWet1 = mWet * (mWidth / 2 + 0.5f);
 			mWet2 = mWet * ((1 - mWidth) / 2);
 
-			if (mMode >= gFreezemode)
-			{
-				mRoomsize1 = 1;
-				mDamp1 = 0;
-				mGain = gMuted;
-			}
-			else
-			{
+			// SOLOUD CHANGE
+			//if (mMode >= gFreezemode)
+			//{
+			//	mRoomsize1 = 1;
+			//	mDamp1 = 0;
+			//	mGain = gMuted;
+			//}
+			//else
+			//{
 				mRoomsize1 = mRoomsize;
 				mDamp1 = mDamp;
 				mGain = gFixedgain;
-			}
+			//}
 
+			// REVERB ROOM SIZE PARAMETERS
 			for (i = 0; i < gNumcombs; i++)
 			{
 				mCombL[i].setfeedback(mRoomsize1);
@@ -426,6 +446,7 @@ namespace SoLoud
 
 		void Revmodel::setroomsize(float aValue)
 		{
+			// m_Roomsize = (value * 0.28f) + 0.7f
 			mRoomsize = (aValue * gScaleroom) + gOffsetroom;
 			mDirty = 1;
 		}
@@ -507,7 +528,7 @@ namespace SoLoud
 		if (drywet < 0 || drywet > 1 || aRoomSize <= 0 || aDamp < 0 || aWidth <= 0)
 			return INVALID_PARAMETER;
 
-		mMode = 1;
+		mMode = 0;
 		mRoomSize = aRoomSize;
 		mDamp = aDamp;
 		mWidth = aWidth;
@@ -549,7 +570,6 @@ namespace SoLoud
 	{
 		return 0;
 	}
-
 
 	FreeverbFilter::~FreeverbFilter()
 	{
