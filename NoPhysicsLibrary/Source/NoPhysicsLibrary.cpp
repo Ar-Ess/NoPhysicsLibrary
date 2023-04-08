@@ -19,7 +19,7 @@ void NPL::Init(float pixelsPerMeter)
 	physics = new Physics(&bodies, &physicsConfig, &gasIndex, &liquidIndex, &pixelsToMeters, &physIterations);
 	audio = new Audio();
 
-	notifier += std::bind(&NPL::UpdateNotifier, this, std::placeholders::_1);
+	notifier += std::bind(&NPL::UpdateNotifier, this, std::placeholders::_1, std::placeholders::_2);
 
 	// Pixels To Meters = [ m / pxl ]
 	pixelsToMeters = pixelsPerMeter > 0 ? 1 / pixelsPerMeter : 1;
@@ -33,11 +33,11 @@ void NPL::Init(float pixelsPerMeter)
 
 	libraryConfig = new LibraryConfig(
 		&panRange,
+		&panFactor,
 		&physicsConfig,
 		&physics->globalGravity,
 		&physics->globalRestitution,
 		&physics->globalFriction,
-		&listener,
 		&pixelsToMeters,
 		&ptmRatio,
 		&physIterations,
@@ -81,7 +81,7 @@ void NPL::CleanUp()
 	bodies.Clear();
 
 	// LISTENER
-	listener = nullptr;
+	listener = -1;
 
 	// PHYSICS
 	physics->CleanUp();
@@ -324,12 +324,13 @@ void NPL::SetPhysicsPreset(PhysicsPreset preset)
 
 //- Private --------------------------------------------------------------------------------
 
-void NPL::UpdateNotifier(unsigned int notify)
+void NPL::UpdateNotifier(unsigned int notify, PhysID id)
 {
 	switch (notify)
 	{
 	case 0: UpdatePixelsToMeters(); break; // Pixels To Meters
-	default: assert(false && "Notified an invalid change out of bounds"); break;
+	case 1: UpdateListener(id); break; // Listener
+	default: assert(false && "NPL ERROR: 'UpdateNotifier' notified an invalid change out of bounds"); break;
 	}
 }
 
@@ -364,6 +365,13 @@ void NPL::UpdatePixelsToMeters()
 
 	panRange *= ptmRatio;
 	physics->globalGravity *= ptmRatio;
+}
+
+void NPL::UpdateListener(PhysID id)
+{
+	Body find(BodyClass::EMPTY_BODY, {}, 0, nullptr);
+	find.id = &id;
+	listener = bodies.Find(&find);
 }
 
 void NPL::StepPhysics(float dt)
@@ -450,14 +458,14 @@ void NPL::UpdateStates()
 void NPL::StepAcoustics()
 {
 	// If no listener & environment is void
-	if (!listener && IsVoid()) return bodies.Iterate([](Body* b) { b->acousticDataList.Clear(); });
+	if (!Listener() && IsVoid()) return bodies.Iterate([](Body* b) { b->acousticDataList.Clear(); });
 
 	for (unsigned int i = 0; i < bodies.Size(); ++i)
 	{
 		Body* b = bodies[i];
 		if (b->acousticDataList.Empty() || !b->HasAcousticsUpdatability()) continue;
 
-		if (!listener)
+		if (!Listener())
 		{
 			NoListenerLogic(b);
 			continue;
@@ -500,16 +508,18 @@ void NPL::NoListenerLogic(Body* b)
 void NPL::ListenerLogic(Body* b, GasBody* environment)
 {
 	// If listener emit sound
-	if (b->Id() == listener->id) return NoListenerLogic(b);
+	if (b->Id() == Listener()->id) return NoListenerLogic(b);
 	if (b->acousticDataList.Empty()) return;
 
 	for (unsigned int i = 0; i < b->acousticDataList.Size(); ++i)
 	{
 		AcousticData* data = b->acousticDataList[i];
+		Body* l = Listener();
 
 		// Get the distance between Body & Listener
-		float distance = PhysMath::Distance(listener->EmissionPoint(InUnit::IN_METERS), data->emissionPosition);
-		bool direction = (listener->EmissionPoint(InUnit::IN_METERS).x - data->emissionPosition.x) < 0;
+		// TODO: Create a receivepoint?
+		float distance = PhysMath::Distance(l->Position(InUnit::IN_METERS), data->emissionPosition);
+		bool direction = (l->Position(InUnit::IN_METERS).x - data->emissionPosition.x) < 0;
 
 		float pan = ComputePanning(distance, direction ? 1 : -1);
 
@@ -540,7 +550,7 @@ float NPL::ComputePanning(float distance, int direction)
 	PhysMath::Clamp(distance, 0, panRange);
 
 	// Compute pan (normalized between [ 1, -1])
-	return distance / panRange * direction;
+	return PhysMath::Pow(distance / panRange, panFactor) * direction;
 }
 
 float NPL::ComputeVolume(float distance, float spl)

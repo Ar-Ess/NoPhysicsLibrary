@@ -75,7 +75,7 @@ public: // Methods
 
 	bool operator==(Body* b)
 	{
-		return id == b->id;
+		return *id == *b->id;
 	}
 
 protected: // Methods

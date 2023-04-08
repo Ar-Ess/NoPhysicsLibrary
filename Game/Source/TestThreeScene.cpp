@@ -18,11 +18,11 @@ bool TestThreeScene::Start()
 
 	// NPL configuration
 	npl->Configure()->CollisionsDebugging(true);
-	npl->Configure()->PanRange(10, InUnit::IN_METERS);
+	npl->Configure()->PanRange(7, InUnit::IN_METERS);
+	npl->Configure()->PanFactor(1.2f);
 	npl->Configure()->PhysicsIterations(40);
 	npl->SetPhysicsPreset(PhysicsPreset::DEFAULT_PHYSICS_PRESET);
 	npl->SetScenarioPreset(ScenarioPreset::CORRIDOR_SCENARIO_PRESET, PhysVec(window->GetSize().x, window->GetSize().y));
-	npl->Configure()->Listener(player);
 	npl->LoadSound("Assets/Audio/bounce.wav");
 
 	// Create bodies
@@ -30,9 +30,11 @@ bool TestThreeScene::Start()
 	// Dynamic
 	player = npl->CreateBody(PhysRect( 100.0f, 200.0f, PhysVec(metersToPixels * 0.3f, metersToPixels * 0.75f) ))
 		->Dynamic(80);
+
+	npl->Configure()->Listener(player);
 	//player->EmissionPoint(PhysVec(-5.0f, 0), InUnit::IN_PIXELS);
 
-	npl->Configure()->Listener(npl->CreateBody(PhysRect( 150.0f, 400.0f, PhysVec(metersToPixels * 0.3f, metersToPixels * 0.75f) ))->Dynamic(80));
+	npl->CreateBody(PhysRect( 150.0f, 400.0f, PhysVec(metersToPixels * 0.3f, metersToPixels * 0.75f) ))->Dynamic(80);
 
 	// Static
 	npl->CreateBody({ 600, 520, 50, 10 })

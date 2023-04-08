@@ -66,8 +66,9 @@ public:
 
 private: // Methods
 
-	void UpdateNotifier(unsigned int notify);
+	void UpdateNotifier(unsigned int notify, PhysID id);
 		void UpdatePixelsToMeters();
+		void UpdateListener(PhysID id);
 
 	void StepPhysics(float dt);
 
@@ -87,6 +88,11 @@ private: // Methods
 	bool IsGlobalPause() { return physics->globals.Get(0); }
 
 	GasBody* GetEnvironmentBody(PhysRect body);
+
+	Body* Listener() 
+	{
+		return bodies[listener];
+	}
 
 private:
 
@@ -117,15 +123,16 @@ private:
 	//_____________________
 	// - Acoustics
 	float panRange = 10.0f;
+	float panFactor = 1.0f;
 	float pixelsToMeters = 20.0f;
 	float ptmRatio = 1.0f;
 
 	//_____________________
 	// - Audio
-	Body* listener = nullptr;
+	int listener = -1;
 	//TODO: Not working, it freezes the position and never changes
 
 	//______Config Notifier______
-	PhysAction<unsigned int> notifier;
+	PhysAction<unsigned int, PhysID> notifier;
 
 };

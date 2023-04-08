@@ -9,13 +9,13 @@ struct LibraryConfig
 {
 private:
 
-	LibraryConfig(float* panRange, Flag* physicsConfig, PhysVec* globalGravity, PhysVec* globalRestitution, PhysVec* globalFriction, Body** listener, float* pixelsToMeters, float* ptmRatio, unsigned int* physIterations, PhysAction<unsigned int>* notifier) :
+	LibraryConfig(float* panRange, float* panFactor, Flag* physicsConfig, PhysVec* globalGravity, PhysVec* globalRestitution, PhysVec* globalFriction, float* pixelsToMeters, float* ptmRatio, unsigned int* physIterations, PhysAction<unsigned int, PhysID>* notifier) :
 		panRange(panRange),
+		panFactor(panFactor),
 		physicsConfig(physicsConfig),
 		globalGravity(globalGravity),
 		globalRestitution(globalRestitution),
 		globalFriction(globalFriction),
-		listener(listener),
 		pixelsToMeters(pixelsToMeters),
 		ptmRatio(ptmRatio),
 		physIterations(physIterations),
@@ -36,6 +36,15 @@ public:
 	{ 
 		if (unit == InUnit::IN_PIXELS) panRange *= *pixelsToMeters;
 		*this->panRange = panRange > 0 ? panRange : 0; 
+	}
+
+	// Set the factor of the curve that describes the pan range
+	// The default value is 1, which means a linear line.
+	// The value can not be equal or less than 0
+	void PanFactor(float factor) const
+	{
+		PhysMath::Clamp(factor, 0.01f, 20);
+		*panFactor = factor;
 	}
 
 	// Allows to debug body collisions. If enabled, "GetCollisionsIterable()" inside NPL class will no longer return null. 
@@ -82,14 +91,14 @@ public:
 		*globalFriction = friction;
 	}
 
-	void Listener(Body* listener) const { *this->listener = listener; }
+	void Listener(Body* listener) const { if (listener != nullptr) notifier->Invoke(1, listener->Id()); }
 
 	void PixelsToMeters(float ratio) const
 	{
 		float old = *this->pixelsToMeters;
 		*this->pixelsToMeters = ratio > 0 ? 1 / ratio : 1;
 		*this->ptmRatio = *this->pixelsToMeters / old;
-		notifier->Invoke(0); // Pixels To Meters
+		notifier->Invoke(0, PhysID(true)); // Pixels To Meters
 	}
 
 	// Define the amount of collision detection and declipping iterations per frame
@@ -103,6 +112,7 @@ public:
 private:
 
 	float* panRange = nullptr;
+	float* panFactor = nullptr;
 	Flag* physicsConfig = nullptr;
 	Flag* bodiesConfig = nullptr;
 	float* pixelsToMeters = nullptr;
@@ -110,8 +120,7 @@ private:
 	PhysVec* globalGravity = nullptr;
 	PhysVec* globalRestitution = nullptr;
 	PhysVec* globalFriction = nullptr;
-	Body** listener = nullptr;
 	unsigned int* physIterations = nullptr;
 
-	PhysAction<unsigned int>* notifier = nullptr;
+	PhysAction<unsigned int, PhysID>* notifier = nullptr;
 };
