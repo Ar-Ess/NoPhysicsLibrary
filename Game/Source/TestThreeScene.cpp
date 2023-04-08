@@ -205,7 +205,7 @@ bool TestThreeScene::Update(float dt)
 
 bool TestThreeScene::CleanUp()
 {
-	if (!npl)
+	if (npl)
 	{
 		npl->CleanUp();
 		RELEASE(npl);

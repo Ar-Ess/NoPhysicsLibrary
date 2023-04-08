@@ -64,7 +64,7 @@ bool EditorScene::Draw(float dt)
 
 bool EditorScene::CleanUp()
 {
-	if (!physics)
+	if (physics)
 	{
 		physics->CleanUp();
 		RELEASE(physics);
