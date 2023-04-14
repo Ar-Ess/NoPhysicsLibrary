@@ -29,8 +29,8 @@ void Audio::LoadSound(const char* path)
 
 void Audio::CleanUp()
 {
+    sounds.Clear();
+
     audio->deinit();
     delete audio;
-
-    sounds.Clear();
 }
