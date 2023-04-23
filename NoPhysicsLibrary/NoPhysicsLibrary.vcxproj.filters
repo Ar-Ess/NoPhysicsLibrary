@@ -37,6 +37,12 @@
     <Filter Include="External\SoLoud">
       <UniqueIdentifier>{b7ffab4b-69cb-4c8b-8a44-246cce313c7a}</UniqueIdentifier>
     </Filter>
+    <Filter Include="External\SoLoud\NPL Variations">
+      <UniqueIdentifier>{9677a5d2-6db2-4ba3-81ed-5977b23eeeef}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="External\SoLoud\NPL Variations\NoReverbFilter">
+      <UniqueIdentifier>{8c5d4521-ff94-48de-aee5-a612b9ba980d}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\NoPhysicsLibrary.cpp">
@@ -227,6 +233,9 @@
     </ClCompile>
     <ClCompile Include="Source\External\SoLoud\src\filter\soloud_robotizefilter.cpp">
       <Filter>External\SoLoud</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\External\SoLoud\src\filter\NoReverbFilter.cpp">
+      <Filter>External\SoLoud\NPL Variations\NoReverbFilter</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -469,6 +478,15 @@
     </ClInclude>
     <ClInclude Include="Source\External\SoLoud\src\backend\miniaudio\miniaudio.h">
       <Filter>External\SoLoud</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\External\SoLoud\include\NoReverbFilter.h">
+      <Filter>External\SoLoud\NPL Variations\NoReverbFilter</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\External\SoLoud\include\NoComb.h">
+      <Filter>External\SoLoud\NPL Variations\NoReverbFilter</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\External\SoLoud\include\NotAllpass.h">
+      <Filter>External\SoLoud\NPL Variations\NoReverbFilter</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

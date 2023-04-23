@@ -198,6 +198,7 @@
     <ClCompile Include="Source\External\SoLoud\src\filter\soloud_flangerfilter.cpp" />
     <ClCompile Include="Source\External\SoLoud\src\filter\soloud_freeverbfilter.cpp" />
     <ClCompile Include="Source\External\SoLoud\src\filter\soloud_lofifilter.cpp" />
+    <ClCompile Include="Source\External\SoLoud\src\filter\NoReverbFilter.cpp" />
     <ClCompile Include="Source\External\SoLoud\src\filter\soloud_robotizefilter.cpp" />
     <ClCompile Include="Source\External\SoLoud\src\filter\soloud_waveshaperfilter.cpp" />
     <ClCompile Include="Source\GasBody.cpp" />
@@ -214,6 +215,8 @@
   <ItemGroup>
     <ClInclude Include="Source\AcusticData.h" />
     <ClInclude Include="Source\Audio.h" />
+    <ClInclude Include="Source\External\SoLoud\include\NoComb.h" />
+    <ClInclude Include="Source\External\SoLoud\include\NotAllpass.h" />
     <ClInclude Include="Source\External\SoLoud\include\soloud.h" />
     <ClInclude Include="Source\External\SoLoud\include\soloud_audiosource.h" />
     <ClInclude Include="Source\External\SoLoud\include\soloud_bassboostfilter.h" />
@@ -237,6 +240,7 @@
     <ClInclude Include="Source\External\SoLoud\include\soloud_misc.h" />
     <ClInclude Include="Source\External\SoLoud\include\soloud_monotone.h" />
     <ClInclude Include="Source\External\SoLoud\include\soloud_noise.h" />
+    <ClInclude Include="Source\External\SoLoud\include\NoReverbFilter.h" />
     <ClInclude Include="Source\External\SoLoud\include\soloud_openmpt.h" />
     <ClInclude Include="Source\External\SoLoud\include\soloud_queue.h" />
     <ClInclude Include="Source\External\SoLoud\include\soloud_robotizefilter.h" />
