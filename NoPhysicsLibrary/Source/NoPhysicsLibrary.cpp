@@ -517,9 +517,8 @@ void NPL::ListenerLogic(Body* b, GasBody* environment)
 		Body* l = Listener();
 
 		// Get the distance between Body & Listener
-		// TODO: Create a receivepoint?
-		float distance = PhysMath::Distance(l->Position(InUnit::IN_METERS), data->emissionPosition);
-		bool direction = (l->Position(InUnit::IN_METERS).x - data->emissionPosition.x) < 0;
+		float distance = PhysMath::Distance(l->ReceptionPoint(InUnit::IN_METERS), data->emissionPosition);
+		bool direction = (l->ReceptionPoint(InUnit::IN_METERS).x - data->emissionPosition.x) < 0;
 
 		float pan = ComputePanning(distance, direction ? 1 : -1);
 

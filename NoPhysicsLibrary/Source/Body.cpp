@@ -40,6 +40,16 @@ PhysVec Body::EmissionPoint(InUnit unit) const
 	return (rect.Position() + (rect.Size() / 2) + emissionPoint) * Conversion(unit, false);
 }
 
+void Body::ReceptionPoint(PhysVec offset, InUnit unit)
+{
+	receptionPoint = offset * Conversion(unit, true);
+}
+
+PhysVec Body::ReceptionPoint(InUnit unit) const
+{
+	return (rect.Position() + (rect.Size() / 2) + receptionPoint) * Conversion(unit, false);
+}
+
 PhysVec Body::Position(InUnit unit) const
 {
 	return rect.Position() * Conversion(unit, false);

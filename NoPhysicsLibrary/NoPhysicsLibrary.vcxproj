@@ -203,6 +203,7 @@
     <ClCompile Include="Source\GasBody.cpp" />
     <ClCompile Include="Source\LiquidBody.cpp" />
     <ClCompile Include="Source\Define.cpp" />
+    <ClCompile Include="Source\NoMaterial.cpp" />
     <ClCompile Include="Source\NoPhysicsLibrary.cpp" />
     <ClCompile Include="Source\Physics.cpp" />
     <ClCompile Include="Source\PhysRect.cpp" />
@@ -274,6 +275,7 @@
     <ClInclude Include="Source\InUnitsEnum.h" />
     <ClInclude Include="Source\LibraryConfigAux.h" />
     <ClInclude Include="Source\LibraryEnums.h" />
+    <ClInclude Include="Source\NoMaterial.h" />
     <ClInclude Include="Source\PhysAction.h" />
     <ClInclude Include="Source\PhysArray.h" />
     <ClInclude Include="Source\PhysID.h" />

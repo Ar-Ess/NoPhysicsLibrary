@@ -9,6 +9,7 @@
 #include "PhysMath.h"
 #include "PhysArray.h"
 #include "PhysID.h"
+#include "NoMaterial.h"
 
 class Body
 {
@@ -27,12 +28,19 @@ public: // Methods
 	//-TOCHECK: Debug emission point
 	void Play(unsigned int index, float decibels = 80);
 
-	// Sets the emission point of the body. Offsetting from the center of the body.
+	// Sets the emission point of the body. It is an offset from the center of the body.
 	// The emission point is from where the body will emmit sound.
-	void EmissionPoint(PhysVec offset, InUnit offsetUnit = InUnit::IN_PIXELS);
-	// Returns the emission point of the body
+	void EmissionPoint(PhysVec offset, InUnit unit = InUnit::IN_PIXELS);
+	// Returns the emission point of the body. It is an offset from the center of the body.
 	// The emission point is from where the body will emmit sound.
 	PhysVec EmissionPoint(InUnit unit) const;
+
+	// Sets the reception point of the body. It is an offset from the center of the body.
+	// The reception point is from where the body listener will receive the sound.
+	void ReceptionPoint(PhysVec offset, InUnit unit = InUnit::IN_PIXELS);
+	// Returns the reception point of the body. It is an offset from the center of the body.
+	// The reception point is from where the body listener will receive the sound.
+	PhysVec ReceptionPoint(InUnit unit) const;
 
 	// Returns the top-left x & y coordinates of the body
 	PhysVec Position(InUnit unit) const;
@@ -52,8 +60,13 @@ public: // Methods
 
 	// Returns the mass of the body
 	float Mass() const { return mass; }
-	//  Set the object's mass
+	// Set the material's mass
 	void Mass(float mass) { mass <= 0 ? this->mass = 0.1f : this->mass = mass; }
+
+	// Returns the material of the body
+	NoMaterial Material() const { return material; }
+	// Sets the material of the body
+	void Material(NoMaterial material) { this->material = material; }
 
 	// Returns the body id
 	PhysID Id() const { return *id; }
@@ -107,10 +120,13 @@ protected: // Variables
 	// Units: m/pxl
 	const float* pixelsToMeters = nullptr;
 	PhysArray<AcousticData*> acousticDataList;
+	NoMaterial material = {};
 
 private:
 
 	PhysVec emissionPoint = { 0.0f, 0.0f };
+
+	PhysVec receptionPoint = { 0.0f, 0.0f };
 
 	// Collidable(0) | UpdatePhysics(1) | UpdateAcoustics(2)
 	Flag properties = {};
