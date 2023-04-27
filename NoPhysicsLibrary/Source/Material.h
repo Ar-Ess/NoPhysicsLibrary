@@ -1,17 +1,17 @@
 #pragma once
 
-class NoMaterial
+class Material
 {
 public:
 
-	NoMaterial()
+	Material()
 	{
 		youngModulus = 0;
 		viscosity = 0;
 		bulkModulus = 0;
-		heatRatio = 0;
+		heatRatio = 1.414f;
 		density = 0;
-		defaultTemperature = 0;
+		temperature = 0;
 	}
 	
 	// Build the material for solids
@@ -28,11 +28,18 @@ public:
 
 private:
 
+	friend class Body;
+	friend class DynamicBody;
+	friend class StaticBody;
+	friend class GasBody;
+	friend class LiquidBody;
+
 	float youngModulus = 0;
 	float viscosity = 0;
 	float bulkModulus = 0;
-	float heatRatio = 0;
+	float heatRatio = 1.414f;
 	float density = 0;
-	float defaultTemperature = 0;
+	float temperature = 0;
+	bool defaults = true;
 
 };

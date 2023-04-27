@@ -7,16 +7,8 @@ class GasBody : public Body
 public:
 
 	~GasBody() override;
-
-	float Volume(InUnit unit) const;
-
-	float Density(InUnit unit) const;
-
-	void Density(float density, InUnit unit);
 	
 	float HeatRatio() const;
-
-	void HeatRatio(float heatRatio);
 	
 	float Pressure() const;
 
@@ -30,16 +22,18 @@ public:
 		return liftCoefficient;
 	}
 
+	void SetMaterial(Material material) override;
+
 private:
 	
-	GasBody(PhysRect rect, float mass, float heatRatio, float pressure, PhysVec dragCoefficient, const float* pixelsToMeters);
+	GasBody(PhysRect rect, float mass, float pressure, PhysVec dragCoefficient, const float* pixelsToMeters);
 
 private:
 
 	friend struct BodyCreation;
 
-	float heatRatio = 0;
 	float pressure = 0;
+	float heatRatio = 0;
 	PhysVec dragCoefficient = {1.0f, 1.0f};
 	PhysVec liftCoefficient = {0.0f, 0.0f};
 };

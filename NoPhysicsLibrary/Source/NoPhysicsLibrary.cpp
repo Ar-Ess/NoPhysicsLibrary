@@ -520,6 +520,7 @@ void NPL::ListenerLogic(Body* b, GasBody* environment)
 		float distance = PhysMath::Distance(l->ReceptionPoint(InUnit::IN_METERS), data->emissionPosition);
 		bool direction = (l->ReceptionPoint(InUnit::IN_METERS).x - data->emissionPosition.x) < 0;
 
+
 		float pan = ComputePanning(distance, direction ? 1 : -1);
 
 		float volume = ComputeVolume(distance, data->spl);

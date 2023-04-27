@@ -4,6 +4,7 @@
 DynamicBody::DynamicBody(PhysRect rect, PhysVec gravityOffset, float mass, Flag* globals, const float* pixelsToMeters) : 
 	Body(BodyClass::DYNAMIC_BODY, rect, mass, pixelsToMeters)
 {
+	SetMaterial(Material());
 	this->gravityOffset = gravityOffset;
 	this->globals = globals;
 }
@@ -198,6 +199,13 @@ void DynamicBody::ResetForces()
 	velocity.Clear();
 	forces.Clear();
 	momentums.Clear();
+}
+
+void DynamicBody::SetMaterial(Material material)
+{
+	Body::SetMaterial(material);
+
+	youngModulus = material.youngModulus;
 }
 
 void DynamicBody::FrictionOffset(PhysVec offset)

@@ -228,7 +228,7 @@
     <ClCompile Include="Source\External\SoLoud\src\filter\soloud_robotizefilter.cpp">
       <Filter>External\SoLoud</Filter>
     </ClCompile>
-    <ClCompile Include="Source\NoMaterial.cpp">
+    <ClCompile Include="Source\Material.cpp">
       <Filter>Core\Bodies</Filter>
     </ClCompile>
   </ItemGroup>
@@ -473,7 +473,7 @@
     <ClInclude Include="Source\External\SoLoud\src\backend\miniaudio\miniaudio.h">
       <Filter>External\SoLoud</Filter>
     </ClInclude>
-    <ClInclude Include="Source\NoMaterial.h">
+    <ClInclude Include="Source\Material.h">
       <Filter>Core\Bodies</Filter>
     </ClInclude>
   </ItemGroup>

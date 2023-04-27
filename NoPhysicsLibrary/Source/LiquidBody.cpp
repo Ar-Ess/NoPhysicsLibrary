@@ -1,14 +1,24 @@
 #include "LiquidBody.h"
 #include "PhysMath.h"
 
-LiquidBody::LiquidBody(PhysRect rect, float mass, float buoyancy, const float* pixelsToMeters) : 
+LiquidBody::LiquidBody(PhysRect rect, float mass, float buoyancy, const float* pixelsToMeters) :
 	Body(BodyClass::LIQUID_BODY, rect, mass, pixelsToMeters)
 {
+	SetMaterial(Material());
+
 	this->buoyancy = buoyancy;
 }
 
 LiquidBody::~LiquidBody()
 {
+}
+
+void LiquidBody::SetMaterial(Material material)
+{
+	Body::SetMaterial(material);
+
+	viscosity = material.viscosity;
+	bulkModulus = material.bulkModulus;
 }
 
 float LiquidBody::Volume(InUnit unit) const
@@ -39,4 +49,14 @@ void LiquidBody::Density(float density, InUnit unit)
 void LiquidBody::Buoyancy(float buoyancy)
 {
 	this->buoyancy = buoyancy;
+}
+
+float LiquidBody::Viscosity() const
+{
+	return viscosity;
+}
+
+float LiquidBody::BulkModulus() const
+{
+	return bulkModulus;
 }

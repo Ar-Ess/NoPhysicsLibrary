@@ -65,13 +65,13 @@ public:
 	}
 
 	// Aerodrag Coefficient is a value tipically ranged from 0 to 1.5 ;)
-	GasBody* Gas(float density, float heatRatio, float pressure, PhysVec aerodragCoefficient, InUnit densityUnit, InUnit pressureUnit) const
+	GasBody* Gas(float density, float pressure, PhysVec aerodragCoefficient, InUnit densityUnit, InUnit pressureUnit) const
 	{
 		float pixToMetSquared = PhysMath::Pow((1 / *pixelsToMeters), 2);
 		if (densityUnit == InUnit::IN_PIXELS) density *= pixToMetSquared;
 		if (pressureUnit == InUnit::IN_PIXELS) pressure *= pixToMetSquared;
 
-		GasBody* b = new GasBody(rect, density * rect.Area(), heatRatio, pressure, aerodragCoefficient, pixelsToMeters);
+		GasBody* b = new GasBody(rect, density * rect.Area(), pressure, aerodragCoefficient, pixelsToMeters);
 		bodies->Add(b);
 		gasIndex->Add(new unsigned int(bodies->Size() - 1));
 		return b;

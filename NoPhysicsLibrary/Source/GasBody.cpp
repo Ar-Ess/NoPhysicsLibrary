@@ -1,9 +1,10 @@
 #include "GasBody.h"
 
-GasBody::GasBody(PhysRect rect, float mass, float heatRatio, float pressure, PhysVec dragCoefficient, const float* pixelsToMeters) : 
+GasBody::GasBody(PhysRect rect, float mass, float pressure, PhysVec dragCoefficient, const float* pixelsToMeters) :
 	Body(BodyClass::GAS_BODY, rect, mass, pixelsToMeters)
 {
-	this->heatRatio = heatRatio;
+	SetMaterial(Material());
+
 	this->pressure = pressure;
 	this->dragCoefficient = dragCoefficient;
 }
@@ -12,9 +13,11 @@ GasBody::~GasBody()
 {
 }
 
-float GasBody::Density(InUnit unit) const
+void GasBody::SetMaterial(Material material)
 {
-	return  mass / Volume(unit);
+	Body::SetMaterial(material);
+
+	heatRatio = material.heatRatio;
 }
 
 float GasBody::HeatRatio() const
@@ -25,24 +28,4 @@ float GasBody::HeatRatio() const
 float GasBody::Pressure() const
 {
 	return pressure;
-}
-
-void GasBody::Density(float density, InUnit unit)
-{
-	if (unit == InUnit::IN_PIXELS) density *= PhysMath::Pow(1 / *pixelsToMeters, 2);
-
-	this->mass = density * rect.Area();
-}
-
-void GasBody::HeatRatio(float heatRatio)
-{
-	this->heatRatio = heatRatio;
-}
-
-float GasBody::Volume(InUnit unit) const
-{
-	float inPixels = 1;
-	if (unit == InUnit::IN_PIXELS) inPixels *= PhysMath::Pow(1 / *pixelsToMeters, 2);
-
-	return rect.Area() * inPixels;
 }

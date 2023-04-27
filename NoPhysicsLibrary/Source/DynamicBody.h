@@ -55,6 +55,8 @@ public: // Methods
 	
 	void ResetForces();
 
+	void SetMaterial(Material material) override;
+
 private: // Methods
 	
 	DynamicBody(PhysRect rect, PhysVec gravityOffset, float mass, Flag* globals, const float* pixelsToMeters);
@@ -78,6 +80,8 @@ private: // Variables
 	friend class Physics; // Necessary for accessing SecondNewton/FirstBuxeda
 	friend class NPL; // Necessary to update states
 	friend struct BodyCreation;
+
+	float youngModulus = 0;
 
 	PhysVec acceleration = {};
 	PhysVec velocity = {};

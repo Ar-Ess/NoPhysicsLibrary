@@ -9,7 +9,7 @@
 #include "PhysMath.h"
 #include "PhysArray.h"
 #include "PhysID.h"
-#include "NoMaterial.h"
+#include "Material.h"
 
 class Body
 {
@@ -61,12 +61,23 @@ public: // Methods
 	// Returns the mass of the body
 	float Mass() const { return mass; }
 	// Set the material's mass
-	void Mass(float mass) { mass <= 0 ? this->mass = 0.1f : this->mass = mass; }
+	void Mass(float mass) { this->mass = mass; }
 
-	// Returns the material of the body
-	NoMaterial Material() const { return material; }
+	// Returns the density of the body
+	float Density(InUnit unit) const { return mass / Volume(unit); }
+
+	// Returns the volume of the body
+	float Volume(InUnit unit) const { return rect.Area() * Conversion(unit, false, 2); }
+
 	// Sets the material of the body
-	void Material(NoMaterial material) { this->material = material; }
+	virtual void SetMaterial(Material material) 
+	{ 
+		if (!material.defaults) mass = material.density * Volume(InUnit::IN_METERS);
+		temperature = material.temperature;
+	}
+
+	// Returns the default temperature of the body in kelvins
+	float DefaultTemperature() const { return temperature; }
 
 	// Returns the body id
 	PhysID Id() const { return *id; }
@@ -120,7 +131,7 @@ protected: // Variables
 	// Units: m/pxl
 	const float* pixelsToMeters = nullptr;
 	PhysArray<AcousticData*> acousticDataList;
-	NoMaterial material = {};
+	float temperature = 0.0f;
 
 private:
 

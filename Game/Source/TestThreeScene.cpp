@@ -60,7 +60,7 @@ bool TestThreeScene::Start()
 
 	// Gas
 	const GasBody* gas = npl->CreateBody(npl->ReturnScenarioRect())
-		->Gas(10, 1.414f, 1000, { 3.0f, 0.1f }, InUnit::IN_METERS, InUnit::IN_METERS);
+		->Gas(1, 5000, { 3.0f, 0.1f }, InUnit::IN_METERS, InUnit::IN_METERS);
 
 	// Shell
 	shell = npl->CreateBody({ 1900, 500, 50, 50 })

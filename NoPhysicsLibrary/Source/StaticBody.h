@@ -12,6 +12,8 @@ public: // Methods
 
 	void RestitutionOffset(PhysVec offset);
 
+	void SetMaterial(Material material) override;
+
 private:
 
 	StaticBody(PhysRect rect, float mass, const float* pixelsToMeters);
@@ -21,5 +23,6 @@ private:
 	friend struct BodyCreation;
 
 	PhysVec restitutionOffset = {0.0f, 0.0f};
+	float youngModulus = 0;
 
 };
