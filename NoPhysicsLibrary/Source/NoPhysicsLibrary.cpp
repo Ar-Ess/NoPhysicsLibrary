@@ -237,10 +237,10 @@ void NPL::SetScenarioPreset(ScenarioPreset preset, PhysVec windowSize, std::vect
 		StaticBody* scenario[maxStatic] = { nullptr, nullptr, nullptr, nullptr };
 
 		//Limits
-		CreateBody({ 0.f,          0.f,                       4280.f, windowSize.y - downLimitY })->Static();
-		CreateBody({ 0.f,          0.f, windowSize.x - rightLimitX,              windowSize.y })->Static();
-		CreateBody({ 0.f, downLimitY,                       4280.f, windowSize.y - downLimitY })->Static();
-		CreateBody({ 3000 + rightLimitX,          0.f, windowSize.x - rightLimitX,              windowSize.x })->Static();
+		scenario[0] = CreateBody({ 0.f,          0.f,                       4280.f, windowSize.y - downLimitY })->Static();
+		scenario[1] = CreateBody({ 0.f,          0.f, windowSize.x - rightLimitX,              windowSize.y })->Static();
+		scenario[2] = CreateBody({ 0.f, downLimitY,                       4280.f, windowSize.y - downLimitY })->Static();
+		scenario[3] = CreateBody({ 3000 + rightLimitX,          0.f, windowSize.x - rightLimitX,              windowSize.x })->Static();
 
 		if (scenarioBodies != nullptr) for (unsigned int i = 0; i < maxStatic; ++i) scenarioBodies->emplace_back(scenario[i]);
 
@@ -285,10 +285,10 @@ void NPL::SetScenarioPreset(ScenarioPreset preset, PhysVec windowSize, std::vect
 		scenario[3] = CreateBody({ rightLimitX,          0.f, windowSize.x - rightLimitX,    windowSize.y })->Static();
 
 		//Obstacles
-		CreateBody({ windowSize.x * 0.23f, windowSize.y * 0.27f, windowSize.x * 0.02f, windowSize.y * 0.55f })->Static();
-		CreateBody({ windowSize.x * 0.40f, windowSize.y * 0.27f, windowSize.x * 0.02f, windowSize.y * 0.55f })->Static();
-		CreateBody({ windowSize.x * 0.61f, windowSize.y * 0.27f, windowSize.x * 0.02f, windowSize.y * 0.55f })->Static();
-		CreateBody({ windowSize.x * 0.84f, windowSize.y * 0.27f, windowSize.x * 0.02f, windowSize.y * 0.55f })->Static();
+		scenario[4] = CreateBody({ windowSize.x * 0.23f, windowSize.y * 0.27f, windowSize.x * 0.02f, windowSize.y * 0.55f })->Static();
+		scenario[5] = CreateBody({ windowSize.x * 0.40f, windowSize.y * 0.27f, windowSize.x * 0.02f, windowSize.y * 0.55f })->Static();
+		scenario[6] = CreateBody({ windowSize.x * 0.61f, windowSize.y * 0.27f, windowSize.x * 0.02f, windowSize.y * 0.55f })->Static();
+		scenario[7] = CreateBody({ windowSize.x * 0.84f, windowSize.y * 0.27f, windowSize.x * 0.02f, windowSize.y * 0.55f })->Static();
 		break;
 	}
 	}
@@ -519,7 +519,6 @@ void NPL::ListenerLogic(Body* b, GasBody* environment)
 		// Get the distance between Body & Listener
 		float distance = PhysMath::Distance(l->ReceptionPoint(InUnit::IN_METERS), data->emissionPosition);
 		bool direction = (l->ReceptionPoint(InUnit::IN_METERS).x - data->emissionPosition.x) < 0;
-
 
 		float pan = ComputePanning(distance, direction ? 1 : -1);
 

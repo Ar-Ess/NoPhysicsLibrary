@@ -11,10 +11,6 @@ Body::Body(BodyClass clas, PhysRect rect, float mass, const float* pixelsToMeter
 	this->emissionPoint = 0;
 	this->pixelsToMeters = pixelsToMeters;
 
-	// You idiot, mass can not be zero :}
-	//-Todo: This must be enabled
-	//assert(mass != 0);
-
 	this->mass = mass;
 
 	this->properties.Set(true, 0);

@@ -22,7 +22,8 @@ bool TestThreeScene::Start()
 	npl->Configure()->PanFactor(1.2f);
 	npl->Configure()->PhysicsIterations(40);
 	npl->SetPhysicsPreset(PhysicsPreset::DEFAULT_PHYSICS_PRESET);
-	npl->SetScenarioPreset(ScenarioPreset::CORRIDOR_SCENARIO_PRESET, PhysVec(window->GetSize().x, window->GetSize().y));
+	std::vector<StaticBody*> x;
+	npl->SetScenarioPreset(ScenarioPreset::CORRIDOR_SCENARIO_PRESET, PhysVec(window->GetSize().x, window->GetSize().y), &x);
 	npl->LoadSound("Assets/Audio/bounce.wav");
 
 	// Create bodies
@@ -44,6 +45,7 @@ bool TestThreeScene::Start()
 	StaticBody* bouncyBoy = npl->CreateBody({ 200, 600, 50, 50 })
 		->Static();
 	bouncyBoy->RestitutionOffset({0.0f, 1.2f});
+	x.at(0)->RestitutionOffset({0.0f, 1.2f});
 	
 	// Shell Obstacles
 	npl->CreateBody({ 1300, 600, 30, 60 })
@@ -63,6 +65,7 @@ bool TestThreeScene::Start()
 		->Gas(1, 5000, { 3.0f, 0.1f }, InUnit::IN_METERS, InUnit::IN_METERS);
 
 	// Shell
+	// TODO: debug
 	shell = npl->CreateBody({ 1900, 500, 50, 50 })
 		->Dynamic(40);
 	shell->ApplyMomentum({ -200.0f, 0 });

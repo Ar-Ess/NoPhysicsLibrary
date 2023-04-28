@@ -22,7 +22,7 @@ void Audio::Playback(SoundData* data, float* dt)
     if (!delay) return;
 
     audio->setDelaySamples(h, SEC_TO_SAMPLES(data->delayTime));
-    audio->setPause(h, 0);
+    audio->setPause(h, false);
 }
 
 void Audio::LoadSound(const char* path)

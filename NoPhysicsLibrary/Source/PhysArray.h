@@ -326,11 +326,15 @@ class PhysArray<T*>
     };
 
     friend class NPL;
+    friend class Body;
+    friend class BodyCreation;
     friend class Audio;
     friend class DynamicBody;
+    friend class GetData;
+    friend class Physics;
     template<class ...Ts> friend class PhysAction;
 
-public:
+private:
 
     void Add(T* value)
     {

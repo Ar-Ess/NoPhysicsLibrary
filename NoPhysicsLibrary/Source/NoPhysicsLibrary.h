@@ -130,7 +130,6 @@ private:
 	//_____________________
 	// - Audio
 	int listener = -1;
-	//TODO: Not working, it freezes the position and never changes
 
 	//______Config Notifier______
 	PhysAction<unsigned int, PhysID> notifier;
