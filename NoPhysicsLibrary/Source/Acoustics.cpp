@@ -13,18 +13,25 @@ Acoustics::Acoustics(PhysArray<Body*>* bodies, PhysArray<SoundData*>* soundDataL
 
 void Acoustics::Simulate(Body* b, Body* listener)
 {
-	if (!listener) return NoListenerLogic(b);
+	if (!listener || listener->id == b->id) return NoListenerLogic(b);
 
-	GasBody* environment = GetEnvironmentBody(b->Rect(InUnit::IN_METERS));
+	PhysRay ray = PhysRay(b->EmissionPoint(InUnit::IN_METERS), listener->ReceptionPoint(InUnit::IN_METERS));
+	float distance = PhysMath::Distance(ray);
 
-	if (!environment) return b->acousticDataList.Clear();
+	// TODO: Check with all gas bodies if there is any void inbetween
 
-	ListenerLogic(b, listener, environment);
+	for (unsigned int i = 0; i < bodies->Size(); ++i)
+	{
+		Body* a = (*bodies)[i];
+		if (a == listener || a == b) continue;
+
+		PhysMath::RayCast(ray, a->Rect(InUnit::IN_METERS));
+	}
 }
 
 void Acoustics::NoListenerLogic(Body* b)
 {
-	b->acousticDataList.Iterate<int, PhysArray<SoundData*>*, const float>
+	b->acousticDataList.Iterate<PhysArray<SoundData*>*, const float>
 	(
 		[](AcousticData* data, PhysArray<SoundData*>* soundDataList, const float maxSPL)
 		{
@@ -38,10 +45,6 @@ void Acoustics::NoListenerLogic(Body* b)
 
 void Acoustics::ListenerLogic(Body* b, Body* listener, GasBody* environment)
 {
-	// If listener emit sound
-	if (b->Id() == listener->id) return NoListenerLogic(b);
-	if (b->acousticDataList.Empty()) return;
-
 	for (unsigned int i = 0; i < b->acousticDataList.Size(); ++i)
 	{
 		AcousticData* data = b->acousticDataList[i];

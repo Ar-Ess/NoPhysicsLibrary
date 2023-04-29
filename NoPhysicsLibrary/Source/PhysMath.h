@@ -87,6 +87,13 @@ namespace PhysMath
 		return float(sqrt((double)Pow((float)dx, 2) + (double)Pow((float)dy, 2)));
 	}
 
+	inline float Distance(PhysRay r)
+	{
+		double dx = double(r.end.x) - double(r.start.x);
+		double dy = double(r.end.y) - double(r.start.y);
+		return float(sqrt((double)Pow((float)dx, 2) + (double)Pow((float)dy, 2)));
+	}
+
 	inline float Ln(float num)
 	{
 		return (float)log((double)num);
@@ -192,7 +199,7 @@ namespace PhysMath
 		return ret;
 	}
 
-	inline bool RayCast(PhysRay r1, PhysRay r2, PhysVec& ret)
+	inline bool RayCast_Internal(PhysRay r1, PhysRay r2, PhysVec& ret)
 	{
 		PhysVec a = r1.start;
 		PhysVec b = r1.end;
@@ -212,7 +219,6 @@ namespace PhysMath
 	}
 
 	// Returns normal vec of the first intersecting plane (returned value is final pos of the vector, init is 0,0)
-	// The variable "planeExtension" extends the rectangle planes in both directions by its respective coordinates
 	// Works only for non-rotative rectangles
 	inline bool RayCast(PhysRay ray, PhysRect rect, PhysVec& ret)
 	{
@@ -228,11 +234,9 @@ namespace PhysMath
 
 		for (unsigned short int i = 0; i < 4; ++i)
 		{
-			if (RayCast(ray, rectPlanes[i], intr))
-			{
-				exist = true;
-				break;
-			}
+			if (!RayCast_Internal(ray, rectPlanes[i], intr)) continue;
+			exist = true;
+			break;
 		}
 
 		if (!exist) return false;
@@ -242,5 +246,25 @@ namespace PhysMath
 
 		return true;
 
+	}
+
+	// Returns whether the ray intersects the rectangle
+	// Works only for non-rotative rectangles
+	inline bool RayCast(PhysRay ray, PhysRect rect)
+	{
+		PhysRay rectPlanes[4] = {
+			{rect.Position(), rect.Position() + PhysVec(rect.w, 0) },
+			{rect.Position() + PhysVec(rect.w, 0), rect.Position() + rect.Size() },
+			{rect.Position() + rect.Size(), rect.Position() + PhysVec(0, rect.h) },
+			{rect.Position() + PhysVec(0, rect.h), rect.Position() }
+		};
+
+		PhysVec intr;
+
+		for (unsigned short int i = 0; i < 4; ++i)
+		{
+			if (RayCast_Internal(ray, rectPlanes[i], intr)) return true;
+		}
+		return false;
 	}
 };
