@@ -19,11 +19,16 @@ class PhysArray
     PhysArray() {}
 
     friend class NPL;
+    friend class Body;
+    friend class BodyCreation;
     friend class Audio;
+    friend class Acoustics;
     friend class DynamicBody;
+    friend class GetData;
+    friend class Physics;
     template<class ...Ts> friend class PhysAction;
 
-public:
+private:
 
     void Add(T value)
     {
@@ -329,6 +334,7 @@ class PhysArray<T*>
     friend class Body;
     friend class BodyCreation;
     friend class Audio;
+    friend class Acoustics;
     friend class DynamicBody;
     friend class GetData;
     friend class Physics;
@@ -403,9 +409,9 @@ private:
         return !node ? nullptr : node->value;
     }
 
-    bool Clear()
+    void Clear()
     {
-        if (Empty()) return true;
+        if (Empty()) return;
 
         Node* node = final;
         for (unsigned int i = 0; i < size; ++i)
@@ -423,8 +429,6 @@ private:
         final = nullptr;
         start = nullptr;
         size = 0;
-
-        return true;
     }
 
     bool Empty() const

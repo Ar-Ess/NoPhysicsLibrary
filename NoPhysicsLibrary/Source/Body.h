@@ -123,6 +123,7 @@ private: // Methods
 protected: // Variables
 
 	friend class NPL;
+	friend class Acoustics;
 
 	PhysRect rect = {};
 	BodyClass clas = BodyClass::EMPTY_BODY;

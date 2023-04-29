@@ -3,6 +3,9 @@
 #include "Define.h"
 #include "PhysMath.h"
 
+#define INIT_CHECK() assert(physics != nullptr && audio != nullptr && acoustics != nullptr && "ERROR: NPL variable not initialized. Call Init() first.");
+#define DOUBLE_INIT_CHECK() assert(physics == nullptr && audio == nullptr && acoustics == nullptr && "ERROR: NPL variable initialized twice. Call CleanUp() first before initializing the library again.");
+
 NPL::NPL()
 {
 }
@@ -12,11 +15,12 @@ NPL::~NPL()
 }
 
 void NPL::Init(float pixelsPerMeter)
+
 {
 	// You've alreay initialized the library once
-	assert(physics == nullptr && audio == nullptr && "ERROR: NPL variable initialized twice. Call CleanUp() first before initializing the variable again.");
-
+	DOUBLE_INIT_CHECK();
 	physics = new Physics(&bodies, &physicsConfig, &gasIndex, &liquidIndex, &pixelsToMeters, &physIterations);
+	acoustics = new Acoustics(&bodies, &soundDataList, &gasIndex, &panRange, &panFactor);
 	audio = new Audio();
 
 	notifier += std::bind(&NPL::UpdateNotifier, this, std::placeholders::_1, std::placeholders::_2);
@@ -58,8 +62,7 @@ void NPL::Init(float pixelsPerMeter)
 
 void NPL::Update(float* dt)
 {
-	assert(physics != nullptr && audio != nullptr && "ERROR: NPL variable not initialized. Call Init() first.");
-
+	INIT_CHECK();
 	if (IsGlobalPause()) return;
 
 	//INFO: Uniform forces independent from space use InUnit::IN_PIXELS, otherwise InUnit::IN_METERS
@@ -72,8 +75,7 @@ void NPL::Update(float* dt)
 
 void NPL::CleanUp()
 {
-	assert(physics != nullptr && audio != nullptr && "ERROR: NPL variable not initialized. Call Init() first.");
-
+	INIT_CHECK();
 	// AUDIO
 	audio->CleanUp();
 
@@ -81,7 +83,7 @@ void NPL::CleanUp()
 	bodies.Clear();
 
 	// LISTENER
-	listener = -1;
+	listener = nullptr;
 
 	// PHYSICS
 	physics->CleanUp();
@@ -97,8 +99,7 @@ void NPL::CleanUp()
 const BodyCreation* NPL::CreateBody(PhysRect rectangle)
 {
 	//Library not initialized. Call NPL::Init() first
-	assert(physics != nullptr && "ERROR: NPL variable not initialized. Call Init() first.");
-
+	INIT_CHECK();
 	rectangle *= pixelsToMeters;
 
 	return bodyCreation->Access(rectangle);
@@ -107,8 +108,7 @@ const BodyCreation* NPL::CreateBody(PhysRect rectangle)
 const BodyCreation* NPL::CreateBody(float x, float y, float width, float height)
 {
 	//Library not initialized. Call NPL::Init() first
-	assert(physics != nullptr && "ERROR: NPL variable not initialized. Call Init() first.");
-
+	INIT_CHECK();
 	PhysRect rectangle = PhysRect( x, y, width, height ) * pixelsToMeters;
 
 	return bodyCreation->Access(rectangle);
@@ -116,40 +116,44 @@ const BodyCreation* NPL::CreateBody(float x, float y, float width, float height)
 
 const LibraryConfig* NPL::Configure()
 {
-	assert(physics != nullptr && audio != nullptr && "ERROR: NPL variable not initialized. Call Init() first.");
+	INIT_CHECK();
 	return libraryConfig->Access();
 }
 
 const GetData* NPL::Get()
 {
-	assert(physics != nullptr && audio != nullptr && "ERROR: NPL variable not initialized. Call Init() first.");
+	INIT_CHECK();
 	return getData->Access();
 }
 
 bool NPL::DestroyBody(Body* body)
 {
-	assert(physics != nullptr && audio != nullptr && "ERROR: NPL variable not initialized. Call Init() first.");
-	return bodies.Erase(bodies.Find(body));
+	INIT_CHECK();
+	int index = bodies.Find(body);
+	if (body == listener) listener = nullptr;
+	return bodies.Erase(index);
 }
 
 bool NPL::DestroyBody(PhysID id)
 {
-	assert(physics != nullptr && audio != nullptr && "ERROR: NPL variable not initialized. Call Init() first.");
+	INIT_CHECK();
 	Body find(BodyClass::EMPTY_BODY, {}, 0, nullptr);
 	find.id = &id;
-	return bodies.Erase(bodies.Find(&find));
+	int index = bodies.Find(&find);
+	if (index == bodies.Find(listener)) listener = nullptr;
+	return bodies.Erase(index);
 }
 
 bool NPL::DestroyBody(BodyClass clas)
 {
-	assert(physics != nullptr && audio != nullptr && "ERROR: NPL variable not initialized. Call Init() first.");
-
+	INIT_CHECK();
 	bool ret = true;
-	for (int i = bodies.Size(); i >= 0; --i) // i must be int
+	for (int i = bodies.Size(); i >= 0; --i)
 	{
 		Body* b = bodies[i];
 		if (b->Class() == clas)
 		{
+			if (b == listener) listener = nullptr;
 			bool destroyed = bodies.Erase(i);
 			if (!destroyed) ret = false;
 		}
@@ -160,18 +164,19 @@ bool NPL::DestroyBody(BodyClass clas)
 
 void NPL::LoadSound(const char* path)
 {
-	assert(audio != nullptr && "ERROR: NPL variable not initialized. Call Init() first.");
-
+	INIT_CHECK();
 	audio->LoadSound(path);
 }
 
 void NPL::PausePhysics(bool pause)
 {
+	INIT_CHECK();
 	physics->globals.Set(0, pause);
 }
 
 const PhysRect NPL::ReturnScenarioRect()
 {
+	INIT_CHECK();
 	if (bodies.Empty()) return PhysRect();
 
 	PhysRect first = bodies.At(0)->Rect(InUnit::IN_PIXELS);
@@ -206,8 +211,7 @@ const PhysRect NPL::ReturnScenarioRect()
 
 void NPL::SetScenarioPreset(ScenarioPreset preset, PhysVec windowSize, std::vector<StaticBody*>* scenarioBodies)
 {
-	assert(physics != nullptr && audio != nullptr && "ERROR: NPL variable not initialized. Call Init() first.");
-
+	INIT_CHECK();
 	switch (preset)
 	{
 	case ScenarioPreset::LIMITS_SCENARIO_PRESET:
@@ -296,8 +300,7 @@ void NPL::SetScenarioPreset(ScenarioPreset preset, PhysVec windowSize, std::vect
 
 void NPL::SetPhysicsPreset(PhysicsPreset preset)
 {
-	assert(physics != nullptr && "ERROR: NPL variable not initialized. Call Init() first.");
-
+	INIT_CHECK();
 	PhysVec friction = {};
 	PhysVec gravity = {};
 	PhysVec restitution = {};
@@ -371,22 +374,7 @@ void NPL::UpdateListener(PhysID id)
 {
 	Body find(BodyClass::EMPTY_BODY, {}, 0, nullptr);
 	find.id = &id;
-	listener = bodies.Find(&find);
-}
-
-void NPL::StepPhysics(float dt)
-{
-	bodies.Iterate<Physics*, float>
-	(
-		[](Body* b, Physics* p, float dt) 
-		{ 
-			p->Step(b, dt); 
-		},
-		physics, dt
-	);
-	//for(unsigned int i = 0; i < bodies.Size(); ++i) physics->Step(bodies[i], dt);
-
-	physics->SolveCollisions(&bodies);
+	listener = bodies[bodies.Find(&find)];
 }
 
 void NPL::UpdateStates()
@@ -455,121 +443,35 @@ void NPL::UpdateStates()
 	}
 }
 
+void NPL::StepPhysics(float dt)
+{
+	bodies.Iterate<Physics*, float>
+	(
+		[](Body* b, Physics* p, float dt) 
+		{ 
+			p->Step(b, dt); 
+		},
+		physics, dt
+	);
+	//for(unsigned int i = 0; i < bodies.Size(); ++i) physics->Step(bodies[i], dt);
+
+	physics->SolveCollisions(&bodies);
+}
+
 void NPL::StepAcoustics()
 {
 	// If no listener & environment is void
-	if (!Listener() && IsVoid()) return bodies.Iterate([](Body* b) { b->acousticDataList.Clear(); });
+	if (!listener && IsVoid()) return bodies.Iterate([](Body* b) { b->acousticDataList.Clear(); });
 
-	for (unsigned int i = 0; i < bodies.Size(); ++i)
-	{
-		Body* b = bodies[i];
-		if (b->acousticDataList.Empty() || !b->HasAcousticsUpdatability()) continue;
-
-		if (!Listener())
-		{
-			NoListenerLogic(b);
-			continue;
-		}
-
-		GasBody* environment = GetEnvironmentBody(b->Rect(InUnit::IN_METERS));
-
-		if (!environment)
-		{
-			b->acousticDataList.Clear();
-			continue;
-		}
-		
-		ListenerLogic(b, environment);
-	}
-}
-
-void NPL::NoListenerLogic(Body* b)
-{
-	if (b->acousticDataList.Empty()) return;
-
-	b->acousticDataList.Iterate<Audio*, PhysArray<SoundData*>&, const float>
+	bodies.Iterate<Acoustics*, Body*, int>
 	(
-		[](AcousticData* data, Audio* audio, PhysArray<SoundData*>& soundDataList, const float maxSPL)
+		[](Body* b, Acoustics* a, Body* listener, int size)
 		{
-			if (unsigned(data->index) >= audio->SoundSize()) return;
-			soundDataList.Add(new SoundData(data->index, 0, data->spl / maxSPL, 0));
+			if (b->acousticDataList.Empty() || !b->HasAcousticsUpdatability()) return;
+			a->Simulate(b, listener, size);
 		},
-		audio, soundDataList, maxSPL
+		acoustics, listener, audio->SoundSize()
 	);
-	/*for(unsigned int i = 0; i < b->acousticDataList.Size(); ++i)
-	{
-		AcousticData* data = b->acousticDataList[i];
-		if (data->index >= audio->SoundSize()) continue;
-		soundDataList.Add(new SoundData(data->index, 0, data->spl / maxSPL, 0));
-	}*/
-	b->acousticDataList.Clear();
-}
-
-void NPL::ListenerLogic(Body* b, GasBody* environment)
-{
-	// If listener emit sound
-	if (b->Id() == Listener()->id) return NoListenerLogic(b);
-	if (b->acousticDataList.Empty()) return;
-
-	for (unsigned int i = 0; i < b->acousticDataList.Size(); ++i)
-	{
-		AcousticData* data = b->acousticDataList[i];
-		Body* l = Listener();
-
-		// Get the distance between Body & Listener
-		float distance = PhysMath::Distance(l->ReceptionPoint(InUnit::IN_METERS), data->emissionPosition);
-		bool direction = (l->ReceptionPoint(InUnit::IN_METERS).x - data->emissionPosition.x) < 0;
-
-		float pan = ComputePanning(distance, direction ? 1 : -1);
-
-		float volume = ComputeVolume(distance, data->spl);
-
-		float timeDelay = ComputeTimeDelay(distance, environment);
-
-		soundDataList.Add(new SoundData(data->index, pan, volume, timeDelay));
-	}
-	b->acousticDataList.Clear();
-}
-
-GasBody* NPL::GetEnvironmentBody(PhysRect body)
-{
-	for (unsigned int i = 0; i < gasIndex.Size(); ++i)
-	{
-		Body* b = bodies[*gasIndex[i]];
-		if (PhysMath::CheckCollision(body, b->Rect(InUnit::IN_METERS)))
-			return (GasBody*)b;
-	}
-
-	return nullptr;
-}
-
-float NPL::ComputePanning(float distance, int direction)
-{
-	// Narrow down distance over Range for panning operations
-	PhysMath::Clamp(distance, 0, panRange);
-
-	// Compute pan (normalized between [ 1, -1])
-	return PhysMath::Pow(distance / panRange, panFactor) * direction;
-}
-
-float NPL::ComputeVolume(float distance, float spl)
-{
-	// Compute the sound attenuation over distance
-	// Final SPL = Initial SPL - 20*Log(distance / 1)
-	float fSPL = spl - 20 * PhysMath::Log(distance);
-
-	// Transform volume from db to linear [ 0, 1])
-	return PhysMath::LogToLinear(fSPL, maxSPL) / maxVolume;
-}
-
-float NPL::ComputeTimeDelay(float distance, GasBody* environment)
-{
-	// Calculate delay time
-	// 1. Vel = sqrt( lambda * Pa / ro )
-	// 2. Time = distance / vel
-	float timeDelay = 0;
-	float vel = PhysMath::Sqrt(environment->HeatRatio() * environment->Pressure() / environment->Density(InUnit::IN_METERS));
-	return distance / vel;
 }
 
 void NPL::StepAudio(float* dt)

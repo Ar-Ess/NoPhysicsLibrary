@@ -37,6 +37,12 @@
     <Filter Include="External\SoLoud">
       <UniqueIdentifier>{b7ffab4b-69cb-4c8b-8a44-246cce313c7a}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Core\Acoustics">
+      <UniqueIdentifier>{854aff1a-4a9a-4e25-b421-e5979950bc58}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Core\Acoustics\Units">
+      <UniqueIdentifier>{fec5f247-d0aa-4a47-b02d-d7c78429060e}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\NoPhysicsLibrary.cpp">
@@ -231,6 +237,9 @@
     <ClCompile Include="Source\Material.cpp">
       <Filter>Core\Bodies</Filter>
     </ClCompile>
+    <ClCompile Include="Source\Acoustics.cpp">
+      <Filter>Core\Acoustics</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\NoPhysicsLibrary.h">
@@ -289,9 +298,6 @@
     </ClInclude>
     <ClInclude Include="Source\BodyBackup.h">
       <Filter>Core\Bodies\Units</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\AcusticData.h">
-      <Filter>Core\Audio\Units</Filter>
     </ClInclude>
     <ClInclude Include="Source\Collision.h">
       <Filter>Core\Physics\Units</Filter>
@@ -475,6 +481,12 @@
     </ClInclude>
     <ClInclude Include="Source\Material.h">
       <Filter>Core\Bodies</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\AcusticData.h">
+      <Filter>Core\Acoustics\Units</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Acoustics.h">
+      <Filter>Core\Acoustics</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

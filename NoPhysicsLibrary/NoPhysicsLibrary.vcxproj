@@ -147,6 +147,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Source\Acoustics.cpp" />
     <ClCompile Include="Source\Audio.cpp" />
     <ClCompile Include="Source\Body.cpp" />
     <ClCompile Include="Source\DynamicBody.cpp" />
@@ -213,6 +214,7 @@
     <ClCompile Include="Source\Timer.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Source\Acoustics.h" />
     <ClInclude Include="Source\AcusticData.h" />
     <ClInclude Include="Source\Audio.h" />
     <ClInclude Include="Source\External\SoLoud\include\soloud.h" />

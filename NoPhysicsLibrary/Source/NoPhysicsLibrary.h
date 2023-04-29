@@ -7,6 +7,7 @@
 #include "Collision.h"
 
 #include "Physics.h"
+#include "Acoustics.h"
 #include "Audio.h"
 #include <vector>
 #include "PhysAction.h"
@@ -89,11 +90,6 @@ private: // Methods
 
 	GasBody* GetEnvironmentBody(PhysRect body);
 
-	Body* Listener() 
-	{
-		return bodies[listener];
-	}
-
 private:
 
 	BodyCreation* bodyCreation = nullptr;
@@ -101,6 +97,7 @@ private:
 	GetData* getData = nullptr;
 
 	Physics* physics = nullptr;
+	Acoustics* acoustics = nullptr;
 	Audio* audio = nullptr;
 
 	PhysArray<Body*> bodies;
@@ -109,9 +106,6 @@ private:
 	PhysArray<unsigned int*> gasIndex;
 	PhysArray<unsigned int*> liquidIndex;
 	PhysRect scenarioRects[4] = {};
-
-	const float maxSPL = 120.0f;
-	const float maxVolume = 10.0f;
 
 	//_____________________
 	// CONFIG VARIABLES
@@ -126,10 +120,10 @@ private:
 	float panFactor = 1.0f;
 	float pixelsToMeters = 20.0f;
 	float ptmRatio = 1.0f;
+	Body* listener = nullptr;
 
 	//_____________________
 	// - Audio
-	int listener = -1;
 
 	//______Config Notifier______
 	PhysAction<unsigned int, PhysID> notifier;
