@@ -463,14 +463,14 @@ void NPL::StepAcoustics()
 	// If no listener & environment is void
 	if (!listener && IsVoid()) return bodies.Iterate([](Body* b) { b->acousticDataList.Clear(); });
 
-	bodies.Iterate<Acoustics*, Body*, int>
+	bodies.Iterate<Acoustics*, Body*>
 	(
-		[](Body* b, Acoustics* a, Body* listener, int size)
+		[](Body* b, Acoustics* a, Body* listener)
 		{
 			if (b->acousticDataList.Empty() || !b->HasAcousticsUpdatability()) return;
-			a->Simulate(b, listener, size);
+			a->Simulate(b, listener);
 		},
-		acoustics, listener, audio->SoundSize()
+		acoustics, listener
 	);
 }
 

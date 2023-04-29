@@ -11,9 +11,8 @@ Acoustics::Acoustics(PhysArray<Body*>* bodies, PhysArray<SoundData*>* soundDataL
 	this->gasIndex = gasIndex;
 }
 
-void Acoustics::Simulate(Body* b, Body* listener, int soundSize)
+void Acoustics::Simulate(Body* b, Body* listener)
 {
-	this->soundSize = soundSize;
 	if (!listener) return NoListenerLogic(b);
 
 	GasBody* environment = GetEnvironmentBody(b->Rect(InUnit::IN_METERS));
@@ -27,12 +26,11 @@ void Acoustics::NoListenerLogic(Body* b)
 {
 	b->acousticDataList.Iterate<int, PhysArray<SoundData*>*, const float>
 	(
-		[](AcousticData* data, int size, PhysArray<SoundData*>* soundDataList, const float maxSPL)
+		[](AcousticData* data, PhysArray<SoundData*>* soundDataList, const float maxSPL)
 		{
-			if (unsigned(data->index) >= size) return;
 			soundDataList->Add(new SoundData(data->index, 0, data->spl / maxSPL, 0));
 		},
-		soundSize, soundDataList, maxSPL
+		soundDataList, maxSPL
 	);
 
 	b->acousticDataList.Clear();

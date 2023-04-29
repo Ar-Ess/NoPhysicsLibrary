@@ -16,7 +16,7 @@ private:
 
 	Acoustics(PhysArray<Body*>* bodies, PhysArray<SoundData*>* soundDataList, PhysArray<unsigned int*>* gasIndex, float* panRange, float* panFactor);
 
-	void Simulate(Body* b, Body* listener, int soundSize);
+	void Simulate(Body* b, Body* listener);
 
 	void NoListenerLogic(Body* b);
 
@@ -35,7 +35,6 @@ private:
 	PhysArray<Body*>* bodies = nullptr;
 	PhysArray<SoundData*>* soundDataList = nullptr;
 	PhysArray<unsigned int*>* gasIndex = nullptr;
-	int soundSize = 0;
 
 	const float maxSPL = 120.0f;
 	const float maxVolume = 10.0f;
