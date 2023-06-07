@@ -1,6 +1,7 @@
 #include "Acoustics.h"
 #include "SoundData.h"
 #include "GasBody.h"
+#include "PhysArray.h"
 
 Acoustics::Acoustics(PhysArray<Body*>* bodies, PhysArray<SoundData*>* soundDataList, PhysArray<unsigned int*>* gasIndex, float* panRange, float* panFactor)
 {
@@ -15,10 +16,14 @@ void Acoustics::Simulate(Body* b, Body* listener)
 {
 	if (!listener || listener->id == b->id) return NoListenerLogic(b);
 
+	GasBody* environment = GetEnvironmentBody(PhysRect(float(b->emissionPoint.x), float(b->emissionPoint.y), 1.0f, 1.0f));
+	if (environment == nullptr) return;
+
 	PhysRay ray = PhysRay(b->EmissionPoint(InUnit::IN_METERS), listener->ReceptionPoint(InUnit::IN_METERS));
 	float distance = PhysMath::Distance(ray);
 
-	//-TODO: Check with all gas bodies if there is any void inbetween
+	PhysArray<RayData*> bodyList;
+	RayCastBodyList(&bodyList, ray, RaycastAgents(listener, b));
 
 	for (unsigned int i = 0; i < bodies->Size(); ++i)
 	{
@@ -64,12 +69,12 @@ void Acoustics::ListenerLogic(Body* b, Body* listener, GasBody* environment)
 	b->acousticDataList.Clear();
 }
 
-GasBody* Acoustics::GetEnvironmentBody(PhysRect body)
+GasBody* Acoustics::GetEnvironmentBody(PhysRect rect)
 {
 	for (unsigned int i = 0; i < gasIndex->Size(); ++i)
 	{
 		Body* b = bodies->At(*(*gasIndex)[i]);
-		if (PhysMath::CheckCollision(body, b->Rect(InUnit::IN_METERS)))
+		if (PhysMath::CheckCollision(rect, b->Rect(InUnit::IN_METERS)))
 			return (GasBody*)b;
 	}
 
@@ -103,4 +108,53 @@ float Acoustics::ComputeTimeDelay(float distance, GasBody* environment)
 	float timeDelay = 0;
 	float vel = PhysMath::Sqrt(environment->HeatRatio() * environment->Pressure() / environment->Density(InUnit::IN_METERS));
 	return distance / vel;
+}
+
+void Acoustics::RayCastBodyList(PhysArray<RayData*>* returnList, PhysRay ray, RaycastAgents agents)
+{
+	bodies->Iterate<PhysArray<RayData*>*, PhysRay, RaycastAgents>
+		(
+			[](Body* b, PhysArray<RayData*>* ret, PhysRay ray, RaycastAgents agents)
+			{
+				if (b == agents.listener || b == agents.emmiter) return;
+
+				PhysRect rect = b->rect;
+				PhysRay rectPlanes[4] =
+				{
+					{ rect.Position(), b->rect.Position() + PhysVec(rect.w, 0) },
+					{ rect.Position() + PhysVec(rect.w, 0), rect.Position() + rect.Size() },
+					{ rect.Position() + rect.Size(), rect.Position() + PhysVec(0, rect.h) },
+					{ rect.Position() + PhysVec(0, rect.h), rect.Position() }
+				};
+
+				PhysVec intr[2] = {};
+				bool first = false;
+				bool collision = false;
+
+				for (unsigned short int i = 0; i < 4; ++i)
+				{
+					if (!PhysMath::RayCast_Internal(ray, rectPlanes[i], intr[first])) continue;
+
+					if (!first)
+					{
+						first = true;
+						continue;
+					}
+
+					collision = true;
+					PhysRay outRay = { intr[0], intr[1]};
+					ret->Add(new RayData(b, outRay));
+					break;
+				}
+
+				if (!first || intr[0].IsZero()) return; // Code ONLY arribes here is first is true and collision is false
+
+				PhysRay outRay = { agents.emmiter->EmissionPoint(InUnit::IN_METERS), intr[0] };
+				ret->Add(new RayData(b, outRay));
+
+			},
+			returnList,
+			ray,
+			agents
+		);
 }

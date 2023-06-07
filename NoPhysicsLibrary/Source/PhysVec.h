@@ -2,6 +2,7 @@
 
 struct PhysVec
 {
+	//-TODO: see that a lot of variables instanciated in the code directly calculates the module, which is really heavy and sometimes not necessary
 	PhysVec();
 	PhysVec(float x, float y);
 	PhysVec(int x, int y);
