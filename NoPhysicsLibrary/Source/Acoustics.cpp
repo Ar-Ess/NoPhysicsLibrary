@@ -18,7 +18,7 @@ void Acoustics::Simulate(Body* b, Body* listener)
 	PhysRay ray = PhysRay(b->EmissionPoint(InUnit::IN_METERS), listener->ReceptionPoint(InUnit::IN_METERS));
 	float distance = PhysMath::Distance(ray);
 
-	// TODO: Check with all gas bodies if there is any void inbetween
+	//-TODO: Check with all gas bodies if there is any void inbetween
 
 	for (unsigned int i = 0; i < bodies->Size(); ++i)
 	{
