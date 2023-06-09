@@ -11,25 +11,15 @@ class GasBody;
 class Acoustics
 {
 
-	friend class NPL;
-
-	struct RayData
-	{
-
-		RayData(Body* body, PhysRay ray)
-		{
-			this->body = body;
-			this->distance = ray.Distance();
-			this->ray = ray;
-		}
-
-		Body* body;
-		float distance;
-		PhysRay ray = {};
-	};
 
 	struct RaycastAgents
 	{
+		RaycastAgents()
+		{
+			this->listener = nullptr;
+			this->emmiter = nullptr;
+		}
+
 		RaycastAgents(Body* listener, Body* emmiter)
 		{
 			this->listener = listener;
@@ -39,6 +29,20 @@ class Acoustics
 		Body* listener = nullptr;
 		Body* emmiter = nullptr;
 	};
+
+	struct RayData
+	{
+
+		RayData(Body* body, PhysRay ray, RaycastAgents agents);
+
+		Body* body = nullptr;
+		float innerDistance;
+		float distance;
+		PhysRay ray = {};
+		RaycastAgents agents;
+	};
+
+	friend class NPL;
 
 private:
 

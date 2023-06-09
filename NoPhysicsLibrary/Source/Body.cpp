@@ -68,6 +68,13 @@ PhysVec Body::Size(InUnit unit) const
 	return rect.Size() * conversion;
 }
 
+void Body::Size(float w, float h, InUnit unit)
+{
+	const float conv = Conversion(unit, true);
+	rect.w = w * conv;
+	rect.h = h * conv;
+}
+
 PhysRect Body::Rect(InUnit unit) const
 {
 	return { Position(unit), Size(unit) };

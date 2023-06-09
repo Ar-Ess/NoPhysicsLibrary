@@ -191,7 +191,9 @@ namespace PhysMath
 
 	inline PhysVec ClosestRectIntersectionFromPoint(PhysVec point, PhysRect rect)
 	{
-		bool inside = PhysMath::CheckCollision({ point + PhysVec(-1.0f, -1.0f), 2, 2 }, rect);
+		float x = point.x - 1;
+		float y = point.y - 1;
+		bool inside = PhysMath::CheckCollision({ x, y, 2.0f, 2.0f }, rect);
 		PhysVec ret = { 0.0f, 0.0f };
 
 		inside ? ret = PhysMath::ClosestRectIntersectionFromInsidePoint(point, rect) : ret = PhysMath::ClosestRectIntersectionFromOutsidePoint(point, rect);

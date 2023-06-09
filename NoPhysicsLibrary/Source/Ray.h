@@ -12,7 +12,8 @@ struct PhysRay
 	float Distance()
 	{
 		if (start.IsZero() && end.IsZero()) return 0;
+		float ret = end.module - start.module;
 
-		return end.module - start.module;
+		return ret < 0 ? -ret : ret;
 	}
 };

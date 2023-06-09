@@ -3,6 +3,15 @@
 #include "GasBody.h"
 #include "PhysArray.h"
 
+Acoustics::RayData::RayData(Body* body, PhysRay ray, Acoustics::RaycastAgents agents)
+{
+	this->body = body;
+	this->innerDistance = ray.Distance();
+	this->distance = PhysMath::Distance(agents.emmiter->rect.Position(), ray.start);
+	this->ray = ray;
+	this->agents = agents;
+}
+
 Acoustics::Acoustics(PhysArray<Body*>* bodies, PhysArray<SoundData*>* soundDataList, PhysArray<unsigned int*>* gasIndex, float* panRange, float* panFactor)
 {
 	this->bodies = bodies;
@@ -17,7 +26,7 @@ void Acoustics::Simulate(Body* b, Body* listener)
 	if (!listener || listener->id == b->id) return NoListenerLogic(b);
 
 	GasBody* environment = GetEnvironmentBody(PhysRect(float(b->emissionPoint.x), float(b->emissionPoint.y), 1.0f, 1.0f));
-	if (environment == nullptr) return;
+	if (environment == nullptr) return; // This assures us that the emitter is inside a gas
 
 	PhysRay ray = PhysRay(b->EmissionPoint(InUnit::IN_METERS), listener->ReceptionPoint(InUnit::IN_METERS));
 	float distance = PhysMath::Distance(ray);
@@ -25,13 +34,15 @@ void Acoustics::Simulate(Body* b, Body* listener)
 	PhysArray<RayData*> bodyList;
 	RayCastBodyList(&bodyList, ray, RaycastAgents(listener, b));
 
-	for (unsigned int i = 0; i < bodies->Size(); ++i)
-	{
-		Body* a = (*bodies)[i];
-		if (a == listener || a == b) continue;
+	bodyList.Sort([](RayData* a, RayData* b) { return a->distance > b->distance; });
 
-		PhysMath::RayCast(ray, a->Rect(InUnit::IN_METERS));
-	}
+	bodyList.Iterate
+	(
+		[](RayData* data)
+		{
+
+		}
+	);
 }
 
 void Acoustics::NoListenerLogic(Body* b)
@@ -68,6 +79,27 @@ void Acoustics::ListenerLogic(Body* b, Body* listener, GasBody* environment)
 	}
 	b->acousticDataList.Clear();
 }
+
+//void Acoustics::ListenerLogic(Body* b, Body* listener, GasBody* environment)
+//{
+//	for (unsigned int i = 0; i < b->acousticDataList.Size(); ++i)
+//	{
+//		AcousticData* data = b->acousticDataList[i];
+//
+//		// Get the distance between Body & Listener
+//		float distance = PhysMath::Distance(listener->ReceptionPoint(InUnit::IN_METERS), data->emissionPosition);
+//		bool direction = (listener->ReceptionPoint(InUnit::IN_METERS).x - data->emissionPosition.x) < 0;
+//
+//		float pan = ComputePanning(distance, direction ? 1 : -1);
+//
+//		float volume = ComputeVolume(distance, data->spl);
+//
+//		float timeDelay = ComputeTimeDelay(distance, environment);
+//
+//		soundDataList->Add(new SoundData(data->index, pan, volume, timeDelay));
+//	}
+//	b->acousticDataList.Clear();
+//}
 
 GasBody* Acoustics::GetEnvironmentBody(PhysRect rect)
 {
@@ -143,14 +175,16 @@ void Acoustics::RayCastBodyList(PhysArray<RayData*>* returnList, PhysRay ray, Ra
 
 					collision = true;
 					PhysRay outRay = { intr[0], intr[1]};
-					ret->Add(new RayData(b, outRay));
+					ret->Add(new RayData(b, outRay, agents));
 					break;
 				}
 
-				if (!first || intr[0].IsZero()) return; // Code ONLY arribes here is first is true and collision is false
+				if (!first || collision) return; // Code ONLY arribes here is first is true and collision is false
 
-				PhysRay outRay = { agents.emmiter->EmissionPoint(InUnit::IN_METERS), intr[0] };
-				ret->Add(new RayData(b, outRay));
+				PhysRay outRay;
+				if (PhysMath::CheckCollision(agents.listener->Rect(InUnit::IN_METERS), b->Rect(InUnit::IN_METERS))) outRay = { intr[0], agents.listener->ReceptionPoint(InUnit::IN_METERS)}; // Ray of the collision rectangles
+				else outRay = { agents.emmiter->EmissionPoint(InUnit::IN_METERS), intr[0]};
+				ret->Add(new RayData(b, outRay, agents));
 
 			},
 			returnList,

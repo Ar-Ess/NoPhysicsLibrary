@@ -51,6 +51,8 @@ public: // Methods
 
 	// Returns the width & height of the body
 	PhysVec Size(InUnit unit) const;
+	// Sets the width & height of the body
+	void Size(float w, float h, InUnit unit);
 
 	// Returns the pointer to the rectangle of the body
 	PhysRect Rect(InUnit unit) const;
