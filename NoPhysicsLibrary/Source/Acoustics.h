@@ -52,7 +52,9 @@ private:
 
 	void NoListenerLogic(Body* b);
 
-	void ListenerLogic(Body* b, Body* listener, GasBody* environment);
+	void ListenerLogic(PhysArray<RayData*>* data, const float totalDistance);
+
+	void ListenerLogicVoidSecure(PhysArray<RayData*>* data, const float totalDistance);
 
 	GasBody* GetEnvironmentBody(PhysRect rect);
 

@@ -64,7 +64,7 @@ bool TestThreeScene::Start()
 	GasBody* gas = npl->CreateBody(npl->ReturnScenarioRect())
 		->Gas(1, 5000, { 3.0f, 0.1f }, InUnit::IN_METERS, InUnit::IN_METERS);
 
-	gas->Size(400, gas->Size(InUnit::IN_PIXELS).y, InUnit::IN_PIXELS);
+	//gas->Size(400, gas->Size(InUnit::IN_PIXELS).y, InUnit::IN_PIXELS);
 
 	// Shell
 	//-TODO: debug
