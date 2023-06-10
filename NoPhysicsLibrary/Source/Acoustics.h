@@ -17,29 +17,29 @@ class Acoustics
 		RaycastAgents()
 		{
 			this->listener = nullptr;
-			this->emmiter = nullptr;
+			this->emitter = nullptr;
 		}
 
-		RaycastAgents(Body* listener, Body* emmiter)
+		void SetAgents(Body* listener, Body* emitter)
 		{
 			this->listener = listener;
-			this->emmiter = emmiter;
+			this->emitter = emitter;
 		}
 
 		Body* listener = nullptr;
-		Body* emmiter = nullptr;
+		Body* emitter = nullptr;
 	};
 
 	struct RayData
 	{
 
-		RayData(Body* body, PhysRay ray, RaycastAgents agents);
+		RayData(Body* body, PhysRay ray, RaycastAgents* agents);
 
 		Body* body = nullptr;
 		float innerDistance;
 		float distance;
+		float percentage = 0;
 		PhysRay ray = {};
-		RaycastAgents agents;
 	};
 
 	friend class NPL;
@@ -48,13 +48,15 @@ private:
 
 	Acoustics(PhysArray<Body*>* bodies, PhysArray<SoundData*>* soundDataList, PhysArray<unsigned int*>* gasIndex, float* panRange, float* panFactor);
 
-	void Simulate(Body* b, Body* listener);
+	void Simulate(Body* emitter, Body* listener);
 
-	void NoListenerLogic(Body* b);
+	void NoListenerLogic(Body* emmiter);
 
 	void ListenerLogic(PhysArray<RayData*>* data, const float totalDistance);
 
-	void ListenerLogicVoidSecure(PhysArray<RayData*>* data, const float totalDistance);
+	void CalculatePercentages(PhysArray<RayData*>* data, const float totalDistance);
+
+	void CalculatePercentagesVoidSecure(PhysArray<RayData*>* data, const float totalDistance);
 
 	GasBody* GetEnvironmentBody(PhysRect rect);
 
@@ -62,15 +64,26 @@ private:
 
 	float ComputeVolume(float distance, float spl);
 
-	float ComputeTimeDelay(float distance, GasBody* environment);
+	float ComputeTimeDelay(float distance, Body* environment);
 
-	void RayCastBodyList(PhysArray<RayData*>* returnList, PhysRay ray, RaycastAgents agents);
+	float ComputeVolumeAttenuation(float distance, Body* obstacle, float currVolume);
+
+	float ComputeFrequentialAttenuation(float distance, Body* obstacle);
+	
+	float ComputePitchShifting(float distance, Body* obstacle);
+	
+	float ComputeDoppler(float distance, Body* obstacle);
+
+	float ComputeReverb(float distance, Body* obstacle);
+
+	void RayCastBodyList(PhysArray<RayData*>* returnList, PhysRay ray);
 
 private:
 
 	PhysArray<Body*>* bodies = nullptr;
 	PhysArray<SoundData*>* soundDataList = nullptr;
 	PhysArray<unsigned int*>* gasIndex = nullptr;
+	RaycastAgents* agents = nullptr;
 
 	const float maxSPL = 120.0f;
 	const float maxVolume = 10.0f;

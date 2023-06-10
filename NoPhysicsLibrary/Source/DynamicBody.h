@@ -57,6 +57,11 @@ public: // Methods
 
 	void SetMaterial(Material material) override;
 
+	float YoungModulus()
+	{
+		return youngModulus;
+	}
+
 private: // Methods
 	
 	DynamicBody(PhysRect rect, PhysVec gravityOffset, float mass, Flag* globals, const float* pixelsToMeters);

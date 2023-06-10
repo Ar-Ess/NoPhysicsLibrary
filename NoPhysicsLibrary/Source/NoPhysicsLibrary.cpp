@@ -465,10 +465,10 @@ void NPL::StepAcoustics()
 
 	bodies.Iterate<Acoustics*, Body*>
 	(
-		[](Body* b, Acoustics* a, Body* listener)
+		[](Body* b, Acoustics* acoustics, Body* listener)
 		{
 			if (b->acousticDataList.Empty() || !b->HasAcousticsUpdatability()) return;
-			a->Simulate(b, listener);
+			acoustics->Simulate(b, listener);
 		},
 		acoustics, listener
 	);

@@ -6,12 +6,11 @@ struct AcousticData
 {
 private:
 
-	AcousticData(int index, PhysVec emissionPosition, float spl) : index(index), emissionPosition(emissionPosition), spl(spl) {}
+	AcousticData(int index, float spl) : index(index), spl(spl) {}
 
 public:
 
 	int index = -1;
-	PhysVec emissionPosition = {};
 	float spl = 0;
 
 private:

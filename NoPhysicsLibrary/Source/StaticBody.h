@@ -14,6 +14,11 @@ public: // Methods
 
 	void SetMaterial(Material material) override;
 
+	float YoungModulus() const
+	{
+		return youngModulus;
+	}
+
 private:
 
 	StaticBody(PhysRect rect, float mass, const float* pixelsToMeters);

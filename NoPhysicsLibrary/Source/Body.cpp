@@ -23,7 +23,7 @@ Body::Body(BodyClass clas, PhysRect rect, float mass, const float* pixelsToMeter
 void Body::Play(unsigned int index, float decibels)
 {
 	PhysMath::Clamp(decibels, 0, 120);
-	acousticDataList.Add(new AcousticData(index, EmissionPoint(InUnit::IN_METERS), decibels));
+	acousticDataList.Add(new AcousticData(index, decibels));
 }
 
 void Body::EmissionPoint(PhysVec offset, InUnit unit)
