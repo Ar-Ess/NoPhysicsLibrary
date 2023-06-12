@@ -1,5 +1,6 @@
 #include "Audio.h"
 #include "SoundData.h"
+#include "soloud_biquadresonantfilter.h"
 
 #define SEC_TO_SAMPLES(seconds) seconds * 44100
 
@@ -22,6 +23,8 @@ void Audio::Playback(SoundData* data, float* dt)
     if (!delay) return;
 
     audio->setDelaySamples(h, SEC_TO_SAMPLES(data->delayTime));
+    SoLoud::BiquadResonantFilter instance;
+
     audio->setPause(h, false);
 }
 

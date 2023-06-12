@@ -116,9 +116,9 @@ namespace PhysMath
 		return Pow(10, num / target);
 	}
 
-	inline float LinearToLog(float num)
+	inline float LinearToLog(float num, float base = 10)
 	{
-		return 20 * Log(num, 10);
+		return Log(num, base);
 	}
 
 	inline float Min(float a, float b)

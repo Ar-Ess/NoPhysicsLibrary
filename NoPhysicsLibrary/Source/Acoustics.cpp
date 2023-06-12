@@ -119,7 +119,7 @@ void Acoustics::ListenerLogic(PhysArray<RayData*>* data, const float totalDistan
 			noVolume = volume < 0.01f;
 			if (noVolume) break;
 
-			timeDelay += ComputeTimeDelay(totalDistance, rD->body) * rD->percentage;
+			timeDelay += ComputeTimeDelay(rD->innerDistance, rD->body);
 
 			float freq = ComputeFrequentialAttenuation(totalDistance, rD->body) * rD->percentage;
 
