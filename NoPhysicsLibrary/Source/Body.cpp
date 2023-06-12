@@ -3,6 +3,7 @@
 #include "DynamicBody.h"
 #include "Define.h"
 #include "PhysMath.h"
+#include "PhysTrigger.h"
 
 Body::Body(BodyClass clas, PhysRect rect, float mass, const float* pixelsToMeters)
 {
@@ -24,6 +25,7 @@ void Body::Play(unsigned int index, float decibels)
 {
 	PhysMath::Clamp(decibels, 0, 120);
 	acousticDataList.Add(new AcousticData(index, decibels));
+	!(*playSoundTrigger);
 }
 
 void Body::EmissionPoint(PhysVec offset, InUnit unit)

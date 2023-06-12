@@ -20,7 +20,7 @@ void NPL::Init(float pixelsPerMeter)
 	// You've alreay initialized the library once
 	DOUBLE_INIT_CHECK();
 	physics = new Physics(&bodies, &physicsConfig, &gasIndex, &liquidIndex, &pixelsToMeters, &physIterations);
-	acoustics = new Acoustics(&bodies, &soundDataList, &gasIndex, &panRange, &panFactor);
+	acoustics = new Acoustics(&bodies, &soundDataList, &gasIndex, &liquidIndex, &panRange, &panFactor);
 	audio = new Audio();
 
 	notifier += std::bind(&NPL::UpdateNotifier, this, std::placeholders::_1, std::placeholders::_2);
@@ -33,7 +33,9 @@ void NPL::Init(float pixelsPerMeter)
 		&gasIndex, 
 		&liquidIndex, 
 		&physics->globals, 
-		&pixelsToMeters);
+		&pixelsToMeters,
+		&playSoundTrigger
+	);
 
 	libraryConfig = new LibraryConfig(
 		&panRange,
@@ -460,6 +462,8 @@ void NPL::StepPhysics(float dt)
 
 void NPL::StepAcoustics()
 {
+	if (playSoundTrigger()) return;
+
 	// If no listener & environment is void
 	if (!listener && IsVoid()) return bodies.Iterate([](Body* b) { b->acousticDataList.Clear(); });
 

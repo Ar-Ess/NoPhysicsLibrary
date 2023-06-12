@@ -281,6 +281,7 @@
     <ClInclude Include="Source\PhysAction.h" />
     <ClInclude Include="Source\PhysArray.h" />
     <ClInclude Include="Source\PhysID.h" />
+    <ClInclude Include="Source\PhysTrigger.h" />
     <ClInclude Include="Source\PhysVec.h" />
     <ClInclude Include="Source\GasBody.h" />
     <ClInclude Include="Source\LiquidBody.h" />

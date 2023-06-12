@@ -11,6 +11,7 @@
 #include "Audio.h"
 #include <vector>
 #include "PhysAction.h"
+#include "PhysTrigger.h"
 
 class NPL
 {
@@ -121,6 +122,7 @@ private:
 	float pixelsToMeters = 20.0f;
 	float ptmRatio = 1.0f;
 	Body* listener = nullptr;
+	PhysTrigger playSoundTrigger;
 
 	//_____________________
 	// - Audio

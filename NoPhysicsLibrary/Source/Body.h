@@ -11,6 +11,8 @@
 #include "PhysID.h"
 #include "Material.h"
 
+class PhysTrigger;
+
 class Body
 {
 public: // Methods
@@ -140,6 +142,7 @@ protected: // Variables
 	PhysArray<AcousticData*> acousticDataList;
 	float temperature = 0.0f;
 	float absorptionCoefficient = 0.0f;
+	PhysTrigger* playSoundTrigger = nullptr;
 
 private:
 

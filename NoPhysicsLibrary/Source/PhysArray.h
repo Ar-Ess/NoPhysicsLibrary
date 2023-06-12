@@ -473,6 +473,8 @@ private:
     //  - Matching   sorting: "[](T a, T b) { return a == b;}"
     void Sort(bool(*comparison)(T* a, T* b))
     {
+        if (Size() <= 1) return;
+
         this->comparison = comparison;
         if (size > 20) QuickSort(0, size - 1);
         else InsertionSort();

@@ -7,6 +7,7 @@ class Body;
 template<class> class PhysArray;
 struct SoundData;
 class GasBody;
+class LiquidBody;
 
 class Acoustics
 {
@@ -20,7 +21,7 @@ class Acoustics
 			this->emitter = nullptr;
 		}
 
-		void SetAgents(Body* listener, Body* emitter)
+		void SetAgents(Body* emitter, Body* listener)
 		{
 			this->listener = listener;
 			this->emitter = emitter;
@@ -46,7 +47,7 @@ class Acoustics
 
 private:
 
-	Acoustics(PhysArray<Body*>* bodies, PhysArray<SoundData*>* soundDataList, PhysArray<unsigned int*>* gasIndex, float* panRange, float* panFactor);
+	Acoustics(PhysArray<Body*>* bodies, PhysArray<SoundData*>* soundDataList, PhysArray<unsigned int*>* gasIndex, PhysArray<unsigned int*>* liquidIndex, float* panRange, float* panFactor);
 
 	void Simulate(Body* emitter, Body* listener);
 
@@ -58,7 +59,9 @@ private:
 
 	void CalculatePercentagesVoidSecure(PhysArray<RayData*>* data, const float totalDistance);
 
-	GasBody* GetEnvironmentBody(PhysRect rect);
+	GasBody* GetEnvironmentBody();
+
+	LiquidBody* GetFloodBody();
 
 	float ComputePanning(float distance, int direction);
 
@@ -83,6 +86,7 @@ private:
 	PhysArray<Body*>* bodies = nullptr;
 	PhysArray<SoundData*>* soundDataList = nullptr;
 	PhysArray<unsigned int*>* gasIndex = nullptr;
+	PhysArray<unsigned int*>* liquidIndex = nullptr;
 	RaycastAgents* agents = nullptr;
 
 	const float maxSPL = 120.0f;

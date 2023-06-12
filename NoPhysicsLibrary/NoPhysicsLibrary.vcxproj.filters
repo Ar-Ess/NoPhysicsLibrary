@@ -488,5 +488,8 @@
     <ClInclude Include="Source\Acoustics.h">
       <Filter>Core\Acoustics</Filter>
     </ClInclude>
+    <ClInclude Include="Source\PhysTrigger.h">
+      <Filter>Utils</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

@@ -5,16 +5,19 @@
 #include "LiquidBody.h"
 #include "GasBody.h"
 
+class PhysTrigger;
+
 struct BodyCreation
 {
 private:
 
-	BodyCreation(PhysArray<Body*>* bodies, PhysArray<unsigned int*>* gasLocation, PhysArray<unsigned int*>* liquidIndex, Flag* globals, const float* pixelsToMeters) :
+	BodyCreation(PhysArray<Body*>* bodies, PhysArray<unsigned int*>* gasLocation, PhysArray<unsigned int*>* liquidIndex, Flag* globals, const float* pixelsToMeters, PhysTrigger* playSoundTrigger) :
 		bodies(bodies),
 		gasIndex(gasLocation),
 		liquidIndex(liquidIndex),
 		globals(globals),
-		pixelsToMeters(pixelsToMeters)
+		pixelsToMeters(pixelsToMeters),
+		playSoundTrigger(playSoundTrigger)
 	{}
 
 	const BodyCreation* Access(PhysRect rect)
@@ -31,6 +34,7 @@ public:
 	{
 		StaticBody* b = new StaticBody(rect, 1.0f, pixelsToMeters);
 		bodies->Add(b);
+		b->playSoundTrigger = playSoundTrigger;
 		return b;
 	}
 
@@ -42,6 +46,7 @@ public:
 
 		DynamicBody* b = new DynamicBody(rect, gravityOffset, mass, globals, pixelsToMeters);
 		bodies->Add(b);
+		b->playSoundTrigger = playSoundTrigger;
 		return b;
 	}
 
@@ -51,6 +56,7 @@ public:
 		LiquidBody* b = new LiquidBody(rect, mass, buoyancy, pixelsToMeters);
 		bodies->Add(b);
 		liquidIndex->Add(new unsigned int(bodies->Size() - 1));
+		b->playSoundTrigger = playSoundTrigger;
 		return b;
 	}
 	// Buoyancy is a value ranged tipically from 0 to 1 ;)
@@ -61,6 +67,7 @@ public:
 		LiquidBody* b = new LiquidBody(rect, density * rect.Area(), buoyancy, pixelsToMeters);
 		bodies->Add(b);
 		liquidIndex->Add(new unsigned int(bodies->Size() - 1));
+		b->playSoundTrigger = playSoundTrigger;
 		return b;
 	}
 
@@ -74,6 +81,7 @@ public:
 		GasBody* b = new GasBody(rect, density * rect.Area(), pressure, aerodragCoefficient, pixelsToMeters);
 		bodies->Add(b);
 		gasIndex->Add(new unsigned int(bodies->Size() - 1));
+		b->playSoundTrigger = playSoundTrigger;
 		return b;
 	}
 
@@ -86,4 +94,5 @@ private:
 	const float* pixelsToMeters = nullptr;
 	Flag* globals = nullptr;
 	Flag* bodiesConfig = nullptr;
+	PhysTrigger* playSoundTrigger = nullptr;
 };

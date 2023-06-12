@@ -16,13 +16,14 @@ Acoustics::RayData::RayData(Body* body, PhysRay ray, Acoustics::RaycastAgents* a
 	this->ray = ray;
 }
 
-Acoustics::Acoustics(PhysArray<Body*>* bodies, PhysArray<SoundData*>* soundDataList, PhysArray<unsigned int*>* gasIndex, float* panRange, float* panFactor)
+Acoustics::Acoustics(PhysArray<Body*>* bodies, PhysArray<SoundData*>* soundDataList, PhysArray<unsigned int*>* gasIndex, PhysArray<unsigned int*>* liquidIndex, float* panRange, float* panFactor)
 {
 	this->bodies = bodies;
 	this->soundDataList = soundDataList;
 	this->panRange = panRange;
 	this->panFactor = panFactor;
 	this->gasIndex = gasIndex;
+	this->liquidIndex = liquidIndex;
 	this->agents = new RaycastAgents();
 }
 
@@ -32,8 +33,10 @@ void Acoustics::Simulate(Body* emitter, Body* listener)
 
 	agents->SetAgents(emitter, listener);
 
-	GasBody* environment = GetEnvironmentBody(PhysRect(float(emitter->EmissionPoint(InUnit::IN_METERS).x), float(emitter->EmissionPoint(InUnit::IN_METERS).y), 1.0f, 1.0f));
+	GasBody* environment = GetEnvironmentBody();
 	if (environment == nullptr) return; // This assures us that the emitter is inside a gas
+
+	LiquidBody* flood = GetFloodBody();
 
 	PhysRay ray = PhysRay(emitter->EmissionPoint(InUnit::IN_METERS), listener->ReceptionPoint(InUnit::IN_METERS));
 	const float totalDistance = PhysMath::Distance(ray);
@@ -43,14 +46,34 @@ void Acoustics::Simulate(Body* emitter, Body* listener)
 
 	data.Sort([](RayData* a, RayData* b) { return a->distance > b->distance; });
 
-	RayData find = RayData(environment, PhysRay(), nullptr);
-	if (!data.Contains(&find))
+	RayData find1 = RayData(environment, PhysRay(), nullptr);
+	RayData find2 = RayData(flood, PhysRay(), nullptr);
+	if (!data.Contains(&find1))
+	// If the enviroment gas isn't contained, it means that it englobes the agents
 	{
-		data.Add(new RayData(environment, PhysRay(emitter->EmissionPoint(InUnit::IN_METERS), listener->ReceptionPoint(InUnit::IN_METERS)), nullptr));
-		CalculatePercentages(&data, totalDistance); // If it's not contained here means that the environment is englobing emissor and listener
+		if (flood != nullptr && !data.Contains(&find2))
+			// If the flood liquid isn't contained, it means that it englobes the agents, taking priority over gas
+			// INFO: LiquidBodies properties takes priority over gas bodies
+			data.Add(new RayData(flood, PhysRay(emitter->EmissionPoint(InUnit::IN_METERS), listener->ReceptionPoint(InUnit::IN_METERS)), nullptr));
+		else 
+			// If the flood liquid is contained, it means that it does not englobe the agents
+			data.Add(new RayData(environment, PhysRay(emitter->EmissionPoint(InUnit::IN_METERS), listener->ReceptionPoint(InUnit::IN_METERS)), nullptr));
+		
+		CalculatePercentages(&data, totalDistance);
 	}
-	else 
-		CalculatePercentagesVoidSecure(&data, totalDistance); // If it is contained, it is possible to have void inbetween
+	else
+	// If the enviroment gas is contained, it means that it doesn't englobe the agents and there is a probability of void
+	{
+		if (flood != nullptr && !data.Contains(&find2))
+			// If the flood liquid isn't contained, it means that it englobes the agents, and no void is possible
+		{
+			data.Add(new RayData(flood, PhysRay(emitter->EmissionPoint(InUnit::IN_METERS), listener->ReceptionPoint(InUnit::IN_METERS)), nullptr));
+			CalculatePercentages(&data, totalDistance);
+		}
+		else
+			// If the flood liquid is contained, it means that it does not englobe the agents, and void is still possible
+			CalculatePercentagesVoidSecure(&data, totalDistance);
+	}
 
 	ListenerLogic(&data, totalDistance);
 
@@ -83,7 +106,7 @@ void Acoustics::ListenerLogic(PhysArray<RayData*>* data, const float totalDistan
 
 		float volume = ComputeVolume(totalDistance, aData->spl);
 
-		if (volume < 0.01) continue;
+		if (volume < 0.005) continue;
 
 		float timeDelay = 0;
 		bool noVolume = false;
@@ -125,13 +148,27 @@ void Acoustics::CalculatePercentagesVoidSecure(PhysArray<RayData*>* data, const 
 
 }
 
-GasBody* Acoustics::GetEnvironmentBody(PhysRect rect)
+GasBody* Acoustics::GetEnvironmentBody()
 {
+	PhysRect rect = PhysRect(float(agents->emitter->EmissionPoint(InUnit::IN_METERS).x), float(agents->emitter->EmissionPoint(InUnit::IN_METERS).y), 1.0f, 1.0f);
 	for (unsigned int i = 0; i < gasIndex->Size(); ++i)
 	{
 		Body* b = bodies->At(*(*gasIndex)[i]);
 		if (PhysMath::CheckCollision(rect, b->Rect(InUnit::IN_METERS)))
 			return (GasBody*)b;
+	}
+
+	return nullptr;
+}
+
+LiquidBody* Acoustics::GetFloodBody()
+{
+	PhysRect rect = PhysRect(float(agents->emitter->EmissionPoint(InUnit::IN_METERS).x), float(agents->emitter->EmissionPoint(InUnit::IN_METERS).y), 1.0f, 1.0f);
+	for (unsigned int i = 0; i < liquidIndex->Size(); ++i)
+	{
+		Body* b = bodies->At(*(*gasIndex)[i]);
+		if (PhysMath::CheckCollision(rect, b->Rect(InUnit::IN_METERS)))
+			return (LiquidBody*)b;
 	}
 
 	return nullptr;
@@ -175,14 +212,14 @@ float Acoustics::ComputeTimeDelay(float distance, Body* obstacle)
 	case BodyClass::STATIC_BODY:
 	{
 		StaticBody* solid = (StaticBody*)obstacle;
-		multiplier = solid->YoungModulus();
+		multiplier = solid->YoungModulus() * 1000000000;
 		break;
 	}
 
 	case BodyClass::LIQUID_BODY:
 	{
 		LiquidBody* liquid = (LiquidBody*)obstacle;
-		multiplier = liquid->BulkModulus();
+		multiplier = liquid->BulkModulus() * 1000000000;
 		break;
 	}
 
@@ -194,7 +231,6 @@ float Acoustics::ComputeTimeDelay(float distance, Body* obstacle)
 	}
 	}
 
-	float timeDelay = 0;
 	float vel = PhysMath::Sqrt(multiplier / obstacle->Density(InUnit::IN_METERS));
 	return distance / vel;
 }
