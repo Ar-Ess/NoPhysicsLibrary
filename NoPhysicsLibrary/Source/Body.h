@@ -75,11 +75,15 @@ public: // Methods
 	virtual void SetMaterial(Material material) 
 	{ 
 		if (!material.defaults) mass = material.density * Volume(InUnit::IN_METERS);
-		temperature = material.temperature;
+		temperature = material.defaultTemperature;
+		absorptionCoefficient = material.absorptionCoefficient;
 	}
 
 	// Returns the default temperature of the body in kelvins
 	float DefaultTemperature() const { return temperature; }
+
+	// Returns the absorption coefficient of the body
+	float AbsorptionCoefficient() const { return absorptionCoefficient; }
 
 	// Returns the body id
 	PhysID Id() const { return *id; }
@@ -135,6 +139,7 @@ protected: // Variables
 	const float* pixelsToMeters = nullptr;
 	PhysArray<AcousticData*> acousticDataList;
 	float temperature = 0.0f;
+	float absorptionCoefficient = 0.0f;
 
 private:
 

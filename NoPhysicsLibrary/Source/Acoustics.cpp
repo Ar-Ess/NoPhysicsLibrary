@@ -92,7 +92,7 @@ void Acoustics::ListenerLogic(PhysArray<RayData*>* data, const float totalDistan
 		{
 			RayData* rD = data->At(i);
 
-			volume -= ComputeVolumeAttenuation(totalDistance, rD->body, volume) * rD->percentage;
+			volume -= ComputeVolumeAttenuation(rD->innerDistance, rD->body);
 			noVolume = volume < 0.01f;
 			if (noVolume) break;
 
@@ -199,29 +199,44 @@ float Acoustics::ComputeTimeDelay(float distance, Body* obstacle)
 	return distance / vel;
 }
 
-float Acoustics::ComputeVolumeAttenuation(float distance, Body* obstacle, float currVolume)
+float Acoustics::ComputeVolumeAttenuation(float distance, Body* obstacle)
 {
+	float attenuation = 0;
 
+	switch (obstacle->Class())
+	{
+	case BodyClass::DYNAMIC_BODY:
+	case BodyClass::STATIC_BODY:
+		attenuation = obstacle->AbsorptionCoefficient() * distance;
+		break;
+
+	case BodyClass::LIQUID_BODY:
+	case BodyClass::GAS_BODY:
+		attenuation = PhysMath::Exp(-obstacle->AbsorptionCoefficient() * distance);
+		break;
+	}
+
+	return PhysMath::LogToLinear(attenuation, maxSPL) / maxVolume;
 }
 
 float Acoustics::ComputeFrequentialAttenuation(float distance, Body* obstacle)
 {
-
+	return 0;
 }
 
 float Acoustics::ComputePitchShifting(float distance, Body* obstacle)
 {
-
+	return 0;
 }
 
 float Acoustics::ComputeDoppler(float distance, Body* obstacle)
 {
-
+	return 0;
 }
 
 float Acoustics::ComputeReverb(float distance, Body* obstacle)
 {
-
+	return 0;
 }
 
 void Acoustics::RayCastBodyList(PhysArray<RayData*>* returnList, PhysRay ray)

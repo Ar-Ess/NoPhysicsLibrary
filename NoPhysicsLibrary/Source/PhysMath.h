@@ -39,6 +39,11 @@ namespace PhysMath
 		return (float)pow((double)num, (double)power);
 	}
 
+	inline float Exp(float num)
+	{
+		return exp(num);
+	}
+
 	inline float RadToDeg(float rad)
 	{
 		return rad * float(180 / PI);

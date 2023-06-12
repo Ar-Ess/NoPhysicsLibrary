@@ -66,7 +66,7 @@ private:
 
 	float ComputeTimeDelay(float distance, Body* environment);
 
-	float ComputeVolumeAttenuation(float distance, Body* obstacle, float currVolume);
+	float ComputeVolumeAttenuation(float distance, Body* obstacle);
 
 	float ComputeFrequentialAttenuation(float distance, Body* obstacle);
 	

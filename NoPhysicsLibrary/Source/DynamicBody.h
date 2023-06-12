@@ -57,7 +57,7 @@ public: // Methods
 
 	void SetMaterial(Material material) override;
 
-	float YoungModulus()
+	float YoungModulus() const
 	{
 		return youngModulus;
 	}
