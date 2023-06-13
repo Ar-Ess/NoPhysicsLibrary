@@ -1,15 +1,15 @@
 #pragma once
-
 #include "PhysRect.h"
 #include "Ray.h"
 #include <math.h>
 
-#define PI 3.14159265359
-#define DEGREES_TO_RADIANS(angleDegrees) ((angleDegrees) * M_PI / 180.0)
-#define RADIANS_TO_DEGREES(angleRadians) ((angleRadians) * 180.0 / M_PI)
-
 namespace PhysMath
 {
+	inline double Pi()
+	{
+		return 3.14159265359;
+	}
+
 	// This function does not consider a collision if rects touches their bounds
 	inline bool CheckCollision(PhysRect r1, PhysRect r2)
 	{
@@ -44,14 +44,19 @@ namespace PhysMath
 		return exp(num);
 	}
 
+	inline double E()
+	{
+		return Exp(1);
+	}
+
 	inline float RadToDeg(float rad)
 	{
-		return rad * float(180 / PI);
+		return rad * float(180 / Pi());
 	}
 
 	inline float DegToRad(float deg)
 	{
-		return deg * float(PI / 180);
+		return deg * float(Pi() / 180);
 	}
 
 	inline int Ceil(float num)

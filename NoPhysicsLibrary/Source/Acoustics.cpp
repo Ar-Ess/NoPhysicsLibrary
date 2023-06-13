@@ -276,7 +276,7 @@ float Acoustics::ComputeFrequentialAttenuation(float distance, Body* obstacle, f
 		for (unsigned int i = 0; i < steps; ++i)
 		{
 			float visc = liquid->Viscosity() / liquid->Density(InUnit::IN_METERS);
-			float y = PhysMath::Exp(-(2 * PI * width * i * visc));
+			float y = PhysMath::Exp(-(2 * PhysMath::Pi() * width * i * visc));
 
 			float height = PhysMath::Max(0, 1 - y);
 			totalArea += width * height;
@@ -284,6 +284,15 @@ float Acoustics::ComputeFrequentialAttenuation(float distance, Body* obstacle, f
 
 		if (totalArea > MAX_FREQ) totalArea = MAX_FREQ;
 		ret = (1 - (totalArea / MAX_FREQ));
+
+		break;
+	}
+
+	case BodyClass::DYNAMIC_BODY:
+	case BodyClass::STATIC_BODY:
+	{
+		float waveLength = 2 * (distance / obstacle->AbsorptionCoefficient());
+		float cuttoff = /*sound velocity*/ 1 / waveLength;
 
 		break;
 	}
