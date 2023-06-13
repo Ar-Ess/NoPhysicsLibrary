@@ -3,27 +3,27 @@
 void Material::BuildSolid(float youngModulus, float absorptionCoefficient, float density, float defaultTemperature)
 {
 	this->youngModulus = youngModulus == -1 ? this->youngModulus : youngModulus;
-	this->density = density == -1 ? this->density : density;
 	this->defaultTemperature = defaultTemperature == -1 ? this->defaultTemperature : defaultTemperature;
 	this->absorptionCoefficient = absorptionCoefficient == -1 ? this->absorptionCoefficient : absorptionCoefficient;
-	defaults = false;
+	
+	this->density = density;
 }
 
 void Material::BuildLiquid(float viscosity, float bulkModulus, float absorptionCoefficient, float density, float defaultTemperature)
 {
 	this->viscosity = viscosity == -1 ? this->viscosity : viscosity;
 	this->bulkModulus = bulkModulus == -1 ? this->bulkModulus : bulkModulus;
-	this->density = density == -1 ? this->density : density;
 	this->defaultTemperature = defaultTemperature == -1 ? this->defaultTemperature : defaultTemperature;
 	this->absorptionCoefficient = absorptionCoefficient == -1 ? this->absorptionCoefficient : absorptionCoefficient;
-	defaults = false;
+	
+	this->density = density;
 }
 
 void Material::BuildGas(float heatRatio, float absorptionCoefficient, float density, float defaultTemperature)
 {
 	this->heatRatio = heatRatio == -1 ? this->heatRatio : heatRatio;
-	this->density = density == -1 ? this->density : density;
 	this->defaultTemperature = defaultTemperature == -1 ? this->defaultTemperature : defaultTemperature;
 	this->absorptionCoefficient = absorptionCoefficient == -1 ? this->absorptionCoefficient : absorptionCoefficient;
-	defaults = false;
+	
+	this->density = density;
 }

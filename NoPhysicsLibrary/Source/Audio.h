@@ -1,10 +1,13 @@
 #pragma once
 
 #include "External/SoLoud/include/soloud.h"
+
 #include "Sound.h"
 #include "PhysArray.h"
 
 class SoundData;
+class SoLoud::Soloud;
+class SoLoud::BiquadResonantFilterInstance;
 
 class Audio
 {
@@ -32,6 +35,7 @@ private:
 	friend class NPL;
 
 	SoLoud::Soloud* audio = nullptr;
+	SoLoud::BiquadResonantFilter* lowpass = nullptr;
 	PhysArray<Sound*> sounds;
 
 };

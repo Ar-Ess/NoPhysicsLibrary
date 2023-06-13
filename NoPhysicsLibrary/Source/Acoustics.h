@@ -71,7 +71,7 @@ private:
 
 	float ComputeVolumeAttenuation(float distance, Body* obstacle);
 
-	float ComputeFrequentialAttenuation(float distance, Body* obstacle);
+	float ComputeFrequentialAttenuation(float distance, Body* obstacle, float currentAttenuation);
 	
 	float ComputePitchShifting(float distance, Body* obstacle);
 	

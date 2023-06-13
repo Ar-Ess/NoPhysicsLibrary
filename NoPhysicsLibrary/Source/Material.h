@@ -10,7 +10,7 @@ public:
 		viscosity = 0.001;
 		bulkModulus = 2.1;
 		heatRatio = 1.414f;
-		density = 0;
+		density = -1;
 		defaultTemperature = 283;
 		absorptionCoefficient = 0.01;
 	}
@@ -53,7 +53,6 @@ private:
 	// INFO: absrpt coeff default is water [1/meter]
 	float absorptionCoefficient = 0.01;
 	
-	float density = 0;
-	bool defaults = true;
+	float density = -1;
 
 };

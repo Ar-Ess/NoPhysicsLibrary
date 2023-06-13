@@ -76,7 +76,7 @@ public: // Methods
 	// Sets the material of the body
 	virtual void SetMaterial(Material material) 
 	{ 
-		if (!material.defaults) mass = material.density * Volume(InUnit::IN_METERS);
+		if (material.density != -1) mass = material.density * Volume(InUnit::IN_METERS);
 		temperature = material.defaultTemperature;
 		absorptionCoefficient = material.absorptionCoefficient;
 	}

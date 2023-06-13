@@ -6,6 +6,10 @@
 #include "LiquidBody.h"
 #include "PhysArray.h"
 
+#define MAX_FREQ 22000
+#define	FINAL_FREQ(x) x * MAX_FREQ
+#define FINAL_RES(x) ((x + (0.2f * x)) / 1.2f) * 2
+
 Acoustics::RayData::RayData(Body* body, PhysRay ray, Acoustics::RaycastAgents* agents)
 {
 	this->body = body;
@@ -85,7 +89,7 @@ void Acoustics::NoListenerLogic(Body* emmiter)
 	(
 		[](AcousticData* data, PhysArray<SoundData*>* soundDataList, const float maxSPL)
 		{
-			soundDataList->Add(new SoundData(data->index, 0, data->spl / maxSPL, 0));
+			soundDataList->Add(new SoundData(data->index, 0, data->spl / maxSPL, 0, 22000, 2));
 		},
 		soundDataList, maxSPL
 	);
@@ -109,6 +113,7 @@ void Acoustics::ListenerLogic(PhysArray<RayData*>* data, const float totalDistan
 		if (volume < 0.005) continue;
 
 		float timeDelay = 0;
+		float freqAtt = 1;
 		bool noVolume = false;
 
 		for (unsigned int i = 0; i < data->Size(); ++i)
@@ -121,7 +126,7 @@ void Acoustics::ListenerLogic(PhysArray<RayData*>* data, const float totalDistan
 
 			timeDelay += ComputeTimeDelay(rD->innerDistance, rD->body);
 
-			float freq = ComputeFrequentialAttenuation(totalDistance, rD->body) * rD->percentage;
+			freqAtt = ComputeFrequentialAttenuation(totalDistance, rD->body, freqAtt);
 
 			float pitch = ComputePitchShifting(totalDistance, rD->body) * rD->percentage;
 
@@ -133,7 +138,7 @@ void Acoustics::ListenerLogic(PhysArray<RayData*>* data, const float totalDistan
 
 		if (noVolume) continue;
 
-		soundDataList->Add(new SoundData(aData->index, pan, volume, timeDelay));
+		soundDataList->Add(new SoundData(aData->index, pan, volume, timeDelay, FINAL_FREQ(freqAtt), FINAL_RES(freqAtt)));
 	}
 	agents->emitter->acousticDataList.Clear();
 }
@@ -255,9 +260,36 @@ float Acoustics::ComputeVolumeAttenuation(float distance, Body* obstacle)
 	return PhysMath::LogToLinear(attenuation, maxSPL) / maxVolume;
 }
 
-float Acoustics::ComputeFrequentialAttenuation(float distance, Body* obstacle)
+float Acoustics::ComputeFrequentialAttenuation(float distance, Body* obstacle, float currentAttenuation)
 {
-	return 0;
+	float ret = 1;
+
+	switch (obstacle->Class())
+	{
+	case BodyClass::LIQUID_BODY:
+	{
+		LiquidBody* liquid = (LiquidBody*)obstacle;
+		float totalArea = 0;
+		float steps = 20;
+		float width = MAX_FREQ / steps;
+
+		for (unsigned int i = 0; i < steps; ++i)
+		{
+			float visc = liquid->Viscosity() / liquid->Density(InUnit::IN_METERS);
+			float y = PhysMath::Exp(-(2 * PI * width * i * visc));
+
+			float height = PhysMath::Max(0, 1 - y);
+			totalArea += width * height;
+		}
+
+		if (totalArea > MAX_FREQ) totalArea = MAX_FREQ;
+		ret = (1 - (totalArea / MAX_FREQ));
+
+		break;
+	}
+	}
+
+	return ret * currentAttenuation;
 }
 
 float Acoustics::ComputePitchShifting(float distance, Body* obstacle)

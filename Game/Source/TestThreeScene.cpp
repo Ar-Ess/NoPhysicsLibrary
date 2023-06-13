@@ -24,7 +24,7 @@ bool TestThreeScene::Start()
 	npl->SetPhysicsPreset(PhysicsPreset::DEFAULT_PHYSICS_PRESET);
 	std::vector<StaticBody*> x;
 	npl->SetScenarioPreset(ScenarioPreset::CORRIDOR_SCENARIO_PRESET, PhysVec(window->GetSize().x, window->GetSize().y), &x);
-	npl->LoadSound("Assets/Audio/bounce.wav");
+	npl->LoadSound("Assets/Audio/bounce_v2.wav");
 
 	// Create bodies
 
@@ -54,8 +54,15 @@ bool TestThreeScene::Start()
 		->Static();
 
 	// Liquid
-	npl->CreateBody(PhysRect{ 900, 400, PhysVec(metersToPixels * 2.6f, metersToPixels * 2.1f) })
+	LiquidBody* l = npl->CreateBody(PhysRect{ 900, 400, PhysVec(metersToPixels * 2.6f, metersToPixels * 2.1f) })
 		->Liquid(997, 1.0f, InUnit::IN_METERS);
+	Material mat;
+	mat.BuildLiquid(0.09, -1, -1, -1, -1);
+	l->SetMaterial(mat);
+
+	l = npl->CreateBody(PhysRect{ 1850, 550, 20, 60 })
+		->Liquid(997, 1.0f, InUnit::IN_METERS);
+	l->SetMaterial(mat);
 	
 	//npl->CreateBody({ 1600, 550, 90, 120 })
 	//	->Liquid(400, 1.0f, InUnit::IN_METERS);

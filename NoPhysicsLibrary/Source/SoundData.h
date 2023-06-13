@@ -7,7 +7,14 @@ struct SoundData
 
 private:
 
-	SoundData(unsigned int index, float pan, float volume, float delayTime) : index(index), volume(volume), pan(pan), delayTime(delayTime) {}
+	SoundData(unsigned int index, float pan, float volume, float delayTime, float frequency, float resonance) : 
+		index(index), 
+		volume(volume), 
+		pan(pan), 
+		delayTime(delayTime),
+		frequency(frequency),
+		resonance(resonance)
+	{}
 
 public:
 
@@ -15,5 +22,7 @@ public:
 	float pan = 0;
 	float volume = 1;
 	float delayTime = 0;
+	float frequency = 0;
+	float resonance = 0;
 
 };
