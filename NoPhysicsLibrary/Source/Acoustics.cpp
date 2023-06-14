@@ -37,6 +37,7 @@ void Acoustics::Simulate(Body* emitter, Body* listener)
 
 	agents->SetAgents(emitter, listener);
 
+	// Check both, not only enviroment!
 	GasBody* environment = GetEnvironmentBody();
 	if (environment == nullptr) return; // This assures us that the emitter is inside a gas
 
@@ -113,7 +114,8 @@ void Acoustics::ListenerLogic(PhysArray<RayData*>* data, const float totalDistan
 		if (volume < 0.005) continue;
 
 		float timeDelay = 0;
-		float freqAtt = 1;
+		float cutoff = 1;
+		float res = 1;
 		bool noVolume = false;
 
 		for (unsigned int i = 0; i < data->Size(); ++i)
@@ -124,21 +126,22 @@ void Acoustics::ListenerLogic(PhysArray<RayData*>* data, const float totalDistan
 			noVolume = volume < 0.01f;
 			if (noVolume) break;
 
-			timeDelay += ComputeTimeDelay(rD->innerDistance, rD->body);
+			float velocity = 0;
+			timeDelay += ComputeTimeDelay(rD->innerDistance, rD->body, velocity);
 
-			freqAtt = ComputeFrequentialAttenuation(totalDistance, rD->body, freqAtt);
+			ComputeFrequentialAttenuation(rD->innerDistance, totalDistance, velocity, rD->body, cutoff, res);
 
 			float pitch = ComputePitchShifting(totalDistance, rD->body) * rD->percentage;
 
-			float doppler = ComputeDoppler(totalDistance, rD->body) * rD->percentage;
+			//float doppler = ComputeDoppler(totalDistance, rD->body) * rD->percentage;
 
-			float reverb = ComputeReverb(totalDistance, rD->body) * rD->percentage;
+			//float reverb = ComputeReverb(totalDistance, rD->body) * rD->percentage;
 
 		}
 
 		if (noVolume) continue;
 
-		soundDataList->Add(new SoundData(aData->index, pan, volume, timeDelay, FINAL_FREQ(freqAtt), FINAL_RES(freqAtt)));
+		soundDataList->Add(new SoundData(aData->index, pan, volume, timeDelay, FINAL_FREQ(cutoff), FINAL_RES(res)));
 	}
 	agents->emitter->acousticDataList.Clear();
 }
@@ -198,7 +201,7 @@ float Acoustics::ComputeVolume(float distance, float spl)
 	return PhysMath::LogToLinear(fSPL, maxSPL) / maxVolume;
 }
 
-float Acoustics::ComputeTimeDelay(float distance, Body* obstacle)
+float Acoustics::ComputeTimeDelay(float distance, Body* obstacle, float& outVelocity)
 {
 	// Calculate delay time
 	// 1. Vel = sqrt( lambda * Pa / ro )
@@ -236,8 +239,8 @@ float Acoustics::ComputeTimeDelay(float distance, Body* obstacle)
 	}
 	}
 
-	float vel = PhysMath::Sqrt(multiplier / obstacle->Density(InUnit::IN_METERS));
-	return distance / vel;
+	outVelocity = PhysMath::Sqrt(multiplier / obstacle->Density(InUnit::IN_METERS));
+	return distance / outVelocity;
 }
 
 float Acoustics::ComputeVolumeAttenuation(float distance, Body* obstacle)
@@ -260,30 +263,33 @@ float Acoustics::ComputeVolumeAttenuation(float distance, Body* obstacle)
 	return PhysMath::LogToLinear(attenuation, maxSPL) / maxVolume;
 }
 
-float Acoustics::ComputeFrequentialAttenuation(float distance, Body* obstacle, float currentAttenuation)
+void Acoustics::ComputeFrequentialAttenuation(float innerDistance, float distance, float outVelocity, Body* obstacle, float& outCutoff, float& outResonance)
 {
-	float ret = 1;
-
 	switch (obstacle->Class())
 	{
 	case BodyClass::LIQUID_BODY:
 	{
-		LiquidBody* liquid = (LiquidBody*)obstacle;
+		const LiquidBody* liquid = (LiquidBody*)obstacle;
+		const float percent = innerDistance / distance;
+		const float steps = 20;
+		const float width = MAX_FREQ / steps;
+
+		float ret = 1;
 		float totalArea = 0;
-		float steps = 20;
-		float width = MAX_FREQ / steps;
 
 		for (unsigned int i = 0; i < steps; ++i)
 		{
 			float visc = liquid->Viscosity() / liquid->Density(InUnit::IN_METERS);
-			float y = PhysMath::Exp(-(2 * PhysMath::Pi() * width * i * visc));
-
-			float height = PhysMath::Max(0, 1 - y);
+			float height = PhysMath::Exp(-(2 * PhysMath::Pi() * width * i * visc));
 			totalArea += width * height;
 		}
 
 		if (totalArea > MAX_FREQ) totalArea = MAX_FREQ;
-		ret = (1 - (totalArea / MAX_FREQ));
+		ret = totalArea / MAX_FREQ;
+		ret = (ret * percent) + (outCutoff * (1 - percent));
+
+		outCutoff = PhysMath::Min(ret, outCutoff);
+		outResonance = PhysMath::Min(ret, outResonance);
 
 		break;
 	}
@@ -291,14 +297,16 @@ float Acoustics::ComputeFrequentialAttenuation(float distance, Body* obstacle, f
 	case BodyClass::DYNAMIC_BODY:
 	case BodyClass::STATIC_BODY:
 	{
-		float waveLength = 2 * (distance / obstacle->AbsorptionCoefficient());
-		float cuttoff = /*sound velocity*/ 1 / waveLength;
+		float waveLength = 2 * (innerDistance / obstacle->AbsorptionCoefficient());
+		float ret = (outVelocity / waveLength) / MAX_FREQ;
+		if (ret > 1) ret = 1;
+
+		outCutoff = PhysMath::Min(ret, outCutoff);
 
 		break;
 	}
 	}
 
-	return ret * currentAttenuation;
 }
 
 float Acoustics::ComputePitchShifting(float distance, Body* obstacle)

@@ -67,14 +67,14 @@ private:
 
 	float ComputeVolume(float distance, float spl);
 
-	float ComputeTimeDelay(float distance, Body* environment);
+	float ComputeTimeDelay(float distance, Body* environment, float& outVelocity);
 
 	float ComputeVolumeAttenuation(float distance, Body* obstacle);
 
-	float ComputeFrequentialAttenuation(float distance, Body* obstacle, float currentAttenuation);
-	
+	void ComputeFrequentialAttenuation(float innerDistance, float distance, float velocity, Body* obstacle, float& outCutoff, float& outResonance);
+
 	float ComputePitchShifting(float distance, Body* obstacle);
-	
+
 	float ComputeDoppler(float distance, Body* obstacle);
 
 	float ComputeReverb(float distance, Body* obstacle);
