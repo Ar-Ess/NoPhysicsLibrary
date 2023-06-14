@@ -47,7 +47,7 @@ class Acoustics
 
 private:
 
-	Acoustics(PhysArray<Body*>* bodies, PhysArray<SoundData*>* soundDataList, PhysArray<unsigned int*>* gasIndex, PhysArray<unsigned int*>* liquidIndex, float* panRange, float* panFactor);
+	Acoustics(PhysArray<Body*>* bodies, PhysArray<SoundData*>* soundDataList, PhysArray<unsigned int*>* gasIndex, PhysArray<unsigned int*>* liquidIndex, const float* panRange, const float* panFactor, const float* pitchVariationFactor);
 
 	void Simulate(Body* emitter, Body* listener);
 
@@ -73,7 +73,7 @@ private:
 
 	void ComputeFrequentialAttenuation(float innerDistance, float distance, float velocity, Body* obstacle, float& outCutoff, float& outResonance);
 
-	float ComputePitchShifting(float distance, Body* obstacle);
+	void ComputePitchShifting(float velocity, const float percent, float& outPitch);
 
 	float ComputeDoppler(float distance, Body* obstacle);
 
@@ -92,7 +92,8 @@ private:
 	const float maxSPL = 120.0f;
 	const float maxVolume = 10.0f;
 
-	float* panRange = nullptr;
-	float* panFactor = nullptr;
+	const float* panRange = nullptr;
+	const float* panFactor = nullptr;
+	const float* pitchVariationFactor = nullptr;
 
 };

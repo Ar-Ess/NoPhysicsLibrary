@@ -15,12 +15,11 @@ NPL::~NPL()
 }
 
 void NPL::Init(float pixelsPerMeter)
-
 {
 	// You've alreay initialized the library once
 	DOUBLE_INIT_CHECK();
 	physics = new Physics(&bodies, &physicsConfig, &gasIndex, &liquidIndex, &pixelsToMeters, &physIterations);
-	acoustics = new Acoustics(&bodies, &soundDataList, &gasIndex, &liquidIndex, &panRange, &panFactor);
+	acoustics = new Acoustics(&bodies, &soundDataList, &gasIndex, &liquidIndex, &panRange, &panFactor, &pitchVariationFactor);
 	audio = new Audio();
 
 	notifier += std::bind(&NPL::UpdateNotifier, this, std::placeholders::_1, std::placeholders::_2);
@@ -40,6 +39,7 @@ void NPL::Init(float pixelsPerMeter)
 	libraryConfig = new LibraryConfig(
 		&panRange,
 		&panFactor,
+		&pitchVariationFactor,
 		&physicsConfig,
 		&physics->globalGravity,
 		&physics->globalRestitution,

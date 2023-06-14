@@ -290,6 +290,7 @@
     <ClInclude Include="Source\NoPhysicsLibrary.h" />
     <ClInclude Include="Source\Physics.h" />
     <ClInclude Include="Source\PhysicsPresetEnum.h" />
+    <ClInclude Include="Source\PitchShiftFilter.h" />
     <ClInclude Include="Source\Ray.h" />
     <ClInclude Include="Source\PhysRect.h" />
     <ClInclude Include="Source\ScenarioPresetEnum.h" />

@@ -491,5 +491,8 @@
     <ClInclude Include="Source\PhysTrigger.h">
       <Filter>Utils</Filter>
     </ClInclude>
+    <ClInclude Include="Source\PitchShiftFilter.h">
+      <Filter>Core\Audio</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

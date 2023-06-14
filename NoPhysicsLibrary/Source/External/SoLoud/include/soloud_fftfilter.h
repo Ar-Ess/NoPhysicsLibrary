@@ -49,6 +49,7 @@ namespace SoLoud
 	class FFTFilter : public Filter
 	{
 	public:
+
 		virtual FilterInstance *createInstance();
 		FFTFilter();
 	};

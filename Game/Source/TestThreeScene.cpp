@@ -21,6 +21,7 @@ bool TestThreeScene::Start()
 	npl->Configure()->PanRange(7, InUnit::IN_METERS);
 	npl->Configure()->PanFactor(1.2f);
 	npl->Configure()->PhysicsIterations(40);
+	npl->Configure()->PitchVariationFactor(0.05);
 	npl->SetPhysicsPreset(PhysicsPreset::DEFAULT_PHYSICS_PRESET);
 	std::vector<StaticBody*> x;
 	npl->SetScenarioPreset(ScenarioPreset::CORRIDOR_SCENARIO_PRESET, PhysVec(window->GetSize().x, window->GetSize().y), &x);

@@ -9,6 +9,8 @@
 #define MAX_FREQ 22000
 #define	FINAL_FREQ(x) x * MAX_FREQ
 #define FINAL_RES(x) ((x + (0.2f * x)) / 1.2f) * 2
+#define REF_VEL 343
+#define FINAL_PITCH(x, factor) (factor * x) + ((1 - factor) * 1)
 
 Acoustics::RayData::RayData(Body* body, PhysRay ray, Acoustics::RaycastAgents* agents)
 {
@@ -20,12 +22,13 @@ Acoustics::RayData::RayData(Body* body, PhysRay ray, Acoustics::RaycastAgents* a
 	this->ray = ray;
 }
 
-Acoustics::Acoustics(PhysArray<Body*>* bodies, PhysArray<SoundData*>* soundDataList, PhysArray<unsigned int*>* gasIndex, PhysArray<unsigned int*>* liquidIndex, float* panRange, float* panFactor)
+Acoustics::Acoustics(PhysArray<Body*>* bodies, PhysArray<SoundData*>* soundDataList, PhysArray<unsigned int*>* gasIndex, PhysArray<unsigned int*>* liquidIndex, const float* panRange, const float* panFactor, const float* pitchVariationFactor)
 {
 	this->bodies = bodies;
 	this->soundDataList = soundDataList;
 	this->panRange = panRange;
 	this->panFactor = panFactor;
+	this->pitchVariationFactor = pitchVariationFactor;
 	this->gasIndex = gasIndex;
 	this->liquidIndex = liquidIndex;
 	this->agents = new RaycastAgents();
@@ -90,7 +93,7 @@ void Acoustics::NoListenerLogic(Body* emmiter)
 	(
 		[](AcousticData* data, PhysArray<SoundData*>* soundDataList, const float maxSPL)
 		{
-			soundDataList->Add(new SoundData(data->index, 0, data->spl / maxSPL, 0, 22000, 2));
+			soundDataList->Add(new SoundData(data->index, 0, data->spl / maxSPL, 0, 22000, 2, 1));
 		},
 		soundDataList, maxSPL
 	);
@@ -116,6 +119,7 @@ void Acoustics::ListenerLogic(PhysArray<RayData*>* data, const float totalDistan
 		float timeDelay = 0;
 		float cutoff = 1;
 		float res = 1;
+		float pitch = 1;
 		bool noVolume = false;
 
 		for (unsigned int i = 0; i < data->Size(); ++i)
@@ -131,7 +135,7 @@ void Acoustics::ListenerLogic(PhysArray<RayData*>* data, const float totalDistan
 
 			ComputeFrequentialAttenuation(rD->innerDistance, totalDistance, velocity, rD->body, cutoff, res);
 
-			float pitch = ComputePitchShifting(totalDistance, rD->body) * rD->percentage;
+			ComputePitchShifting(velocity, rD->innerDistance / totalDistance, pitch);
 
 			//float doppler = ComputeDoppler(totalDistance, rD->body) * rD->percentage;
 
@@ -141,7 +145,7 @@ void Acoustics::ListenerLogic(PhysArray<RayData*>* data, const float totalDistan
 
 		if (noVolume) continue;
 
-		soundDataList->Add(new SoundData(aData->index, pan, volume, timeDelay, FINAL_FREQ(cutoff), FINAL_RES(res)));
+		soundDataList->Add(new SoundData(aData->index, pan, volume, timeDelay, FINAL_FREQ(cutoff), FINAL_RES(res), FINAL_PITCH(pitch, *pitchVariationFactor)));
 	}
 	agents->emitter->acousticDataList.Clear();
 }
@@ -220,14 +224,14 @@ float Acoustics::ComputeTimeDelay(float distance, Body* obstacle, float& outVelo
 	case BodyClass::STATIC_BODY:
 	{
 		StaticBody* solid = (StaticBody*)obstacle;
-		multiplier = solid->YoungModulus() * 1000000000;
+		multiplier = solid->YoungModulus() * 1000000000.0;
 		break;
 	}
 
 	case BodyClass::LIQUID_BODY:
 	{
 		LiquidBody* liquid = (LiquidBody*)obstacle;
-		multiplier = liquid->BulkModulus() * 1000000000;
+		multiplier = liquid->BulkModulus() * 1000000000.0;
 		break;
 	}
 
@@ -263,7 +267,7 @@ float Acoustics::ComputeVolumeAttenuation(float distance, Body* obstacle)
 	return PhysMath::LogToLinear(attenuation, maxSPL) / maxVolume;
 }
 
-void Acoustics::ComputeFrequentialAttenuation(float innerDistance, float distance, float outVelocity, Body* obstacle, float& outCutoff, float& outResonance)
+void Acoustics::ComputeFrequentialAttenuation(float innerDistance, float distance, float velocity, Body* obstacle, float& outCutoff, float& outResonance)
 {
 	switch (obstacle->Class())
 	{
@@ -298,7 +302,7 @@ void Acoustics::ComputeFrequentialAttenuation(float innerDistance, float distanc
 	case BodyClass::STATIC_BODY:
 	{
 		float waveLength = 2 * (innerDistance / obstacle->AbsorptionCoefficient());
-		float ret = (outVelocity / waveLength) / MAX_FREQ;
+		float ret = (velocity / waveLength) / MAX_FREQ;
 		if (ret > 1) ret = 1;
 
 		outCutoff = PhysMath::Min(ret, outCutoff);
@@ -309,9 +313,12 @@ void Acoustics::ComputeFrequentialAttenuation(float innerDistance, float distanc
 
 }
 
-float Acoustics::ComputePitchShifting(float distance, Body* obstacle)
+void Acoustics::ComputePitchShifting(float velocity, const float percent, float& outPitch)
 {
-	return 0;
+	float pitch = velocity / REF_VEL;
+	const float relPercent = 1 - percent;
+
+	outPitch = (outPitch * (relPercent)) + (pitch * percent);
 }
 
 float Acoustics::ComputeDoppler(float distance, Body* obstacle)

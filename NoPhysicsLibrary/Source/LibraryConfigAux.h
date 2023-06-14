@@ -9,9 +9,10 @@ struct LibraryConfig
 {
 private:
 
-	LibraryConfig(float* panRange, float* panFactor, Flag* physicsConfig, PhysVec* globalGravity, PhysVec* globalRestitution, PhysVec* globalFriction, float* pixelsToMeters, float* ptmRatio, unsigned int* physIterations, PhysAction<unsigned int, PhysID>* notifier) :
+	LibraryConfig(float* panRange, float* panFactor, float* pitchFactor, Flag* physicsConfig, PhysVec* globalGravity, PhysVec* globalRestitution, PhysVec* globalFriction, float* pixelsToMeters, float* ptmRatio, unsigned int* physIterations, PhysAction<unsigned int, PhysID>* notifier) :
 		panRange(panRange),
 		panFactor(panFactor),
+		pitchFactor(pitchFactor),
 		physicsConfig(physicsConfig),
 		globalGravity(globalGravity),
 		globalRestitution(globalRestitution),
@@ -45,6 +46,15 @@ public:
 	{
 		PhysMath::Clamp(factor, 0.01f, 20);
 		*panFactor = factor;
+	}
+
+	// Set the factor of the pitch variation depending on the environment
+	// 1 means real variation and 0 means no variation
+	// The value is ranged between 0 and 1
+	void PitchVariationFactor(float factor) const
+	{
+		PhysMath::Clamp(factor, 0, 1);
+		*pitchFactor = factor;
 	}
 
 	// Allows to debug body collisions. If enabled, "GetCollisionsIterable()" inside NPL class will no longer return null. 
@@ -113,6 +123,7 @@ private:
 
 	float* panRange = nullptr;
 	float* panFactor = nullptr;
+	float* pitchFactor = nullptr;
 	Flag* physicsConfig = nullptr;
 	Flag* bodiesConfig = nullptr;
 	float* pixelsToMeters = nullptr;

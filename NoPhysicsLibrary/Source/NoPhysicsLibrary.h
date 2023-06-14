@@ -119,6 +119,7 @@ private:
 	// - Acoustics
 	float panRange = 10.0f;
 	float panFactor = 1.0f;
+	float pitchVariationFactor = 1.0f;
 	float pixelsToMeters = 20.0f;
 	float ptmRatio = 1.0f;
 	Body* listener = nullptr;

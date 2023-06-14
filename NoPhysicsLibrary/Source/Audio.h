@@ -8,6 +8,7 @@
 class SoundData;
 class SoLoud::Soloud;
 class SoLoud::BiquadResonantFilterInstance;
+class PitchShiftFilter;
 
 class Audio
 {
@@ -36,6 +37,7 @@ private:
 
 	SoLoud::Soloud* audio = nullptr;
 	SoLoud::BiquadResonantFilter* lowpass = nullptr;
+	PitchShiftFilter* pitch = nullptr;
 	PhysArray<Sound*> sounds;
 
 };
