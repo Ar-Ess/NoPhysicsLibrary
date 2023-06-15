@@ -6,10 +6,10 @@
 
 #include "PhysMath.h"
 
-Physics::Physics(const PhysArray<Body*>* bodies, const Flag* physicsConfig, const PhysArray<unsigned int*>* gasIndex, const PhysArray<unsigned int*>* liquidIndex, const float* pixelsToMeters, const unsigned int* physIterations)
+Physics::Physics(const PhysArray<Body*>* bodies, const Flag* generalConfig, const PhysArray<unsigned int*>* gasIndex, const PhysArray<unsigned int*>* liquidIndex, const float* pixelsToMeters, const unsigned int* physIterations)
 {
 	this->bodies = bodies;
-	this->physicsConfig = physicsConfig;
+	this->generalConfig = generalConfig;
 	this->gasIndex = gasIndex;
 	this->liquidIndex = liquidIndex;
 	this->pixelsToMeters = pixelsToMeters;
@@ -442,7 +442,7 @@ void Physics::Declip()
 	}
 
 	// If collision debugging is disabled
-	if (!physicsConfig->Get(0)) collisions.Clear();
+	if (!generalConfig->Get(0)) collisions.Clear();
 }
 
 PhysVec Physics::CalculateFriction(Body* dynBody)

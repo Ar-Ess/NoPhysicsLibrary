@@ -9,11 +9,11 @@ struct LibraryConfig
 {
 private:
 
-	LibraryConfig(float* panRange, float* panFactor, float* pitchFactor, Flag* physicsConfig, PhysVec* globalGravity, PhysVec* globalRestitution, PhysVec* globalFriction, float* pixelsToMeters, float* ptmRatio, unsigned int* physIterations, PhysAction<unsigned int, PhysID>* notifier) :
+	LibraryConfig(float* panRange, float* panFactor, float* pitchFactor, Flag* generalConfig, PhysVec* globalGravity, PhysVec* globalRestitution, PhysVec* globalFriction, float* pixelsToMeters, float* ptmRatio, unsigned int* physIterations, PhysAction<unsigned int, PhysID>* notifier) :
 		panRange(panRange),
 		panFactor(panFactor),
 		pitchFactor(pitchFactor),
-		physicsConfig(physicsConfig),
+		generalConfig(generalConfig),
 		globalGravity(globalGravity),
 		globalRestitution(globalRestitution),
 		globalFriction(globalFriction),
@@ -50,16 +50,38 @@ public:
 
 	// Set the factor of the pitch variation depending on the environment
 	// 1 means real variation and 0 means no variation
-	// The value is ranged between 0 and 1
-	void PitchVariationFactor(float factor) const
+	// UpwardsPitch and DownwardsPitch controls if sound can be pitched up or pitched down
+	void PitchVariationFactor(float factor, bool upwardsPitch, bool downwardsPitch) const
 	{
 		PhysMath::Clamp(factor, 0, 1);
 		*pitchFactor = factor;
+		generalConfig->Set(1, upwardsPitch);
+		generalConfig->Set(2, downwardsPitch);
+	}
+
+	// Allows the library to calculate the frequential attenuation that sounds may suffer
+	void FrequentialAttenuation(bool active)
+	{
+		generalConfig->Set(3, active);
+	}
+
+	// Allows the library to attenuate the sound volume if there are bodies inbetween
+	// the listener and the emmiter
+	void SoundOclusion(bool active)
+	{
+		generalConfig->Set(4, active);
+	}
+
+	// Allows the library to calculate the time that the sound lasts to
+	// reach the listener and apply it as a delay
+	void SoundDelay(bool active)
+	{
+		generalConfig->Set(5, active);
 	}
 
 	// Allows to debug body collisions. If enabled, "GetCollisionsIterable()" inside NPL class will no longer return null. 
 	// Then draw the rectangle inside it. Enabling this might slightly slow the code iteration
-	void CollisionsDebugging(bool enable) const { this->physicsConfig->Set(0, enable); }
+	void CollisionsDebugging(bool enable) const { generalConfig->Set(0, enable); }
 
 	void GlobalGravity(PhysVec gravity, InUnit unit) const
 	{
@@ -124,7 +146,7 @@ private:
 	float* panRange = nullptr;
 	float* panFactor = nullptr;
 	float* pitchFactor = nullptr;
-	Flag* physicsConfig = nullptr;
+	Flag* generalConfig = nullptr;
 	Flag* bodiesConfig = nullptr;
 	float* pixelsToMeters = nullptr;
 	float* ptmRatio = nullptr;

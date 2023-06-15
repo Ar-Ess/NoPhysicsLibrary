@@ -68,51 +68,44 @@ public:
 
 private: // Methods
 
+	void StepPhysics(float dt);
+	void StepAcoustics();
+	void StepAudio(float* dt);
+	
+	void UpdateStates();
 	void UpdateNotifier(unsigned int notify, PhysID id);
 		void UpdatePixelsToMeters();
 		void UpdateListener(PhysID id);
-
-	void StepPhysics(float dt);
-
-	void StepAcoustics();
-		void ListenerLogic(Body* b, GasBody* environment);
-			float ComputePanning(float distance, int direction);
-			float ComputeVolume(float distance, float spl);
-			float ComputeTimeDelay(float distance, GasBody* environment);
-		void NoListenerLogic(Body* b);
-
-	void UpdateStates();
-
-	void StepAudio(float* dt);
 
 	bool IsVoid() const { return gasIndex.Empty(); }
 	bool IsDry() const { return liquidIndex.Empty(); }
 	bool IsGlobalPause() { return physics->globals.Get(0); }
 
-	GasBody* GetEnvironmentBody(PhysRect body);
-
 private:
 
+	// AUXILIARS
 	BodyCreation* bodyCreation = nullptr;
 	LibraryConfig* libraryConfig = nullptr;
 	GetData* getData = nullptr;
 
+	// MODULES
 	Physics* physics = nullptr;
 	Acoustics* acoustics = nullptr;
 	Audio* audio = nullptr;
 
+	// VARIABLES
 	PhysArray<Body*> bodies;
 	PhysArray<SoundData*> soundDataList;
-	//INFO: Fet aixi perquè amb unic ids s'hauria de fer moltes iteracions + protegir el vector de bodies
-	PhysArray<unsigned int*> gasIndex;
+	PhysArray<unsigned int*> gasIndex; 	//INFO: Fet aixi perquè amb unic ids s'hauria de fer moltes iteracions + protegir el vector de bodies
 	PhysArray<unsigned int*> liquidIndex;
-	PhysRect scenarioRects[4] = {};
 
 	//_____________________
 	// CONFIG VARIABLES
-	// - Physics
+	// - General
+	Flag generalConfig = {}; // Debug Collisions (0) | Upwards Pitch (1) | Downwards Pitch (2) | Freq Attenuation (3) | Sound Oclusion (4) | SoundDelay (5)
 
-	Flag physicsConfig = {}; // Debug Collisions (0) |
+	//_____________________
+	// - Physics
 	unsigned int physIterations = 40;
 
 	//_____________________
@@ -128,7 +121,8 @@ private:
 	//_____________________
 	// - Audio
 
-	//______Config Notifier______
+	//_____________________
+	// - Notifier
 	PhysAction<unsigned int, PhysID> notifier;
 
 };

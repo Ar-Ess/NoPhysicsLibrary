@@ -6,10 +6,10 @@ class GetData
 {
 private:
 	
-	GetData(PhysArray<Body*>* bodies, PhysArray<Collision*>* collisions, Flag* physicsConfig, PhysVec* globalGravity, PhysVec* globalFriction, PhysVec* globalRestitution, Flag* physicsGlobals, float* pixelsToMeters) :
+	GetData(PhysArray<Body*>* bodies, PhysArray<Collision*>* collisions, Flag* generalConfig, PhysVec* globalGravity, PhysVec* globalFriction, PhysVec* globalRestitution, Flag* physicsGlobals, float* pixelsToMeters) :
 		bodies(bodies),
 		collisions(collisions),
-		physicsConfig(physicsConfig),
+		generalConfig(generalConfig),
 		globalGravity(globalGravity),
 		globalFriction(globalFriction),
 		globalRestitution(globalRestitution),
@@ -39,7 +39,7 @@ public:
 
 	const Collision* Collisions(unsigned int index) const 
 	{
-		if (!physicsConfig->Get(0)) return nullptr;
+		if (!generalConfig->Get(0)) return nullptr;
 
 		if (index > collisions->Size() - 1) return nullptr;
 
@@ -66,7 +66,7 @@ private:
 
 	PhysArray<Body*>* bodies = nullptr;
 	PhysArray<Collision*>* collisions = nullptr;
-	Flag* physicsConfig = nullptr;
+	Flag* generalConfig = nullptr;
 	Flag* physicsGlobals = nullptr;
 	PhysVec* globalGravity = nullptr;
 	PhysVec* globalFriction = nullptr;

@@ -38,7 +38,8 @@ public:
 		return b;
 	}
 
-	// mass is a value that tipically must not be 0 or negative ;)
+	// Gravity offset applies extra gravity to the global one
+	// Mass [Kg]
 	DynamicBody* Dynamic(float mass, PhysVec gravityOffset = { 0.0f, 0.0f }, InUnit gravityUnit = InUnit::IN_METERS) const
 	{
 		// pxl^2/s --> m^2/s
@@ -51,6 +52,7 @@ public:
 	}
 
 	// Buoyancy is a value ranged tipically from 0 to 1 ;)
+	// Mass [Kg]
 	LiquidBody* Liquid(float mass, float buoyancy) const
 	{
 		LiquidBody* b = new LiquidBody(rect, mass, buoyancy, pixelsToMeters);
@@ -59,7 +61,9 @@ public:
 		b->playSoundTrigger = playSoundTrigger;
 		return b;
 	}
+
 	// Buoyancy is a value ranged tipically from 0 to 1 ;)
+	// Density [kg/m2]
 	LiquidBody* Liquid(float density, float buoyancy, InUnit densityUnit) const
 	{
 		if (densityUnit == InUnit::IN_PIXELS) density *= PhysMath::Pow((1 / *pixelsToMeters), 2);
@@ -72,13 +76,13 @@ public:
 	}
 
 	// Aerodrag Coefficient is a value tipically ranged from 0 to 1.5 ;)
-	GasBody* Gas(float density, float pressure, PhysVec aerodragCoefficient, InUnit densityUnit, InUnit pressureUnit) const
+	// Density [kg/m2]
+	GasBody* Gas(float density, PhysVec aerodragCoefficient, InUnit densityUnit) const
 	{
 		float pixToMetSquared = PhysMath::Pow((1 / *pixelsToMeters), 2);
 		if (densityUnit == InUnit::IN_PIXELS) density *= pixToMetSquared;
-		if (pressureUnit == InUnit::IN_PIXELS) pressure *= pixToMetSquared;
 
-		GasBody* b = new GasBody(rect, density * rect.Area(), pressure, aerodragCoefficient, pixelsToMeters);
+		GasBody* b = new GasBody(rect, density * rect.Area(), aerodragCoefficient, pixelsToMeters);
 		bodies->Add(b);
 		gasIndex->Add(new unsigned int(bodies->Size() - 1));
 		b->playSoundTrigger = playSoundTrigger;

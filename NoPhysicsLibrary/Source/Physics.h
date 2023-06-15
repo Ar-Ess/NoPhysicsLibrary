@@ -22,7 +22,7 @@ public: // Methods
 
 private: // Methods
 
-	Physics(const PhysArray<Body*>* bodies, const Flag* physicsConfig, const PhysArray<unsigned int*>* gasIndex, const PhysArray<unsigned int*>* liquidIndex, const float* pixelsToMeters, const unsigned int* physIterations);
+	Physics(const PhysArray<Body*>* bodies, const Flag* generalConfig, const PhysArray<unsigned int*>* gasIndex, const PhysArray<unsigned int*>* liquidIndex, const float* pixelsToMeters, const unsigned int* physIterations);
 
 	void ApplyNaturalForces(Body* dynBody);
 		void ApplyHydroForces(Body* dynBody);
@@ -42,7 +42,7 @@ private: // Methods
 
 	// Internal
 	PhysVec CalculateFriction(Body* body);
-	bool IsCollisionDebuggingEnabled() const { return physicsConfig->Get(0); }
+	bool IsCollisionDebuggingEnabled() const { return generalConfig->Get(0); }
 
 public: // Variables
 
@@ -59,7 +59,7 @@ public: // Variables
 	const PhysArray<Body*>* bodies;
 
 	// Config
-	const Flag* physicsConfig = nullptr;
+	const Flag* generalConfig = nullptr;
 	const float* pixelsToMeters = nullptr;
 	const unsigned int* physIterations = nullptr;
 

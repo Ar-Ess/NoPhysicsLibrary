@@ -1,11 +1,10 @@
 #include "GasBody.h"
 
-GasBody::GasBody(PhysRect rect, float mass, float pressure, PhysVec dragCoefficient, const float* pixelsToMeters) :
+GasBody::GasBody(PhysRect rect, float mass, PhysVec dragCoefficient, const float* pixelsToMeters) :
 	Body(BodyClass::GAS_BODY, rect, mass, pixelsToMeters)
 {
 	SetMaterial(Material());
 
-	this->pressure = pressure;
 	this->dragCoefficient = dragCoefficient;
 }
 
@@ -18,6 +17,7 @@ void GasBody::SetMaterial(Material material)
 	Body::SetMaterial(material);
 
 	heatRatio = material.heatRatio;
+	pressure = material.pressure;
 }
 
 float GasBody::HeatRatio() const

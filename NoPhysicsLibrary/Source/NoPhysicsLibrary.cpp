@@ -18,11 +18,13 @@ void NPL::Init(float pixelsPerMeter)
 {
 	// You've alreay initialized the library once
 	DOUBLE_INIT_CHECK();
-	physics = new Physics(&bodies, &physicsConfig, &gasIndex, &liquidIndex, &pixelsToMeters, &physIterations);
-	acoustics = new Acoustics(&bodies, &soundDataList, &gasIndex, &liquidIndex, &panRange, &panFactor, &pitchVariationFactor);
+	physics = new Physics(&bodies, &generalConfig, &gasIndex, &liquidIndex, &pixelsToMeters, &physIterations);
+	acoustics = new Acoustics(&bodies, &soundDataList, &gasIndex, &liquidIndex, &panRange, &panFactor, &pitchVariationFactor, &generalConfig);
 	audio = new Audio();
 
 	notifier += std::bind(&NPL::UpdateNotifier, this, std::placeholders::_1, std::placeholders::_2);
+
+	generalConfig.Set(0b00011110);
 
 	// Pixels To Meters = [ m / pxl ]
 	pixelsToMeters = pixelsPerMeter > 0 ? 1 / pixelsPerMeter : 1;
@@ -40,7 +42,7 @@ void NPL::Init(float pixelsPerMeter)
 		&panRange,
 		&panFactor,
 		&pitchVariationFactor,
-		&physicsConfig,
+		&generalConfig,
 		&physics->globalGravity,
 		&physics->globalRestitution,
 		&physics->globalFriction,
@@ -53,7 +55,7 @@ void NPL::Init(float pixelsPerMeter)
 	getData = new GetData(
 		&bodies, 
 		&physics->collisions, 
-		&physicsConfig,
+		&generalConfig,
 		&physics->globalGravity, 
 		&physics->globalFriction, 
 		&physics->globalRestitution, 

@@ -8,6 +8,7 @@ template<class> class PhysArray;
 struct SoundData;
 class GasBody;
 class LiquidBody;
+class Flag;
 
 class Acoustics
 {
@@ -47,7 +48,7 @@ class Acoustics
 
 private:
 
-	Acoustics(PhysArray<Body*>* bodies, PhysArray<SoundData*>* soundDataList, PhysArray<unsigned int*>* gasIndex, PhysArray<unsigned int*>* liquidIndex, const float* panRange, const float* panFactor, const float* pitchVariationFactor);
+	Acoustics(PhysArray<Body*>* bodies, PhysArray<SoundData*>* soundDataList, PhysArray<unsigned int*>* gasIndex, PhysArray<unsigned int*>* liquidIndex, const float* panRange, const float* panFactor, const float* pitchVariationFactor, const Flag* generalConfig);
 
 	void Simulate(Body* emitter, Body* listener);
 
@@ -95,5 +96,6 @@ private:
 	const float* panRange = nullptr;
 	const float* panFactor = nullptr;
 	const float* pitchVariationFactor = nullptr;
+	const Flag* generalConfig = nullptr;
 
 };

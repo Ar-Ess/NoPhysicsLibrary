@@ -26,7 +26,7 @@ public:
 
 private:
 	
-	GasBody(PhysRect rect, float mass, float pressure, PhysVec dragCoefficient, const float* pixelsToMeters);
+	GasBody(PhysRect rect, float mass, PhysVec dragCoefficient, const float* pixelsToMeters);
 
 private:
 

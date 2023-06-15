@@ -13,6 +13,7 @@ public:
 		density = -1;
 		defaultTemperature = 283;
 		absorptionCoefficient = 0.01;
+		pressure = 1000;
 	}
 	
 	// Build the material for solids [set -1 to not modify the value]
@@ -25,7 +26,7 @@ public:
 
 	// Build the material for gases [set -1 to not modify the value]
 	// Heat Ratio [None] | Absrpt Coeff [1/m] | Density [Kg/m2] | Temperature [K]
-	void BuildGas(float heatRatio, float absorptionCoefficient, float density, float defaultTemperature);
+	void BuildGas(float heatRatio, float pressure, float absorptionCoefficient, float density, float defaultTemperature);
 
 private:
 
@@ -52,6 +53,9 @@ private:
 
 	// INFO: absrpt coeff default is water [1/meter]
 	float absorptionCoefficient = 0.01;
+
+	// INFO: pressure default is air [Pa]
+	float pressure = 1000;
 	
 	float density = -1;
 

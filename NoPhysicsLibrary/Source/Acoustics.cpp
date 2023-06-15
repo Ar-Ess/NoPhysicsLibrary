@@ -22,7 +22,7 @@ Acoustics::RayData::RayData(Body* body, PhysRay ray, Acoustics::RaycastAgents* a
 	this->ray = ray;
 }
 
-Acoustics::Acoustics(PhysArray<Body*>* bodies, PhysArray<SoundData*>* soundDataList, PhysArray<unsigned int*>* gasIndex, PhysArray<unsigned int*>* liquidIndex, const float* panRange, const float* panFactor, const float* pitchVariationFactor)
+Acoustics::Acoustics(PhysArray<Body*>* bodies, PhysArray<SoundData*>* soundDataList, PhysArray<unsigned int*>* gasIndex, PhysArray<unsigned int*>* liquidIndex, const float* panRange, const float* panFactor, const float* pitchVariationFactor, const Flag* generalConfig)
 {
 	this->bodies = bodies;
 	this->soundDataList = soundDataList;
@@ -32,6 +32,7 @@ Acoustics::Acoustics(PhysArray<Body*>* bodies, PhysArray<SoundData*>* soundDataL
 	this->gasIndex = gasIndex;
 	this->liquidIndex = liquidIndex;
 	this->agents = new RaycastAgents();
+	this->generalConfig = generalConfig;
 }
 
 void Acoustics::Simulate(Body* emitter, Body* listener)
@@ -121,19 +122,23 @@ void Acoustics::ListenerLogic(PhysArray<RayData*>* data, const float totalDistan
 		float res = 1;
 		float pitch = 1;
 		bool noVolume = false;
+		bool freqAttenuation = generalConfig->Get(3);
+		bool soundOclusion = generalConfig->Get(4);
 
 		for (unsigned int i = 0; i < data->Size(); ++i)
 		{
 			RayData* rD = data->At(i);
 
-			volume -= ComputeVolumeAttenuation(rD->innerDistance, rD->body);
+			if (soundOclusion)
+				volume -= ComputeVolumeAttenuation(rD->innerDistance, rD->body);
 			noVolume = volume < 0.01f;
 			if (noVolume) break;
 
 			float velocity = 0;
 			timeDelay += ComputeTimeDelay(rD->innerDistance, rD->body, velocity);
 
-			ComputeFrequentialAttenuation(rD->innerDistance, totalDistance, velocity, rD->body, cutoff, res);
+			if (freqAttenuation)
+				ComputeFrequentialAttenuation(rD->innerDistance, totalDistance, velocity, rD->body, cutoff, res);
 
 			ComputePitchShifting(velocity, rD->innerDistance / totalDistance, pitch);
 
@@ -144,6 +149,9 @@ void Acoustics::ListenerLogic(PhysArray<RayData*>* data, const float totalDistan
 		}
 
 		if (noVolume) continue;
+
+		if ((pitch > 1 && !generalConfig->Get(1)) || (pitch < 1 && !generalConfig->Get(2))) pitch = 1;
+		if (generalConfig->Get(5)) timeDelay = 0;
 
 		soundDataList->Add(new SoundData(aData->index, pan, volume, timeDelay, FINAL_FREQ(cutoff), FINAL_RES(res), FINAL_PITCH(pitch, *pitchVariationFactor)));
 	}

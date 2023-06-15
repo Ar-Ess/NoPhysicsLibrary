@@ -5,7 +5,7 @@
 #include "Sound.h"
 #include "PhysArray.h"
 
-class SoundData;
+struct SoundData;
 class SoLoud::Soloud;
 class SoLoud::BiquadResonantFilterInstance;
 class PitchShiftFilter;

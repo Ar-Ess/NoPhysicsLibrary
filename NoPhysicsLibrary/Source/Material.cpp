@@ -19,9 +19,10 @@ void Material::BuildLiquid(float viscosity, float bulkModulus, float absorptionC
 	this->density = density;
 }
 
-void Material::BuildGas(float heatRatio, float absorptionCoefficient, float density, float defaultTemperature)
+void Material::BuildGas(float heatRatio, float pressure, float absorptionCoefficient, float density, float defaultTemperature)
 {
 	this->heatRatio = heatRatio == -1 ? this->heatRatio : heatRatio;
+	this->pressure = pressure == -1 ? this->pressure : pressure;
 	this->defaultTemperature = defaultTemperature == -1 ? this->defaultTemperature : defaultTemperature;
 	this->absorptionCoefficient = absorptionCoefficient == -1 ? this->absorptionCoefficient : absorptionCoefficient;
 	

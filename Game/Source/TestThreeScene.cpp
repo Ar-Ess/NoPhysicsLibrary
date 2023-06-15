@@ -21,7 +21,7 @@ bool TestThreeScene::Start()
 	npl->Configure()->PanRange(7, InUnit::IN_METERS);
 	npl->Configure()->PanFactor(1.2f);
 	npl->Configure()->PhysicsIterations(40);
-	npl->Configure()->PitchVariationFactor(0.05);
+	npl->Configure()->PitchVariationFactor(1, false, false);
 	npl->SetPhysicsPreset(PhysicsPreset::DEFAULT_PHYSICS_PRESET);
 	std::vector<StaticBody*> x;
 	npl->SetScenarioPreset(ScenarioPreset::CORRIDOR_SCENARIO_PRESET, PhysVec(window->GetSize().x, window->GetSize().y), &x);
@@ -70,7 +70,7 @@ bool TestThreeScene::Start()
 
 	// Gas
 	GasBody* gas = npl->CreateBody(npl->ReturnScenarioRect())
-		->Gas(1, 5000, { 3.0f, 0.1f }, InUnit::IN_METERS, InUnit::IN_METERS);
+		->Gas(1.2f, { 3.0f, 0.1f }, InUnit::IN_METERS);
 
 	//gas->Size(400, gas->Size(InUnit::IN_PIXELS).y, InUnit::IN_PIXELS);
 
