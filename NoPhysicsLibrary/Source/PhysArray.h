@@ -491,7 +491,7 @@ private:
 
         for (Node* node = start; node != nullptr; node = node->post)
         {
-            if (node->value == value) return true;
+            if (*node->value == *value) return true;
         }
 
         return false;

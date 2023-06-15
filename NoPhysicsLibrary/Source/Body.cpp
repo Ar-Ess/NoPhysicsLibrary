@@ -70,11 +70,12 @@ PhysVec Body::Size(InUnit unit) const
 	return rect.Size() * conversion;
 }
 
+// Set -1 to not modify the value
 void Body::Size(float w, float h, InUnit unit)
 {
 	const float conv = Conversion(unit, true);
-	rect.w = w * conv;
-	rect.h = h * conv;
+	if (w != -1) rect.w = PhysMath::Max(0.0001, w * conv);
+	if (h != -1) rect.h = PhysMath::Max(0.0001, h * conv);
 }
 
 PhysRect Body::Rect(InUnit unit) const

@@ -42,6 +42,9 @@ class Acoustics
 		float distance;
 		float percentage = 0;
 		PhysRay ray = {};
+
+		bool operator==(RayData data) const;
+
 	};
 
 	friend class NPL;
@@ -56,9 +59,7 @@ private:
 
 	void ListenerLogic(PhysArray<RayData*>* data, const float totalDistance);
 
-	void CalculatePercentages(PhysArray<RayData*>* data, const float totalDistance);
-
-	void CalculatePercentagesVoidSecure(PhysArray<RayData*>* data, const float totalDistance);
+	bool VoidSecurityLogic(PhysArray<RayData*>* data, GasBody* environment, LiquidBody* flood, const float totalDistance);
 
 	GasBody* GetEnvironmentBody();
 
