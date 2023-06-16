@@ -18,7 +18,7 @@ class PhysArray
 
     PhysArray() {}
 
-    friend class NPL;
+    friend class NoPhysicsLibrary;
     friend class Body;
     friend class BodyCreation;
     friend class Audio;
@@ -330,7 +330,7 @@ class PhysArray<T*>
         Node* post = nullptr;
     };
 
-    friend class NPL;
+    friend class NoPhysicsLibrary;
     friend class Body;
     friend class BodyCreation;
     friend class Audio;

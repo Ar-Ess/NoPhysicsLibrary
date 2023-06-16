@@ -65,6 +65,6 @@ public: // Variables
 
 private:
 
-	friend class NPL;
+	friend class NoPhysicsLibrary;
 
 };

@@ -3,13 +3,13 @@
 #include "Scene.h"
 #include "NoPhysicsLibrary.h"
 
-class TestThreeScene : public Scene
+class DebugScene : public Scene
 {
 public:
 
-	TestThreeScene();
+	DebugScene();
 
-	~TestThreeScene() override;
+	~DebugScene() override;
 
 	bool Start() override;
 

@@ -47,7 +47,7 @@ class Acoustics
 
 	};
 
-	friend class NPL;
+	friend class NoPhysicsLibrary;
 
 private:
 

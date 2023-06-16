@@ -95,9 +95,9 @@
   <ItemGroup>
     <ClCompile Include="Source\AssetsManager.cpp" />
     <ClCompile Include="Source\Camera.cpp" />
+    <ClCompile Include="Source\D1WorldScene.cpp" />
     <ClCompile Include="Source\Easing.cpp" />
     <ClCompile Include="Source\EditorScene.cpp" />
-    <ClCompile Include="Source\ExamScene.cpp" />
     <ClCompile Include="Source\GroundTile.cpp" />
     <ClCompile Include="Source\LightTimer.cpp" />
     <ClCompile Include="Source\InitialScene.cpp" />
@@ -109,7 +109,7 @@
     <ClCompile Include="Source\Render.cpp" />
     <ClCompile Include="Source\Scene.cpp" />
     <ClCompile Include="Source\SceneManager.cpp" />
-    <ClCompile Include="Source\TestThreeScene.cpp" />
+    <ClCompile Include="Source\DebugScene.cpp" />
     <ClCompile Include="Source\Textures.cpp" />
     <ClCompile Include="Source\Tile.cpp" />
     <ClCompile Include="Source\TileManager.cpp" />
@@ -120,9 +120,9 @@
     <ClInclude Include="Source\AssetsManager.h" />
     <ClInclude Include="Source\Camera.h" />
     <ClInclude Include="Source\Circle.h" />
+    <ClInclude Include="Source\D1WorldScene.h" />
     <ClInclude Include="Source\Easing.h" />
     <ClInclude Include="Source\EditorScene.h" />
-    <ClInclude Include="Source\ExamScene.h" />
     <ClInclude Include="Source\Grid.h" />
     <ClInclude Include="Source\GroundTile.h" />
     <ClInclude Include="Source\ID.h" />
@@ -140,7 +140,7 @@
     <ClInclude Include="Source\Render.h" />
     <ClInclude Include="Source\Scene.h" />
     <ClInclude Include="Source\SceneManager.h" />
-    <ClInclude Include="Source\TestThreeScene.h" />
+    <ClInclude Include="Source\DebugScene.h" />
     <ClInclude Include="Source\Textures.h" />
     <ClInclude Include="Source\Tile.h" />
     <ClInclude Include="Source\TileHeader.h" />

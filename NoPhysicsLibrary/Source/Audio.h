@@ -16,7 +16,7 @@ public:
 
 	~Audio();
 
-	void Playback(SoundData* data, float* dt);
+	void Playback(SoundData* data);
 
 	void LoadSound(const char* path);
 
@@ -33,7 +33,7 @@ private:
 
 private:
 
-	friend class NPL;
+	friend class NoPhysicsLibrary;
 
 	SoLoud::Soloud* audio = nullptr;
 	SoLoud::BiquadResonantFilter* lowpass = nullptr;

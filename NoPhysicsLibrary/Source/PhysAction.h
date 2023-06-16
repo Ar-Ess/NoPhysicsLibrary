@@ -6,7 +6,7 @@ template<class ...Ts>
 class PhysAction
 {
 
-    friend class NPL;
+    friend class NoPhysicsLibrary;
 
 public:
 

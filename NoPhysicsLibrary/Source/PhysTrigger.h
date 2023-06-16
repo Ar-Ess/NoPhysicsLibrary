@@ -3,7 +3,7 @@
 class PhysTrigger
 {
 
-	friend class NPL;
+	friend class NoPhysicsLibrary;
 
 public:
 

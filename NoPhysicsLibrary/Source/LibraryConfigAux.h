@@ -28,7 +28,7 @@ private:
 		return this;
 	}
 	
-	friend class NPL;
+	friend class NoPhysicsLibrary;
 
 public:
 	// Set which distance (in meters) the audio will sound mono in one of the two channels (Left / Right)

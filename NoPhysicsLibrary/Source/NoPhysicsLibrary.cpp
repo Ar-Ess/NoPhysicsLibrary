@@ -6,15 +6,15 @@
 #define INIT_CHECK() assert(physics != nullptr && audio != nullptr && acoustics != nullptr && "ERROR: NPL variable not initialized. Call Init() first.");
 #define DOUBLE_INIT_CHECK() assert(physics == nullptr && audio == nullptr && acoustics == nullptr && "ERROR: NPL variable initialized twice. Call CleanUp() first before initializing the library again.");
 
-NPL::NPL()
+NoPhysicsLibrary::NoPhysicsLibrary()
 {
 }
 
-NPL::~NPL()
+NoPhysicsLibrary::~NoPhysicsLibrary()
 {
 }
 
-void NPL::Init(float pixelsPerMeter)
+void NoPhysicsLibrary::Init(float pixelsPerMeter)
 {
 	// You've alreay initialized the library once
 	DOUBLE_INIT_CHECK();
@@ -64,20 +64,20 @@ void NPL::Init(float pixelsPerMeter)
 	);
 }
 
-void NPL::Update(float* dt)
+void NoPhysicsLibrary::Update(const float dt)
 {
 	INIT_CHECK();
 	if (IsGlobalPause()) return;
 
 	//INFO: Uniform forces independent from space use InUnit::IN_PIXELS, otherwise InUnit::IN_METERS
-	StepPhysics(*dt);
+	StepPhysics(dt);
 	StepAcoustics();
 	StepAudio(dt);
 
 	UpdateStates();
 }
 
-void NPL::CleanUp()
+void NoPhysicsLibrary::CleanUp()
 {
 	INIT_CHECK();
 	// AUDIO
@@ -100,37 +100,35 @@ void NPL::CleanUp()
 
 }
 
-const BodyCreation* NPL::CreateBody(PhysRect rectangle)
+const BodyCreation* NoPhysicsLibrary::CreateBody(PhysRect rectangle)
 {
-	//Library not initialized. Call NPL::Init() first
 	INIT_CHECK();
 	rectangle *= pixelsToMeters;
 
 	return bodyCreation->Access(rectangle);
 }
 
-const BodyCreation* NPL::CreateBody(float x, float y, float width, float height)
+const BodyCreation* NoPhysicsLibrary::CreateBody(float x, float y, float width, float height)
 {
-	//Library not initialized. Call NPL::Init() first
 	INIT_CHECK();
 	PhysRect rectangle = PhysRect( x, y, width, height ) * pixelsToMeters;
 
 	return bodyCreation->Access(rectangle);
 }
 
-const LibraryConfig* NPL::Configure()
+const LibraryConfig* NoPhysicsLibrary::Configure()
 {
 	INIT_CHECK();
 	return libraryConfig->Access();
 }
 
-const GetData* NPL::Get()
+const GetData* NoPhysicsLibrary::Get()
 {
 	INIT_CHECK();
 	return getData->Access();
 }
 
-bool NPL::DestroyBody(Body* body)
+bool NoPhysicsLibrary::DestroyBody(Body* body)
 {
 	INIT_CHECK();
 	int index = bodies.Find(body);
@@ -138,7 +136,7 @@ bool NPL::DestroyBody(Body* body)
 	return bodies.Erase(index);
 }
 
-bool NPL::DestroyBody(PhysID id)
+bool NoPhysicsLibrary::DestroyBody(PhysID id)
 {
 	INIT_CHECK();
 	Body find(BodyClass::EMPTY_BODY, {}, 0, nullptr);
@@ -148,7 +146,7 @@ bool NPL::DestroyBody(PhysID id)
 	return bodies.Erase(index);
 }
 
-bool NPL::DestroyBody(BodyClass clas)
+bool NoPhysicsLibrary::DestroyBody(BodyClass clas)
 {
 	INIT_CHECK();
 	bool ret = true;
@@ -166,19 +164,19 @@ bool NPL::DestroyBody(BodyClass clas)
 	return ret;
 }
 
-void NPL::LoadSound(const char* path)
+void NoPhysicsLibrary::LoadSound(const char* path)
 {
 	INIT_CHECK();
 	audio->LoadSound(path);
 }
 
-void NPL::PausePhysics(bool pause)
+void NoPhysicsLibrary::PausePhysics(bool pause)
 {
 	INIT_CHECK();
 	physics->globals.Set(0, pause);
 }
 
-const PhysRect NPL::ReturnScenarioRect()
+const PhysRect NoPhysicsLibrary::ReturnScenarioRect()
 {
 	INIT_CHECK();
 	if (bodies.Empty()) return PhysRect();
@@ -213,7 +211,7 @@ const PhysRect NPL::ReturnScenarioRect()
 	return PhysRect{ minP.x, minP.y, maxP.x - minP.x, maxP.y - minP.y };
 }
 
-void NPL::SetScenarioPreset(ScenarioPreset preset, PhysVec windowSize, std::vector<StaticBody*>* scenarioBodies)
+void NoPhysicsLibrary::SetScenarioPreset(ScenarioPreset preset, PhysVec windowSize, std::vector<StaticBody*>* scenarioBodies)
 {
 	INIT_CHECK();
 	switch (preset)
@@ -302,7 +300,7 @@ void NPL::SetScenarioPreset(ScenarioPreset preset, PhysVec windowSize, std::vect
 	}
 }
 
-void NPL::SetPhysicsPreset(PhysicsPreset preset)
+void NoPhysicsLibrary::SetPhysicsPreset(PhysicsPreset preset)
 {
 	INIT_CHECK();
 	PhysVec friction = {};
@@ -331,7 +329,7 @@ void NPL::SetPhysicsPreset(PhysicsPreset preset)
 
 //- Private --------------------------------------------------------------------------------
 
-void NPL::UpdateNotifier(unsigned int notify, PhysID id)
+void NoPhysicsLibrary::UpdateNotifier(unsigned int notify, PhysID id)
 {
 	switch (notify)
 	{
@@ -341,7 +339,7 @@ void NPL::UpdateNotifier(unsigned int notify, PhysID id)
 	}
 }
 
-void NPL::UpdatePixelsToMeters()
+void NoPhysicsLibrary::UpdatePixelsToMeters()
 {
 	bodies.Iterate<float>
 	(
@@ -374,14 +372,14 @@ void NPL::UpdatePixelsToMeters()
 	physics->globalGravity *= ptmRatio;
 }
 
-void NPL::UpdateListener(PhysID id)
+void NoPhysicsLibrary::UpdateListener(PhysID id)
 {
 	Body find(BodyClass::EMPTY_BODY, {}, 0, nullptr);
 	find.id = &id;
 	listener = bodies[bodies.Find(&find)];
 }
 
-void NPL::UpdateStates()
+void NoPhysicsLibrary::UpdateStates()
 {
 	for (unsigned int i = 0; i < bodies.Size(); ++i)
 	{
@@ -447,7 +445,7 @@ void NPL::UpdateStates()
 	}
 }
 
-void NPL::StepPhysics(float dt)
+void NoPhysicsLibrary::StepPhysics(const float dt)
 {
 	bodies.Iterate<Physics*, float>
 	(
@@ -462,7 +460,7 @@ void NPL::StepPhysics(float dt)
 	physics->SolveCollisions(&bodies);
 }
 
-void NPL::StepAcoustics()
+void NoPhysicsLibrary::StepAcoustics()
 {
 	if (playSoundTrigger()) return;
 
@@ -480,17 +478,17 @@ void NPL::StepAcoustics()
 	);
 }
 
-void NPL::StepAudio(float* dt)
+void NoPhysicsLibrary::StepAudio()
 {
 	if (soundDataList.Empty()) return;
 
-	soundDataList.Iterate<Audio*, float*>
+	soundDataList.Iterate<Audio*>
 		(
-			[](SoundData* data, Audio* audio, float* dt)
+			[](SoundData* data, Audio* audio)
 			{
-				audio->Playback(data, dt);
+				audio->Playback(data);
 			},
-			audio, dt
+			audio
 		);
 
 	soundDataList.Clear();

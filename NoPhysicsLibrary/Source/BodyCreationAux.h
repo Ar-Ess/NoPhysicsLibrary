@@ -26,7 +26,7 @@ private:
 		return this;
 	}
 
-	friend class NPL;
+	friend class NoPhysicsLibrary;
 
 public:
 

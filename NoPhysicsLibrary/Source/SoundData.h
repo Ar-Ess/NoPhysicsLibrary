@@ -2,7 +2,7 @@
 
 struct SoundData
 {
-	friend class NPL;
+	friend class NoPhysicsLibrary;
 	friend class Acoustics;
 
 private:

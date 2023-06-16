@@ -21,7 +21,7 @@ Audio::~Audio()
 {
 }
 
-void Audio::Playback(SoundData* data, float* dt)
+void Audio::Playback(SoundData* data)
 {
     if (SoundSize() == 0 || data->index < 0 || data->index >= SoundSize()) return;
 

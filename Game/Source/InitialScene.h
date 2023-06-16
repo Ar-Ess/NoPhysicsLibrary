@@ -2,8 +2,6 @@
 
 #include "Scene.h"
 
-#include "Easing.h"
-
 class InitialScene : public Scene
 {
 public:
@@ -17,8 +15,5 @@ public:
 	bool Update(float dt) override;
 
 	bool CleanUp() override;
-
-	Easing ease = Easing(EaseType::LINEAR, EaseMode::IN_MODE, 2);
-	Rect rect = Rect(100, 360, 10, 10);
 
 };

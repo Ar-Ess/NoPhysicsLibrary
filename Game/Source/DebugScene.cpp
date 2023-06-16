@@ -1,15 +1,15 @@
-#include "TestThreeScene.h"
+#include "DebugScene.h"
 #include "MathUtils.h"
 
-TestThreeScene::TestThreeScene()
+DebugScene::DebugScene()
 {
 }
 
-TestThreeScene::~TestThreeScene()
+DebugScene::~DebugScene()
 {
 }
 
-bool TestThreeScene::Start()
+bool DebugScene::Start()
 {
 	// Initialize Variables
 	npl = new NPL();
@@ -90,7 +90,7 @@ bool TestThreeScene::Start()
 	return true;
 }
 
-bool TestThreeScene::Update(float dt)
+bool DebugScene::Update(float dt)
 {
 	// Variables
 	static bool pause = false;
@@ -216,7 +216,7 @@ bool TestThreeScene::Update(float dt)
 	return true;
 }
 
-bool TestThreeScene::CleanUp()
+bool DebugScene::CleanUp()
 {
 	if (npl)
 	{

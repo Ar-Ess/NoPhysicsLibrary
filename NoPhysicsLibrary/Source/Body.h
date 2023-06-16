@@ -130,7 +130,7 @@ private: // Methods
 
 protected: // Variables
 
-	friend class NPL;
+	friend class NoPhysicsLibrary;
 	friend class Acoustics;
 
 	PhysRect rect = {};

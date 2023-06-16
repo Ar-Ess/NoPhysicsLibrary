@@ -83,7 +83,7 @@ private: // Methods
 private: // Variables
 
 	friend class Physics; // Necessary for accessing SecondNewton/FirstBuxeda
-	friend class NPL; // Necessary to update states
+	friend class NoPhysicsLibrary; // Necessary to update states
 	friend struct BodyCreation;
 
 	float youngModulus = 0;

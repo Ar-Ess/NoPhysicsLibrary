@@ -24,15 +24,6 @@
     <ClCompile Include="Source\InitialScene.cpp">
       <Filter>Scenes</Filter>
     </ClCompile>
-    <ClCompile Include="Source\ExamScene.cpp">
-      <Filter>Scenes\Test</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\TestThreeScene.cpp">
-      <Filter>Scenes\Test</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\EditorScene.cpp">
-      <Filter>Scenes</Filter>
-    </ClCompile>
     <ClCompile Include="Source\Tile.cpp">
       <Filter>Game\Tiles</Filter>
     </ClCompile>
@@ -62,6 +53,15 @@
     </ClCompile>
     <ClCompile Include="Source\GroundTile.cpp">
       <Filter>Game\Tiles</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\DebugScene.cpp">
+      <Filter>Scenes\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\EditorScene.cpp">
+      <Filter>Scenes\Game</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\D1WorldScene.cpp">
+      <Filter>Scenes\Demos</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -98,15 +98,6 @@
     </ClInclude>
     <ClInclude Include="Source\Map.h">
       <Filter>Utils\Data Structures</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\ExamScene.h">
-      <Filter>Scenes\Test</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\TestThreeScene.h">
-      <Filter>Scenes\Test</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\EditorScene.h">
-      <Filter>Scenes</Filter>
     </ClInclude>
     <ClInclude Include="Source\Grid.h">
       <Filter>Utils\Data Structures</Filter>
@@ -168,6 +159,15 @@
     <ClInclude Include="Source\Alignment.h">
       <Filter>Utils\Maths</Filter>
     </ClInclude>
+    <ClInclude Include="Source\DebugScene.h">
+      <Filter>Scenes\Debug</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\EditorScene.h">
+      <Filter>Scenes\Game</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\D1WorldScene.h">
+      <Filter>Scenes\Demos</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="External">
@@ -188,9 +188,6 @@
     <Filter Include="Utils\Data Structures">
       <UniqueIdentifier>{c5ea655c-769e-4e82-a483-6926ada47076}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Scenes\Test">
-      <UniqueIdentifier>{c8d8bca4-8cd3-4d69-aa03-02475f9cd6a9}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Utils\Timing">
       <UniqueIdentifier>{47dc9040-b617-46ec-9a0c-d7a44db0bc3e}</UniqueIdentifier>
     </Filter>
@@ -208,6 +205,15 @@
     </Filter>
     <Filter Include="Game\Tiles">
       <UniqueIdentifier>{5e5c2228-63b2-490c-94d1-75a07dddaaa4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Scenes\Game">
+      <UniqueIdentifier>{5475a966-afd8-40f6-9614-0312e75d4922}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Scenes\Debug">
+      <UniqueIdentifier>{c8d8bca4-8cd3-4d69-aa03-02475f9cd6a9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Scenes\Demos">
+      <UniqueIdentifier>{aab01b44-cc93-4f31-86ac-b6dc162ebc8a}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

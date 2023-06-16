@@ -13,13 +13,13 @@
 #include "PhysAction.h"
 #include "PhysTrigger.h"
 
-class NPL
+class NoPhysicsLibrary
 {
 public:
 
-	NPL();
+	NoPhysicsLibrary();
 
-	~NPL();
+	~NoPhysicsLibrary();
 
 	// Initialize the library
 	void Init(float pixelsPerMeter);
@@ -41,7 +41,7 @@ public:
 
 	// Iterates the library
 	//  - Call it in your main update function
-	void Update(float* dt);
+	void Update(float dt);
 
 	// Allows to pause or unpause the physics
 	void PausePhysics(bool pause);
@@ -70,7 +70,7 @@ private: // Methods
 
 	void StepPhysics(float dt);
 	void StepAcoustics();
-	void StepAudio(float* dt);
+	void StepAudio();
 	
 	void UpdateStates();
 	void UpdateNotifier(unsigned int notify, PhysID id);
