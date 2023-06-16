@@ -1,14 +1,14 @@
-#include "D1WorldScene.h"
+#include "D2SpatialScene.h"
 
-D1WorldScene::D1WorldScene()
+D2SpatialScene::D2SpatialScene()
 {
 }
 
-D1WorldScene::~D1WorldScene()
+D2SpatialScene::~D2SpatialScene()
 {
 }
 
-bool D1WorldScene::Start()
+bool D2SpatialScene::Start()
 {
 	physics = new NoPhysicsLibrary();
 	physics->Init(256);
@@ -16,7 +16,7 @@ bool D1WorldScene::Start()
 	return true;
 }
 
-bool D1WorldScene::Update(float dt)
+bool D2SpatialScene::Update(float dt)
 {
 	physics->Update(dt);
 
@@ -26,7 +26,7 @@ bool D1WorldScene::Update(float dt)
 	return true;
 }
 
-bool D1WorldScene::CleanUp()
+bool D2SpatialScene::CleanUp()
 {
 	physics->CleanUp();
 	delete physics;

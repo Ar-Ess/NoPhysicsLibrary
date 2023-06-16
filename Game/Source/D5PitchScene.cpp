@@ -1,14 +1,14 @@
-#include "D1WorldScene.h"
+#include "D5PitchScene.h"
 
-D1WorldScene::D1WorldScene()
+D5PitchScene::D5PitchScene()
 {
 }
 
-D1WorldScene::~D1WorldScene()
+D5PitchScene::~D5PitchScene()
 {
 }
 
-bool D1WorldScene::Start()
+bool D5PitchScene::Start()
 {
 	physics = new NoPhysicsLibrary();
 	physics->Init(256);
@@ -16,7 +16,7 @@ bool D1WorldScene::Start()
 	return true;
 }
 
-bool D1WorldScene::Update(float dt)
+bool D5PitchScene::Update(float dt)
 {
 	physics->Update(dt);
 
@@ -26,7 +26,7 @@ bool D1WorldScene::Update(float dt)
 	return true;
 }
 
-bool D1WorldScene::CleanUp()
+bool D5PitchScene::CleanUp()
 {
 	physics->CleanUp();
 	delete physics;

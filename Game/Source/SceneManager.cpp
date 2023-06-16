@@ -1,8 +1,12 @@
 #include "SceneManager.h"
 #include "InitialScene.h"
-#include "TestThreeScene.h"
-#include "ExamScene.h"
+#include "DebugScene.h"
 #include "EditorScene.h"
+#include "D1WorldScene.h"
+#include "D2SpatialScene.h"
+#include "D3DelayScene.h"
+#include "D4OclusionScene.h"
+#include "D5PitchScene.h"
 
 SceneManager::SceneManager(Render* render, Input* input, Window* window)
 {
@@ -22,9 +26,13 @@ bool SceneManager::Start()
 	texture->Start();
 
 	PushScene(new InitialScene());
-	PushScene(new TestThreeScene());
-	PushScene(new ExamScene());
+	PushScene(new DebugScene());
 	PushScene(new EditorScene());
+	PushScene(new D1WorldScene());
+	PushScene(new D2SpatialScene());
+	PushScene(new D3DelayScene());
+	PushScene(new D4OclusionScene());
+	PushScene(new D5PitchScene());
 
 	ChangeScene(0);
 

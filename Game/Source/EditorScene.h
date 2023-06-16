@@ -37,7 +37,7 @@ private:
 	bool editMode = true;
 
 	// Physics
-	NPL* physics = nullptr;
+	NoPhysicsLibrary* physics = nullptr;
 	Player* player = nullptr;
 
 };

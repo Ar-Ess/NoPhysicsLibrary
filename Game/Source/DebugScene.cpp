@@ -12,7 +12,7 @@ DebugScene::~DebugScene()
 bool DebugScene::Start()
 {
 	// Initialize Variables
-	npl = new NPL();
+	npl = new NoPhysicsLibrary();
 	npl->Init(128);
 	float metersToPixels = npl->Get()->MetersToPixels();
 
@@ -145,7 +145,7 @@ bool DebugScene::Update(float dt)
 	}
 
 	// Update library
-	npl->Update(&dt);
+	npl->Update(dt);
 
 	// Draw Library
 	// Draw bodies

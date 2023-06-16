@@ -1,14 +1,14 @@
-#include "D1WorldScene.h"
+#include "D4OclusionScene.h"
 
-D1WorldScene::D1WorldScene()
+D4OclusionScene::D4OclusionScene()
 {
 }
 
-D1WorldScene::~D1WorldScene()
+D4OclusionScene::~D4OclusionScene()
 {
 }
 
-bool D1WorldScene::Start()
+bool D4OclusionScene::Start()
 {
 	physics = new NoPhysicsLibrary();
 	physics->Init(256);
@@ -16,7 +16,7 @@ bool D1WorldScene::Start()
 	return true;
 }
 
-bool D1WorldScene::Update(float dt)
+bool D4OclusionScene::Update(float dt)
 {
 	physics->Update(dt);
 
@@ -26,7 +26,7 @@ bool D1WorldScene::Update(float dt)
 	return true;
 }
 
-bool D1WorldScene::CleanUp()
+bool D4OclusionScene::CleanUp()
 {
 	physics->CleanUp();
 	delete physics;

@@ -11,7 +11,7 @@ EditorScene::~EditorScene()
 bool EditorScene::Start()
 {	
 	Point wSize = window->GetSize();
-	physics = new NPL();
+	physics = new NoPhysicsLibrary();
 	physics->Init(128);
 
 	player = new Player(physics->CreateBody({ 100.0f, 1120.0f, 38.0f, 90.0f })->Dynamic(80), input);
@@ -45,7 +45,7 @@ bool EditorScene::Update(float dt)
 	render->camera.Update(pPos)->LimitFollow({0, 0, 200, 720});
 
 	// Physics
-	physics->Update(&dt);
+	physics->Update(dt);
 
 	// Inputs
 	UpdateGeneralInputs();

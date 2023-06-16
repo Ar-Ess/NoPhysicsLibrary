@@ -1,7 +1,7 @@
 #include "TileManager.h"
 #include "MathUtils.h"
 
-TileManager::TileManager(Point size, Render* render, Window* window, NPL* physics)
+TileManager::TileManager(Point size, Render* render, Window* window, NoPhysicsLibrary* physics)
 {
 	grid = new Grid<Tile*>(size);
 	this->render = render;

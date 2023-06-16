@@ -63,6 +63,18 @@
     <ClCompile Include="Source\D1WorldScene.cpp">
       <Filter>Scenes\Demos</Filter>
     </ClCompile>
+    <ClCompile Include="Source\D2SpatialScene.cpp">
+      <Filter>Scenes\Demos</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\D3DelayScene.cpp">
+      <Filter>Scenes\Demos</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\D4OclusionScene.cpp">
+      <Filter>Scenes\Demos</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\D5PitchScene.cpp">
+      <Filter>Scenes\Demos</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\App.h" />
@@ -166,6 +178,18 @@
       <Filter>Scenes\Game</Filter>
     </ClInclude>
     <ClInclude Include="Source\D1WorldScene.h">
+      <Filter>Scenes\Demos</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\D2SpatialScene.h">
+      <Filter>Scenes\Demos</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\D3DelayScene.h">
+      <Filter>Scenes\Demos</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\D4OclusionScene.h">
+      <Filter>Scenes\Demos</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\D5PitchScene.h">
       <Filter>Scenes\Demos</Filter>
     </ClInclude>
   </ItemGroup>

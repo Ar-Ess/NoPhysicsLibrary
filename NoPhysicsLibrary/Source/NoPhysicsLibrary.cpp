@@ -22,7 +22,7 @@ void NoPhysicsLibrary::Init(float pixelsPerMeter)
 	acoustics = new Acoustics(&bodies, &soundDataList, &gasIndex, &liquidIndex, &panRange, &panFactor, &pitchVariationFactor, &generalConfig);
 	audio = new Audio();
 
-	notifier += std::bind(&NPL::UpdateNotifier, this, std::placeholders::_1, std::placeholders::_2);
+	notifier += std::bind(&NoPhysicsLibrary::UpdateNotifier, this, std::placeholders::_1, std::placeholders::_2);
 
 	generalConfig.Set(0b00011110);
 
@@ -72,7 +72,7 @@ void NoPhysicsLibrary::Update(const float dt)
 	//INFO: Uniform forces independent from space use InUnit::IN_PIXELS, otherwise InUnit::IN_METERS
 	StepPhysics(dt);
 	StepAcoustics();
-	StepAudio(dt);
+	StepAudio();
 
 	UpdateStates();
 }

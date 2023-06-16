@@ -9,7 +9,7 @@ class TileManager
 {
 public:
 
-	TileManager(Point size, Render* render, Window* window, NPL* physics);
+	TileManager(Point size, Render* render, Window* window, NoPhysicsLibrary* physics);
 
 	bool Update(float dt);
 
@@ -31,6 +31,6 @@ private:
 
 	const Render* render = nullptr;
 	const Window* window = nullptr;
-	NPL* physics = nullptr;
+	NoPhysicsLibrary* physics = nullptr;
 
 };

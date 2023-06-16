@@ -19,7 +19,7 @@ public:
 
 private:
 
-	NPL* npl = nullptr;
+	NoPhysicsLibrary* npl = nullptr;
 	DynamicBody* player = nullptr;
 	DynamicBody* shell = nullptr;
 	StaticBody* emitter = nullptr;

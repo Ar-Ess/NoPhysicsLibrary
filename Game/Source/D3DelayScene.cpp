@@ -1,14 +1,14 @@
-#include "D1WorldScene.h"
+#include "D3DelayScene.h"
 
-D1WorldScene::D1WorldScene()
+D3DelayScene::D3DelayScene()
 {
 }
 
-D1WorldScene::~D1WorldScene()
+D3DelayScene::~D3DelayScene()
 {
 }
 
-bool D1WorldScene::Start()
+bool D3DelayScene::Start()
 {
 	physics = new NoPhysicsLibrary();
 	physics->Init(256);
@@ -16,7 +16,7 @@ bool D1WorldScene::Start()
 	return true;
 }
 
-bool D1WorldScene::Update(float dt)
+bool D3DelayScene::Update(float dt)
 {
 	physics->Update(dt);
 
@@ -26,7 +26,7 @@ bool D1WorldScene::Update(float dt)
 	return true;
 }
 
-bool D1WorldScene::CleanUp()
+bool D3DelayScene::CleanUp()
 {
 	physics->CleanUp();
 	delete physics;
