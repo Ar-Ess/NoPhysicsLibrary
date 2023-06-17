@@ -3,6 +3,8 @@
 #include "Scene.h"
 #include "NoPhysicsLibrary.h"
 
+class SDL_Texture;
+
 class D1WorldScene : public Scene
 {
 public:
@@ -17,8 +19,12 @@ public:
 
 	bool CleanUp() override;
 
+	void Draw();
+
 private:
 
 	NoPhysicsLibrary* physics = nullptr;
+	SDL_Texture* background = nullptr;
+	DynamicBody* player = nullptr;
 
 };

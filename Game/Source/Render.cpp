@@ -136,8 +136,8 @@ bool Render::DrawTexture(SDL_Texture* texture, Point position, Point size, bool 
 	}
 	else SDL_QueryTexture(texture, NULL, NULL, &rect.w, &rect.h);
 
-	rect.w *= int(size.x);
-	rect.h *= int(size.y);
+	rect.w *= size.x;
+	rect.h *= size.y;
 
 	if (SDL_RenderCopyEx(renderer, texture, sectPtr, &rect, angle, NULL, flip) != 0)
 	{
