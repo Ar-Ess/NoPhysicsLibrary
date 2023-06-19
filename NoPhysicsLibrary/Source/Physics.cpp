@@ -100,10 +100,11 @@ void Physics::ApplyHydroForces(Body* dynBody)
 		if (body->IsIdExcludedFromCollision(liquid->Id())) continue;
 		if (!PhysMath::CheckCollision(liquid->Rect(InUnit::IN_METERS), body->Rect(InUnit::IN_METERS))) continue;
 
-		float area = PhysMath::IntersectRectangle(liquid->Rect(InUnit::IN_METERS), body->Rect(InUnit::IN_METERS)).Area();
+		PhysRect inside = PhysMath::IntersectRectangle(liquid->Rect(InUnit::IN_METERS), body->Rect(InUnit::IN_METERS));
+		float area = inside.Area();
 		areaCovered += area;
 
-		ApplyHydroDrag(body, liquid);
+		ApplyHydroDrag(body, liquid, inside);
 		//-TODO: End HydroForces
 		ApplyHydroLift(body, liquid);
 		ApplyBuoyancy(body, liquid, area);
@@ -112,7 +113,7 @@ void Physics::ApplyHydroForces(Body* dynBody)
 	}
 }
 
-void Physics::ApplyHydroDrag(Body* dynBody, Body* env)
+void Physics::ApplyHydroDrag(Body* dynBody, Body* env, const PhysRect insideRect)
 {
 	LiquidBody* liquid = (LiquidBody*)env;
 	DynamicBody* body = (DynamicBody*)dynBody;
@@ -120,8 +121,8 @@ void Physics::ApplyHydroDrag(Body* dynBody, Body* env)
 	int negx = (body->velocity.x < 0) ? 1 : -1;
 	int negy = (body->velocity.y < 0) ? 1 : -1;
 
-	float hydrodragY = negy * 0.5f * liquid->Density(InUnit::IN_METERS) * PhysMath::Pow(body->velocity.y, 2) * body->Rect(InUnit::IN_METERS).h /* * liquid->GetDragCoefficient().y*/;
-	float hydrodragX = negx * 0.5f * liquid->Density(InUnit::IN_METERS) * PhysMath::Pow(body->velocity.x, 2) * body->Rect(InUnit::IN_METERS).w /* * liquid->GetDragCoefficient().x*/;
+	float hydrodragY = negy * 0.5f * liquid->Density(InUnit::IN_METERS) * PhysMath::Pow(body->velocity.y, 2) * insideRect.h;//body->Rect(InUnit::IN_METERS).h /* * liquid->GetDragCoefficient().y*/;
+	float hydrodragX = negx * 0.5f * liquid->Density(InUnit::IN_METERS) * PhysMath::Pow(body->velocity.x, 2) * insideRect.w;//body->Rect(InUnit::IN_METERS).w /* * liquid->GetDragCoefficient().x*/;
 	// negx *= -1;
 	// negy *= -1;
 	// float hydrodragY = negy * MathUtils::Abs(1 - liquid->GetDragCoefficient().y) * body->velocity.y;
@@ -147,7 +148,7 @@ void Physics::ApplyHydroLift(Body* dynBody, Body* env)
 	body->ApplyForce(hydroliftX, hydroliftY, InUnit::IN_METERS);
 }
 
-void Physics::ApplyBuoyancy(Body* dynBody, Body* env, float area)
+void Physics::ApplyBuoyancy(Body* dynBody, Body* env, const float area)
 {
 	LiquidBody* liquid = (LiquidBody*)env;
 	DynamicBody* body = (DynamicBody*)dynBody;
@@ -292,13 +293,17 @@ void Physics::Declip()
 			PhysRay ray(centerOfIntersecion + (directionVec * -1.0f), centerOfIntersecion);
 			if (!PhysMath::RayCast(ray, body->Rect(InUnit::IN_METERS), normal)) break;
 
+			const float totalMass = dynBody->Mass() + body->Mass();
+
 			if (normal.x == 0) // Vertical collision with horizontal surface
 			{
 				// Top -> Bottom
 				if (directionVec.y > 0)
 				{
-					dynBody->rect.y -= intersect.h / 2;
-					body->rect.y += intersect.h / 2;
+					dynBody->rect.y -= intersect.h * (body->Mass() / totalMass);
+					body->rect.y += intersect.h * (dynBody->Mass() / totalMass);
+					//dynBody->rect.y -= intersect.h / 2;
+					//body->rect.y += intersect.h / 2;
 
 					if (!dynBody->IsBodyPreviously(ON_GROUND)) dynBody->IsBodyEnter(ON_GROUND, true);
 					dynBody->IsBodyStill(ON_GROUND, true);
@@ -306,8 +311,10 @@ void Physics::Declip()
 				// Bottom -> Top
 				if (directionVec.y < 0)
 				{
-					dynBody->rect.y += intersect.h / 2;
-					body->rect.y -= intersect.h / 2;
+					dynBody->rect.y += intersect.h * (body->Mass() / totalMass);
+					body->rect.y -= intersect.h * (dynBody->Mass() / totalMass);
+					//dynBody->rect.y += intersect.h / 2;
+					//body->rect.y -= intersect.h / 2;
 
 					if (!dynBody->IsBodyPreviously(ON_ROOF)) dynBody->IsBodyEnter(ON_ROOF, true);
 					dynBody->IsBodyStill(ON_ROOF, true);
@@ -326,8 +333,10 @@ void Physics::Declip()
 				// Left -> Right
 				if (directionVec.x > 0)
 				{
-					dynBody->rect.x -= intersect.w / 2;
-					body->rect.x += intersect.w / 2;
+					dynBody->rect.x -= intersect.w * (body->Mass() / totalMass);
+					body->rect.x += intersect.w * (dynBody->Mass() / totalMass);
+					//dynBody->rect.x -= intersect.w / 2;
+					//body->rect.x += intersect.w / 2;
 
 					if (!dynBody->IsBodyPreviously(ON_RIGHT)) dynBody->IsBodyEnter(ON_RIGHT, true);
 					dynBody->IsBodyStill(ON_RIGHT, true);
@@ -335,8 +344,10 @@ void Physics::Declip()
 				// Right -> Left
 				if (directionVec.x < 0)
 				{
-					dynBody->rect.x += intersect.w / 2;
-					body->rect.x -= intersect.w / 2;
+					dynBody->rect.x += intersect.w * (body->Mass() / totalMass);
+					body->rect.x -= intersect.w * (dynBody->Mass() / totalMass);
+					//dynBody->rect.x += intersect.w / 2;
+					//body->rect.x -= intersect.w / 2;
 
 					if (!dynBody->IsBodyPreviously(ON_LEFT)) dynBody->IsBodyEnter(ON_LEFT, true);
 					dynBody->IsBodyStill(ON_LEFT, true);

@@ -1,6 +1,7 @@
 #pragma once
 
 #include <math.h>
+#include "PhysVec.h"
 
 struct Point
 {
@@ -10,6 +11,12 @@ struct Point
 
 	Point(float a) { x = a; y = a; }
 	Point(double a) { x = float(a); y = float(a); }
+
+	Point(PhysVec vec)
+	{
+		this->x = vec.x;
+		this->y = vec.y;
+	}
 
 	float x = 0, y = 0;
 

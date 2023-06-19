@@ -26,9 +26,9 @@ private: // Methods
 
 	void ApplyNaturalForces(Body* dynBody);
 		void ApplyHydroForces(Body* dynBody);
-			void ApplyHydroDrag(Body* dynBody, Body* env);
+			void ApplyHydroDrag(Body* dynBody, Body* env, const PhysRect insideRect);
 			void ApplyHydroLift(Body* dynBody, Body* env);
-			void  ApplyBuoyancy(Body* dynBody, Body* env, float area);
+			void  ApplyBuoyancy(Body* dynBody, Body* env, const float area);
 		void ApplyAeroForces(Body* dynBody);
 			void ApplyAeroDrag(Body* dynBody, Body* env, float area);
 			void ApplyAeroLift(Body* dynBody, Body* env, float area);
