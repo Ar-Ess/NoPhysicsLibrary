@@ -243,18 +243,23 @@ namespace PhysMath
 
 		PhysVec intr;
 		bool exist = false;
+		int i = 0;
 
-		for (unsigned short int i = 0; i < 4; ++i)
+		for (i = 0; i < 4; ++i)
 		{
 			if (!RayCast_Internal(ray, rectPlanes[i], intr)) continue;
+
 			exist = true;
 			break;
 		}
 
 		if (!exist) return false;
 
-		if (intr.x == rect.x || intr.x == rect.x + rect.w) ret = {1.0f, 0.0f };
-		else if (intr.y == rect.y || intr.y == rect.y + rect.h) ret = { 0.0f, 1.0f };
+		if (i == 0 || i == 2) ret = { 0.0f, 1.0f };
+		else ret = { 1.0f, 0.0f };
+
+		//if (intr.x == rect.x || intr.x == rect.x + rect.w) ret = {1.0f, 0.0f };
+		//else if (intr.y == rect.y || intr.y == rect.y + rect.h) ret = { 0.0f, 1.0f };
 
 		return true;
 

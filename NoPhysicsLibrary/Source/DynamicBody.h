@@ -52,6 +52,12 @@ public: // Methods
 	void RestitutionOffset(PhysVec offset);
 	// Returns the friction offset to the body
 	PhysVec RestitutionOffset() { return restitutionOffset; }
+
+	// Set the force multiplier
+	// Allows to scale the magnitude of all the forces/momentums applied to this body
+	void ForceMultiplier(float multiplier) { forceMultiplier = multiplier; }
+	// Returns the force multiplier
+	float ForceMultiplier() const { return forceMultiplier; }
 	
 	void ResetForces();
 
@@ -87,6 +93,9 @@ private: // Variables
 	friend struct BodyCreation;
 
 	float youngModulus = 0;
+
+	float forceMultiplier = 1;
+	const float* globalMultiplier = nullptr;
 
 	PhysVec acceleration = {};
 	PhysVec velocity = {};

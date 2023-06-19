@@ -11,13 +11,14 @@ struct BodyCreation
 {
 private:
 
-	BodyCreation(PhysArray<Body*>* bodies, PhysArray<unsigned int*>* gasLocation, PhysArray<unsigned int*>* liquidIndex, Flag* globals, const float* pixelsToMeters, PhysTrigger* playSoundTrigger) :
+	BodyCreation(PhysArray<Body*>* bodies, PhysArray<unsigned int*>* gasLocation, PhysArray<unsigned int*>* liquidIndex, Flag* globals, const float* pixelsToMeters, PhysTrigger* playSoundTrigger, const float* globalMultiplier) :
 		bodies(bodies),
 		gasIndex(gasLocation),
 		liquidIndex(liquidIndex),
 		globals(globals),
 		pixelsToMeters(pixelsToMeters),
-		playSoundTrigger(playSoundTrigger)
+		playSoundTrigger(playSoundTrigger),
+		globalMultiplier(globalMultiplier)
 	{}
 
 	const BodyCreation* Access(PhysRect rect)
@@ -48,6 +49,7 @@ public:
 		DynamicBody* b = new DynamicBody(rect, gravityOffset, mass, globals, pixelsToMeters);
 		bodies->Add(b);
 		b->playSoundTrigger = playSoundTrigger;
+		b->globalMultiplier = globalMultiplier;
 		return b;
 	}
 
@@ -99,4 +101,5 @@ private:
 	Flag* globals = nullptr;
 	Flag* bodiesConfig = nullptr;
 	PhysTrigger* playSoundTrigger = nullptr;
+	const float* globalMultiplier = nullptr;
 };

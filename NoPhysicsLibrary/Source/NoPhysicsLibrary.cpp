@@ -35,7 +35,8 @@ void NoPhysicsLibrary::Init(float pixelsPerMeter)
 		&liquidIndex, 
 		&physics->globals, 
 		&pixelsToMeters,
-		&playSoundTrigger
+		&playSoundTrigger,
+		&globalMultiplier
 	);
 
 	libraryConfig = new LibraryConfig(
@@ -49,7 +50,8 @@ void NoPhysicsLibrary::Init(float pixelsPerMeter)
 		&pixelsToMeters,
 		&ptmRatio,
 		&physIterations,
-		&notifier
+		&notifier,
+		&globalMultiplier
 	);
 
 	getData = new GetData(
@@ -388,7 +390,7 @@ void NoPhysicsLibrary::UpdateStates()
 		DynamicBody* dB = (DynamicBody*)b;
 
 		// Detect moving
-		if (PhysMath::Abs(PhysMath::Abs(dB->velocity.x)) > 0.001f || PhysMath::Abs(PhysMath::Abs(dB->velocity.y)) > 0.001f)
+		if (PhysMath::Abs(dB->velocity.x) > 0.01f || PhysMath::Abs(dB->velocity.y) > 0.01f)
 		{
 			if (!dB->prevBodyState.Get((int)BodyState::MOVING)) dB->bodyStateEnter.Set((int)BodyState::MOVING, true);
 			dB->bodyStateStay.Set((int)BodyState::MOVING, true);
@@ -399,6 +401,8 @@ void NoPhysicsLibrary::UpdateStates()
 
 		for (unsigned int i = 1; i < 5; ++i)
 		{
+			if ((BodyState)i == BodyState::MOVING) continue;
+
 			if (dB->IsBodyStill((BodyState)i))
 			{
 				floating = false;

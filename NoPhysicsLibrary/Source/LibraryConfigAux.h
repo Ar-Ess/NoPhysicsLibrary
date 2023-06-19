@@ -9,7 +9,7 @@ struct LibraryConfig
 {
 private:
 
-	LibraryConfig(float* panRange, float* panFactor, float* pitchFactor, Flag* generalConfig, PhysVec* globalGravity, PhysVec* globalRestitution, PhysVec* globalFriction, float* pixelsToMeters, float* ptmRatio, unsigned int* physIterations, PhysAction<unsigned int, PhysID>* notifier) :
+	LibraryConfig(float* panRange, float* panFactor, float* pitchFactor, Flag* generalConfig, PhysVec* globalGravity, PhysVec* globalRestitution, PhysVec* globalFriction, float* pixelsToMeters, float* ptmRatio, unsigned int* physIterations, PhysAction<unsigned int, PhysID>* notifier, float* globalMultiplier) :
 		panRange(panRange),
 		panFactor(panFactor),
 		pitchFactor(pitchFactor),
@@ -20,7 +20,8 @@ private:
 		pixelsToMeters(pixelsToMeters),
 		ptmRatio(ptmRatio),
 		physIterations(physIterations),
-		notifier(notifier)
+		notifier(notifier),
+		globalMultiplier(globalMultiplier)
 	{}
 
 	const LibraryConfig* Access() const
@@ -141,6 +142,13 @@ public:
 		*physIterations = iterations;
 	}
 
+	// Set the global multiplier of the world
+	// It scales all the forces applied inside
+	void GlobalMultiplier(float multiplier) const
+	{
+		*globalMultiplier = multiplier;
+	}
+
 private:
 
 	float* panRange = nullptr;
@@ -154,6 +162,7 @@ private:
 	PhysVec* globalRestitution = nullptr;
 	PhysVec* globalFriction = nullptr;
 	unsigned int* physIterations = nullptr;
+	float* globalMultiplier = nullptr;
 
 	PhysAction<unsigned int, PhysID>* notifier = nullptr;
 };

@@ -95,7 +95,7 @@ void DynamicBody::ApplyForce(float x, float y, InUnit unit)
 	if (force.IsZero()) return; // If forces is null
 	force *= Conversion(unit, true);
 
-	forces.Add(new Force(force));
+	forces.Add(new Force(force * forceMultiplier * *globalMultiplier));
 }
 
 void DynamicBody::ApplyForce(PhysVec force, InUnit unit)
@@ -106,7 +106,7 @@ void DynamicBody::ApplyForce(PhysVec force, InUnit unit)
 	//-TODO: Check if it has to be times = 2 because of m^2
 	force *= Conversion(unit, true);
 
-	forces.Add(new Force(force));
+	forces.Add(new Force(force * forceMultiplier * *globalMultiplier));
 }
 
 void DynamicBody::ApplyMomentum(float momentumX, float momentumY, InUnit unit)
@@ -117,7 +117,7 @@ void DynamicBody::ApplyMomentum(float momentumX, float momentumY, InUnit unit)
 	if (momentum.IsZero()) return; // If momentum is null
 	momentum *= Conversion(unit, true);
 
-	momentums.Add(new Momentum(momentum));
+	momentums.Add(new Momentum(momentum * forceMultiplier * *globalMultiplier));
 }
 
 void DynamicBody::ApplyMomentum(PhysVec momentum, InUnit unit)
@@ -127,7 +127,7 @@ void DynamicBody::ApplyMomentum(PhysVec momentum, InUnit unit)
 
 	momentum *= Conversion(unit, true);
 
-	momentums.Add(new Momentum(momentum));
+	momentums.Add(new Momentum(momentum * forceMultiplier * *globalMultiplier));
 }
 
 void DynamicBody::GravityOffset(PhysVec offset, InUnit unit)

@@ -103,6 +103,7 @@ private:
 	// CONFIG VARIABLES
 	// - General
 	Flag generalConfig = {}; // Debug Collisions (0) | Upwards Pitch (1) | Downwards Pitch (2) | Freq Attenuation (3) | Sound Oclusion (4) | SoundDelay (5)
+	float globalMultiplier = 1;
 
 	//_____________________
 	// - Physics
