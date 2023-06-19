@@ -24,6 +24,7 @@ bool D1WorldScene::Start()
 	groundTex  = texture->Load("Textures/ts_demos_01.png");
 	woodBoxTex = texture->Load("Textures/ts_demos_02.png");
 	doorTex    = texture->Load("Textures/ts_demos_03.png");
+	rockTex    = texture->Load("Textures/ts_demos_04.png");
 
 	door = physics->CreateBody(2935, 220, 80,  120)->Static();
 	
@@ -131,6 +132,9 @@ bool D1WorldScene::CleanUp()
 
 	texture->UnLoad(background);
 	texture->UnLoad(groundTex);
+	texture->UnLoad(woodBoxTex);
+	texture->UnLoad(doorTex);
+	texture->UnLoad(rockTex);
 
 	return true;
 }
@@ -156,7 +160,9 @@ void D1WorldScene::Draw()
 			break;
 
 		case BodyClass::DYNAMIC_BODY: 
-			render->DrawRectangle(b->Rect(InUnit::IN_PIXELS), { 0, 200, 0, 220 });
+			if (b->Id() == player->Id()) render->DrawRectangle(b->Rect(InUnit::IN_PIXELS), { 0, 200, 0, 220 });
+			else render->DrawTexture(rockTex, b->Position(InUnit::IN_PIXELS), { r.w / 2600, r.h / 2600 }, true);
+
 			break;
 
 		case BodyClass::LIQUID_BODY: 
