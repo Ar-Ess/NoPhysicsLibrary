@@ -89,6 +89,7 @@ private: // Methods
 private: // Variables
 
 	friend class Physics; // Necessary for accessing SecondNewton/FirstBuxeda
+	friend class Acoustics; // Necessary for accessing SecondNewton/FirstBuxeda
 	friend class NoPhysicsLibrary; // Necessary to update states
 	friend struct BodyCreation;
 

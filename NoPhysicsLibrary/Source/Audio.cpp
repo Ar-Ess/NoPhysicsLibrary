@@ -39,17 +39,21 @@ void Audio::Playback(SoundData* data)
     audio->setPause(h, false);
 }
 
-void Audio::LoadSound(const char* path)
+bool Audio::LoadSound(const char* path)
 {
+    int i = sounds.Size();
     Sound* sound = new Sound(lowpass, pitch);
 
     if (sound->Load(path)) sounds.Add(sound);
     else delete sound;
 
+    return sounds.Size() > i;
 }
 
 void Audio::CleanUp()
 {
+    audio->stopAll();
+
     sounds.Clear();
 
     audio->deinit();

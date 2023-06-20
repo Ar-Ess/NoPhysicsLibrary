@@ -2,6 +2,7 @@
 
 #include "Ray.h"
 #include "PhysRect.h"
+#include "Define.h"
 
 class Body;
 template<class> class PhysArray;
@@ -51,7 +52,7 @@ class Acoustics
 
 private:
 
-	Acoustics(PhysArray<Body*>* bodies, PhysArray<SoundData*>* soundDataList, PhysArray<unsigned int*>* gasIndex, PhysArray<unsigned int*>* liquidIndex, const float* panRange, const float* panFactor, const float* pitchVariationFactor, const Flag* generalConfig);
+	Acoustics(PhysArray<Body*>* bodies, PhysArray<SoundData*>* soundDataList, PhysArray<unsigned int*>* gasIndex, PhysArray<unsigned int*>* liquidIndex, const float* panRange, const float* panFactor, const float* pitchVariationFactor, const Flag* generalConfig, const float* globalVolumeAttFactor);
 
 	void Simulate(Body* emitter, Body* listener);
 
@@ -98,5 +99,6 @@ private:
 	const float* panFactor = nullptr;
 	const float* pitchVariationFactor = nullptr;
 	const Flag* generalConfig = nullptr;
+	const float* globalVolumeAttFactor = nullptr;
 
 };

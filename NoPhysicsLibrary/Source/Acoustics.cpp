@@ -27,7 +27,7 @@ bool Acoustics::RayData::operator==(RayData data) const
 	return body == data.body;
 }
 
-Acoustics::Acoustics(PhysArray<Body*>* bodies, PhysArray<SoundData*>* soundDataList, PhysArray<unsigned int*>* gasIndex, PhysArray<unsigned int*>* liquidIndex, const float* panRange, const float* panFactor, const float* pitchVariationFactor, const Flag* generalConfig)
+Acoustics::Acoustics(PhysArray<Body*>* bodies, PhysArray<SoundData*>* soundDataList, PhysArray<unsigned int*>* gasIndex, PhysArray<unsigned int*>* liquidIndex, const float* panRange, const float* panFactor, const float* pitchVariationFactor, const Flag* generalConfig, const float* globalVolumeAttFactor)
 {
 	this->bodies = bodies;
 	this->soundDataList = soundDataList;
@@ -38,17 +38,22 @@ Acoustics::Acoustics(PhysArray<Body*>* bodies, PhysArray<SoundData*>* soundDataL
 	this->liquidIndex = liquidIndex;
 	this->agents = new RaycastAgents();
 	this->generalConfig = generalConfig;
+	this->globalVolumeAttFactor = globalVolumeAttFactor;
 }
 
 void Acoustics::Simulate(Body* emitter, Body* listener)
 {
-	if (!listener || listener->id == emitter->id) return NoListenerLogic(emitter);
+	if (!listener || listener->id == emitter->id)
+	{
+		emitter->acousticDataList.Clear();
+		return;
+	}
 
 	agents->SetAgents(emitter, listener);
 
 	GasBody* environment = GetEnvironmentBody();
 	LiquidBody* flood = GetFloodBody();
-	if (environment == nullptr && flood == nullptr) return; // This assures us that the emitter is inside a gas or liquid
+	if (environment == nullptr && flood == nullptr) return emitter->acousticDataList.Clear(); // This assures us that the emitter is inside a gas or liquid
 
 	PhysRay ray = PhysRay(emitter->EmissionPoint(InUnit::IN_METERS), listener->ReceptionPoint(InUnit::IN_METERS));
 	const float totalDistance = PhysMath::Distance(ray);
@@ -61,7 +66,11 @@ void Acoustics::Simulate(Body* emitter, Body* listener)
 	RayData find1 = RayData(environment, PhysRay(), nullptr);
 	RayData find2 = RayData(flood, PhysRay(), nullptr);
 
-	if (!VoidSecurityLogic(&data, environment, flood, totalDistance)) return;
+	if (!VoidSecurityLogic(&data, environment, flood, totalDistance))
+	{
+		emitter->acousticDataList.Clear();
+		return;
+	}
 
 	ListenerLogic(&data, totalDistance);
 
@@ -107,6 +116,9 @@ void Acoustics::ListenerLogic(PhysArray<RayData*>* data, const float totalDistan
 		for (unsigned int i = 0; i < data->Size(); ++i)
 		{
 			RayData* rD = data->At(i);
+			if (!(agents->listener->Class() == BodyClass::DYNAMIC_BODY && // If body is excluded from collision, don't affect
+				((DynamicBody*)agents->listener)->IsIdExcludedFromCollision(rD->body))) continue;
+
 
 			if (soundOclusion)
 				volume -= ComputeVolumeAttenuation(rD->innerDistance, rD->body);
@@ -130,7 +142,7 @@ void Acoustics::ListenerLogic(PhysArray<RayData*>* data, const float totalDistan
 		if (noVolume) continue;
 
 		if ((pitch > 1 && !generalConfig->Get(1)) || (pitch < 1 && !generalConfig->Get(2))) pitch = 1;
-		if (generalConfig->Get(5)) timeDelay = 0;
+		if (!generalConfig->Get(5)) timeDelay = 0;
 
 		soundDataList->Add(new SoundData(aData->index, pan, volume, timeDelay, FINAL_FREQ(cutoff), FINAL_RES(res), FINAL_PITCH(pitch, *pitchVariationFactor)));
 	}
@@ -243,7 +255,7 @@ float Acoustics::ComputeVolume(float distance, float spl)
 {
 	// Compute the sound attenuation over distance
 	// Final SPL = Initial SPL - 20*Log(distance / 1)
-	float fSPL = spl - 20 * PhysMath::Log(distance);
+	float fSPL = spl - (20 * PhysMath::Log(distance * *globalVolumeAttFactor * *globalVolumeAttFactor));
 
 	// Transform volume from db to linear [ 0, 1])
 	return PhysMath::LogToLinear(fSPL, maxSPL) / maxVolume;

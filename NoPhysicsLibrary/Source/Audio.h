@@ -18,7 +18,7 @@ public:
 
 	void Playback(SoundData* data);
 
-	void LoadSound(const char* path);
+	bool LoadSound(const char* path);
 
 	void CleanUp();
 

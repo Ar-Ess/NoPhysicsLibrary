@@ -24,8 +24,14 @@ public:
 private:
 
 	NoPhysicsLibrary* physics = nullptr;
+
 	SDL_Texture* background = nullptr;
 	SDL_Texture* groundTex = nullptr;
+	SDL_Texture* woodBoxTex = nullptr;
+	SDL_Texture* doorTex = nullptr;
+	SDL_Texture* rockTex = nullptr;
+
 	DynamicBody* player = nullptr;
+	StaticBody* door = nullptr;
 
 };

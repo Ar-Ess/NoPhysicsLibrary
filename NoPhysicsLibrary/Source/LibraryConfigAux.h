@@ -9,7 +9,7 @@ struct LibraryConfig
 {
 private:
 
-	LibraryConfig(float* panRange, float* panFactor, float* pitchFactor, Flag* generalConfig, PhysVec* globalGravity, PhysVec* globalRestitution, PhysVec* globalFriction, float* pixelsToMeters, float* ptmRatio, unsigned int* physIterations, PhysAction<unsigned int, PhysID>* notifier, float* globalMultiplier) :
+	LibraryConfig(float* panRange, float* panFactor, float* pitchFactor, Flag* generalConfig, PhysVec* globalGravity, PhysVec* globalRestitution, PhysVec* globalFriction, float* pixelsToMeters, float* ptmRatio, unsigned int* physIterations, PhysAction<unsigned int, PhysID>* notifier, float* globalMultiplier, float* volumeAttenuationFactor) :
 		panRange(panRange),
 		panFactor(panFactor),
 		pitchFactor(pitchFactor),
@@ -21,7 +21,8 @@ private:
 		ptmRatio(ptmRatio),
 		physIterations(physIterations),
 		notifier(notifier),
-		globalMultiplier(globalMultiplier)
+		globalMultiplier(globalMultiplier),
+		volumeAttenuationFactor(volumeAttenuationFactor)
 	{}
 
 	const LibraryConfig* Access() const
@@ -61,21 +62,21 @@ public:
 	}
 
 	// Allows the library to calculate the frequential attenuation that sounds may suffer
-	void FrequentialAttenuation(bool active)
+	void FrequentialAttenuation(bool active) const
 	{
 		generalConfig->Set(3, active);
 	}
 
 	// Allows the library to attenuate the sound volume if there are bodies inbetween
 	// the listener and the emmiter
-	void SoundOclusion(bool active)
+	void SoundOclusion(bool active) const
 	{
 		generalConfig->Set(4, active);
 	}
 
 	// Allows the library to calculate the time that the sound lasts to
 	// reach the listener and apply it as a delay
-	void SoundDelay(bool active)
+	void SoundDelay(bool active) const
 	{
 		generalConfig->Set(5, active);
 	}
@@ -149,6 +150,13 @@ public:
 		*globalMultiplier = multiplier;
 	}
 
+	// Set the global volume attenuation factor
+	// 0 for no attenuation, 1 for real attenuation, >1 for more attenuation
+	void GlobalVolumeAttenuationFactor(float factor) const
+	{
+		*volumeAttenuationFactor = factor;
+	}
+
 private:
 
 	float* panRange = nullptr;
@@ -163,6 +171,7 @@ private:
 	PhysVec* globalFriction = nullptr;
 	unsigned int* physIterations = nullptr;
 	float* globalMultiplier = nullptr;
+	float* volumeAttenuationFactor = nullptr;
 
 	PhysAction<unsigned int, PhysID>* notifier = nullptr;
 };

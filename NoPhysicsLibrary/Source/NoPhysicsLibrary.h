@@ -54,7 +54,8 @@ public:
 	bool DestroyBody(BodyClass clas);
 
 	// Load internally an audio file
-	void LoadSound(const char* path);
+	// Returns whether the sound has been loaded or not
+	bool LoadSound(const char* path);
 
 	// Calculates & returns a rectsngle that englobes all the existent bodies
 	const PhysRect ReturnScenarioRect();
@@ -116,6 +117,7 @@ private:
 	float pitchVariationFactor = 1.0f;
 	float pixelsToMeters = 20.0f;
 	float ptmRatio = 1.0f;
+	float volumeAttenuationFactor = 1.0f;
 	Body* listener = nullptr;
 	PhysTrigger playSoundTrigger;
 

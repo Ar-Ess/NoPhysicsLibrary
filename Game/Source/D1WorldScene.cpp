@@ -25,10 +25,11 @@ bool D1WorldScene::Start()
 	woodBoxTex = texture->Load("Textures/ts_demos_02.png");
 	doorTex    = texture->Load("Textures/ts_demos_03.png");
 	rockTex    = texture->Load("Textures/ts_demos_04.png");
+	waterTex   = texture->Load("Textures/ts_demos_05.png");
 
 	door = physics->CreateBody(2935, 220, 80,  120)->Static();
 	
-	player = physics->CreateBody(100, 300, 0.7 * mTp, 1.6 * mTp)->Dynamic(75);
+	player = physics->CreateBody(100, 380, 0.7 * mTp, 1.6 * mTp)->Dynamic(75);
 	//player->ForceMultiplier(3);
 	
 	player->ExcludeForCollision(door);
@@ -41,14 +42,14 @@ bool D1WorldScene::Start()
 	physics->CreateBody( 640, 240,  121, 300)->Static();
 
 	physics->CreateBody( 760, 280, 750, 260)->Liquid(400, 0.8, InUnit::IN_METERS);
-	physics->CreateBody(1322, 160, 188, 121)->Liquid(700, 1.0, InUnit::IN_METERS);
+	physics->CreateBody(1322, 160, 188, 130)->Liquid(700, 1.0, InUnit::IN_METERS);
 
 	physics->CreateBody(1510, 110, 360, 430)->Static();
 	physics->CreateBody(1510,  20, 500,  91)->Static();
 
 	physics->CreateBody(1790, -50,  70,  70)->Dynamic(20);
 
-	physics->CreateBody(2900, 340, 150, 210)->Static();
+	physics->CreateBody(2900, 340, 150, 200)->Static();
 	
 
 	return true;
@@ -135,6 +136,7 @@ bool D1WorldScene::CleanUp()
 	texture->UnLoad(woodBoxTex);
 	texture->UnLoad(doorTex);
 	texture->UnLoad(rockTex);
+	texture->UnLoad(waterTex);
 
 	return true;
 }
@@ -154,9 +156,39 @@ void D1WorldScene::Draw()
 		switch (b->Class())
 		{
 		case BodyClass::STATIC_BODY:  
-			if (i != 0) render->DrawTexture(groundTex, b->Position(InUnit::IN_PIXELS), {1.0, 1.0}, true, &r);
-			else render->DrawTexture(doorTex, b->Position(InUnit::IN_PIXELS), { r.w / 360, r.h / 600 }, true);
-			render->DrawTexture(woodBoxTex, b->Position(InUnit::IN_PIXELS), {r.w / 1896, r.h / 1896}, true); 
+			if (i != 0)
+			{
+				Point finalSize = { r.w / 1896, r.h / 1896 };
+				render->DrawTexture(groundTex, b->Position(InUnit::IN_PIXELS), { 1.0, 1.0 }, true, &r);
+				if (r.w >= r.h && r.w / r.h < 2)
+				{
+					render->DrawTexture(woodBoxTex, b->Position(InUnit::IN_PIXELS), finalSize, true);
+				}
+				else if (r.h >= r.w && r.h / r.w < 2)
+				{
+					render->DrawTexture(woodBoxTex, b->Position(InUnit::IN_PIXELS), finalSize, true);
+				}
+				else
+				{
+					if (r.h > r.w)
+					{
+						render->DrawTexture(woodBoxTex, b->Position(InUnit::IN_PIXELS), { finalSize.x, finalSize.y / 3 }, true);
+						render->DrawTexture(woodBoxTex, Point(b->Position(InUnit::IN_PIXELS)) + Point{ 0, (r.h / 3) }, { finalSize.x, finalSize.y / 3 }, true);
+						render->DrawTexture(woodBoxTex, Point(b->Position(InUnit::IN_PIXELS)) + Point{ 0, (r.h / 3) * 2 }, { finalSize.x, finalSize.y / 3 }, true);
+					}
+					if (r.w > r.h)
+					{
+						render->DrawTexture(woodBoxTex, b->Position(InUnit::IN_PIXELS), { finalSize.x / 3, finalSize.y }, true);
+						render->DrawTexture(woodBoxTex, Point(b->Position(InUnit::IN_PIXELS)) + Point{ (r.w / 3), 0 }, { finalSize.x / 3, finalSize.y }, true);
+						render->DrawTexture(woodBoxTex, Point(b->Position(InUnit::IN_PIXELS)) + Point{ (r.w / 3) * 2, 0 }, { finalSize.x / 3, finalSize.y }, true);
+					}
+				}
+			}
+			else
+			{
+				render->DrawTexture(doorTex, b->Position(InUnit::IN_PIXELS), { r.w / 360, r.h / 600 }, true);
+				render->DrawTexture(woodBoxTex, b->Position(InUnit::IN_PIXELS), { r.w / 1896, r.h / 1896 }, true);
+			}
 			break;
 
 		case BodyClass::DYNAMIC_BODY: 
@@ -165,8 +197,8 @@ void D1WorldScene::Draw()
 
 			break;
 
-		case BodyClass::LIQUID_BODY: 
-			render->DrawRectangle(b->Rect(InUnit::IN_PIXELS), { 0, 0, 200, 220 }); 
+		case BodyClass::LIQUID_BODY:
+			render->DrawTexture(waterTex, b->Position(InUnit::IN_PIXELS), { r.w / 300, r.h / 300 }, true);
 			break;
 		}
 

@@ -19,7 +19,7 @@ void NoPhysicsLibrary::Init(float pixelsPerMeter)
 	// You've alreay initialized the library once
 	DOUBLE_INIT_CHECK();
 	physics = new Physics(&bodies, &generalConfig, &gasIndex, &liquidIndex, &pixelsToMeters, &physIterations);
-	acoustics = new Acoustics(&bodies, &soundDataList, &gasIndex, &liquidIndex, &panRange, &panFactor, &pitchVariationFactor, &generalConfig);
+	acoustics = new Acoustics(&bodies, &soundDataList, &gasIndex, &liquidIndex, &panRange, &panFactor, &pitchVariationFactor, &generalConfig, &volumeAttenuationFactor);
 	audio = new Audio();
 
 	notifier += std::bind(&NoPhysicsLibrary::UpdateNotifier, this, std::placeholders::_1, std::placeholders::_2);
@@ -51,7 +51,8 @@ void NoPhysicsLibrary::Init(float pixelsPerMeter)
 		&ptmRatio,
 		&physIterations,
 		&notifier,
-		&globalMultiplier
+		&globalMultiplier,
+		&volumeAttenuationFactor
 	);
 
 	getData = new GetData(
@@ -166,10 +167,10 @@ bool NoPhysicsLibrary::DestroyBody(BodyClass clas)
 	return ret;
 }
 
-void NoPhysicsLibrary::LoadSound(const char* path)
+bool NoPhysicsLibrary::LoadSound(const char* path)
 {
 	INIT_CHECK();
-	audio->LoadSound(path);
+	return audio->LoadSound(path);
 }
 
 void NoPhysicsLibrary::PausePhysics(bool pause)
