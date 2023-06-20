@@ -29,9 +29,11 @@ private:
 	SDL_Texture* groundTex = nullptr;
 	SDL_Texture* woodBoxTex = nullptr;
 	SDL_Texture* doorTex = nullptr;
-	SDL_Texture* rockTex = nullptr;
+	SDL_Texture* airTex = nullptr;
+	SDL_Texture* postTex = nullptr;
 
 	DynamicBody* player = nullptr;
+	StaticBody* emmiter = nullptr;
 	StaticBody* door = nullptr;
 
 };

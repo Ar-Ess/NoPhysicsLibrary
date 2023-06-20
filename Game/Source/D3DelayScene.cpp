@@ -17,45 +17,63 @@ bool D3DelayScene::Start()
 	physics->Configure()->PhysicsIterations(90);
 	physics->SetPhysicsPreset(PhysicsPreset::DEFAULT_PHYSICS_PRESET);
 	physics->Configure()->GlobalGravity({ 0, 9.8f * 3 }, InUnit::IN_METERS);
+	bool tr = physics->LoadSound("Assets/Audio/bounce.wav");
 	float mTp = physics->Get()->MetersToPixels();
-
+	physics->Configure()->FrequentialAttenuation(false);
+	physics->Configure()->SoundDelay(true);
+	physics->Configure()->SoundOclusion(false);
+	physics->Configure()->PitchVariationFactor(0, false, false);
 
 	background = texture->Load("Textures/bg_demos_01.png");
 	groundTex = texture->Load("Textures/ts_demos_01.png");
 	woodBoxTex = texture->Load("Textures/ts_demos_02.png");
 	doorTex = texture->Load("Textures/ts_demos_03.png");
-	rockTex = texture->Load("Textures/ts_demos_04.png");
+	airTex = texture->Load("Textures/ts_demos_06.png");
+	postTex = texture->Load("Textures/ts_demos_07.png");
 
-	door = physics->CreateBody(2935, 220, 80, 120)->Static();
-
-	player = physics->CreateBody(100, 300, 0.7 * mTp, 1.6 * mTp)->Dynamic(75);
-	//player->ForceMultiplier(3);
-
+	door = physics->CreateBody(2940, 460, 80, 120)->Static();
+	player = physics->CreateBody(100, 0, 0.7 * mTp, 1.6 * mTp)->Dynamic(75);
+	physics->Configure()->Listener(player);
+	emmiter = physics->CreateBody(2390, 470, 428 / 4.5, 1440 / 4.5)->Static();
+	emmiter->EmissionPoint({-40, -140}, InUnit::IN_PIXELS);
 	player->ExcludeForCollision(door);
+	player->ExcludeForCollision(emmiter);
 
-	physics->CreateBody(0, 540, 3060, 180)->Static();
-	physics->CreateBody(0, -200, 10, 920)->Static();
+	Body* gas = physics->CreateBody(0, 0, 1, 1)->Gas(0.4f, { 3.0f, 0.1f }, InUnit::IN_METERS);
+
+	// Limits
+	physics->CreateBody(   0, 530, 1275, 230)->Static();
+	physics->CreateBody(1275, 555,  360, 230)->Static();
+	physics->CreateBody(1635, 580, 1410, 230)->Static();
+
+	physics->CreateBody(0, -500, 10, 1220)->Static();
 	physics->CreateBody(3050, -200, 10, 920)->Static();
-	physics->CreateBody(400, 440, 121, 100)->Static();
-	physics->CreateBody(520, 340, 121, 200)->Static();
-	physics->CreateBody(640, 240, 121, 300)->Static();
 
-	physics->CreateBody(760, 280, 750, 260)->Liquid(400, 0.8, InUnit::IN_METERS);
-	physics->CreateBody(1322, 160, 188, 121)->Liquid(700, 1.0, InUnit::IN_METERS);
+	// Stairs
+	float sW = 150;
+	float sH = 90;
+	for (int stair = 0; stair < 5; ++stair) 
+		physics->CreateBody(sW * stair, 150 + sH * stair, sW, 380 - sH * stair)->Static();
+	
+	// Celing
+	physics->CreateBody(10, -380, 890, 400)->Static();
+	physics->CreateBody(900,  -380, 750, 800)->Static();
+	physics->CreateBody(1650, -350, 1400, 650)->Static();
+	physics->CreateBody(2550,  300,  510, 130)->Static();
 
-	physics->CreateBody(1510, 110, 360, 430)->Static();
-	physics->CreateBody(1510, 20, 500, 91)->Static();
-
-	physics->CreateBody(1790, -50, 70, 70)->Dynamic(20);
-
-	physics->CreateBody(2900, 340, 150, 210)->Static();
-
+	Rect r = physics->ReturnScenarioRect();
+	r.w -= (60 * 6) - 30;
+	r.x += (60 * 6) - 30;
+	r.y -= 200;
+	gas->Size(r.w, r.h, InUnit::IN_PIXELS);
+	gas->Position(r.x, r.y, InUnit::IN_PIXELS);
 
 	return true;
 }
 
 bool D3DelayScene::Update(float dt)
 {
+	static float timer = 0;
 	bool ground = player->IsBodyStill(BodyState::ON_GROUND);
 	bool air = player->IsBodyStill(BodyState::FLOATING);
 	bool moving = player->IsBodyStill(BodyState::MOVING);
@@ -66,9 +84,9 @@ bool D3DelayScene::Update(float dt)
 
 	// Camera movement
 	PhysVec pos = player->Position(InUnit::IN_PIXELS);
-	if (pos.x >= 625) render->camera.rect.x = pos.x - 625;
+	if (pos.x >= 425) render->camera.rect.x = pos.x - 425;
 	if (pos.y <= 360) render->camera.rect.y = pos.y - 360;
-	if (pos.x < 625) render->camera.rect.x = 0;
+	if (pos.x < 425) render->camera.rect.x = 0;
 	if (pos.y > 360 + 48) render->camera.rect.y = 0;
 	if (render->camera.rect.x > 1780) render->camera.rect.x = 1780;
 
@@ -116,7 +134,7 @@ bool D3DelayScene::Update(float dt)
 
 	if (input->GetKey(SDL_SCANCODE_W) == KeyState::KEY_DOWN &&
 		MathUtils::CheckCollision(door->Rect(InUnit::IN_PIXELS), player->Rect(InUnit::IN_PIXELS)))
-		SetScene(Scenes::D2_SCENE);
+		SetScene(Scenes::D3_SCENE);
 
 	//Change scene
 	if (input->GetKey(SDL_SCANCODE_BACKSPACE) == KeyState::KEY_DOWN) SetScene(Scenes::INITIAL_SCENE);
@@ -134,7 +152,8 @@ bool D3DelayScene::CleanUp()
 	texture->UnLoad(groundTex);
 	texture->UnLoad(woodBoxTex);
 	texture->UnLoad(doorTex);
-	texture->UnLoad(rockTex);
+	texture->UnLoad(airTex);
+	texture->UnLoad(postTex);
 
 	return true;
 }
@@ -154,19 +173,57 @@ void D3DelayScene::Draw()
 		switch (b->Class())
 		{
 		case BodyClass::STATIC_BODY:
-			if (i != 0) render->DrawTexture(groundTex, b->Position(InUnit::IN_PIXELS), { 1.0, 1.0 }, true, &r);
-			else render->DrawTexture(doorTex, b->Position(InUnit::IN_PIXELS), { r.w / 360, r.h / 600 }, true);
-			render->DrawTexture(woodBoxTex, b->Position(InUnit::IN_PIXELS), { r.w / 1896, r.h / 1896 }, true);
+			if (b == emmiter)
+			{
+				render->DrawTexture(postTex, b->Position(InUnit::IN_PIXELS), { r.w / 428, r.h / 1440 }, true, nullptr, 0, SDL_FLIP_HORIZONTAL);
+				render->DrawRectangle(Rect(b->EmissionPoint(InUnit::IN_PIXELS), 4, 4));
+				break;
+			}
+			if (i != 0)
+			{
+				Point finalSize = { r.w / 1896, r.h / 1896 };
+				render->DrawTexture(groundTex, b->Position(InUnit::IN_PIXELS), { 1.0, 1.0 }, true, &r);
+				if (r.w >= r.h && r.w / r.h < 1.8)
+				{
+					render->DrawTexture(woodBoxTex, b->Position(InUnit::IN_PIXELS), finalSize, true);
+				}
+				else if (r.h >= r.w && r.h / r.w < 1.8)
+				{
+					render->DrawTexture(woodBoxTex, b->Position(InUnit::IN_PIXELS), finalSize, true);
+				}
+				else
+				{
+					if (r.h > r.w)
+					{
+						render->DrawTexture(woodBoxTex, b->Position(InUnit::IN_PIXELS), { finalSize.x, finalSize.y / 3 }, true);
+						render->DrawTexture(woodBoxTex, Point(b->Position(InUnit::IN_PIXELS)) + Point{ 0, (r.h / 3) }, { finalSize.x, finalSize.y / 3 }, true);
+						render->DrawTexture(woodBoxTex, Point(b->Position(InUnit::IN_PIXELS)) + Point{ 0, (r.h / 3) * 2 }, { finalSize.x, finalSize.y / 3 }, true);
+					}
+					if (r.w > r.h)
+					{
+						render->DrawTexture(woodBoxTex, b->Position(InUnit::IN_PIXELS), { finalSize.x / 3, finalSize.y }, true);
+						render->DrawTexture(woodBoxTex, Point(b->Position(InUnit::IN_PIXELS)) + Point{ (r.w / 3), 0 }, { finalSize.x / 3, finalSize.y }, true);
+						render->DrawTexture(woodBoxTex, Point(b->Position(InUnit::IN_PIXELS)) + Point{ (r.w / 3) * 2, 0 }, { finalSize.x / 3, finalSize.y }, true);
+					}
+				}
+			}
+			else
+			{
+				render->DrawTexture(doorTex, b->Position(InUnit::IN_PIXELS), { r.w / 360, r.h / 600 }, true);
+				render->DrawTexture(woodBoxTex, b->Position(InUnit::IN_PIXELS), { r.w / 1896, r.h / 1896 }, true);
+			}
 			break;
 
 		case BodyClass::DYNAMIC_BODY:
-			if (b->Id() == player->Id()) render->DrawRectangle(b->Rect(InUnit::IN_PIXELS), { 0, 200, 0, 220 });
-			else render->DrawTexture(rockTex, b->Position(InUnit::IN_PIXELS), { r.w / 2600, r.h / 2600 }, true);
-
+				render->DrawRectangle(b->Rect(InUnit::IN_PIXELS), { 0, 200, 0, 220 });
 			break;
 
 		case BodyClass::LIQUID_BODY:
 			render->DrawRectangle(b->Rect(InUnit::IN_PIXELS), { 0, 0, 200, 220 });
+			break;
+
+		case BodyClass::GAS_BODY:
+			render->DrawTexture(airTex, b->Position(InUnit::IN_PIXELS), { r.w / 5000, r.h / 5000 }, true);
 			break;
 		}
 
