@@ -46,7 +46,7 @@ bool D3DelayScene::Start()
 	player->ExcludeForCollision(emmiter);
 	for (int i = 0; i < 2; ++i) player->ExcludeForCollision(buttons[i]);
 
-	Body* gas = physics->CreateBody(0, 0, 1, 1)->Gas(0.4f, { 3.0f, 0.1f }, InUnit::IN_METERS);
+	gas = physics->CreateBody(0, 0, 1, 1)->Gas(0.4f, { 3.0f, 0.1f }, InUnit::IN_METERS);
 
 	// Limits
 	physics->CreateBody(   0, 530, 1275, 230)->Static();
@@ -62,7 +62,7 @@ bool D3DelayScene::Start()
 	for (int stair = 0; stair < 5; ++stair) 
 		physics->CreateBody(sW * stair, 150 + sH * stair, sW, 380 - sH * stair)->Static();
 	
-	// Celing
+	// Roof
 	physics->CreateBody(10, -380, 890, 400)->Static();
 	physics->CreateBody(900,  -380, 750, 800)->Static();
 	physics->CreateBody(1650, -350, 1400, 650)->Static();
@@ -277,22 +277,43 @@ void D3DelayScene::ChangeMaterial()
 	{
 	case 0:
 	{
+		Material mat;
+		mat.BuildGas(-1, 100, -1, 10);
+		gas->SetMaterial(mat);
 		break;
 	}
 	case 1:
 	{
+		Material mat;
+		mat.BuildGas(-1, -1, -1, 0.4);
+		gas->SetMaterial(mat);
+
+		obstacle = physics->CreateBody(2030, 380, 180, 180)->Static();
+
 		break;
 	}
 	case 2:
 	{
+		Material mat;
+		mat.BuildSolid(0.01, -1, 100000); // Rubber
+		obstacle->SetMaterial(mat);
+
 		break;
 	}
 	case 3:
 	{
+		physics->DestroyBody(obstacle);
+		obstacle = nullptr;
+
+		obstacle = physics->CreateBody(2030, 380, 180, 180)->Liquid(400, 0.8, InUnit::IN_METERS);
 		break;
 	}
 	case 4:
 	{
+		Material mat;
+		mat.BuildLiquid(-1, 0.92, -1, 100000); // Acetone
+		obstacle->SetMaterial(mat);
+
 		break;
 	}
 	}

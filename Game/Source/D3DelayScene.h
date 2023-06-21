@@ -39,7 +39,9 @@ private:
 	StaticBody* emmiter = nullptr;
 	StaticBody* counter = nullptr;
 	StaticBody* door = nullptr;
+	GasBody* gas = nullptr;
 	Body* buttons[2] = {nullptr, nullptr};
+	Body* obstacle = nullptr;
 
 	int step = 0;
 	bool stepDone = false;

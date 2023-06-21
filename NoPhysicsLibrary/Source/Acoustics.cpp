@@ -5,6 +5,7 @@
 #include "StaticBody.h"
 #include "LiquidBody.h"
 #include "PhysArray.h"
+#include "PhysID.h"
 
 #define MAX_FREQ 22000
 #define	FINAL_FREQ(x) x * MAX_FREQ
@@ -116,8 +117,8 @@ void Acoustics::ListenerLogic(PhysArray<RayData*>* data, const float totalDistan
 		for (unsigned int i = 0; i < data->Size(); ++i)
 		{
 			RayData* rD = data->At(i);
-			if (!(agents->listener->Class() == BodyClass::DYNAMIC_BODY && // If body is excluded from collision, don't affect
-				((DynamicBody*)agents->listener)->IsIdExcludedFromCollision(rD->body))) continue;
+			if (agents->listener->Class() == BodyClass::DYNAMIC_BODY && // If body is excluded from collision, don't affect
+				((DynamicBody*)agents->listener)->IsIdExcludedFromCollision(rD->body)) continue;
 
 
 			if (soundOclusion)
@@ -274,7 +275,7 @@ float Acoustics::ComputeTimeDelay(float distance, Body* obstacle, float& outVelo
 	case BodyClass::DYNAMIC_BODY:
 	{
 		DynamicBody* solid = (DynamicBody*)obstacle;
-		multiplier = solid->YoungModulus();
+		multiplier = solid->YoungModulus() * 1000000000.0;
 		break;
 	}
 	case BodyClass::STATIC_BODY:

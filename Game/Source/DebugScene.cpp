@@ -58,7 +58,7 @@ bool DebugScene::Start()
 	LiquidBody* l = npl->CreateBody(PhysRect{ 900, 400, PhysVec(metersToPixels * 2.6f, metersToPixels * 2.1f) })
 		->Liquid(997, 1.0f, InUnit::IN_METERS);
 	Material mat;
-	mat.BuildLiquid(0.09, -1, -1, -1, -1);
+	mat.BuildLiquid(0.09, -1, -1, -1);
 	l->SetMaterial(mat);
 
 	l = npl->CreateBody(PhysRect{ 1850, 550, 20, 60 })
