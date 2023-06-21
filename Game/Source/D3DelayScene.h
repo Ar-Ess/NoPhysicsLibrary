@@ -21,6 +21,8 @@ public:
 
 	void Draw();
 
+	void ChangeMaterial();
+
 private:
 
 	NoPhysicsLibrary* physics = nullptr;
@@ -31,9 +33,15 @@ private:
 	SDL_Texture* doorTex = nullptr;
 	SDL_Texture* airTex = nullptr;
 	SDL_Texture* postTex = nullptr;
+	SDL_Texture* buttonTex = nullptr;
 
 	DynamicBody* player = nullptr;
 	StaticBody* emmiter = nullptr;
+	StaticBody* counter = nullptr;
 	StaticBody* door = nullptr;
+	Body* buttons[2] = {nullptr, nullptr};
+
+	int step = 0;
+	bool stepDone = false;
 
 };

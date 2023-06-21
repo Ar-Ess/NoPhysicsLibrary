@@ -17,6 +17,7 @@ bool D3DelayScene::Start()
 	physics->Configure()->PhysicsIterations(90);
 	physics->SetPhysicsPreset(PhysicsPreset::DEFAULT_PHYSICS_PRESET);
 	physics->Configure()->GlobalGravity({ 0, 9.8f * 3 }, InUnit::IN_METERS);
+	physics->Configure()->PanRange(15, InUnit::IN_METERS);
 	bool tr = physics->LoadSound("Assets/Audio/bounce.wav");
 	float mTp = physics->Get()->MetersToPixels();
 	physics->Configure()->FrequentialAttenuation(false);
@@ -30,14 +31,20 @@ bool D3DelayScene::Start()
 	doorTex = texture->Load("Textures/ts_demos_03.png");
 	airTex = texture->Load("Textures/ts_demos_06.png");
 	postTex = texture->Load("Textures/ts_demos_07.png");
+	buttonTex = texture->Load("Textures/ts_demos_08.png");
 
 	door = physics->CreateBody(2940, 460, 80, 120)->Static();
+	
+	buttons[0] = physics->CreateBody(1550, 470, 45, 45)->Static();
+	buttons[1] = physics->CreateBody(1750, 500, 45, 45)->Static();
+
 	player = physics->CreateBody(100, 0, 0.7 * mTp, 1.6 * mTp)->Dynamic(75);
 	physics->Configure()->Listener(player);
 	emmiter = physics->CreateBody(2390, 470, 428 / 4.5, 1440 / 4.5)->Static();
 	emmiter->EmissionPoint({-40, -140}, InUnit::IN_PIXELS);
 	player->ExcludeForCollision(door);
 	player->ExcludeForCollision(emmiter);
+	for (int i = 0; i < 2; ++i) player->ExcludeForCollision(buttons[i]);
 
 	Body* gas = physics->CreateBody(0, 0, 1, 1)->Gas(0.4f, { 3.0f, 0.1f }, InUnit::IN_METERS);
 
@@ -59,11 +66,12 @@ bool D3DelayScene::Start()
 	physics->CreateBody(10, -380, 890, 400)->Static();
 	physics->CreateBody(900,  -380, 750, 800)->Static();
 	physics->CreateBody(1650, -350, 1400, 650)->Static();
+	counter = physics->CreateBody(1840, 150, 550, 100)->Static();
 	physics->CreateBody(2550,  300,  510, 130)->Static();
 
 	Rect r = physics->ReturnScenarioRect();
-	r.w -= (60 * 6) - 30;
-	r.x += (60 * 6) - 30;
+	r.w -= (60 * 26);
+	r.x += (60 * 26);
 	r.y -= 200;
 	gas->Size(r.w, r.h, InUnit::IN_PIXELS);
 	gas->Position(r.x, r.y, InUnit::IN_PIXELS);
@@ -132,9 +140,18 @@ bool D3DelayScene::Update(float dt)
 
 	Draw();
 
-	if (input->GetKey(SDL_SCANCODE_W) == KeyState::KEY_DOWN &&
-		MathUtils::CheckCollision(door->Rect(InUnit::IN_PIXELS), player->Rect(InUnit::IN_PIXELS)))
-		SetScene(Scenes::D3_SCENE);
+	if (input->GetKey(SDL_SCANCODE_W) == KeyState::KEY_DOWN)
+	{
+		if (stepDone && MathUtils::CheckCollision(buttons[0]->Rect(InUnit::IN_PIXELS), player->Rect(InUnit::IN_PIXELS)))
+			ChangeMaterial();
+		else if (MathUtils::CheckCollision(buttons[1]->Rect(InUnit::IN_PIXELS), player->Rect(InUnit::IN_PIXELS)))
+		{
+			stepDone = true;
+			emmiter->Play(0, 100);
+		}
+		else if (MathUtils::CheckCollision(door->Rect(InUnit::IN_PIXELS), player->Rect(InUnit::IN_PIXELS)))
+			SetScene(Scenes::D3_SCENE);
+	}
 
 	//Change scene
 	if (input->GetKey(SDL_SCANCODE_BACKSPACE) == KeyState::KEY_DOWN) SetScene(Scenes::INITIAL_SCENE);
@@ -154,6 +171,7 @@ bool D3DelayScene::CleanUp()
 	texture->UnLoad(doorTex);
 	texture->UnLoad(airTex);
 	texture->UnLoad(postTex);
+	texture->UnLoad(buttonTex);
 
 	return true;
 }
@@ -173,15 +191,32 @@ void D3DelayScene::Draw()
 		switch (b->Class())
 		{
 		case BodyClass::STATIC_BODY:
-			if (b == emmiter)
+		{
+			Point finalSize = { r.w / 1896, r.h / 1896 };
+			     if (b == counter)
+			{
+				render->DrawRectangle(r, { 0, 0, 0, 255 });
+				//render->DrawTexture(woodBoxTex, b->Position(InUnit::IN_PIXELS), finalSize, true);
+				break;
+			}
+			else if (b == emmiter)
 			{
 				render->DrawTexture(postTex, b->Position(InUnit::IN_PIXELS), { r.w / 428, r.h / 1440 }, true, nullptr, 0, SDL_FLIP_HORIZONTAL);
 				render->DrawRectangle(Rect(b->EmissionPoint(InUnit::IN_PIXELS), 4, 4));
 				break;
 			}
-			if (i != 0)
+			else if (b == door)
 			{
-				Point finalSize = { r.w / 1896, r.h / 1896 };
+				render->DrawTexture(doorTex, b->Position(InUnit::IN_PIXELS), { r.w / 360, r.h / 600 }, true);
+				render->DrawTexture(woodBoxTex, b->Position(InUnit::IN_PIXELS), { r.w / 1896, r.h / 1896 }, true);
+				break;
+			}
+			else if (b == buttons[0] || b == buttons[1])
+			{
+				render->DrawTexture(buttonTex, b->Position(InUnit::IN_PIXELS), { r.w / 620, r.h / 620 }, true);
+			}
+			else
+			{
 				render->DrawTexture(groundTex, b->Position(InUnit::IN_PIXELS), { 1.0, 1.0 }, true, &r);
 				if (r.w >= r.h && r.w / r.h < 1.8)
 				{
@@ -207,13 +242,8 @@ void D3DelayScene::Draw()
 					}
 				}
 			}
-			else
-			{
-				render->DrawTexture(doorTex, b->Position(InUnit::IN_PIXELS), { r.w / 360, r.h / 600 }, true);
-				render->DrawTexture(woodBoxTex, b->Position(InUnit::IN_PIXELS), { r.w / 1896, r.h / 1896 }, true);
-			}
 			break;
-
+		}
 		case BodyClass::DYNAMIC_BODY:
 				render->DrawRectangle(b->Rect(InUnit::IN_PIXELS), { 0, 200, 0, 220 });
 			break;
@@ -239,4 +269,33 @@ void D3DelayScene::Draw()
 		//PhysVec v = b->EmissionPoint(InUnit::IN_PIXELS) + (-3.0f, -3);
 		//render->DrawRectangle(Rect(v.x, v.y, 6, 6), { 155, 255, 155, 255 });
 	}
+}
+
+void D3DelayScene::ChangeMaterial()
+{
+	switch (step)
+	{
+	case 0:
+	{
+		break;
+	}
+	case 1:
+	{
+		break;
+	}
+	case 2:
+	{
+		break;
+	}
+	case 3:
+	{
+		break;
+	}
+	case 4:
+	{
+		break;
+	}
+	}
+	step++;
+	stepDone = false;
 }
