@@ -17,7 +17,6 @@ bool D3DelayScene::Start()
 	physics->Configure()->PhysicsIterations(90);
 	physics->SetPhysicsPreset(PhysicsPreset::DEFAULT_PHYSICS_PRESET);
 	physics->Configure()->GlobalGravity({ 0, 9.8f * 3 }, InUnit::IN_METERS);
-	physics->Configure()->PanRange(12, InUnit::IN_METERS);
 	physics->LoadSound("Assets/Audio/bounce.wav");
 	bool tr = physics->LoadSound("Assets/Audio/doorOpen.wav");
 	float mTp = physics->Get()->MetersToPixels();
