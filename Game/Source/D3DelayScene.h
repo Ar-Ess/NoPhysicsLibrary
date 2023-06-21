@@ -35,6 +35,7 @@ private:
 	SDL_Texture* postTex = nullptr;
 	SDL_Texture* buttonTex = nullptr;
 	SDL_Texture* waterTex = nullptr;
+	SDL_Texture* clickTex = nullptr;
 
 	DynamicBody* player = nullptr;
 	StaticBody* emmiter = nullptr;
@@ -48,5 +49,6 @@ private:
 
 	int step = 0;
 	bool stepDone = false;
+	int buttonClick = -1;
 
 };

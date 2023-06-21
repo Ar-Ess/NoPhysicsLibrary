@@ -34,6 +34,7 @@ bool D3DelayScene::Start()
 	airTex = texture->Load("Textures/ts_demos_06.png");
 	postTex = texture->Load("Textures/ts_demos_07.png");
 	buttonTex = texture->Load("Textures/ts_demos_08.png");
+	clickTex = texture->Load("Textures/txt_demos_01.png");
 
 	door = physics->CreateBody(2940, 460, 80, 120)->Static();
 	
@@ -148,9 +149,13 @@ bool D3DelayScene::Update(float dt)
 	if (input->GetKey(SDL_SCANCODE_W) == KeyState::KEY_DOWN)
 	{
 		if (stepDone && buttons[0] && MathUtils::CheckCollision(buttons[0]->Rect(InUnit::IN_PIXELS), player->Rect(InUnit::IN_PIXELS)))
+		{
+			buttonClick = 0;
 			ChangeMaterial();
+		}
 		else if (buttons[1] && MathUtils::CheckCollision(buttons[1]->Rect(InUnit::IN_PIXELS), player->Rect(InUnit::IN_PIXELS)))
 		{
+			buttonClick = 1;
 			stepDone = true;
 			emmiter->Play(0, 100);
 		}
@@ -184,6 +189,8 @@ bool D3DelayScene::CleanUp()
 
 void D3DelayScene::Draw()
 {
+	static float timer = 0;
+	
 	render->DrawTexture(background, { 0.f, -400 }, { 1.f, 1 }, true);
 	render->DrawTexture(background, { 1801.f, -400 }, { 1.f, 1 }, true);
 
@@ -274,6 +281,17 @@ void D3DelayScene::Draw()
 		//render->DrawRectangle(b->Rect(InUnit::IN_PIXELS), color);
 		//PhysVec v = b->EmissionPoint(InUnit::IN_PIXELS) + (-3.0f, -3);
 		//render->DrawRectangle(Rect(v.x, v.y, 6, 6), { 155, 255, 155, 255 });
+	}
+
+	if (buttonClick != -1)
+	{
+		render->DrawTexture(clickTex, buttons[buttonClick]->Position(InUnit::IN_PIXELS) + PhysVec{ 50, 0 }, {0.5f, 0.5f}, true);
+		timer += 0.1f;
+		if (timer >= 2)
+		{
+			timer = 0;
+			buttonClick = -1;
+		}
 	}
 }
 
