@@ -126,6 +126,12 @@ namespace PhysMath
 		return Log(num, base);
 	}
 
+	inline float LinearToLogV2(float num, float minLinear, float maxLinear, float minLog, float maxLog)
+	{
+		float log = PhysMath::Log(minLog) + (PhysMath::Log(maxLog) - PhysMath::Log(minLog)) * (num - minLinear) / (maxLinear - minLinear);
+		return PhysMath::Pow(10, log);
+	}
+
 	inline float Min(float a, float b)
 	{
 		if (a <= b) return a;
@@ -148,6 +154,13 @@ namespace PhysMath
 	{
 		if (value < min) value = min;
 		else if (value > max) value = max;
+	}
+
+	inline float Clamp(float value, float min, float max, bool onlyMin)
+	{
+		if (value < min) value = min;
+		else if (!onlyMin && value > max) value = max;
+		return value;
 	}
 
 	inline void Clamp(PhysVec& value, float min, float max)

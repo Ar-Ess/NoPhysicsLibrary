@@ -118,7 +118,7 @@ void Acoustics::ListenerLogic(PhysArray<RayData*>* data, const float totalDistan
 		{
 			RayData* rD = data->At(i);
 			if (agents->listener->Class() == BodyClass::DYNAMIC_BODY && // If body is excluded from collision, don't affect
-				((DynamicBody*)agents->listener)->IsIdExcludedFromCollision(rD->body)) continue;
+				((DynamicBody*)agents->listener)->IsIdExcludedFromCollision(*rD->body->id)) continue;
 
 
 			if (soundOclusion)
@@ -256,7 +256,7 @@ float Acoustics::ComputeVolume(float distance, float spl)
 {
 	// Compute the sound attenuation over distance
 	// Final SPL = Initial SPL - 20*Log(distance / 1)
-	float fSPL = spl - (20 * PhysMath::Log(distance * *globalVolumeAttFactor * *globalVolumeAttFactor));
+	float fSPL = spl - (20 * PhysMath::Log(distance * *globalVolumeAttFactor));
 
 	// Transform volume from db to linear [ 0, 1])
 	return PhysMath::LogToLinear(fSPL, maxSPL) / maxVolume;
@@ -312,7 +312,8 @@ float Acoustics::ComputeVolumeAttenuation(float distance, Body* obstacle)
 	{
 	case BodyClass::DYNAMIC_BODY:
 	case BodyClass::STATIC_BODY:
-		attenuation = obstacle->AbsorptionCoefficient() * distance;
+		attenuation += obstacle->AbsorptionCoefficient() * distance;
+		attenuation += 20 * PhysMath::Log(1 / obstacle->AbsorptionCoefficient(), 10);
 		break;
 
 	case BodyClass::LIQUID_BODY:
@@ -349,6 +350,8 @@ void Acoustics::ComputeFrequentialAttenuation(float innerDistance, float distanc
 		ret = totalArea / MAX_FREQ;
 		ret = (ret * percent) + (outCutoff * (1 - percent));
 
+		ret = PhysMath::LinearToLogV2(ret, 0, 1, 20, 22000) / MAX_FREQ;
+
 		outCutoff = PhysMath::Min(ret, outCutoff);
 		outResonance = PhysMath::Min(ret, outResonance);
 
@@ -358,7 +361,8 @@ void Acoustics::ComputeFrequentialAttenuation(float innerDistance, float distanc
 	case BodyClass::DYNAMIC_BODY:
 	case BodyClass::STATIC_BODY:
 	{
-		float waveLength = 2 * (innerDistance / obstacle->AbsorptionCoefficient());
+		float absorptionCoeff = PhysMath::Clamp(obstacle->AbsorptionCoefficient(), 0, 0.99999, false);
+		float waveLength = 2 * (innerDistance / (1 - absorptionCoeff));
 		float ret = (velocity / waveLength) / MAX_FREQ;
 		if (ret > 1) ret = 1;
 

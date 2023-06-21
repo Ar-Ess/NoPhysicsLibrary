@@ -253,7 +253,7 @@ void D3DelayScene::Draw()
 						render->DrawTexture(woodBoxTex, Point(b->Position(InUnit::IN_PIXELS)) + Point{ (r.w / 3) * 2, 0 }, { finalSize.x / 3, finalSize.y }, true);
 					}
 				}
-				render->DrawRectangle(Rect(b->EmissionPoint(InUnit::IN_PIXELS), 4, 4), {255, 0, 0, 255});
+				//render->DrawRectangle(Rect(b->EmissionPoint(InUnit::IN_PIXELS), 4, 4), {255, 0, 0, 255});
 			}
 			break;
 		}

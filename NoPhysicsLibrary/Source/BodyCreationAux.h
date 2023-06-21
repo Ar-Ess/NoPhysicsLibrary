@@ -31,9 +31,12 @@ private:
 
 public:
 
-	StaticBody* Static() const
+	// Static bodies don't usually have mass, but it makes sense
+	// from the perspective of the sound velodity travelling
+	// Mass [Kg]
+	StaticBody* Static(float mass = 1.0f) const
 	{
-		StaticBody* b = new StaticBody(rect, 1.0f, pixelsToMeters);
+		StaticBody* b = new StaticBody(rect, mass, pixelsToMeters);
 		bodies->Add(b);
 		b->playSoundTrigger = playSoundTrigger;
 		return b;

@@ -21,6 +21,8 @@ public:
 
 	void Draw();
 
+	void OclusionLogic();
+
 private:
 
 	NoPhysicsLibrary* physics = nullptr;
@@ -29,9 +31,25 @@ private:
 	SDL_Texture* groundTex = nullptr;
 	SDL_Texture* woodBoxTex = nullptr;
 	SDL_Texture* doorTex = nullptr;
-	SDL_Texture* rockTex = nullptr;
+	SDL_Texture* airTex = nullptr;
+	SDL_Texture* postTex = nullptr;
+	SDL_Texture* buttonTex = nullptr;
+	SDL_Texture* waterTex = nullptr;
+	SDL_Texture* clickTex = nullptr;
 
 	DynamicBody* player = nullptr;
+	StaticBody* emmiter = nullptr;
+	StaticBody* counter = nullptr;
 	StaticBody* door = nullptr;
+	StaticBody* blockWall = nullptr;
+	StaticBody* doorSoundEffectBody = nullptr;
+	GasBody* gas = nullptr;
+	Body* button = nullptr;
+	Body* obstacle = nullptr;
+
+	int step = 0;
+	bool buttonClick = false;
+	bool buttonTexShow = false;
+	Material mat;
 
 };
