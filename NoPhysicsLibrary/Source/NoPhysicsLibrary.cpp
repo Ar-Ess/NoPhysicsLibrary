@@ -139,6 +139,8 @@ bool NoPhysicsLibrary::DestroyBody(Body* body)
 	if (body->Class() == BodyClass::LIQUID_BODY) liquidIndex.Erase(liquidIndex.Find(&index));
 	else if (body->Class() == BodyClass::GAS_BODY) gasIndex.Erase(gasIndex.Find(&index));
 
+	RestructureIndexArrays(index);
+
 	return bodies.Erase(index);
 }
 
@@ -151,6 +153,9 @@ bool NoPhysicsLibrary::DestroyBody(PhysID id)
 	if (index == bodies.Find(listener)) listener = nullptr;
 	if (bodies[index]->Class() == BodyClass::LIQUID_BODY) liquidIndex.Erase(liquidIndex.Find(&index));
 	else if (bodies[index]->Class() == BodyClass::GAS_BODY) gasIndex.Erase(gasIndex.Find(&index));
+
+	RestructureIndexArrays(index);
+
 	return bodies.Erase(index);
 }
 
@@ -158,6 +163,7 @@ bool NoPhysicsLibrary::DestroyBody(BodyClass clas)
 {
 	INIT_CHECK();
 	bool ret = true;
+	bool restructure = clas != BodyClass::LIQUID_BODY && clas != BodyClass::GAS_BODY;
 	for (int i = bodies.Size(); i >= 0; --i)
 	{
 		Body* b = bodies[i];
@@ -165,6 +171,7 @@ bool NoPhysicsLibrary::DestroyBody(BodyClass clas)
 		{
 			if (b == listener) listener = nullptr;
 			bool destroyed = bodies.Erase(i);
+			if (restructure) RestructureIndexArrays(i);
 			if (!destroyed) ret = false;
 		}
 	}
@@ -505,4 +512,29 @@ void NoPhysicsLibrary::StepAudio()
 		);
 
 	soundDataList.Clear();
+}
+
+void NoPhysicsLibrary::RestructureIndexArrays(unsigned int index)
+{
+	liquidIndex.Iterate<unsigned int>
+	(
+		[](unsigned int* bodyIndex, unsigned int index)
+		{
+			if (*bodyIndex < index) return;
+
+			*bodyIndex = *bodyIndex - 1;
+		},
+		index
+	);
+
+	gasIndex.Iterate<unsigned int>
+	(
+		[](unsigned int* bodyIndex, unsigned int index)
+		{
+			if (*bodyIndex < index) return;
+
+			*bodyIndex = *bodyIndex - 1;
+		},
+		index
+	);
 }

@@ -78,6 +78,8 @@ private: // Methods
 		void UpdatePixelsToMeters();
 		void UpdateListener(PhysID id);
 
+	void RestructureIndexArrays(unsigned int index);
+
 	bool IsVoid() const { return gasIndex.Empty(); }
 	bool IsDry() const { return liquidIndex.Empty(); }
 	bool IsGlobalPause() { return physics->globals.Get(0); }

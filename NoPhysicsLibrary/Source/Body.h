@@ -105,9 +105,9 @@ public: // Methods
 	// Sets the acoustic updatability property of the body
 	void HasAcousticsUpdatability(bool set) { properties.Set(BP_ACOUSTICS_UPDATE, set); }
 
-	bool operator==(Body* b)
+	bool operator==(Body b)
 	{
-		return *id == *b->id;
+		return *id == *b.id;
 	}
 
 protected: // Methods

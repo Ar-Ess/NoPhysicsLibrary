@@ -371,6 +371,7 @@ private:
         {
             if (erase->post) start = erase->post; //-Change
             else start = nullptr; //-Change
+            if (size == 0) final = nullptr;
             delete erase;
             erase = nullptr;
             if (start) start->prev = nullptr; //-Change
@@ -381,6 +382,7 @@ private:
         {
             if (erase->prev) final = erase->prev; //-Change
             else final = nullptr; //-Change
+            if (size == 0) start = nullptr;
             delete erase;
             erase = nullptr;
             if (final) final->post = nullptr; //-CHANGE
@@ -452,7 +454,7 @@ private:
         for (Node* node = start; node != nullptr; node = node->post)
         {
             // Error? Maybe missing == operand for "ptr variables" or "non-ptr variables"
-            if (*node->value == value) return i;
+            if (*node->value == *value) return i;
             ++i;
         }
 

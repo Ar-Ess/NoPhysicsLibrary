@@ -53,7 +53,7 @@ bool D3DelayScene::Start()
 	// Limits
 	physics->CreateBody(   0, 530, 1275, 230)->Static();
 	physics->CreateBody(1275, 555,  360, 230)->Static();
-	physics->CreateBody(1635, 580, 1410, 230)->Static();
+	physics->CreateBody(1635, 580, 1415, 230)->Static();
 
 	physics->CreateBody(0, -500, 10, 1220)->Static();
 	physics->CreateBody(3050, -200, 10, 920)->Static();
@@ -155,7 +155,7 @@ bool D3DelayScene::Update(float dt)
 			emmiter->Play(0, 100);
 		}
 		else if (MathUtils::CheckCollision(door->Rect(InUnit::IN_PIXELS), player->Rect(InUnit::IN_PIXELS)))
-			SetScene(Scenes::D3_SCENE);
+			SetScene(Scenes::D4_SCENE);
 	}
 
 	//Change scene
@@ -199,7 +199,7 @@ void D3DelayScene::Draw()
 		case BodyClass::STATIC_BODY:
 		{
 			Point finalSize = { r.w / 1896, r.h / 1896 };
-			     if (b == counter)
+			if (b == counter)
 			{
 				render->DrawRectangle(r, { 0, 0, 0, 255 });
 				//render->DrawTexture(woodBoxTex, b->Position(InUnit::IN_PIXELS), finalSize, true);
@@ -208,7 +208,6 @@ void D3DelayScene::Draw()
 			else if (b == emmiter)
 			{
 				render->DrawTexture(postTex, b->Position(InUnit::IN_PIXELS), { r.w / 428, r.h / 1440 }, true, nullptr, 0, SDL_FLIP_HORIZONTAL);
-				render->DrawRectangle(Rect(b->EmissionPoint(InUnit::IN_PIXELS), 4, 4));
 				break;
 			}
 			else if (b == door)
@@ -247,6 +246,7 @@ void D3DelayScene::Draw()
 						render->DrawTexture(woodBoxTex, Point(b->Position(InUnit::IN_PIXELS)) + Point{ (r.w / 3) * 2, 0 }, { finalSize.x / 3, finalSize.y }, true);
 					}
 				}
+				render->DrawRectangle(Rect(b->EmissionPoint(InUnit::IN_PIXELS), 4, 4), {255, 0, 0, 255});
 			}
 			break;
 		}
@@ -317,7 +317,7 @@ void D3DelayScene::ChangeMaterial()
 	case 4:
 	{
 		Material mat;
-		mat.BuildLiquid(-1, 0.92, -1, 100000); // Acetone
+		mat.BuildLiquid(-1, 0.92, -1, 1000000); // Acetone
 		obstacle->SetMaterial(mat);
 
 		break;
@@ -327,7 +327,6 @@ void D3DelayScene::ChangeMaterial()
 		physics->DestroyBody(obstacle);
 		physics->DestroyBody(buttons[0]);
 		physics->DestroyBody(buttons[1]);
-		physics->DestroyBody(emmiter);
 		physics->DestroyBody(blockWall);
 		doorSoundEffectBody->Play(1, 100);
 		break;
