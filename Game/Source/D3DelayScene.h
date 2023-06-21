@@ -34,11 +34,14 @@ private:
 	SDL_Texture* airTex = nullptr;
 	SDL_Texture* postTex = nullptr;
 	SDL_Texture* buttonTex = nullptr;
+	SDL_Texture* waterTex = nullptr;
 
 	DynamicBody* player = nullptr;
 	StaticBody* emmiter = nullptr;
 	StaticBody* counter = nullptr;
 	StaticBody* door = nullptr;
+	StaticBody* blockWall = nullptr;
+	StaticBody* doorSoundEffectBody = nullptr;
 	GasBody* gas = nullptr;
 	Body* buttons[2] = {nullptr, nullptr};
 	Body* obstacle = nullptr;

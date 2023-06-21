@@ -134,8 +134,11 @@ const GetData* NoPhysicsLibrary::Get()
 bool NoPhysicsLibrary::DestroyBody(Body* body)
 {
 	INIT_CHECK();
-	int index = bodies.Find(body);
+	unsigned int index = bodies.Find(body);
 	if (body == listener) listener = nullptr;
+	if (body->Class() == BodyClass::LIQUID_BODY) liquidIndex.Erase(liquidIndex.Find(&index));
+	else if (body->Class() == BodyClass::GAS_BODY) gasIndex.Erase(gasIndex.Find(&index));
+
 	return bodies.Erase(index);
 }
 
@@ -144,8 +147,10 @@ bool NoPhysicsLibrary::DestroyBody(PhysID id)
 	INIT_CHECK();
 	Body find(BodyClass::EMPTY_BODY, {}, 0, nullptr);
 	find.id = &id;
-	int index = bodies.Find(&find);
+	unsigned int index = bodies.Find(&find);
 	if (index == bodies.Find(listener)) listener = nullptr;
+	if (bodies[index]->Class() == BodyClass::LIQUID_BODY) liquidIndex.Erase(liquidIndex.Find(&index));
+	else if (bodies[index]->Class() == BodyClass::GAS_BODY) gasIndex.Erase(gasIndex.Find(&index));
 	return bodies.Erase(index);
 }
 
@@ -163,6 +168,9 @@ bool NoPhysicsLibrary::DestroyBody(BodyClass clas)
 			if (!destroyed) ret = false;
 		}
 	}
+
+	if (clas == BodyClass::GAS_BODY) gasIndex.Clear();
+	else if (clas == BodyClass::LIQUID_BODY) liquidIndex.Clear();
 
 	return ret;
 }

@@ -17,8 +17,9 @@ bool D3DelayScene::Start()
 	physics->Configure()->PhysicsIterations(90);
 	physics->SetPhysicsPreset(PhysicsPreset::DEFAULT_PHYSICS_PRESET);
 	physics->Configure()->GlobalGravity({ 0, 9.8f * 3 }, InUnit::IN_METERS);
-	physics->Configure()->PanRange(15, InUnit::IN_METERS);
-	bool tr = physics->LoadSound("Assets/Audio/bounce.wav");
+	physics->Configure()->PanRange(12, InUnit::IN_METERS);
+	physics->LoadSound("Assets/Audio/bounce.wav");
+	bool tr = physics->LoadSound("Assets/Audio/doorOpen.wav");
 	float mTp = physics->Get()->MetersToPixels();
 	physics->Configure()->FrequentialAttenuation(false);
 	physics->Configure()->SoundDelay(true);
@@ -29,6 +30,7 @@ bool D3DelayScene::Start()
 	groundTex = texture->Load("Textures/ts_demos_01.png");
 	woodBoxTex = texture->Load("Textures/ts_demos_02.png");
 	doorTex = texture->Load("Textures/ts_demos_03.png");
+	waterTex = texture->Load("Textures/ts_demos_05.png");
 	airTex = texture->Load("Textures/ts_demos_06.png");
 	postTex = texture->Load("Textures/ts_demos_07.png");
 	buttonTex = texture->Load("Textures/ts_demos_08.png");
@@ -67,7 +69,10 @@ bool D3DelayScene::Start()
 	physics->CreateBody(900,  -380, 750, 800)->Static();
 	physics->CreateBody(1650, -350, 1400, 650)->Static();
 	counter = physics->CreateBody(1840, 150, 550, 100)->Static();
-	physics->CreateBody(2550,  300,  510, 130)->Static();
+	doorSoundEffectBody = physics->CreateBody(2550, 300, 510, 130)->Static();
+	doorSoundEffectBody->EmissionPoint({ -250, 0 });
+	
+	blockWall = physics->CreateBody(2550, 430, 30, 150)->Static();
 
 	Rect r = physics->ReturnScenarioRect();
 	r.w -= (60 * 26);
@@ -142,9 +147,9 @@ bool D3DelayScene::Update(float dt)
 
 	if (input->GetKey(SDL_SCANCODE_W) == KeyState::KEY_DOWN)
 	{
-		if (stepDone && MathUtils::CheckCollision(buttons[0]->Rect(InUnit::IN_PIXELS), player->Rect(InUnit::IN_PIXELS)))
+		if (stepDone && buttons[0] && MathUtils::CheckCollision(buttons[0]->Rect(InUnit::IN_PIXELS), player->Rect(InUnit::IN_PIXELS)))
 			ChangeMaterial();
-		else if (MathUtils::CheckCollision(buttons[1]->Rect(InUnit::IN_PIXELS), player->Rect(InUnit::IN_PIXELS)))
+		else if (buttons[1] && MathUtils::CheckCollision(buttons[1]->Rect(InUnit::IN_PIXELS), player->Rect(InUnit::IN_PIXELS)))
 		{
 			stepDone = true;
 			emmiter->Play(0, 100);
@@ -172,6 +177,7 @@ bool D3DelayScene::CleanUp()
 	texture->UnLoad(airTex);
 	texture->UnLoad(postTex);
 	texture->UnLoad(buttonTex);
+	texture->UnLoad(waterTex);
 
 	return true;
 }
@@ -249,7 +255,7 @@ void D3DelayScene::Draw()
 			break;
 
 		case BodyClass::LIQUID_BODY:
-			render->DrawRectangle(b->Rect(InUnit::IN_PIXELS), { 0, 0, 200, 220 });
+			render->DrawTexture(waterTex, b->Position(InUnit::IN_PIXELS), {r.w / 300, r.h / 300}, true);
 			break;
 
 		case BodyClass::GAS_BODY:
@@ -314,6 +320,16 @@ void D3DelayScene::ChangeMaterial()
 		mat.BuildLiquid(-1, 0.92, -1, 100000); // Acetone
 		obstacle->SetMaterial(mat);
 
+		break;
+	}
+	case 5:
+	{
+		physics->DestroyBody(obstacle);
+		physics->DestroyBody(buttons[0]);
+		physics->DestroyBody(buttons[1]);
+		physics->DestroyBody(emmiter);
+		physics->DestroyBody(blockWall);
+		doorSoundEffectBody->Play(1, 100);
 		break;
 	}
 	}
