@@ -30,6 +30,9 @@ bool Acoustics::RayData::operator==(RayData data) const
 
 Acoustics::Acoustics(PhysArray<Body*>* bodies, PhysArray<SoundData*>* soundDataList, PhysArray<unsigned int*>* gasIndex, PhysArray<unsigned int*>* liquidIndex, const float* panRange, const float* panFactor, const float* pitchVariationFactor, const Flag* generalConfig, const float* globalVolumeAttFactor)
 {
+	float ret = PhysMath::LinearToLogV2(0.5, 20, 20000);
+	ret = PhysMath::LogToLinearV2(ret, 20, 20000);
+
 	this->bodies = bodies;
 	this->soundDataList = soundDataList;
 	this->panRange = panRange;
@@ -350,7 +353,7 @@ void Acoustics::ComputeFrequentialAttenuation(float innerDistance, float distanc
 		ret = totalArea / MAX_FREQ;
 		ret = (ret * percent) + (outCutoff * (1 - percent));
 
-		ret = PhysMath::LinearToLogV2(ret, 0, 1, 20, 22000) / MAX_FREQ;
+		ret = PhysMath::LinearToLogV2(ret, 20, 22000) / MAX_FREQ;
 
 		outCutoff = PhysMath::Min(ret, outCutoff);
 		outResonance = PhysMath::Min(ret, outResonance);

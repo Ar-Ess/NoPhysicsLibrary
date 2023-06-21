@@ -38,7 +38,7 @@ bool D4OclusionScene::Start()
 
 	door = physics->CreateBody(2940, 460, 80, 120)->Static();
 
-	button = physics->CreateBody(1750, 470, 45, 45)->Static();
+	button = physics->CreateBody(1750, 500, 45, 45)->Static();
 
 	player = physics->CreateBody(100, 380, 0.7 * mTp, 1.6 * mTp)->Dynamic(75);
 	physics->Configure()->Listener(player);
@@ -51,7 +51,9 @@ bool D4OclusionScene::Start()
 	gas = physics->CreateBody(0, 0, 1, 1)->Gas(0.4f, { 3.0f, 0.1f }, InUnit::IN_METERS);
 
 	// Limits
-	physics->CreateBody(0, 530, 3060, 230)->Static();
+	physics->CreateBody(0, 530, 1640, 230)->Static();
+	physics->CreateBody(1640, 580, 1420, 230)->Static();
+
 	physics->CreateBody(0, -500, 10, 1220)->Static();
 	physics->CreateBody(3050, -200, 10, 920)->Static();
 
@@ -143,17 +145,17 @@ bool D4OclusionScene::Update(float dt)
 			buttonTexShow = true;
 			if (step == 0)
 			{
-				obstacle = physics->CreateBody(1860, 330, 1, 180)->Static(200);
+				obstacle = physics->CreateBody(1860, 370, 1, 180)->Static(200);
 				obstacle->SetMaterial(mat);
 			}
 			else if (step == 1)
 			{
-				obstacle = physics->CreateBody(1860, 330, 1, 180)->Liquid(400, 0.8, InUnit::IN_METERS);
+				obstacle = physics->CreateBody(1860, 370, 1, 180)->Liquid(400, 0.8, InUnit::IN_METERS);
 				obstacle->SetMaterial(mat);
 			}
 		}
 		else if (MathUtils::CheckCollision(door->Rect(InUnit::IN_PIXELS), player->Rect(InUnit::IN_PIXELS)))
-			SetScene(Scenes::D4_SCENE);
+			SetScene(Scenes::D5_SCENE);
 	}
 
 	if (buttonClick) OclusionLogic();
@@ -178,6 +180,12 @@ bool D4OclusionScene::CleanUp()
 	texture->UnLoad(postTex);
 	texture->UnLoad(buttonTex);
 	texture->UnLoad(waterTex);
+	texture->UnLoad(clickTex);
+
+	step = 0;
+	buttonClick = false;
+	buttonTexShow = false;
+	mat = Material();
 
 	return true;
 }

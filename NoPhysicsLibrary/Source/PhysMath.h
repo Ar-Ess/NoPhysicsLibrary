@@ -126,11 +126,25 @@ namespace PhysMath
 		return Log(num, base);
 	}
 
-	inline float LinearToLogV2(float num, float minLinear, float maxLinear, float minLog, float maxLog)
+	inline float LinearToLogV2(float num, float minLog, float maxLog)
 	{
-		float log = PhysMath::Log(minLog) + (PhysMath::Log(maxLog) - PhysMath::Log(minLog)) * (num - minLinear) / (maxLinear - minLinear);
+		float log = Log(minLog, 10) + num * (Log(maxLog, 10) - Log(minLog, 10));
+
+		//float log = PhysMath::Log(minLog, 10) + (PhysMath::Log(maxLog, 10) - PhysMath::Log(minLog, 10)) * (num - minLinear) / (maxLinear - minLinear);
+		
 		return PhysMath::Pow(10, log);
 	}
+
+	inline float LogToLinearV2(float num, float minLog, float maxLog)
+	{
+		//float log = Log(num, 10);
+		//float linear = (log - Log(minLog, 10)) / (log10(maxLog) - log10(minLog));
+		//return minLinear + (log - Log(minLog, 10)) * (maxLinear - minLinear) / (Log(maxLog, 10) - Log(minLog, 10));
+
+		float log = Log(num, 10);
+		return (log - Log(minLog, 10)) / (Log(maxLog, 10) - Log(minLog, 10));
+	}
+
 
 	inline float Min(float a, float b)
 	{
