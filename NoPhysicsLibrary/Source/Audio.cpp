@@ -26,17 +26,20 @@ void Audio::Playback(SoundData* data)
     if (SoundSize() == 0 || data->index < 0 || data->index >= SoundSize()) return;
 
     bool delay = data->delayTime > 0.1;
-    Sound* sound = sounds[data->index];
+    Sound* aSound = sounds[data->index];
 
-    sound->Lowpass(data->frequency, data->resonance);
-    sound->Pitch(SOFTEN_PITCH(data->pitch));
+    aSound->Lowpass(data->frequency, data->resonance);
+    aSound->Pitch(SOFTEN_PITCH(data->pitch));
 
-    SoLoud::handle h = audio->play(*sound->sound, data->volume, data->pan, delay);
+    SoLoud::handle v = audio->play(*aSound->sound, data->volume, data->pan, delay);
     
     if (!delay) return;
 
-    if (delay) audio->setDelaySamples(h, SEC_TO_SAMPLES(data->delayTime));
-    audio->setPause(h, false);
+    unsigned int i = SEC_TO_SAMPLES(data->delayTime);
+    if (delay) audio->setDelaySamples(v, i);
+
+    bool delayPause = data->delayTime < -1;
+    audio->setPause(v, delayPause);
 }
 
 bool Audio::LoadSound(const char* path)

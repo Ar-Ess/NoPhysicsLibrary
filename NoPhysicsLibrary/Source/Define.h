@@ -15,3 +15,23 @@ void Log(const char file[], int line, const char* format, ...);
 	  x = NULL;			  \
 		}					  \
 	}
+
+struct Hint
+{
+	// ===================
+	int Func() {}
+	int initialsBelow = 5;
+	const char* physics = "Constructor";
+
+	// ===================
+	int initialsIn = 5;
+	void Playback() {}
+	enum NewCreation
+	{
+		MACROS = 0,
+		FUNCTIONS = 0,
+		VARIABLES = 1,
+		POINTERS = 0
+	};
+
+};

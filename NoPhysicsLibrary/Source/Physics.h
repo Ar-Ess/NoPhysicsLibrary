@@ -24,7 +24,13 @@ private: // Methods
 
 	Physics(const PhysArray<Body*>* bodies, const Flag* generalConfig, const PhysArray<unsigned int*>* gasIndex, const PhysArray<unsigned int*>* liquidIndex, const float* pixelsToMeters, const unsigned int* physIterations);
 
+	void DetectCollisions(PhysArray<Body*>* bodies);
 	void ApplyNaturalForces(Body* dynBody);
+	PhysVec VarFrictionCalculation(Body* body);
+	void Integrate(float dt, Body* body);
+	void Declip();
+
+	// Apply Forces
 		void ApplyHydroForces(Body* dynBody);
 			void ApplyHydroDrag(Body* dynBody, Body* env, const PhysRect insideRect);
 			void ApplyHydroLift(Body* dynBody, Body* env);
@@ -33,15 +39,9 @@ private: // Methods
 			void ApplyAeroDrag(Body* dynBody, Body* env, float area);
 			void ApplyAeroLift(Body* dynBody, Body* env, float area);
 
-	void Integrate(float dt, Body* body);
-
 	// Declip
-	void DetectCollisions(PhysArray<Body*>* bodies);
 	void ResetFlags(PhysArray<Body*>* bodies);
-	void Declip();
 
-	// Internal
-	PhysVec CalculateFriction(Body* body);
 	bool IsCollisionDebuggingEnabled() const { return generalConfig->Get(0); }
 
 public: // Variables
@@ -66,5 +66,6 @@ public: // Variables
 private:
 
 	friend class NoPhysicsLibrary;
+	friend class Hint;
 
 };

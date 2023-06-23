@@ -407,7 +407,7 @@ void Physics::Declip()
 
 				// Loss of energy
 				dynBody->velocity.y *= (globalRestitution.y + body->RestitutionOffset().y + dynBody->RestitutionOffset().y);
-				dynBody->velocity.x *= CalculateFriction(dynBody).x;
+				dynBody->velocity.x *= VarFrictionCalculation(dynBody).x;
 			}
 			else if (normal.y == 0) // Horizontal collision with vertical surface
 			{
@@ -433,7 +433,7 @@ void Physics::Declip()
 
 				// Loss of energy
 				dynBody->velocity.x *= (globalRestitution.x + body->RestitutionOffset().x + dynBody->RestitutionOffset().x);
-				dynBody->velocity.y *= CalculateFriction(dynBody).y;
+				dynBody->velocity.y *= VarFrictionCalculation(dynBody).y;
 			}
 			else
 			{
@@ -456,7 +456,7 @@ void Physics::Declip()
 	if (!generalConfig->Get(0)) collisions.Clear();
 }
 
-PhysVec Physics::CalculateFriction(Body* dynBody)
+PhysVec Physics::VarFrictionCalculation(Body* dynBody)
 {
 	DynamicBody* body = (DynamicBody*)dynBody;
 	PhysVec gF = { PhysMath::Abs(1 - globalFriction.x), PhysMath::Abs(1 - globalFriction.y) };
