@@ -16,7 +16,6 @@ NoPhysicsLibrary::~NoPhysicsLibrary()
 
 void NoPhysicsLibrary::Init(float pixelsPerMeter)
 {
-	// You've alreay initialized the library once
 	DOUBLE_INIT_CHECK();
 	physics = new Physics(&bodies, &generalConfig, &gasIndex, &liquidIndex, &pixelsToMeters, &physIterations);
 	acoustics = new Acoustics(&bodies, &soundDataList, &gasIndex, &liquidIndex, &panRange, &panFactor, &pitchVariationFactor, &generalConfig, &volumeAttenuationFactor);
@@ -351,8 +350,8 @@ void NoPhysicsLibrary::UpdateNotifier(unsigned int notify, PhysID id)
 {
 	switch (notify)
 	{
-	case 0: UpdatePixelsToMeters(); break; // Pixels To Meters
-	case 1: UpdateListener(id); break; // Listener
+	case 0: UpdatePixelsToMeters(); break;
+	case 1: UpdateListener(id); break;
 	default: assert(false && "NPL ERROR: 'UpdateNotifier' notified an invalid change out of bounds"); break;
 	}
 }
@@ -475,7 +474,6 @@ void NoPhysicsLibrary::StepPhysics(const float dt)
 		},
 		physics, dt
 	);
-	//for(unsigned int i = 0; i < bodies.Size(); ++i) physics->Step(bodies[i], dt);
 
 	physics->SolveCollisions(&bodies);
 }
