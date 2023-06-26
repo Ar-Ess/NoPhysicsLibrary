@@ -30,9 +30,6 @@ bool Acoustics::RayData::operator==(RayData data) const
 
 Acoustics::Acoustics(PhysArray<Body*>* bodies, PhysArray<SoundData*>* soundDataList, PhysArray<unsigned int*>* gasIndex, PhysArray<unsigned int*>* liquidIndex, const float* panRange, const float* panFactor, const float* pitchVariationFactor, const Flag* generalConfig, const float* globalVolumeAttFactor)
 {
-	float ret = PhysMath::LinearToLogV2(0.5, 20, 20000);
-	ret = PhysMath::LogToLinearV2(ret, 20, 20000);
-
 	this->bodies = bodies;
 	this->soundDataList = soundDataList;
 	this->panRange = panRange;
@@ -48,10 +45,7 @@ Acoustics::Acoustics(PhysArray<Body*>* bodies, PhysArray<SoundData*>* soundDataL
 void Acoustics::Simulate(Body* emitter, Body* listener)
 {
 	if (!listener || listener->id == emitter->id)
-	{
-		emitter->acousticDataList.Clear();
-		return;
-	}
+		return NoListenerLogic(emitter);
 
 	agents->SetAgents(emitter, listener);
 
