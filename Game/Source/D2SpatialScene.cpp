@@ -223,7 +223,9 @@ void D2SpatialScene::Draw()
 			break;
 
 		case BodyClass::GAS_BODY:
-			render->DrawTexture(airTex, b->Position(InUnit::IN_PIXELS), { r.w/5000, r.h/5000 }, true);
+			Point p = b->Position(InUnit::IN_PIXELS);
+			p.x += 50;
+			render->DrawTexture(airTex, p, { r.w / 5000, r.h / 5000 }, true, nullptr, 0, SDL_FLIP_HORIZONTAL);
 			break;
 		}
 
