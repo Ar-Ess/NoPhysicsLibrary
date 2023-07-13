@@ -9,7 +9,7 @@
 
 #define MAX_FREQ 22000
 #define	FINAL_FREQ(x) x * MAX_FREQ
-#define FINAL_RES(x) ((x + (0.2f * x)) / 1.2f) * 2
+#define FINAL_RES(x) ((x + (0.2f * x)) / 1.2f) * 1.5
 #define REF_VEL 343
 #define FINAL_PITCH(x, factor) (factor * x) + ((1 - factor) * 1)
 
