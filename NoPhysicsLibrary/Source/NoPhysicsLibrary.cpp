@@ -166,13 +166,12 @@ bool NoPhysicsLibrary::DestroyBody(BodyClass clas)
 	for (int i = bodies.Size(); i >= 0; --i)
 	{
 		Body* b = bodies[i];
-		if (b->Class() == clas)
-		{
-			if (b == listener) listener = nullptr;
-			bool destroyed = bodies.Erase(i);
-			if (restructure) RestructureIndexArrays(i);
-			if (!destroyed) ret = false;
-		}
+		if (b->Class() != clas) return;
+		
+		if (b == listener) listener = nullptr;
+		bool destroyed = bodies.Erase(i);
+		if (restructure) RestructureIndexArrays(i);
+		if (!destroyed) ret = false;
 	}
 
 	if (clas == BodyClass::GAS_BODY) gasIndex.Clear();
