@@ -333,6 +333,9 @@ void NoPhysicsLibrary::SetPhysicsPreset(PhysicsPreset preset)
 		break;
 
 	case PhysicsPreset::NO_PHYSIC_PRESET:
+		friction = { 0.0f, 0.0f };
+		gravity = { 0.0f, 0.0f };
+		restitution = { 0.0f, 0.0f };
 		break;
 
 	default:
