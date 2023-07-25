@@ -166,7 +166,7 @@ bool NoPhysicsLibrary::DestroyBody(BodyClass clas)
 	for (int i = bodies.Size(); i >= 0; --i)
 	{
 		Body* b = bodies[i];
-		if (b->Class() != clas) return;
+		if (b->Class() != clas) continue;
 		
 		if (b == listener) listener = nullptr;
 		bool destroyed = bodies.Erase(i);
